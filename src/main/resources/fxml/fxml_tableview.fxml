@@ -43,31 +43,31 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <Accordion prefHeight="542.0" prefWidth="243.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
-                  <Button layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="243.0" text="+ New Files" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Button layoutY="2.0" mnemonicParsing="false" onMouseClicked="#openReferenceFileChooser" prefHeight="25.0" prefWidth="243.0" text="+ New Files" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">
                <children>
                   <TableView fx:id="metTable" maxWidth="1.7976931348623157E308" prefHeight="542.0" prefWidth="575.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                      <TableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="45.0" text="Name">
-                           <cellValueFactory><PropertyValueFactory property="name" />
+                      <TableColumn fx:id="nameColumn" maxWidth="400.0" minWidth="50.0" prefWidth="88.0" text="OGroup">
+                           <cellValueFactory><PropertyValueFactory property="OGroup" />
         </cellValueFactory>
                       </TableColumn>
-                      <TableColumn fx:id="rtColumn" minWidth="50.0" prefWidth="32.641357421875" text="RT">
-                          <cellValueFactory><PropertyValueFactory property="prop1" />
+                      <TableColumn fx:id="rtColumn" maxWidth="400.0" minWidth="50.0" prefWidth="77.0" text="RT">
+                          <cellValueFactory><PropertyValueFactory property="RT" />
         </cellValueFactory>
                            </TableColumn>
-                        <TableColumn minWidth="50.0" prefWidth="64.63482666015625" text="...">
+                        <TableColumn maxWidth="400.0" minWidth="50.0" prefWidth="57.0" text="...">
                              </TableColumn>
-                        <TableColumn minWidth="50.0" prefWidth="151.594482421875" text="...">
+                        <TableColumn maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="...">
                              </TableColumn>
-                        <TableColumn minWidth="50.0" prefWidth="112.56005859375" text="...">
+                        <TableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
                              </TableColumn>
-                        <TableColumn minWidth="50.0" prefWidth="112.56005859375" text="...">
+                        <TableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
                              </TableColumn>
-                        <TableColumn fx:id="scoreColumn" minWidth="50.0" prefWidth="112.56005859375" text="Score">
-                             <cellValueFactory><PropertyValueFactory property="score" />
+                        <TableColumn fx:id="scoreColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="Score">
+                             <cellValueFactory><PropertyValueFactory property="Score" />
         </cellValueFactory>
                         </TableColumn>
                     </columns>
