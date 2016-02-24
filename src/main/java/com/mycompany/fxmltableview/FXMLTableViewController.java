@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -31,6 +32,9 @@ public class FXMLTableViewController implements Initializable {
     
     @FXML
     TableColumn rtColumn;
+    
+    @FXML
+    Button referenceButton;
 
     //List with data for table
     ObservableList<OGroup> data;
@@ -73,6 +77,9 @@ public class FXMLTableViewController implements Initializable {
              System.out.println(session.getReferenceTsv().toString());
         data = session.parseReferenceTsv();
         metTable.setItems(data);
+        referenceButton.setDisable(true);
+        referenceButton.setVisible(false);
+        
         
         
     }
