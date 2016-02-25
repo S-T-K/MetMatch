@@ -15,6 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 
@@ -22,16 +24,16 @@ public class FXMLTableViewController implements Initializable {
 
     //link fxml information to controller
     @FXML
-    TableView<OGroup> metTable;
+    TreeTableView<OGroup> metTable;
 
     @FXML
-    TableColumn nameColumn;
+    TreeTableColumn nameColumn;
 
     @FXML
-    TableColumn scoreColumn;
+    TreeTableColumn scoreColumn;
     
     @FXML
-    TableColumn rtColumn;
+    TreeTableColumn rtColumn;
     
     @FXML
     Button referenceButton;
