@@ -43,6 +43,7 @@ public class Entry {
         this.OGroup = new SimpleIntegerProperty(OGroup);
         this.Ion = new SimpleStringProperty(Ion);
         this.M = new SimpleDoubleProperty(M);
+        this.Score = new SimpleDoubleProperty(0);
         
     }
     
@@ -59,7 +60,7 @@ public class Entry {
     //add adduct to an OGroup
     public void addAduct(Entry adduct) {
         this.getListofAdducts().add(adduct);
-        this.setRT(new SimpleDoubleProperty(((adduct.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size()));
+        this.setRT(new SimpleDoubleProperty(((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size()));
 
     }
 
@@ -89,7 +90,7 @@ public class Entry {
      * @return the Score
      */
     public double getScore() {
-        return 0;
+        return Score.get();
     }
 
     /**
@@ -116,6 +117,9 @@ public class Entry {
      * @return the MZ
      */
     public double getMZ() {
+        if (this.MZ==null) {
+            return 0;
+        }
         return MZ.get();
     }
 

@@ -42,8 +42,18 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Accordion prefHeight="542.0" prefWidth="243.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <Button fx:id="referenceButton" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#openReferenceFileChooser" prefHeight="25.0" prefWidth="243.0" text="+ New Files" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Accordion prefHeight="542.0" prefWidth="243.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
+                     <panes>
+                        <TitledPane fx:id="ReferencePane" animated="false" text="Reference" expanded="true" >
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="referenceButton" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#openReferenceFileChooser" prefHeight="25.0" prefWidth="243.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.399999999999977" AnchorPane.topAnchor="14.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                     </panes></Accordion>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">
@@ -58,7 +68,9 @@
                           <cellValueFactory><PropertyValueFactory property="RT" />
         </cellValueFactory>
                            </TreeTableColumn>
-                        <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="57.0" text="...">
+                        <TreeTableColumn fx:id="mzColumn" maxWidth="400.0" minWidth="50.0" prefWidth="57.0" text="MZ">
+                            <cellValueFactory><PropertyValueFactory property="MZ" />
+        </cellValueFactory>
                              </TreeTableColumn>
                         <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="...">
                              </TreeTableColumn>
@@ -80,5 +92,6 @@
             </AnchorPane>
         </items>
       </SplitPane>
+      <Accordion layoutX="-101.0" layoutY="66.0" />
    </children>
 </AnchorPane>

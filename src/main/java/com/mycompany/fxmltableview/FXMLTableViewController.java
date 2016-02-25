@@ -38,7 +38,13 @@ public class FXMLTableViewController implements Initializable {
     TreeTableColumn rtColumn;
     
     @FXML
+    TreeTableColumn mzColumn;
+    
+    @FXML
     Button referenceButton;
+    
+    @FXML
+    
 
     //List with data for table
     ObservableList<Entry> data;
@@ -63,6 +69,7 @@ public class FXMLTableViewController implements Initializable {
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
+        mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
 
         
         //metTable.setItems(data);
@@ -85,7 +92,7 @@ public class FXMLTableViewController implements Initializable {
         //Convert List into TreeTable Entries
         
         
-        TreeItem<Entry> superroot = new TreeItem<Entry>();
+        TreeItem<Entry> superroot = new TreeItem<>();
         
         
         //for all OGroups
@@ -101,11 +108,6 @@ public class FXMLTableViewController implements Initializable {
             }
            
         }
-       
-       
-       
-      
-      
         metTable.setRoot(superroot);
         metTable.setShowRoot(false);
         referenceButton.setDisable(true);
