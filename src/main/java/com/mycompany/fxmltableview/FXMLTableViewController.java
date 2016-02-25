@@ -12,9 +12,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
@@ -44,6 +47,24 @@ public class FXMLTableViewController implements Initializable {
     Button referenceButton;
     
     @FXML
+    Label DataMatrixLabel;
+    
+    @FXML
+    Label DataMatrixPathLabel;
+    
+    @FXML
+    TitledPane ReferencePane;
+    
+    @FXML
+    Accordion accordion;
+    
+    @FXML
+    Button referencemzxmlButton;
+    
+    @FXML
+    Label mzxmlLabel, mzxmlPathLabel;
+    
+    
     
 
     //List with data for table
@@ -71,13 +92,14 @@ public class FXMLTableViewController implements Initializable {
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
 
-        
+        accordion.setExpandedPane(ReferencePane);
+        referencemzxmlButton.setDisable(true);
         //metTable.setItems(data);
         
         session = new Session();
     }
     
-    public void openReferenceFileChooser () throws FileNotFoundException {
+    public void openReferenceDataMatrixChooser () throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
  
               //Set extension filter
@@ -85,7 +107,8 @@ public class FXMLTableViewController implements Initializable {
               fileChooser.getExtensionFilters().add(extFilter);
              
               //Show open file dialog
-             session.setReferenceTsv(fileChooser.showOpenDialog(null));
+              File file = fileChooser.showOpenDialog(null);
+             session.setReferenceTsv(file);
              System.out.println(session.getReferenceTsv().toString());
         data = session.parseReferenceTsv();
         
@@ -112,8 +135,28 @@ public class FXMLTableViewController implements Initializable {
         metTable.setShowRoot(false);
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
+        referencemzxmlButton.setDisable(false);
+        DataMatrixLabel.setText("Data Matrix:");
+        DataMatrixPathLabel.setText(file.toString());
         
         
         
     }
+    
+     public void openReferencemzxmlChooser () throws FileNotFoundException {
+         FileChooser fileChooser = new FileChooser();
+ 
+              //Set extension filter
+              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("mzXML files (*.mzxml)", "*.mzxml");
+              fileChooser.getExtensionFilters().add(extFilter);
+             
+              //Show open file dialog
+              File file = fileChooser.showOpenDialog(null);
+              mzxmlLabel.setText("mzXML file:");
+              mzxmlPathLabel.setText(file.toString());
+              referencemzxmlButton.setDisable(false);
+              referencemzxmlButton.setVisible(false);
+              referenceButton.setVisible(false);
+         
+     }
 }

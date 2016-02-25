@@ -42,13 +42,18 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Accordion prefHeight="542.0" prefWidth="243.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
+                  <Accordion fx:id="accordion" prefHeight="542.0" prefWidth="243.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <panes>
-                        <TitledPane fx:id="ReferencePane" animated="false" text="Reference" expanded="true" >
+                        <TitledPane fx:id="ReferencePane" animated="false" expanded="true" text="Reference">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Button fx:id="referenceButton" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#openReferenceFileChooser" prefHeight="25.0" prefWidth="243.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.399999999999977" AnchorPane.topAnchor="14.0" />
+                                    <Button fx:id="referenceButton" layoutX="69.6" layoutY="5.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                    <Label fx:id="DataMatrixLabel" layoutX="20.0" layoutY="9.0" prefHeight="18.0" prefWidth="70.0" AnchorPane.leftAnchor="10.0" />
+                                    <Label fx:id="DataMatrixPathLabel" layoutX="97.0" layoutY="9.0" prefHeight="18.0" prefWidth="124.0" AnchorPane.rightAnchor="10.0" />
+                                    <Button fx:id="referencemzxmlButton" layoutX="50.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#openReferencemzxmlChooser" prefHeight="25.0" prefWidth="142.0" text="+ Add Reference mzXML" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                    <Label fx:id="mzxmlLabel" layoutX="20.0" layoutY="34.0" prefHeight="18.0" prefWidth="70.0" AnchorPane.leftAnchor="10.0" />
+                                    <Label fx:id="mzxmlPathLabel" layoutX="97.0" layoutY="34.0" prefHeight="18.0" prefWidth="124.0" AnchorPane.rightAnchor="10.0" />
                                  </children>
                               </AnchorPane>
                            </content>
