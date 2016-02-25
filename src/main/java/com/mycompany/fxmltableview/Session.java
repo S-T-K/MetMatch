@@ -22,7 +22,7 @@ import javafx.collections.ObservableList;
  */
 public class Session {
     private File ReferenceTsv;
-    private List<OGroup> listofOGroups;
+    private List<Entry> listofOGroups;
     
     public Session() {
         
@@ -43,8 +43,8 @@ public class Session {
         this.ReferenceTsv = ReferenceTsv;
     }
     
-    public ObservableList<OGroup> parseReferenceTsv() throws FileNotFoundException {
-        ObservableList<OGroup> obsList = FXCollections.observableArrayList();
+    public ObservableList<Entry> parseReferenceTsv() throws FileNotFoundException {
+        ObservableList<Entry> obsList = FXCollections.observableArrayList();
         
         
         TsvParserSettings settings = new TsvParserSettings();
@@ -81,13 +81,13 @@ public class Session {
             OGroup = Integer.parseInt(allRows.get(i)[indexOGroup]);
             Ion = allRows.get(i)[indexIon];
             M = parseDoubleSafely(allRows.get(i)[indexM]);
-            Adduct adduct = new Adduct(Num,MZ,RT,Xn,OGroup,Ion,M);
+            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M);
             
             
             if (lastOGroup.equals(allRows.get(i)[indexOGroup])) {
                 obsList.get(obsList.size()-1).addAduct(adduct);
             } else {
-                obsList.add(new OGroup(adduct));
+                obsList.add(new Entry(adduct));
             }
      
             lastOGroup = allRows.get(i)[indexOGroup];

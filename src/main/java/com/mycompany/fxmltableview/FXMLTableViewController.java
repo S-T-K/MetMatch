@@ -15,16 +15,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.stage.FileChooser;
 
 public class FXMLTableViewController implements Initializable {
 
     //link fxml information to controller
     @FXML
-    TreeTableView<OGroup> metTable;
+    TreeTableView<Entry> metTable;
 
     @FXML
     TreeTableColumn nameColumn;
@@ -39,7 +41,8 @@ public class FXMLTableViewController implements Initializable {
     Button referenceButton;
 
     //List with data for table
-    ObservableList<OGroup> data;
+    ObservableList<Entry> data;
+    
 
     
     Session session;
@@ -57,12 +60,12 @@ public class FXMLTableViewController implements Initializable {
     //initialize the table
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        nameColumn.setCellValueFactory(new PropertyValueFactory<OGroup, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<OGroup, Double>("Score"));
-        rtColumn.setCellValueFactory(new PropertyValueFactory<OGroup, Double>("RT"));
+        nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
+        scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
+        rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
 
         
-        metTable.setItems(data);
+        //metTable.setItems(data);
         
         session = new Session();
     }
@@ -78,7 +81,33 @@ public class FXMLTableViewController implements Initializable {
              session.setReferenceTsv(fileChooser.showOpenDialog(null));
              System.out.println(session.getReferenceTsv().toString());
         data = session.parseReferenceTsv();
-        metTable.setItems(data);
+        
+        //Convert List into TreeTable Entries
+        
+        
+        TreeItem<Entry> superroot = new TreeItem<Entry>();
+        
+        
+        //for all OGroups
+        for (int i = 0; i<data.size(); i++) {
+        TreeItem<Entry> root = new TreeItem<>(data.get(i));
+        root.setExpanded(false);  
+        superroot.getChildren().add(root);
+        
+            for (int j=0; j<data.get(i).getListofAdducts().size(); j++) {
+                TreeItem<Entry> childNode1 = new TreeItem<>(data.get(i).getListofAdducts().get(j));
+                root.getChildren().add(childNode1);
+                
+            }
+           
+        }
+       
+       
+       
+      
+      
+        metTable.setRoot(superroot);
+        metTable.setShowRoot(false);
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
         
