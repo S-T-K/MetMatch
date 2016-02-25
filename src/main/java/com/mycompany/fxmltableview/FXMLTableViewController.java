@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,6 +24,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
 public class FXMLTableViewController implements Initializable {
@@ -59,7 +61,7 @@ public class FXMLTableViewController implements Initializable {
     Accordion accordion;
     
     @FXML
-    Button referencemzxmlButton;
+    Button referencemzxmlButton, addBatchButton;
     
     @FXML
     Label mzxmlLabel, mzxmlPathLabel;
@@ -92,11 +94,22 @@ public class FXMLTableViewController implements Initializable {
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
 
+        //make referencePane expanded
         accordion.setExpandedPane(ReferencePane);
         referencemzxmlButton.setDisable(true);
+        addBatchButton.setDisable(true);
+        
+        //highlight the Button
+        Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+            referenceButton.requestFocus();
+        }
+    });
         //metTable.setItems(data);
         
         session = new Session();
+       
     }
     
     public void openReferenceDataMatrixChooser () throws FileNotFoundException {
@@ -136,6 +149,7 @@ public class FXMLTableViewController implements Initializable {
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
         referencemzxmlButton.setDisable(false);
+        referencemzxmlButton.requestFocus();
         DataMatrixLabel.setText("Data Matrix:");
         DataMatrixPathLabel.setText(file.toString());
         
@@ -157,6 +171,15 @@ public class FXMLTableViewController implements Initializable {
               referencemzxmlButton.setDisable(false);
               referencemzxmlButton.setVisible(false);
               referenceButton.setVisible(false);
+         
+     }
+     
+     public void addBatch() {
+         AnchorPane test = new AnchorPane();
+         TitledPane tps = new TitledPane("tset",test);
+         tps.setExpanded(true);
+         accordion.getPanes().add(tps);
+         
          
      }
 }
