@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -69,7 +70,7 @@ public class FXMLTableViewController implements Initializable {
     
     
 
-    //List with data for table
+    //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
     
 
@@ -171,6 +172,19 @@ public class FXMLTableViewController implements Initializable {
               referencemzxmlButton.setDisable(false);
               referencemzxmlButton.setVisible(false);
               referenceButton.setVisible(false);
+              addBatchButton.setDisable(false);
+              
+              double start = System.currentTimeMillis();
+              RawDataFile newfile = new RawDataFile(file);
+              newfile.parseFile();
+              newfile.extractSlices(data, 1, 0.1f);
+              System.out.println("Done!");
+              double end = System.currentTimeMillis();
+              System.out.println(end-start);
+              //metTable.getTreeItem(0).getValue().setRT(new SimpleDoubleProperty(999));
+              //metTable.getTreeItem(0).getChildren().get(0).getValue().setScore(new SimpleDoubleProperty(-100));
+              
+              
          
      }
      

@@ -43,6 +43,7 @@ public class Session {
         this.ReferenceTsv = ReferenceTsv;
     }
     
+    // returns List of Ogroups, with their adducts
     public ObservableList<Entry> parseReferenceTsv() throws FileNotFoundException {
         ObservableList<Entry> obsList = FXCollections.observableArrayList();
         
