@@ -30,6 +30,7 @@ public class Entry {
     private DoubleProperty M;
     private Entry OGroupObject;
     private List<Entry> listofAdducts;
+    private List<Slice> listofSlices;
 
     public Entry() {
     }
@@ -44,9 +45,11 @@ public class Entry {
         this.Ion = new SimpleStringProperty(Ion);
         this.M = new SimpleDoubleProperty(M);
         this.Score = new SimpleDoubleProperty(0);
+        this.listofSlices = new ArrayList<Slice>();
         
     }
     
+   
     //constructor for OGroup
     public Entry(Entry adduct) {
         this.listofAdducts= new ArrayList<>();
@@ -55,6 +58,12 @@ public class Entry {
         this.OGroup = new SimpleIntegerProperty(adduct.getOGroup());
         this.Score = new SimpleDoubleProperty(0);
 
+    }
+    
+    //add Slice to Adduct
+    public void addSlice(Slice slice) {
+        listofSlices.add(slice);
+        
     }
     
     //add adduct to an OGroup

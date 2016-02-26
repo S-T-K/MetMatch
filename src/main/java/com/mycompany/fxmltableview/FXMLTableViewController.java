@@ -100,6 +100,7 @@ public class FXMLTableViewController implements Initializable {
         referencemzxmlButton.setDisable(true);
         addBatchButton.setDisable(true);
         
+        
         //highlight the Button
         Platform.runLater(new Runnable() {
         @Override
@@ -196,4 +197,11 @@ public class FXMLTableViewController implements Initializable {
          
          
      }
+     
+     public void printInfo() {
+         
+         
+     }
+     
+     
 }

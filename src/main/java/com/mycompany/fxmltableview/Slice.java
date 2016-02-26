@@ -14,14 +14,16 @@ import java.util.List;
  */
 public class Slice {
     
-    public int Num; //Num from Intput Matrix, each adduct has its own Num
-    public float minRT, maxRT;
-    public float minMZ, maxMZ;
-    public List<Float> retentionTimeList = new ArrayList<Float>();
-    public List<Float> intensityList = new ArrayList<Float>();
-    public List<Float> massList = new ArrayList<Float>();
+    private String file;
+    private int Num; //Num from Intput Matrix, each adduct has its own Num
+    private float minRT, maxRT;
+    private float minMZ, maxMZ;
+    private List<Float> retentionTimeList = new ArrayList<Float>();
+    private List<Float> intensityList = new ArrayList<Float>();
+    private List<Float> massList = new ArrayList<Float>();
    
-    public Slice(int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
+    public Slice(String file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
+        this.file = file;
         this.Num=Num;
         this.minRT = RT-RTTolerance;
         this.maxRT = RT+RTTolerance;
