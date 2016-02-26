@@ -18,10 +18,12 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -100,6 +102,8 @@ public class FXMLTableViewController implements Initializable {
         referencemzxmlButton.setDisable(true);
         addBatchButton.setDisable(true);
         
+        
+
         
         //highlight the Button
         Platform.runLater(new Runnable() {
