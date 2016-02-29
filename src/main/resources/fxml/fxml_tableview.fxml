@@ -59,7 +59,7 @@
                            </content>
                         </TitledPane>
                      </panes></Accordion>
-                  <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch" textOverrun="WORD_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch ?????" textOverrun="WORD_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">
@@ -99,5 +99,6 @@
         </items>
       </SplitPane>
       <Accordion layoutX="-101.0" layoutY="66.0" />
+      <Button fx:id="testbutton" layoutX="516.0" layoutY="571.0" mnemonicParsing="false" text="Button" />
    </children>
 </AnchorPane>

@@ -34,6 +34,7 @@ public class FXMLTableView extends Application {
         //remove the first two Metabolites
         //controller.metTable.getItems().remove(0, 2);
         
+        
        
 
     }
