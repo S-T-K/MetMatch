@@ -42,6 +42,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.jfree.fx.FXGraphics2D;
 
 public class FXMLTableViewController implements Initializable {
 
@@ -86,6 +87,7 @@ public class FXMLTableViewController implements Initializable {
     ObservableList<Entry> data;
 
     Session session;
+    FXGraphics2D test;
 
     //add new Metabolite
     public void addMet(String name, double score) {
@@ -120,6 +122,7 @@ public class FXMLTableViewController implements Initializable {
         //metTable.setItems(data);
 
         session = new Session();
+        System.out.println("Teeeest");
 
     }
 
