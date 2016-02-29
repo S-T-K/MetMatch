@@ -62,7 +62,7 @@ public class Entry {
     
     //add Slice to Adduct
     public void addSlice(Slice slice) {
-        listofSlices.add(slice);
+        getListofSlices().add(slice);
         
     }
     
@@ -208,6 +208,13 @@ public class Entry {
      */
     public void setOGroupObject(Entry OGroupObject) {
         this.OGroupObject = OGroupObject;
+    }
+
+    /**
+     * @return the listofSlices
+     */
+    public List<Slice> getListofSlices() {
+        return listofSlices;
     }
     
 }

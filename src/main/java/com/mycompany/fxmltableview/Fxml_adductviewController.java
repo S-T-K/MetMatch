@@ -12,10 +12,13 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 
 /**
  * FXML Controller class
@@ -34,6 +37,9 @@ public class Fxml_adductviewController implements Initializable {
     @FXML
     LineChart chart;
     
+    @FXML
+    GridPane gridPane;
+    
     
     public Entry entry;
 
@@ -42,29 +48,38 @@ public class Fxml_adductviewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
+      
     }    
     
     public void print() {
         
-         System.out.println(entry.getRT());
-         label.setText(Double.toString(entry.getRT()));
+         System.out.println(entry.getListofAdducts().get(0).getRT());
+         label.setText(Double.toString(entry.getListofAdducts().get(0).getRT()));
           XYChart.Series series = new XYChart.Series();
         series.setName("My portfolio");
         //populating the series with data
-        series.getData().add(new XYChart.Data(1, 23));
-        series.getData().add(new XYChart.Data(2, 14));
-        series.getData().add(new XYChart.Data(3, 15));
-        series.getData().add(new XYChart.Data(4, 24));
-        series.getData().add(new XYChart.Data(5, 34));
-        series.getData().add(new XYChart.Data(6, 36));
-        series.getData().add(new XYChart.Data(7, 22));
-        series.getData().add(new XYChart.Data(8, 45));
-        series.getData().add(new XYChart.Data(9, 43));
-        series.getData().add(new XYChart.Data(10, 17));
-        series.getData().add(new XYChart.Data(11, 29));
-        series.getData().add(new XYChart.Data(12, 25));
+        Slice slice = entry.getListofAdducts().get(0).getListofSlices().get(0);
+        
+        
+        for (int i = 0; i<slice.getIntensityList().size(); i++) {
+            series.getData().add(new XYChart.Data(slice.getRetentionTimeList().get(i), slice.getIntensityList().get(i)));
+            
+            
+            
+        }
+        
+        
         chart.getData().add(series);
+       RTAxis.setAutoRanging(false);
+       RTAxis.setLowerBound(slice.getRetentionTimeList().get(0));
+       RTAxis.setUpperBound(slice.getRetentionTimeList().get(slice.getRetentionTimeList().size()-1));
+       
+       for (int i = 0; i<entry.getListofAdducts().size(); i++) {
+           Label test = new Label(Double.toString(entry.getListofAdducts().get(i).getRT()));
+           gridPane.addRow(i+1,test);
+       }
+       
+     
         
     }
 }

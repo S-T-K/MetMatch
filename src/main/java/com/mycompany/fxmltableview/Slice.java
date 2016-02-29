@@ -35,28 +35,56 @@ public class Slice {
          //for all Scans
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
+            boolean found = false;
         if (listofScans.get(i).getRetentionTime()>= minRT && listofScans.get(i).getRetentionTime()<= maxRT) {
-                        
+                        found = false;
                         
                         
                         //TODO binary search!!!!!!
                         for (int l=0; l<listofScans.get(i).getPeakscount(); l++) {
                             if (listofScans.get(i).getMassovercharge()[l] >= minMZ && listofScans.get(i).getMassovercharge()[l] <= maxMZ) {
-                                retentionTimeList.add(listofScans.get(i).getRetentionTime());
-                                intensityList.add(listofScans.get(i).getIntensity()[l]);
-                                massList.add(listofScans.get(i).getMassovercharge()[l]);
+                                getRetentionTimeList().add(listofScans.get(i).getRetentionTime());
+                                getIntensityList().add(listofScans.get(i).getIntensity()[l]);
+                                getMassList().add(listofScans.get(i).getMassovercharge()[l]);
+                                found = true;
                                 
                                 
                                 
                             }
                             
                         }
-                        
+                        if (!found) {
+                            getRetentionTimeList().add(listofScans.get(i).getRetentionTime());
+                            getIntensityList().add(0.0f);
+                            getMassList().add(null);
+                            
+                        }
                     }
         }
-      System.out.println(retentionTimeList.size());
-      System.out.println(intensityList.size());
-      System.out.println(massList.size());
+      System.out.println(getRetentionTimeList().size());
+      System.out.println(getIntensityList().size());
+      System.out.println(getMassList().size());
+    }
+
+    /**
+     * @return the retentionTimeList
+     */
+    public List<Float> getRetentionTimeList() {
+        return retentionTimeList;
+    }
+
+    /**
+     * @return the intensityList
+     */
+    public List<Float> getIntensityList() {
+        return intensityList;
+    }
+
+    /**
+     * @return the massList
+     */
+    public List<Float> getMassList() {
+        return massList;
     }
     
     

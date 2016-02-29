@@ -122,7 +122,7 @@ public class FXMLTableViewController implements Initializable {
         //metTable.setItems(data);
 
         session = new Session();
-        System.out.println("Teeeest");
+        System.out.println("Teeeest3");
 
     }
 
@@ -214,7 +214,7 @@ public class FXMLTableViewController implements Initializable {
         double start = System.currentTimeMillis();
         RawDataFile newfile = new RawDataFile(file);
         newfile.parseFile();
-        newfile.extractSlices(data, 1, 0.1f);
+        newfile.extractSlices(data, 20, 0.1f);
         System.out.println("Done!");
         double end = System.currentTimeMillis();
         System.out.println(end - start);
