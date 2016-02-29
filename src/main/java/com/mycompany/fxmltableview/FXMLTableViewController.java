@@ -70,7 +70,7 @@ public class FXMLTableViewController implements Initializable {
     Accordion accordion;
 
     @FXML
-    Button referencemzxmlButton, addBatchButton, testbutton;
+    Button referencemzxmlButton, addBatchButton;
 
     @FXML
     Label mzxmlLabel, mzxmlPathLabel;
@@ -113,17 +113,7 @@ public class FXMLTableViewController implements Initializable {
         //metTable.setItems(data);
 
         session = new Session();
-        testbutton.setDisable(false);
-        testbutton.setVisible(true);
-        testbutton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                              @Override
-                              public void handle(MouseEvent event) {
-                                   if(event.getClickCount()==2){  
-                                        
-                                                               System.out.println("double click on treeMenu");                         
-                                   }
-                              }
-                                        });
+       
         
      
         
