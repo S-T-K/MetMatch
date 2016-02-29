@@ -1,0 +1,41 @@
+package com.mycompany.fxmltableview;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import com.mycompany.fxmltableview.Entry;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+
+/**
+ * FXML Controller class
+ *
+ * @author stefankoch
+ */
+public class Fxml_adductviewController implements Initializable {
+    
+    @FXML
+    Label label;
+    
+    public Entry entry;
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+       
+    }    
+    
+    public void print() {
+        
+         System.out.println(entry.getRT());
+         label.setText(Double.toString(entry.getRT()));
+    }
+}

@@ -5,9 +5,12 @@ import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -17,7 +20,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,7 +39,9 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class FXMLTableViewController implements Initializable {
 
@@ -113,10 +120,6 @@ public class FXMLTableViewController implements Initializable {
         //metTable.setItems(data);
 
         session = new Session();
-       
-        
-     
-        
 
     }
 
@@ -157,7 +160,36 @@ public class FXMLTableViewController implements Initializable {
         referencemzxmlButton.requestFocus();
         DataMatrixLabel.setText("Data Matrix:");
         DataMatrixPathLabel.setText(file.toString());
-     
+
+        metTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+
+                    try {
+                        System.out.println("double click on treeMenu");
+                        System.out.println(metTable.getSelectionModel().getSelectedIndex());
+                        System.out.println(metTable.getTreeItem(metTable.getSelectionModel().getSelectedIndex()).getValue().getRT());
+                        TreeItem<Entry> item = metTable.getSelectionModel().getSelectedItem();
+                        System.out.println(item.getValue().getRT());
+                        
+                        Stage stage = new Stage();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_adductview.fxml"));
+                        Pane myPane = (Pane) loader.load();
+                        Scene myScene = new Scene(myPane);
+                        stage.setScene(myScene);
+                        Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
+                        controller.entry = item.getValue();
+                        controller.print();
+                        stage.show();
+                    } catch (IOException ex) {
+                        Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+        });
+
     }
 
     public void openReferencemzxmlChooser() throws FileNotFoundException {
