@@ -10,7 +10,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.Fxml_adductviewController">
    <children>
-      <Label fx:id="label" layoutX="196.0" layoutY="161.0" prefHeight="141.0" prefWidth="242.0" text="Label" />
       <ScrollPane prefViewportHeight="400.0" prefViewportWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <GridPane fx:id="gridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -20,19 +19,6 @@
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
-               <children>
-                  <LineChart fx:id="chart" animated="false" createSymbols="false" horizontalGridLinesVisible="false" prefHeight="400.0" prefWidth="600.0" title="Test Chart" verticalGridLinesVisible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <xAxis>
-                      <NumberAxis fx:id="RTAxis" label="RT [min]" side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis fx:id="intensityAxis" label="Intensity" side="LEFT" />
-                    </yAxis>
-                     <cursor>
-                        <Cursor fx:constant="CROSSHAIR" />
-                     </cursor>
-                  </LineChart>
-               </children>
             </GridPane>
          </content>
       </ScrollPane>

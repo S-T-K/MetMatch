@@ -36,13 +36,13 @@ public class Slice {
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
             boolean found = false;
-        if (listofScans.get(i).getRetentionTime()>= minRT && listofScans.get(i).getRetentionTime()<= maxRT) {
+        if (listofScans.get(i).getRetentionTime()>= getMinRT() && listofScans.get(i).getRetentionTime()<= getMaxRT()) {
                         found = false;
                         
                         
                         //TODO binary search!!!!!!
                         for (int l=0; l<listofScans.get(i).getPeakscount(); l++) {
-                            if (listofScans.get(i).getMassovercharge()[l] >= minMZ && listofScans.get(i).getMassovercharge()[l] <= maxMZ) {
+                            if (listofScans.get(i).getMassovercharge()[l] >= getMinMZ() && listofScans.get(i).getMassovercharge()[l] <= getMaxMZ()) {
                                 getRetentionTimeList().add(listofScans.get(i).getRetentionTime());
                                 getIntensityList().add(listofScans.get(i).getIntensity()[l]);
                                 getMassList().add(listofScans.get(i).getMassovercharge()[l]);
@@ -85,6 +85,34 @@ public class Slice {
      */
     public List<Float> getMassList() {
         return massList;
+    }
+
+    /**
+     * @return the minRT
+     */
+    public float getMinRT() {
+        return minRT;
+    }
+
+    /**
+     * @return the maxRT
+     */
+    public float getMaxRT() {
+        return maxRT;
+    }
+
+    /**
+     * @return the minMZ
+     */
+    public float getMinMZ() {
+        return minMZ;
+    }
+
+    /**
+     * @return the maxMZ
+     */
+    public float getMaxMZ() {
+        return maxMZ;
     }
     
     

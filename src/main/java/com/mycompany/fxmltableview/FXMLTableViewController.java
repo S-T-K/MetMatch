@@ -182,7 +182,7 @@ public class FXMLTableViewController implements Initializable {
                         Scene myScene = new Scene(myPane);
                         stage.setScene(myScene);
                         Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
-                        controller.entry = item.getValue();
+                        controller.entry = metTable.getSelectionModel().getSelectedItem().getValue();
                         controller.print();
                         stage.show();
                     } catch (IOException ex) {
@@ -214,7 +214,7 @@ public class FXMLTableViewController implements Initializable {
         double start = System.currentTimeMillis();
         RawDataFile newfile = new RawDataFile(file);
         newfile.parseFile();
-        newfile.extractSlices(data, 20, 0.1f);
+        newfile.extractSlices(data, 20, 0.001f);
         System.out.println("Done!");
         double end = System.currentTimeMillis();
         System.out.println(end - start);

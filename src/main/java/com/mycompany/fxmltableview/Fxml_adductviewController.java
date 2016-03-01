@@ -15,6 +15,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -27,16 +28,8 @@ import javafx.scene.layout.TilePane;
  */
 public class Fxml_adductviewController implements Initializable {
     
-    @FXML
-    Label label;
-     @FXML
-    NumberAxis RTAxis;
-      @FXML
-    NumberAxis intensityAxis;
     
-    @FXML
-    LineChart chart;
-    
+     
     @FXML
     GridPane gridPane;
     
@@ -51,32 +44,22 @@ public class Fxml_adductviewController implements Initializable {
       
     }    
     
+    
     public void print() {
-        
-         System.out.println(entry.getListofAdducts().get(0).getRT());
-         label.setText(Double.toString(entry.getListofAdducts().get(0).getRT()));
-          XYChart.Series series = new XYChart.Series();
-        series.setName("My portfolio");
-        //populating the series with data
-        Slice slice = entry.getListofAdducts().get(0).getListofSlices().get(0);
-        
-        
-        for (int i = 0; i<slice.getIntensityList().size(); i++) {
-            series.getData().add(new XYChart.Data(slice.getRetentionTimeList().get(i), slice.getIntensityList().get(i)));
-            
-            
-            
-        }
-        
-        
-        chart.getData().add(series);
-       RTAxis.setAutoRanging(false);
-       RTAxis.setLowerBound(slice.getRetentionTimeList().get(0));
-       RTAxis.setUpperBound(slice.getRetentionTimeList().get(slice.getRetentionTimeList().size()-1));
+        ChartGenerator chartGenerator = new ChartGenerator();
+       
        
        for (int i = 0; i<entry.getListofAdducts().size(); i++) {
-           Label test = new Label(Double.toString(entry.getListofAdducts().get(i).getRT()));
-           gridPane.addRow(i+1,test);
+           
+           Label label = new Label(Double.toString(entry.getListofAdducts().get(i).getMZ()));
+           label.setRotate(270);
+           gridPane.addRow(i,label);
+           LineChart<Number,Number> linechart = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
+           gridPane.addColumn(1,linechart);
+           linechart = chartGenerator.generateNormalizedEIC(entry.getListofAdducts().get(i));
+           gridPane.addColumn(2, linechart);
+           ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
+           gridPane.addColumn(3, scatterchart);
        }
        
      
