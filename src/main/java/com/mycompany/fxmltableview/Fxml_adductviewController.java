@@ -18,6 +18,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
@@ -34,7 +35,7 @@ public class Fxml_adductviewController implements Initializable {
     GridPane gridPane;
     
     
-    public Entry entry;
+    TreeTableView<Entry> metTable;
 
     /**
      * Initializes the controller class.
@@ -47,8 +48,8 @@ public class Fxml_adductviewController implements Initializable {
     
     public void print() {
         ChartGenerator chartGenerator = new ChartGenerator();
-       
-       
+       Entry entry = metTable.getSelectionModel().getSelectedItem().getValue();
+       gridPane.getChildren().clear();
        for (int i = 0; i<entry.getListofAdducts().size(); i++) {
            
            Label label = new Label(Double.toString(entry.getListofAdducts().get(i).getMZ()));
@@ -63,6 +64,20 @@ public class Fxml_adductviewController implements Initializable {
        }
        
      
+        
+    }
+    
+    public void next() {
+        metTable.getSelectionModel().getSelectedItem().setExpanded(false);
+        metTable.getSelectionModel().selectNext();
+        print();
+        
+    }
+    
+    public void previous() {
+        metTable.getSelectionModel().getSelectedItem().setExpanded(false);
+        metTable.getSelectionModel().selectPrevious();
+        print();
         
     }
 }

@@ -8,9 +8,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.Fxml_adductviewController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.Fxml_adductviewController">
    <children>
-      <ScrollPane prefViewportHeight="400.0" prefViewportWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane layoutY="30.0" prefHeight="370.0" prefViewportHeight="400.0" prefViewportWidth="600.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
          <content>
             <GridPane fx:id="gridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <columnConstraints>
@@ -22,5 +22,7 @@
             </GridPane>
          </content>
       </ScrollPane>
+      <Button fx:id="previousButton" layoutX="2.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#previous" text="&lt;" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0" />
+      <Button fx:id="nextButton" layoutX="574.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#next" text="&gt;" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
    </children>
 </AnchorPane>
