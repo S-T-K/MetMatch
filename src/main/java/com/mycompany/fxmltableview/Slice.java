@@ -29,6 +29,8 @@ public class Slice {
         this.maxRT = RT+RTTolerance;
         this.minMZ = MZ-MZTolerance;
         this.maxMZ = MZ+MZTolerance;
+        
+        
     }
     
     public void extractSlice(List<Scan> listofScans) {
@@ -36,7 +38,10 @@ public class Slice {
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
             boolean found = false;
+            
+            
         if (listofScans.get(i).getRetentionTime()>= getMinRT() && listofScans.get(i).getRetentionTime()<= getMaxRT()) {
+            
                         found = false;
                         
                         
@@ -61,9 +66,7 @@ public class Slice {
                         }
                     }
         }
-      System.out.println(getRetentionTimeList().size());
-      System.out.println(getIntensityList().size());
-      System.out.println(getMassList().size());
+      
     }
 
     /**

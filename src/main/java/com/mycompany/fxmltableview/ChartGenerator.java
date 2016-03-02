@@ -28,7 +28,7 @@ public class ChartGenerator {
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("RT [seconds]");
+        xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Intensity");
         LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
        
@@ -48,9 +48,11 @@ public class ChartGenerator {
             linechart.setMaxSize(300, 200);
             
             //set Range
-            xAxis.setAutoRanging(false);
-            xAxis.setLowerBound(currentSlice.getRetentionTimeList().get(0));
-            xAxis.setUpperBound(currentSlice.getRetentionTimeList().get(currentSlice.getRetentionTimeList().size() - 1));
+   
+             xAxis.setAutoRanging(false);
+            xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT()-adduct.getListofSlices().get(0).getMinRT())/7);
+            xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
+            xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
 
         }
 linechart.setLegendVisible(false);
@@ -63,7 +65,7 @@ linechart.setLegendVisible(false);
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("RT [seconds]");
+        xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Intensity (normalized)");
         LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
         
@@ -86,9 +88,11 @@ linechart.setLegendVisible(false);
             linechart.setMaxSize(300, 200);
             
             //set Range
-            xAxis.setAutoRanging(false);
-            xAxis.setLowerBound(currentSlice.getRetentionTimeList().get(0));
-            xAxis.setUpperBound(currentSlice.getRetentionTimeList().get(currentSlice.getRetentionTimeList().size() - 1));
+             xAxis.setAutoRanging(false);
+            xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT()-adduct.getListofSlices().get(0).getMinRT())/7);
+            xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
+            xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
+            
             yAxis.setAutoRanging(false);
             yAxis.setLowerBound(0);
             yAxis.setUpperBound(1);
@@ -105,7 +109,7 @@ linechart.setLegendVisible(false);
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("RT [seconds]");
+        xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Mass");
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
         
@@ -138,9 +142,10 @@ linechart.setLegendVisible(false);
             scatterchart.setMaxSize(300, 200);
             
             //set Range
-            xAxis.setAutoRanging(false);
-            xAxis.setLowerBound(currentSlice.getRetentionTimeList().get(0));
-            xAxis.setUpperBound(currentSlice.getRetentionTimeList().get(currentSlice.getRetentionTimeList().size() - 1));
+             xAxis.setAutoRanging(false);
+            xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT()-adduct.getListofSlices().get(0).getMinRT())/7);
+            xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
+            xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
             
             yAxis.setAutoRanging(false);
             yAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxMZ()-adduct.getListofSlices().get(0).getMinMZ())/5);

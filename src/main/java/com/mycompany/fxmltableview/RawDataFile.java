@@ -44,7 +44,7 @@ public class RawDataFile {
                 int Num = data.get(i).getListofAdducts().get(j).getNum();
                 float MZ = (float) data.get(i).getListofAdducts().get(j).getMZ();
                 float RT = (float) data.get(i).getListofAdducts().get(j).getRT();   //RT in Minutes
-                Slice newSlice = new Slice(file.toString(),Num, MZ, MZTolerance, RT*60, RTTolerance);   
+                Slice newSlice = new Slice(file.toString(),Num, MZ, MZTolerance, RT, RTTolerance); 
                 newSlice.extractSlice(listofScans);
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 listofSlices.add(newSlice);
