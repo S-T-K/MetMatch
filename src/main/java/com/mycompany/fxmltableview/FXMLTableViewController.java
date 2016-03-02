@@ -214,7 +214,7 @@ public class FXMLTableViewController implements Initializable {
         double start = System.currentTimeMillis();
         RawDataFile newfile = new RawDataFile(file);
         newfile.parseFile();
-        newfile.extractSlices(data, 0.83f, 0.001f);
+        newfile.extractSlices(data, 0.83f, 0.002f);
         System.out.println("Done!");
         double end = System.currentTimeMillis();
         System.out.println(end - start);

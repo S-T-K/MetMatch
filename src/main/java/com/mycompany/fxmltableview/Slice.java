@@ -37,10 +37,10 @@ public class Slice {
          //for all Scans
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
-            boolean found = false;
+            boolean found;
+            float currentRT = listofScans.get(i).getRetentionTime();
             
-            
-        if (listofScans.get(i).getRetentionTime()>= getMinRT() && listofScans.get(i).getRetentionTime()<= getMaxRT()) {
+        if (currentRT>= getMinRT() && currentRT<= getMaxRT()) {
             
                         found = false;
                         
@@ -48,7 +48,7 @@ public class Slice {
                         //TODO binary search!!!!!!
                         for (int l=0; l<listofScans.get(i).getPeakscount(); l++) {
                             if (listofScans.get(i).getMassovercharge()[l] >= getMinMZ() && listofScans.get(i).getMassovercharge()[l] <= getMaxMZ()) {
-                                getRetentionTimeList().add(listofScans.get(i).getRetentionTime());
+                                getRetentionTimeList().add(currentRT);
                                 getIntensityList().add(listofScans.get(i).getIntensity()[l]);
                                 getMassList().add(listofScans.get(i).getMassovercharge()[l]);
                                 found = true;
@@ -59,7 +59,7 @@ public class Slice {
                             
                         }
                         if (!found) {
-                            getRetentionTimeList().add(listofScans.get(i).getRetentionTime());
+                            getRetentionTimeList().add(currentRT);
                             getIntensityList().add(0.0f);
                             getMassList().add(null);
                             

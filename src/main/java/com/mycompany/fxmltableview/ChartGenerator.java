@@ -5,6 +5,7 @@
  */
 package com.mycompany.fxmltableview;
 
+import static java.lang.Math.abs;
 import java.util.Collections;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -17,6 +18,9 @@ import javafx.scene.shape.Rectangle;
 /**
  *
  * @author stefankoch
+ * TODO:
+ * Just read every slice once and generate all the different graphs
+ * 
  */
 public class ChartGenerator {
 
@@ -39,8 +43,24 @@ public class ChartGenerator {
 
             XYChart.Series newSeries = new XYChart.Series();
 
+            
+            //while the next RT is the same as the one before, add Intensities
             for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
-                newSeries.getData().add(new XYChart.Data(currentSlice.getRetentionTimeList().get(j), currentSlice.getIntensityList().get(j)));
+                float intensity = currentSlice.getIntensityList().get(j);
+                float currentRT = currentSlice.getRetentionTimeList().get(j);
+             while (j<currentSlice.getIntensityList().size()-1 && abs(currentRT-currentSlice.getRetentionTimeList().get(j+1))<0.0001 ){
+                 j++;
+                 intensity= intensity + currentSlice.getIntensityList().get(j);
+                 
+                 
+             } 
+                 
+                 newSeries.getData().add(new XYChart.Data(currentRT, intensity));
+             
+                
+                
+                
+                
 
             }
             linechart.getData().add(newSeries);
@@ -80,7 +100,21 @@ linechart.setLegendVisible(false);
             float maxIntensity = Collections.max(currentSlice.getIntensityList());
             
             for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
-                newSeries.getData().add(new XYChart.Data(currentSlice.getRetentionTimeList().get(j), currentSlice.getIntensityList().get(j)/maxIntensity));
+                float intensity = currentSlice.getIntensityList().get(j);
+                float currentRT = currentSlice.getRetentionTimeList().get(j);
+             while (j<currentSlice.getIntensityList().size()-1 && abs(currentRT-currentSlice.getRetentionTimeList().get(j+1))<0.0001 ){
+                 j++;
+                 intensity= intensity + currentSlice.getIntensityList().get(j);
+                 
+                 
+             } 
+                 
+                 newSeries.getData().add(new XYChart.Data(currentRT, intensity/maxIntensity));
+             
+                
+                
+                
+                
 
             }
             linechart.getData().add(newSeries);
