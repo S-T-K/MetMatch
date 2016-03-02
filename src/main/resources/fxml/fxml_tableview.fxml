@@ -16,88 +16,124 @@
 <?import com.mycompany.fxmltableview.*?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="826.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.FXMLTableViewController">
-   <children>
-      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="826.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
+    <children>
+        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="826.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <Separator layoutY="570.0" prefHeight="2.0" prefWidth="826.0" />
+        <ProgressBar layoutX="626.0" layoutY="577.0" prefHeight="18.0" prefWidth="191.0" progress="0.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="9.0" />
+        <SplitPane dividerPositions="0.29797979797979796" layoutY="27.0" prefHeight="544.0" prefWidth="826.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <Separator layoutY="570.0" prefHeight="2.0" prefWidth="826.0" />
-      <ProgressBar layoutX="626.0" layoutY="577.0" prefHeight="18.0" prefWidth="191.0" progress="0.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="9.0" />
-      <SplitPane dividerPositions="0.29797979797979796" layoutY="27.0" prefHeight="544.0" prefWidth="826.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-               <children>
-                  <Accordion fx:id="accordion" prefHeight="517.0" prefWidth="243.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <panes>
-                        <TitledPane fx:id="ReferencePane" animated="false" expanded="true" prefHeight="516.0" prefWidth="243.0" text="Reference">
-                           <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="497.0" prefWidth="241.0">
-                                 <children>
-                                    <Label fx:id="DataMatrixLabel" layoutX="20.0" layoutY="9.0" prefHeight="18.0" prefWidth="70.0" AnchorPane.leftAnchor="10.0" />
-                                    <Label fx:id="DataMatrixPathLabel" layoutX="97.0" layoutY="9.0" prefHeight="18.0" prefWidth="124.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" />
-                                    <Label fx:id="mzxmlLabel" layoutX="20.0" layoutY="34.0" prefHeight="18.0" prefWidth="70.0" AnchorPane.leftAnchor="10.0" />
-                                    <Label fx:id="mzxmlPathLabel" layoutX="97.0" layoutY="34.0" prefHeight="18.0" prefWidth="124.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" />
-                                    <Button fx:id="referencemzxmlButton" layoutX="50.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#openReferencemzxmlChooser" prefHeight="25.0" prefWidth="142.0" text="+ Add Reference mzXML" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                                    <Button fx:id="referenceButton" layoutX="69.6" layoutY="5.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </TitledPane>
-                     </panes></Accordion>
-                  <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch" textOverrun="WORD_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-               </children>
-            </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">
-               <children>
-                  <TreeTableView fx:id="metTable" maxWidth="1.7976931348623157E308" prefHeight="542.0" prefWidth="575.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columns>
-                      <TreeTableColumn fx:id="nameColumn" maxWidth="400.0" minWidth="50.0" prefWidth="88.0" text="OGroup">
-                           <cellValueFactory><PropertyValueFactory property="OGroup" />
-        </cellValueFactory>
-                      </TreeTableColumn>
-                      <TreeTableColumn fx:id="rtColumn" maxWidth="400.0" minWidth="50.0" prefWidth="77.0" text="RT">
-                          <cellValueFactory><PropertyValueFactory property="RT" />
-        </cellValueFactory>
-                           </TreeTableColumn>
-                        <TreeTableColumn fx:id="mzColumn" maxWidth="400.0" minWidth="50.0" prefWidth="57.0" text="MZ">
-                            <cellValueFactory><PropertyValueFactory property="MZ" />
-        </cellValueFactory>
-                             </TreeTableColumn>
-                        <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="...">
-                             </TreeTableColumn>
-                        <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
-                             </TreeTableColumn>
-                        <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
-                             </TreeTableColumn>
-                        <TreeTableColumn fx:id="scoreColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="Score">
-                             <cellValueFactory><PropertyValueFactory property="Score" />
-        </cellValueFactory>
-                        </TreeTableColumn>
-                    </columns>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                    <children>
+                        <Accordion fx:id="accordion" prefHeight="517.0" prefWidth="243.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <panes>
+                                <TitledPane fx:id="ReferencePane" animated="false" expanded="true" prefHeight="516.0" prefWidth="243.0" text="Reference">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="497.0" prefWidth="241.0">
+                                            <children>
+                                                <Label fx:id="DataMatrixLabel" layoutX="9.6" layoutY="36.0" prefHeight="18.0" prefWidth="75.0" AnchorPane.leftAnchor="-8.0" />
+                                                <Label fx:id="DataMatrixPathLabel" layoutX="101.6" layoutY="36.0" prefHeight="18.0" prefWidth="90.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="-10.0" />
+                                                <Button fx:id="referenceButton" layoutX="29.0" layoutY="12.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="29.399999999999977" />
+                                                <MenuBar fx:id="referenceMenu" layoutX="1.0" prefHeight="25.0" prefWidth="243.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+                                                    <menus>
+                                                        <Menu mnemonicParsing="false" text="Files">
+                                                            <items>
+                                                                <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openReferencemzxmlChooser" text="Add new .mzXML" />
+                                                            </items>
+                                                        </Menu>
+                                                        <Menu mnemonicParsing="false" text="Edit">
+                                                            <items>
+                                                                <MenuItem mnemonicParsing="false" text="Delete" />
+                                                            </items>
+                                                        </Menu>
+                                                        <Menu mnemonicParsing="false" text="Help">
+                                                            <items>
+                                                                <MenuItem mnemonicParsing="false" text="About" />
+                                                            </items>
+                                                        </Menu>
+                                                    </menus>
+                                                </MenuBar>
+                                                <TableView fx:id="referenceFileView" layoutY="57.0" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
+                                                    <columns>
+                                                        <TableColumn fx:id="fileColumn" prefWidth="75.0" text="File">
+                                                            <cellValueFactory>
+                                                                <PropertyValueFactory property="File" />
+                                                            </cellValueFactory>
+                                                        </TableColumn>
+                                        
+                                                        <TableColumn fx:id="colorColumn" prefWidth="75.0" text="Color">
+                                                            <cellValueFactory>
+                                                                <PropertyValueFactory property="Color" />
+                                                            </cellValueFactory>
+                                                        </TableColumn>
+                                                    </columns>
+                                                </TableView>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                            </panes>
+                        </Accordion>
+                        <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch" textOverrun="WORD_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">
+                    <children>
+                        <TreeTableView fx:id="metTable" maxWidth="1.7976931348623157E308" prefHeight="542.0" prefWidth="575.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <columns>
+                                <TreeTableColumn fx:id="nameColumn" maxWidth="400.0" minWidth="50.0" prefWidth="88.0" text="OGroup">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="OGroup" />
+                                    </cellValueFactory>
+                                </TreeTableColumn>
+                                <TreeTableColumn fx:id="rtColumn" maxWidth="400.0" minWidth="50.0" prefWidth="77.0" text="RT">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="RT" />
+                                    </cellValueFactory>
+                                </TreeTableColumn>
+                                <TreeTableColumn fx:id="mzColumn" maxWidth="400.0" minWidth="50.0" prefWidth="57.0" text="MZ">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="MZ" />
+                                    </cellValueFactory>
+                                </TreeTableColumn>
+                                <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="...">
+                                </TreeTableColumn>
+                                <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
+                                </TreeTableColumn>
+                                <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
+                                </TreeTableColumn>
+                                <TreeTableColumn fx:id="scoreColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="Score">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="Score" />
+                                    </cellValueFactory>
+                                </TreeTableColumn>
+                            </columns>
 
-                     <columnResizePolicy>
-                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                  </TreeTableView>
-               </children>
-            </AnchorPane>
-        </items>
-      </SplitPane>
-      <Accordion layoutX="-101.0" layoutY="66.0" />
-   </children>
+                            <columnResizePolicy>
+                                <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TreeTableView>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+        <Accordion layoutX="-101.0" layoutY="66.0" />
+    </children>
 </AnchorPane>

@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -78,13 +79,20 @@ public class FXMLTableViewController implements Initializable {
     Accordion accordion;
 
     @FXML
-    Button referencemzxmlButton, addBatchButton;
-
+    Button  addBatchButton;
+    
     @FXML
-    Label mzxmlLabel, mzxmlPathLabel;
+    MenuBar referenceMenu;
+    
+    @FXML
+    TableView referenceFileView;
+    
+    @FXML
+    TableColumn fileColumn, colorColumn;
 
     //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
+  
 
     Session session;
     FXGraphics2D test;
@@ -106,11 +114,19 @@ public class FXMLTableViewController implements Initializable {
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
+        
+        fileColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, String>("name"));
+        
+        
 
         //make referencePane expanded
         accordion.setExpandedPane(ReferencePane);
-        referencemzxmlButton.setDisable(true);
+        
         addBatchButton.setDisable(true);
+        referenceMenu.setDisable(true);
+        referenceMenu.setVisible(false);
+        referenceFileView.setDisable(true);
+        referenceFileView.setVisible(false);
 
         //highlight the Button
         Platform.runLater(new Runnable() {
@@ -138,6 +154,7 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         data = session.parseReferenceTsv();
+       
 
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
@@ -159,10 +176,13 @@ public class FXMLTableViewController implements Initializable {
         metTable.setShowRoot(false);
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
-        referencemzxmlButton.setDisable(false);
-        referencemzxmlButton.requestFocus();
         DataMatrixLabel.setText("Data Matrix:");
-        DataMatrixPathLabel.setText(file.toString());
+        DataMatrixPathLabel.setText(file.getName());
+        referenceMenu.setDisable(false);
+        referenceMenu.setVisible(true);
+        referenceFileView.setDisable(false);
+        referenceFileView.setVisible(true);
+        
 
         metTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -203,26 +223,31 @@ public class FXMLTableViewController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        mzxmlLabel.setText("mzXML file:");
-        mzxmlPathLabel.setText(file.toString());
-        referencemzxmlButton.setDisable(false);
-        referencemzxmlButton.setVisible(false);
-        referenceButton.setVisible(false);
-        addBatchButton.setDisable(false);
-
-        double start = System.currentTimeMillis();
-        RawDataFile newfile = new RawDataFile(file);
-        newfile.parseFile();
-        newfile.extractSlices(data, 0.83f, 0.002f);
-        System.out.println("Done!");
+        List<File> filelist  = fileChooser.showOpenMultipleDialog(null);
+        
+        if (filelist != null) {
+                        for (File file : filelist) {
+                            double start = System.currentTimeMillis();
+                            RawDataFile newfile = new RawDataFile(file);
+                            session.getReference().addFile(newfile);
+                            newfile.parseFile();
+                            newfile.extractSlices(data, 0.83f, 0.002f);
+                            System.out.println("Done!");
         double end = System.currentTimeMillis();
         System.out.println(end - start);
-        //metTable.getTreeItem(0).getValue().setRT(new SimpleDoubleProperty(999));
-        //metTable.getTreeItem(0).getChildren().get(0).getValue().setScore(new SimpleDoubleProperty(-100));
+       
+                            
+                        }
+                        
+                        
+        referenceButton.setVisible(false);
+        addBatchButton.setDisable(false);
+        referenceFileView.setItems(session.getReference().getListofFiles());
+
+      
 
     }
-
+    }
     public void addBatch() {
         AnchorPane test = new AnchorPane();
         TitledPane tps = new TitledPane("tset", test);

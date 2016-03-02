@@ -19,13 +19,17 @@ import javafx.collections.ObservableList;
 /**
  *
  * @author stefankoch
+ * 
+ * Holds entire information
  */
 public class Session {
-    private File ReferenceTsv;
+   
     private List<Entry> listofOGroups;
+    private Reference reference;
+    
     
     public Session() {
-        
+        this.reference= new Reference();
         
     }
 
@@ -33,14 +37,16 @@ public class Session {
      * @return the ReferenceTsv
      */
     public File getReferenceTsv() {
-        return ReferenceTsv;
+        return getReference().getMatrixFile();
     }
 
     /**
      * @param ReferenceTsv the ReferenceTsv to set
      */
     public void setReferenceTsv(File ReferenceTsv) {
-        this.ReferenceTsv = ReferenceTsv;
+        
+        getReference().setMatrixFile(ReferenceTsv);
+        
     }
     
     // returns List of Ogroups, with their adducts
@@ -52,7 +58,7 @@ public class Session {
         settings.getFormat().setLineSeparator("\n");
 
         TsvParser parser = new TsvParser(settings);
-        FileReader reader = new FileReader(ReferenceTsv);
+        FileReader reader = new FileReader(this.getReference().getMatrixFile());
         List<String[]> allRows = parser.parseAll(reader);
         
         //get Headers
@@ -107,5 +113,19 @@ public class Session {
     }
     return result;
 }
+
+    /**
+     * @return the reference
+     */
+    public Reference getReference() {
+        return reference;
+    }
+
+    /**
+     * @param reference the reference to set
+     */
+    public void setReference(Reference reference) {
+        this.reference = reference;
+    }
     
 }

@@ -11,21 +11,30 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
 /**
  *
  * @author stefankoch
+ * 
+ * TODO:
+ * Implement Labels for Files (sick and healthy...)
  */
 public class RawDataFile {
 
     private File file;
     private List<Scan> listofScans;
     private List<Slice> listofSlices;
+    private StringProperty name;
+   
+    
 
-    //Constructor for new Raw Data File
+    //Constructor for new Raw Data file
     public RawDataFile(File file) {
         this.file=file;
+        this.name = new SimpleStringProperty(file.getName());
 
     }
 
@@ -57,4 +66,22 @@ public class RawDataFile {
 this.listofScans=null; //get rid of Scans
     }
 
+    /**
+     * @return the name
+     */
+    public String getName() {
+         System.out.println("tried to get name");
+        return name.get();
+       
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(StringProperty name) {
+        this.name = name;
+    }
+
+    
+    
 }
