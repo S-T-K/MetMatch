@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,7 +32,10 @@ public class RawDataFile {
     private List<Scan> listofScans;
     private List<Slice> listofSlices;
     private StringProperty name;
+    
+    
     private final Property<Color> color;
+    private final DoubleProperty width;
    
     
 
@@ -40,7 +44,7 @@ public class RawDataFile {
         this.file=file;
         this.name = new SimpleStringProperty(file.getName());
         this.color=new SimpleObjectProperty(Color.BLACK) {};
-
+        this.width = new SimpleDoubleProperty(1.0);
     }
 
     // parse Scans
