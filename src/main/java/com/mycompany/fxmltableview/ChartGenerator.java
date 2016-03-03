@@ -14,6 +14,7 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
@@ -56,18 +57,21 @@ public class ChartGenerator {
                 }
                 
                 XYChart.Data data = new XYChart.Data(currentRT, intensity);
-                Path path = new Path();
-                data.setNode(path);
-                path.setStroke(Color.BLACK);
-                System.out.println("Original" + path);
+              
+                
                 newSeries.getData().add(data);
                     
                 
 
             }
             
+            
 
             linechart.getData().add(newSeries);
+            linechart.applyCss();
+           ((Path)newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
+            ((Path)newSeries.getNode()).setStrokeWidth(2.0);
+            
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(300, 200);
 
@@ -112,6 +116,9 @@ public class ChartGenerator {
 
             }
             linechart.getData().add(newSeries);
+            linechart.applyCss();
+           ((Path)newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
+            ((Path)newSeries.getNode()).setStrokeWidth(2.0);
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(300, 200);
 
@@ -152,11 +159,8 @@ public class ChartGenerator {
                     XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(j), currentSlice.getMassList().get(j));
                     Rectangle rect1 = new Rectangle(5, 5);
                     
-                    if (i==0) {
-                        rect1.setFill(Color.RED);
-                        
-                    }else {
-                    rect1.setFill(Color.GREEN);}
+                    
+                    rect1.setFill(currentSlice.getFile().getColor());
                     data.setNode(rect1);
                     data.getNode().setOpacity(currentSlice.getIntensityList().get(j) / maxIntensity);
                     Tooltip tooltip = new Tooltip();
@@ -168,8 +172,7 @@ public class ChartGenerator {
 
             }
             scatterchart.getData().add(newSeries);
-
-            scatterchart.setMaxSize(300, 200);
+          scatterchart.setMaxSize(300, 200);
 
             //set Range
             xAxis.setAutoRanging(false);

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Slice {
     
-    private String file;
+    private RawDataFile file;
     private int Num; //Num from Intput Matrix, each adduct has its own Num
     private float minRT, maxRT;
     private float minMZ, maxMZ;
@@ -22,7 +22,7 @@ public class Slice {
     private List<Float> intensityList = new ArrayList<Float>();
     private List<Float> massList = new ArrayList<Float>();
    
-    public Slice(String file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
+    public Slice(RawDataFile file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
         this.file = file;
         this.Num=Num;
         this.minRT = RT-RTTolerance;
@@ -116,6 +116,20 @@ public class Slice {
      */
     public float getMaxMZ() {
         return maxMZ;
+    }
+
+    /**
+     * @return the file
+     */
+    public RawDataFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(RawDataFile file) {
+        this.file = file;
     }
     
     

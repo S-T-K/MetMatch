@@ -10,10 +10,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -28,6 +31,7 @@ public class RawDataFile {
     private List<Scan> listofScans;
     private List<Slice> listofSlices;
     private StringProperty name;
+    private final Property<Color> color;
    
     
 
@@ -35,6 +39,7 @@ public class RawDataFile {
     public RawDataFile(File file) {
         this.file=file;
         this.name = new SimpleStringProperty(file.getName());
+        this.color=new SimpleObjectProperty(Color.BLACK) {};
 
     }
 
@@ -53,7 +58,7 @@ public class RawDataFile {
                 int Num = data.get(i).getListofAdducts().get(j).getNum();
                 float MZ = (float) data.get(i).getListofAdducts().get(j).getMZ();
                 float RT = (float) data.get(i).getListofAdducts().get(j).getRT();   //RT in Minutes
-                Slice newSlice = new Slice(file.toString(),Num, MZ, MZTolerance, RT, RTTolerance); 
+                Slice newSlice = new Slice(this,Num, MZ, MZTolerance, RT, RTTolerance); 
                 newSlice.extractSlice(listofScans);
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 listofSlices.add(newSlice);
@@ -70,7 +75,6 @@ this.listofScans=null; //get rid of Scans
      * @return the name
      */
     public String getName() {
-         System.out.println("tried to get name");
         return name.get();
        
     }
@@ -82,6 +86,15 @@ this.listofScans=null; //get rid of Scans
         this.name = name;
     }
 
+    public final Color getColor() {
+	return color.getValue();
+    }
+
+    public final void setColor(Color color) {
+	this.color.setValue(color);
+    }
     
-    
+    public Property<Color> colorProperty() {
+	return color;
+    }
 }

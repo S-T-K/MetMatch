@@ -70,18 +70,16 @@
                                                         </Menu>
                                                     </menus>
                                                 </MenuBar>
-                                                <TableView fx:id="referenceFileView" layoutY="57.0" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
+                                                <TableView fx:id="referenceFileView" editable="true" layoutY="57.0" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
                                                     <columns>
-                                                        <TableColumn fx:id="fileColumn" prefWidth="198.9999634027481" text="File">
+                                                        <TableColumn fx:id="fileColumn" prefWidth="199.9999634027481" text="File">
                                                             <cellValueFactory>
                                                                 <PropertyValueFactory property="File" />
                                                             </cellValueFactory>
                                                         </TableColumn>
                                         
-                                                        <TableColumn fx:id="colorColumn" prefWidth="40.0" text="Color">
-                                                            <cellValueFactory>
-                                                                <PropertyValueFactory property="Color" />
-                                                            </cellValueFactory>
+                                                        <TableColumn fx:id="colorColumn" maxWidth="57.0" minWidth="57.0" prefWidth="57.0" resizable="false" text="Color">
+                                                            
                                                         </TableColumn>
                                                     </columns>
                                                     <columnResizePolicy>

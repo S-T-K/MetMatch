@@ -41,6 +41,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jfree.fx.FXGraphics2D;
@@ -85,10 +86,13 @@ public class FXMLTableViewController implements Initializable {
     MenuBar referenceMenu;
     
     @FXML
-    TableView referenceFileView;
+    TableView<RawDataFile> referenceFileView;
     
     @FXML
-    TableColumn fileColumn, colorColumn;
+    TableColumn<RawDataFile, String> fileColumn;
+    
+    @FXML
+    TableColumn<RawDataFile, Color> colorColumn;
 
     //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
@@ -116,6 +120,8 @@ public class FXMLTableViewController implements Initializable {
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
         
         fileColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, String>("name"));
+        colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
+        colorColumn.setCellFactory(ColorTableCell::new);
         
         
 

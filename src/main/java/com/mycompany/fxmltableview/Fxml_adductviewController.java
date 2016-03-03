@@ -10,8 +10,10 @@ import com.mycompany.fxmltableview.Entry;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
@@ -66,12 +68,8 @@ public class Fxml_adductviewController implements Initializable {
            gridPane.addColumn(2, linechart2);
            ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
            gridPane.addColumn(3, scatterchart);
-           System.out.println("new" + linechart1.getData().get(0).getNode().getId());
-           System.out.println(scatterchart.getData().get(0).getData().get(0).getNode().getClass());
-           System.out.println(linechart1.getData().get(0).getNode().getClass());
-           System.out.println(((Path)linechart1.getData().get(0).getNode()).getStroke());
-           System.out.println(((Rectangle)scatterchart.getData().get(0).getData().get(0).getNode()).getFill());
-           System.out.println(((Path)linechart1.getData().get(0).getNode()).getStrokeWidth());
+           
+          
         
        }
        
