@@ -12,11 +12,14 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -29,6 +32,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableRow;
@@ -110,6 +114,9 @@ public class FXMLTableViewController implements Initializable {
     
     @FXML
     ColorPicker refdefcol, refsetcol;
+    
+    @FXML
+    ProgressBar progressbar;
     
 
     //List with data for table, Ogroups (adducts within the Ogroups)
@@ -282,6 +289,11 @@ public class FXMLTableViewController implements Initializable {
 
     // File Chooser for mzXML files
     public void openReferencemzxmlChooser() throws FileNotFoundException {
+        
+        //Property to link with progressbar
+        DoubleProperty progress = new SimpleDoubleProperty(0.0);
+        progressbar.progressProperty().bind(progress);
+        
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter
@@ -291,27 +303,42 @@ public class FXMLTableViewController implements Initializable {
         //Show open file dialog
         List<File> filelist  = fileChooser.showOpenMultipleDialog(null);
         
+        
+        // create a new task
+        Task task = new Task<Void>() {
+    @Override public Void call() {
+        double test = 1/(double)filelist.size();
+        System.out.println(test);
         if (filelist != null) {
                         for (File file : filelist) {
                             double start = System.currentTimeMillis();
                             
                             session.getReference().addFile(file, data);
-                            
-                            System.out.println("Done!");
+                            progress.set(progress.get()+test);
+                            System.out.println(progress.get());
         double end = System.currentTimeMillis();
         System.out.println(end - start);
-       
-                            
+        //refresh files
+       referenceFileView.setItems(session.getReference().getListofFiles());
+                           
                         }
                         
                         
         referenceButton.setVisible(false);
         addBatchButton.setDisable(false);
-        referenceFileView.setItems(session.getReference().getListofFiles());
+        
 
       
 
     }
+        return null;
+    }
+    
+    };
+        
+        //new thread that executes task
+        new Thread(task).start();
+        
     }
     
     //add a new batch
