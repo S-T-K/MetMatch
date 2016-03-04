@@ -18,6 +18,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -174,6 +175,31 @@ public class FXMLTableViewController implements Initializable {
 
         session = new Session();
         
+        //bind default values
+        refdefwidth.textProperty().bindBidirectional(session.getReference().getWidthProperty(), new NumberStringConverter());
+        refdefcol.valueProperty().bindBidirectional(session.getReference().getColorProperty());
+        
+        
+        refsetcol.setOnAction(new EventHandler() {
+            public void handle(Event t) {
+                for (int i = 0; i<session.getReference().getListofFiles().size(); i++) {
+                    session.getReference().getListofFiles().get(i).setColor(refsetcol.getValue());
+                    
+                }
+                         
+            }
+        });
+        
+        refsetwidth.setOnAction(new EventHandler() {
+            public void handle(Event t) {
+                for (int i = 0; i<session.getReference().getListofFiles().size(); i++) {
+                    session.getReference().getListofFiles().get(i).setWidth(new SimpleDoubleProperty(Double.parseDouble(refsetwidth.getText())));
+                    referenceFileView.refresh();
+                    
+                }
+                         
+            }
+        });
 
     }
 
@@ -263,10 +289,9 @@ public class FXMLTableViewController implements Initializable {
         if (filelist != null) {
                         for (File file : filelist) {
                             double start = System.currentTimeMillis();
-                            RawDataFile newfile = new RawDataFile(file);
-                            session.getReference().addFile(newfile);
-                            newfile.parseFile();
-                            newfile.extractSlices(data, 0.83f, 0.002f);
+                            
+                            session.getReference().addFile(file, data);
+                            
                             System.out.println("Done!");
         double end = System.currentTimeMillis();
         System.out.println(end - start);

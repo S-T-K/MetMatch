@@ -101,8 +101,9 @@ public class Session {
             
         }
         
-        
+        this.listofOGroups= obsList;
         return obsList;
+        
     }
     
     public static double parseDoubleSafely(String str) {

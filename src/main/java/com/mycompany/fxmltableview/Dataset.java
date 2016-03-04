@@ -5,6 +5,7 @@
  */
 package com.mycompany.fxmltableview;
 
+import java.io.File;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
@@ -40,8 +41,13 @@ public class Dataset {
     }
     
     
-    public void addFile(RawDataFile file) {
-        this.listofFiles.add(file); 
+    public void addFile(File file, ObservableList<Entry> data) {
+        RawDataFile newfile = new RawDataFile(file, this.color, this.Width);
+        this.listofFiles.add(newfile); 
+        newfile.parseFile();
+        newfile.extractSlices(data, 0.83f, 0.002f);
+        
+        
     }
     
     /**
@@ -73,7 +79,7 @@ public class Dataset {
 	this.color.setValue(color);
     }
     
-    public Property<Color> colorProperty() {
+    public Property<Color> getColorProperty() {
 	return color;
     }
 
@@ -91,5 +97,7 @@ public class Dataset {
         this.Width = width;
     }
     
-    
+    public DoubleProperty getWidthProperty() {
+        return Width;
+    }
 }

@@ -40,11 +40,11 @@ public class RawDataFile {
     
 
     //Constructor for new Raw Data file
-    public RawDataFile(File file) {
+    public RawDataFile(File file, Property color,  DoubleProperty width) {
         this.file=file;
         this.name = new SimpleStringProperty(file.getName());
-        this.color=new SimpleObjectProperty(Color.BLACK) {};
-        this.Width = new SimpleDoubleProperty(1.0);
+        this.color= new SimpleObjectProperty(color.getValue());
+        this.Width = new SimpleDoubleProperty(width.get());
     }
 
     // parse Scans
