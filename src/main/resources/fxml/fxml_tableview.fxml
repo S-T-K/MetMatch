@@ -44,7 +44,7 @@
                     <children>
                         <Accordion fx:id="accordion" prefHeight="517.0" prefWidth="243.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <panes>
-                                <TitledPane fx:id="ReferencePane" animated="false" expanded="true" prefHeight="516.0" prefWidth="243.0" text="Reference">
+                                <TitledPane fx:id="ReferencePane" expanded="true" prefHeight="516.0" prefWidth="243.0" text="Reference">
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="497.0" prefWidth="241.0">
                                             <children>

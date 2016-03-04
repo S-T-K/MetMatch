@@ -343,10 +343,22 @@ public class FXMLTableViewController implements Initializable {
     
     //add a new batch
     public void addBatch() {
-        AnchorPane test = new AnchorPane();
-        TitledPane tps = new TitledPane("tset", test);
-        tps.setExpanded(true);
-        accordion.getPanes().add(tps);
+        
+        try {
+            AnchorPane test = new AnchorPane();
+            TitledPane tps = new TitledPane("tset", test);
+            tps.setExpanded(true);
+            accordion.getPanes().add(tps);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FXML.fxml"));
+            loader.setController(this);
+            loader.setRoot(test);
+            test  = (AnchorPane) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+        
+        
 
     }
 
