@@ -17,6 +17,9 @@ import javafx.beans.property.StringProperty;
 /**
  *
  * @author stefankoch
+ * Represents either a Metabolite or an adduct/fragment
+ * Metabolites have adducts/fragments on their own
+ * 
  */
 public class Entry {
     
@@ -50,7 +53,7 @@ public class Entry {
     }
     
    
-    //constructor for OGroup
+    //constructor for OGroup/Metabolite
     public Entry(Entry adduct) {
         this.listofAdducts= new ArrayList<>();
         this.listofAdducts.add(adduct);

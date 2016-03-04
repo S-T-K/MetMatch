@@ -31,12 +31,13 @@ import javafx.scene.shape.Rectangle;
 /**
  * FXML Controller class
  *
+ * Controller for the Adduct GUI
  * @author stefankoch
  */
 public class Fxml_adductviewController implements Initializable {
     
     
-     
+    //Gridpane holding all the graphs
     @FXML
     GridPane gridPane;
     
@@ -49,18 +50,27 @@ public class Fxml_adductviewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //add ChartGenerator
       chartGenerator = new ChartGenerator();
     }    
     
-    
+    //method that generates the graphs
     public void print() {
         
+       //get selected Entry
        Entry entry = metTable.getSelectionModel().getSelectedItem().getValue();
+       
+       //delete previous graphs
        gridPane.getChildren().clear();
+       
+       //for every Adduct/Fragment
        for (int i = 0; i<entry.getListofAdducts().size(); i++) {
            
+           //Label showing the MZ
            Label label = new Label(Double.toString(entry.getListofAdducts().get(i).getMZ()));
            label.setRotate(270);
+           
+           //generate graphs
            gridPane.addRow(i,label);
            LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(1,linechart1);
@@ -78,6 +88,7 @@ public class Fxml_adductviewController implements Initializable {
         
     }
     
+    //select next metabolite, changes Selection in Main GUI
     public void next() {
         metTable.getSelectionModel().getSelectedItem().setExpanded(false);
         metTable.getSelectionModel().selectNext();
@@ -85,6 +96,7 @@ public class Fxml_adductviewController implements Initializable {
         
     }
     
+    //select previous metablite, changes Selection in Main GUI
     public void previous() {
         metTable.getSelectionModel().getSelectedItem().setExpanded(false);
         metTable.getSelectionModel().selectPrevious();

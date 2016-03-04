@@ -67,6 +67,7 @@ public class Slice {
                     }
         }
       
+        System.out.println("Size of single Slice: " + retentionTimeList.size());
     }
 
     /**

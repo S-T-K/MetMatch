@@ -24,23 +24,30 @@ import javafx.scene.paint.Color;
  */
 public class Dataset {
     
+    //holds files
     private ObservableList<RawDataFile> listofFiles;
+    
+    //name of Dataset
     private String name;
     
+    //Default values for new Files
     private Property<Color> color;
     private DoubleProperty Width;
 
     
     
+    //Constructor
     public Dataset() {
         
         this.listofFiles = FXCollections.observableArrayList();
+        //default values for new Dataset
         this.Width = new SimpleDoubleProperty(2.0);
         this.color = new SimpleObjectProperty(Color.BLACK);
         
     }
     
     
+    //add new File and parse it
     public void addFile(File file, ObservableList<Entry> data) {
         RawDataFile newfile = new RawDataFile(file, this.color, this.Width);
         this.listofFiles.add(newfile); 

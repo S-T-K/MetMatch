@@ -8,6 +8,7 @@ package com.mycompany.fxmltableview;
 /**
  *
  * @author stefankoch
+ * Holds information of a batch
  */
 public class Batch extends Dataset{
     

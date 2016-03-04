@@ -17,14 +17,13 @@ import org.xml.sax.SAXException;
 public class DomParser {
 
     //No generics
-    List<Scan> listofScans;
+    
     Document mzxmlFile;
     String Filepath;
     B64decoder decoder;
 
     public DomParser(String path) {
         this.Filepath = path;
-        listofScans = new ArrayList<Scan>();
         this.decoder = new B64decoder();
     }
 
@@ -33,7 +32,7 @@ public class DomParser {
         parseXmlFile();
         parseDocument();
 
-        return listofScans;
+        return parseDocument();
 
     }
 
@@ -59,9 +58,12 @@ public class DomParser {
         }
     }
 
-    private void parseDocument() {
+    private List<Scan> parseDocument() {
         //get the root elememt
         Element docEle = mzxmlFile.getDocumentElement();
+        List<Scan> listofScans = new ArrayList<>();
+
+        //get a nodelist of <scan> elements;
 
         //get a nodelist of <scan> elements
         NodeList nl = docEle.getElementsByTagName("scan");
@@ -78,6 +80,8 @@ public class DomParser {
                 listofScans.add(e);
             }
         }
+        docEle = null;
+        return listofScans;
     }
 
 

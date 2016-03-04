@@ -23,6 +23,9 @@ import javafx.scene.paint.Color;
  *
  * @author stefankoch
  * 
+ * A File
+ * Basically just a list of Slices, all other information is only needed when constructing a new file
+ * 
  * TODO:
  * Implement Labels for Files (sick and healthy...)
  */
@@ -51,8 +54,10 @@ public class RawDataFile {
     public void parseFile() {
         DomParser dpe = new DomParser(file.toString());
         this.listofScans = dpe.ParseFile();
+        dpe=null;
     }
 
+    //extract Slices, according to tolerances
     public void extractSlices(ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
         this.listofSlices = new ArrayList<>();
 
@@ -72,7 +77,8 @@ public class RawDataFile {
         }
        
         
-this.listofScans=null; //get rid of Scans
+this.listofScans=null; //get rid of Scans, they are not needed any more
+
     }
 
     /**

@@ -52,6 +52,8 @@ import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import org.jfree.fx.FXGraphics2D;
 
+
+//this is the Controller for the Main GUI
 public class FXMLTableViewController implements Initializable {
 
     //link fxml information to controller
@@ -113,23 +115,16 @@ public class FXMLTableViewController implements Initializable {
     //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
   
-
+    //current session, storing all information
     Session session;
     FXGraphics2D test;
 
-    //add new Metabolite
-    public void addMet(String name, double score) {
-        Met met = new Met();
-        met.setName(name);
-        met.setScore(score);
-        met.setProp1(100);
-        //data.add(met);
 
-    }
-
-    //initialize the table
+    //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
+        //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
@@ -140,6 +135,7 @@ public class FXMLTableViewController implements Initializable {
         colorColumn.setCellFactory(ColorTableCell::new);
         
         
+        //enables edit functionality for width cell
         widthColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         widthColumn.setOnEditCommit(
         new EventHandler<CellEditEvent<RawDataFile, Number>>() {
@@ -158,21 +154,22 @@ public class FXMLTableViewController implements Initializable {
         //make referencePane expanded
         accordion.setExpandedPane(ReferencePane);
         
+        //disable not needed elements
         addBatchButton.setDisable(true);
         referenceMenu.setDisable(true);
         referenceMenu.setVisible(false);
         referenceFileView.setDisable(true);
         referenceFileView.setVisible(false);
 
-        //highlight the Button
+        //highlight the Button, can't be done the normal way
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 referenceButton.requestFocus();
             }
         });
-        //metTable.setItems(data);
-
+        
+        //create new Session
         session = new Session();
         
         //bind default values
@@ -180,6 +177,7 @@ public class FXMLTableViewController implements Initializable {
         refdefcol.valueProperty().bindBidirectional(session.getReference().getColorProperty());
         
         
+        //add functionality to set the color for all files
         refsetcol.setOnAction(new EventHandler() {
             public void handle(Event t) {
                 for (int i = 0; i<session.getReference().getListofFiles().size(); i++) {
@@ -190,6 +188,7 @@ public class FXMLTableViewController implements Initializable {
             }
         });
         
+        //add functionality to set the width for all files
         refsetwidth.setOnAction(new EventHandler() {
             public void handle(Event t) {
                 for (int i = 0; i<session.getReference().getListofFiles().size(); i++) {
@@ -203,6 +202,7 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
+    //Open File Chooser for Data Matrix
     public void openReferenceDataMatrixChooser() throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
 
@@ -245,27 +245,31 @@ public class FXMLTableViewController implements Initializable {
         referenceFileView.setVisible(true);
         
 
+        //add double click functionality to the TreeTable
         metTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
 
                     try {
-                        System.out.println("double click on treeMenu");
-                        System.out.println(metTable.getSelectionModel().getSelectedIndex());
-                        System.out.println(metTable.getTreeItem(metTable.getSelectionModel().getSelectedIndex()).getValue().getRT());
+                        //get selected item
                         TreeItem<Entry> item = metTable.getSelectionModel().getSelectedItem();
-                        System.out.println(item.getValue().getRT());
-                        
+                       
+                        //create new window
                         Stage stage = new Stage();
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_adductview.fxml"));
                         Pane myPane = (Pane) loader.load();
                         Scene myScene = new Scene(myPane);
                         stage.setScene(myScene);
                         Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
+                        
+                        //add data to new controller
                         controller.metTable = metTable;
+                        
+                        //print graphs
                         controller.print();
                         stage.show();
+                        
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -276,6 +280,7 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
+    // File Chooser for mzXML files
     public void openReferencemzxmlChooser() throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
 
@@ -308,6 +313,8 @@ public class FXMLTableViewController implements Initializable {
 
     }
     }
+    
+    //add a new batch
     public void addBatch() {
         AnchorPane test = new AnchorPane();
         TitledPane tps = new TitledPane("tset", test);

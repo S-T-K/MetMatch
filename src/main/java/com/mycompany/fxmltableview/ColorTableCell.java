@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
  *
  * @author stefankoch
  * from http://info.michael-simons.eu/2014/10/27/custom-editor-components-in-javafx-tablecells/
+ * Enables Color Picker in Table functionality
  */
 public class ColorTableCell<T> extends TableCell<T, Color> {    
     private final ColorPicker colorPicker;

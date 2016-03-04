@@ -55,24 +55,24 @@ public class ChartGenerator {
                     intensity = intensity + currentSlice.getIntensityList().get(j);
 
                 }
-                
+
                 XYChart.Data data = new XYChart.Data(currentRT, intensity);
-              
-                
+
                 newSeries.getData().add(data);
-                    
-                
 
             }
-            
-            
 
+            // add new Series
             linechart.getData().add(newSeries);
+            //apply Css to create nodes
             linechart.applyCss();
-           ((Path)newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
-           ((Path)newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
-            
+            //cast to path to be able to set stroke
+            ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
+            ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
+
+            //don't draw symbols
             linechart.setCreateSymbols(false);
+            //set size of chart
             linechart.setMaxSize(300, 200);
 
             //set Range
@@ -117,8 +117,8 @@ public class ChartGenerator {
             }
             linechart.getData().add(newSeries);
             linechart.applyCss();
-           ((Path)newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
-           ((Path)newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
+            ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
+            ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(300, 200);
 
@@ -153,18 +153,23 @@ public class ChartGenerator {
 
             XYChart.Series newSeries = new XYChart.Series();
             float maxIntensity = Collections.max(currentSlice.getIntensityList());
-            double width = currentSlice.getFile().getWidth()+1.5;
+            double width = currentSlice.getFile().getWidth() + 1.5;
 
             for (int j = 0; j < currentSlice.getMassList().size(); j++) {
                 if (currentSlice.getMassList().get(j) != null) {
                     XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(j), currentSlice.getMassList().get(j));
-                    
+
+                    //rect is the node of the plot
                     Rectangle rect1 = new Rectangle(width, width);
-                    
-                    
                     rect1.setFill(currentSlice.getFile().getColor());
+                    
+                    //set rect as node
                     data.setNode(rect1);
+                    
+                    //set opacity
                     data.getNode().setOpacity(currentSlice.getIntensityList().get(j) / maxIntensity);
+                    
+                    //set Tooltip
                     Tooltip tooltip = new Tooltip();
                     tooltip.setText(currentSlice.getIntensityList().get(j).toString());
                     Tooltip.install(data.getNode(), tooltip);
@@ -174,7 +179,7 @@ public class ChartGenerator {
 
             }
             scatterchart.getData().add(newSeries);
-          scatterchart.setMaxSize(300, 200);
+            scatterchart.setMaxSize(300, 200);
 
             //set Range
             xAxis.setAutoRanging(false);
