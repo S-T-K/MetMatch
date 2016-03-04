@@ -70,7 +70,7 @@ public class ChartGenerator {
             linechart.getData().add(newSeries);
             linechart.applyCss();
            ((Path)newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
-            ((Path)newSeries.getNode()).setStrokeWidth(2.0);
+           ((Path)newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
             
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(300, 200);
@@ -118,7 +118,7 @@ public class ChartGenerator {
             linechart.getData().add(newSeries);
             linechart.applyCss();
            ((Path)newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
-            ((Path)newSeries.getNode()).setStrokeWidth(2.0);
+           ((Path)newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(300, 200);
 
@@ -153,11 +153,13 @@ public class ChartGenerator {
 
             XYChart.Series newSeries = new XYChart.Series();
             float maxIntensity = Collections.max(currentSlice.getIntensityList());
+            double width = currentSlice.getFile().getWidth()+1.5;
 
             for (int j = 0; j < currentSlice.getMassList().size(); j++) {
                 if (currentSlice.getMassList().get(j) != null) {
                     XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(j), currentSlice.getMassList().get(j));
-                    Rectangle rect1 = new Rectangle(5, 5);
+                    
+                    Rectangle rect1 = new Rectangle(width, width);
                     
                     
                     rect1.setFill(currentSlice.getFile().getColor());

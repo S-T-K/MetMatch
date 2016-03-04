@@ -25,17 +25,21 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -44,6 +48,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 import org.jfree.fx.FXGraphics2D;
 
 public class FXMLTableViewController implements Initializable {
@@ -92,7 +97,17 @@ public class FXMLTableViewController implements Initializable {
     TableColumn<RawDataFile, String> fileColumn;
     
     @FXML
+    TableColumn widthColumn;
+    
+    @FXML
     TableColumn<RawDataFile, Color> colorColumn;
+    
+    @FXML
+    TextField refdefwidth, refsetwidth;
+    
+    @FXML
+    ColorPicker refdefcol, refsetcol;
+    
 
     //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
@@ -124,6 +139,20 @@ public class FXMLTableViewController implements Initializable {
         colorColumn.setCellFactory(ColorTableCell::new);
         
         
+        widthColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        widthColumn.setOnEditCommit(
+        new EventHandler<CellEditEvent<RawDataFile, Number>>() {
+        @Override
+        public void handle(CellEditEvent<RawDataFile, Number> t) {
+            ((RawDataFile) t.getTableView().getItems().get(
+                t.getTablePosition().getRow())
+                ).setWidth(new SimpleDoubleProperty(t.getNewValue().doubleValue()));
+        }
+    }
+);
+
+        widthColumn.setCellFactory(TextFieldTableCell.<RawDataFile, Number>forTableColumn(new NumberStringConverter()));
+        
 
         //make referencePane expanded
         accordion.setExpandedPane(ReferencePane);
@@ -144,7 +173,7 @@ public class FXMLTableViewController implements Initializable {
         //metTable.setItems(data);
 
         session = new Session();
-        System.out.println("Teeeest3");
+        
 
     }
 

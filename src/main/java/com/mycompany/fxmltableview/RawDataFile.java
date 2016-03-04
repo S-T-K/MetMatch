@@ -35,7 +35,7 @@ public class RawDataFile {
     
     
     private final Property<Color> color;
-    private final DoubleProperty width;
+    private DoubleProperty Width;
    
     
 
@@ -44,7 +44,7 @@ public class RawDataFile {
         this.file=file;
         this.name = new SimpleStringProperty(file.getName());
         this.color=new SimpleObjectProperty(Color.BLACK) {};
-        this.width = new SimpleDoubleProperty(1.0);
+        this.Width = new SimpleDoubleProperty(1.0);
     }
 
     // parse Scans
@@ -100,5 +100,19 @@ this.listofScans=null; //get rid of Scans
     
     public Property<Color> colorProperty() {
 	return color;
+    }
+
+    /**
+     * @return the width
+     */
+    public double getWidth() {
+        return Width.get();
+    }
+
+    /**
+     * @param width the width to set
+     */
+    public void setWidth(DoubleProperty width) {
+        this.Width = width;
     }
 }

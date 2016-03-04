@@ -6,8 +6,13 @@
 package com.mycompany.fxmltableview;
 
 import java.util.List;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -20,13 +25,17 @@ public class Dataset {
     
     private ObservableList<RawDataFile> listofFiles;
     private String name;
+    
+    private Property<Color> color;
+    private DoubleProperty Width;
 
     
     
     public Dataset() {
         
         this.listofFiles = FXCollections.observableArrayList();
-        
+        this.Width = new SimpleDoubleProperty(2.0);
+        this.color = new SimpleObjectProperty(Color.BLACK);
         
     }
     
@@ -56,7 +65,31 @@ public class Dataset {
         this.name = name;
     }
     
+    public final Color getColor() {
+	return color.getValue();
+    }
+
+    public final void setColor(Color color) {
+	this.color.setValue(color);
+    }
     
+    public Property<Color> colorProperty() {
+	return color;
+    }
+
+    /**
+     * @return the width
+     */
+    public double getWidth() {
+        return Width.get();
+    }
+
+    /**
+     * @param width the width to set
+     */
+    public void setWidth(DoubleProperty width) {
+        this.Width = width;
+    }
     
     
 }
