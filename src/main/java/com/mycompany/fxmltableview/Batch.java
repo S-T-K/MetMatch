@@ -12,6 +12,15 @@ package com.mycompany.fxmltableview;
  */
 public class Batch extends Dataset{
     
+    //number of batch in sessions listofbatches
+    private int batchnumber;
+    
+    
+    public Batch(int batchnumber) {
+        this.batchnumber = batchnumber;
+       System.out.println("new batch n°: " + this.batchnumber);
+        
+    }
     
     
 }

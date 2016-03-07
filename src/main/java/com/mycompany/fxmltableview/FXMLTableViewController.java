@@ -110,7 +110,7 @@ public class FXMLTableViewController implements Initializable {
     TableColumn<RawDataFile, Color> colorColumn;
     
     @FXML
-    TextField refdefwidth, refsetwidth;
+    TextField refdefwidth, refsetwidth, paneName;
     
     @FXML
     ColorPicker refdefcol, refsetcol;
@@ -125,6 +125,9 @@ public class FXMLTableViewController implements Initializable {
     //current session, storing all information
     Session session;
     FXGraphics2D test;
+    
+    //number of current batches, as an index
+    int batchcount;
 
 
     //initialize the table, and various elements
@@ -178,6 +181,10 @@ public class FXMLTableViewController implements Initializable {
         
         //create new Session
         session = new Session();
+        session.getReference().setName("Reference");
+        
+        //set batchcount to 0,
+        batchcount = 0; 
         
         //bind default values
         refdefwidth.textProperty().bindBidirectional(session.getReference().getWidthProperty(), new NumberStringConverter());
@@ -206,6 +213,9 @@ public class FXMLTableViewController implements Initializable {
                          
             }
         });
+
+        paneName.textProperty().bindBidirectional(session.getReference().getNameProperty());
+        ReferencePane.textProperty().bind(session.getReference().getNameProperty());
 
     }
 
@@ -250,6 +260,7 @@ public class FXMLTableViewController implements Initializable {
         referenceMenu.setVisible(true);
         referenceFileView.setDisable(false);
         referenceFileView.setVisible(true);
+        addBatchButton.setDisable(false);
         
 
         //add double click functionality to the TreeTable
@@ -346,11 +357,18 @@ public class FXMLTableViewController implements Initializable {
         
         try {
             AnchorPane test = new AnchorPane();
-            TitledPane tps = new TitledPane("tset", test);
+            TitledPane tps = new TitledPane("", test);
             tps.setExpanded(true);
             accordion.getPanes().add(tps);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FXML.fxml"));
-            loader.setController(this);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
+            
+            Batch batch = new Batch(batchcount);
+            batch.setName("Batch Nr. " + (batchcount+1));
+            session.addBatch(batch);
+            batchcount++;
+            loader.setController(new BatchController(session, batch, progressbar, data, tps));
+            
+            
             loader.setRoot(test);
             test  = (AnchorPane) loader.load();
         } catch (IOException ex) {

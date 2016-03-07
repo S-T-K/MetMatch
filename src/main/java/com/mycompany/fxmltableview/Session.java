@@ -10,6 +10,7 @@ import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -26,10 +27,12 @@ public class Session {
    
     private List<Entry> listofOGroups;
     private Reference reference;
+    private List<Batch> listofBatches;
     
     
     public Session() {
         this.reference= new Reference();
+        this.listofBatches = new ArrayList<>();
         
     }
 
@@ -129,4 +132,9 @@ public class Session {
         this.reference = reference;
     }
     
+    
+    public void addBatch(Batch batch) {
+        this.listofBatches.add(batch);
+        
+    }
 }

@@ -7,16 +7,22 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="DataMatrixLabel" layoutX="9.6" layoutY="36.0" prefHeight="18.0" prefWidth="75.0" AnchorPane.leftAnchor="-8.0" />
-      <Label fx:id="DataMatrixPathLabel" layoutX="101.6" layoutY="36.0" prefHeight="18.0" prefWidth="90.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="-10.0" />
-      <Button fx:id="referenceButton" layoutX="29.0" layoutY="12.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="29.399999999999977" />
-      <MenuBar fx:id="referenceMenu" layoutX="1.0" prefHeight="25.0" prefWidth="243.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+      <MenuBar fx:id="batchMenu" layoutX="1.0" prefHeight="26.0" prefWidth="243.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
          <menus>
             <Menu mnemonicParsing="false" text="Files">
                <items>
-                  <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openReferencemzxmlChooser" text="Add new .mzXML" />
+                  <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openBatchmzxmlChooser" text="Add new .mzXML" />
+                  <Menu mnemonicParsing="false" text="Rename">
+                     <items>
+                        <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <TextField fx:id="paneName" />
+                           </graphic>
+                        </MenuItem>
+                     </items>
+                  </Menu>
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
@@ -25,13 +31,13 @@
                      <items>
                         <MenuItem mnemonicParsing="false" text="Set default color">
                            <graphic>
-                              <ColorPicker fx:id="refdefcol" maxWidth="35.0" prefWidth="35.0" />
+                              <ColorPicker fx:id="batdefcol" maxWidth="40.0" prefWidth="40.0" />
                            </graphic>
                         </MenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Change color">
                            <graphic>
-                              <ColorPicker fx:id="refsetcol" maxWidth="35.0" prefWidth="35.0" />
+                              <ColorPicker fx:id="batsetcol" maxWidth="40.0" prefWidth="40.0" />
                            </graphic>
                         </MenuItem>
                      </items>
@@ -40,13 +46,13 @@
                      <items>
                         <MenuItem mnemonicParsing="false" text="Set default width">
                            <graphic>
-                              <TextField fx:id="refdefwidth" maxWidth="40.0" prefWidth="40.0" />
+                              <TextField fx:id="batdefwidth" maxWidth="40.0" prefWidth="40.0" />
                            </graphic>
                         </MenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Change width">
                            <graphic>
-                              <TextField fx:id="refsetwidth" maxWidth="40.0" prefWidth="40.0" />
+                              <TextField fx:id="batsetwidth" maxWidth="40.0" prefWidth="40.0" />
                            </graphic>
                         </MenuItem>
                      </items>
@@ -60,7 +66,7 @@
             </Menu>
          </menus>
       </MenuBar>
-      <TableView fx:id="referenceFileView" editable="true" layoutY="57.0" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
+      <TableView fx:id="batchFileView" editable="true" layoutY="16.0" prefHeight="234.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="16.0">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
