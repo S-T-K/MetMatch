@@ -21,6 +21,8 @@ public class Slice {
     private List<Float> retentionTimeList = new ArrayList<Float>();
     private List<Float> intensityList = new ArrayList<Float>();
     private List<Float> massList = new ArrayList<Float>();
+    private List<Peak> peakList = new ArrayList<Peak>();
+    private int bestPeak;
    
     public Slice(RawDataFile file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
         this.file = file;
@@ -69,6 +71,7 @@ public class Slice {
       
      
     }
+    
 
     /**
      * @return the retentionTimeList
@@ -131,6 +134,38 @@ public class Slice {
      */
     public void setFile(RawDataFile file) {
         this.file = file;
+    }
+
+    public void addPeak(Peak peak) {
+        this.peakList.add(peak);
+        
+    }
+    /**
+     * @return the peakList
+     */
+    public List<Peak> getPeakList() {
+        return peakList;
+    }
+
+    /**
+     * @param peakList the peakList to set
+     */
+    public void setPeakList(List<Peak> peakList) {
+        this.peakList = peakList;
+    }
+
+    /**
+     * @return the bestPeak
+     */
+    public int getBestPeak() {
+        return bestPeak;
+    }
+
+    /**
+     * @param bestPeak the bestPeak to set
+     */
+    public void setBestPeak(int bestPeak) {
+        this.bestPeak = bestPeak;
     }
     
     

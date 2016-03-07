@@ -325,6 +325,11 @@ public class FXMLTableViewController implements Initializable {
                             double start = System.currentTimeMillis();
                             
                             session.getReference().addFile(file, data);
+                            
+                            PeakPicker picker = new PeakPicker();
+                            picker.pick(session.getReference().getListofFiles().get(0).getListofSlices().get(1), 25000, 0.2f);
+                            
+                            
                             progress.set(progress.get()+test);
                             System.out.println(progress.get());
         double end = System.currentTimeMillis();

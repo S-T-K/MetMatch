@@ -59,7 +59,7 @@ public class RawDataFile {
 
     //extract Slices, according to tolerances
     public void extractSlices(ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
-        this.listofSlices = new ArrayList<>();
+        this.setListofSlices(new ArrayList<>());
 
 
         for (int i = 0; i < data.size(); i++) {
@@ -70,7 +70,8 @@ public class RawDataFile {
                 Slice newSlice = new Slice(this,Num, MZ, MZTolerance, RT, RTTolerance); 
                 newSlice.extractSlice(listofScans);
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
-                listofSlices.add(newSlice);
+                getListofSlices().add(newSlice);
+                
                 
             }
      
@@ -120,5 +121,19 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
      */
     public void setWidth(DoubleProperty width) {
         this.Width = width;
+    }
+
+    /**
+     * @return the listofSlices
+     */
+    public List<Slice> getListofSlices() {
+        return listofSlices;
+    }
+
+    /**
+     * @param listofSlices the listofSlices to set
+     */
+    public void setListofSlices(List<Slice> listofSlices) {
+        this.listofSlices = listofSlices;
     }
 }

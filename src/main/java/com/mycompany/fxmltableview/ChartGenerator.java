@@ -29,11 +29,13 @@ import javafx.scene.shape.Shape;
  *
  */
 public class ChartGenerator {
+    
+    
 
     public ChartGenerator() {
     }
 
-    public LineChart generateEIC(Entry adduct) {
+    public LineChart generateEIC(Entry adduct, float lower, float upper) {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -82,9 +84,9 @@ public class ChartGenerator {
 
             //set Range
             xAxis.setAutoRanging(false);
-            xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT() - adduct.getListofSlices().get(0).getMinRT()) / 7);
-            xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
-            xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
+            xAxis.setTickUnit((upper-lower) / 7);
+            xAxis.setLowerBound(lower);
+            xAxis.setUpperBound(upper);
             
             linechart.setAnimated(false);
             linechart.setCache(true);
@@ -93,7 +95,7 @@ public class ChartGenerator {
         return linechart;
     }
 
-    public LineChart generateNormalizedEIC(Entry adduct) {
+    public LineChart generateNormalizedEIC(Entry adduct, float lower, float upper ) {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -134,9 +136,9 @@ public class ChartGenerator {
         }
 //set Range
             xAxis.setAutoRanging(false);
-            xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT() - adduct.getListofSlices().get(0).getMinRT()) / 7);
-            xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
-            xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
+            xAxis.setTickUnit((upper-lower) / 7);
+            xAxis.setLowerBound(lower);
+            xAxis.setUpperBound(upper);
 
             yAxis.setAutoRanging(false);
             yAxis.setLowerBound(0);
@@ -148,7 +150,7 @@ public class ChartGenerator {
         return linechart;
     }
 
-    public ScatterChart generateMassChart(Entry adduct) {
+    public ScatterChart generateMassChart(Entry adduct, float lower, float upper) {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -196,9 +198,9 @@ public class ChartGenerator {
 
         }
         xAxis.setAutoRanging(false);
-            xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT() - adduct.getListofSlices().get(0).getMinRT()) / 7);
-            xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
-            xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
+            xAxis.setTickUnit((upper-lower) / 7);
+            xAxis.setLowerBound(lower);
+            xAxis.setUpperBound(upper);
 
             yAxis.setAutoRanging(false);
             yAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxMZ() - adduct.getListofSlices().get(0).getMinMZ()) / 5);
