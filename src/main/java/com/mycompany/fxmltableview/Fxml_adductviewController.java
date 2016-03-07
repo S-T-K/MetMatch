@@ -10,6 +10,7 @@ import com.mycompany.fxmltableview.Entry;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -71,6 +72,7 @@ public class Fxml_adductviewController implements Initializable {
            label.setRotate(270);
            
            //generate graphs
+          
            gridPane.addRow(i,label);
            LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(1,linechart1);

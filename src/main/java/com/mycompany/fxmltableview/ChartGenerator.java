@@ -7,6 +7,7 @@ package com.mycompany.fxmltableview;
 
 import static java.lang.Math.abs;
 import java.util.Collections;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -24,6 +25,7 @@ import javafx.scene.shape.Shape;
  *
  * @author stefankoch TODO: Just read every slice once and generate all the
  * different graphs
+ * TODO: Performance: http://stackoverflow.com/questions/28850211/performance-issue-with-javafx-linechart-with-65000-data-points
  *
  */
 public class ChartGenerator {
@@ -70,7 +72,10 @@ public class ChartGenerator {
             ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
             ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
 
-            //don't draw symbols
+            
+
+        }
+        //don't draw symbols
             linechart.setCreateSymbols(false);
             //set size of chart
             linechart.setMaxSize(300, 200);
@@ -80,8 +85,10 @@ public class ChartGenerator {
             xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT() - adduct.getListofSlices().get(0).getMinRT()) / 7);
             xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
             xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
-
-        }
+            
+            linechart.setAnimated(false);
+            linechart.setCache(true);
+            linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
@@ -122,7 +129,10 @@ public class ChartGenerator {
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(300, 200);
 
-            //set Range
+            
+
+        }
+//set Range
             xAxis.setAutoRanging(false);
             xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT() - adduct.getListofSlices().get(0).getMinRT()) / 7);
             xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
@@ -131,9 +141,9 @@ public class ChartGenerator {
             yAxis.setAutoRanging(false);
             yAxis.setLowerBound(0);
             yAxis.setUpperBound(1);
-
-        }
-
+            linechart.setAnimated(false);
+            linechart.setCache(true);
+            linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
@@ -182,7 +192,10 @@ public class ChartGenerator {
             scatterchart.setMaxSize(300, 200);
 
             //set Range
-            xAxis.setAutoRanging(false);
+            
+
+        }
+        xAxis.setAutoRanging(false);
             xAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxRT() - adduct.getListofSlices().get(0).getMinRT()) / 7);
             xAxis.setLowerBound(adduct.getListofSlices().get(0).getMinRT());
             xAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxRT());
@@ -191,8 +204,9 @@ public class ChartGenerator {
             yAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxMZ() - adduct.getListofSlices().get(0).getMinMZ()) / 5);
             yAxis.setLowerBound(adduct.getListofSlices().get(0).getMinMZ());
             yAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxMZ());
-
-        }
+            scatterchart.setAnimated(false);
+            scatterchart.setCache(true);
+            scatterchart.setCacheHint(CacheHint.SPEED);
         scatterchart.setLegendVisible(false);
         return scatterchart;
 

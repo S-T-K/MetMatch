@@ -18,7 +18,6 @@ public class Batch extends Dataset{
     
     public Batch(int batchnumber) {
         this.batchnumber = batchnumber;
-       System.out.println("new batch n°: " + this.batchnumber);
         
     }
     
