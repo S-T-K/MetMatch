@@ -190,7 +190,7 @@ public class BatchController implements Initializable {
         Task task = new Task<Void>() {
     @Override public Void call() {
         double test = 1/(double)filelist.size();
-        System.out.println(test);
+        
         if (filelist != null) {
                         for (File file : filelist) {
                             double start = System.currentTimeMillis();
@@ -204,7 +204,41 @@ public class BatchController implements Initializable {
        batchFileView.setItems(batch.getListofFiles());
                            
                         }
+                        RawDataFile ref = session.getReference().getListofFiles().get(0);
+                        RawDataFile bat = batch.getListofFiles().get(0);
+                        PeakPicker picker = new PeakPicker();
                         
+                        System.out.println(ref.getListofSlices().size());
+                        int currentGroup = 0;
+                        int currentAdduct = 0;
+                        int currentGroupMax = session.getListofOGroups().get(0).getListofAdducts().size()-1;
+                        
+                        
+                        for (int i =0; i< ref.getListofSlices().size(); i++) {
+                            Slice slice1 = ref.getListofSlices().get(i);
+                            Slice slice2 = bat.getListofSlices().get(i);
+                            slice1.clean();
+                            slice2.clean();
+                            picker.pick(slice1, 3000);
+                            picker.pick(slice2, 3000);
+  
+                            if (slice1.isHasPeaks() && slice2.isHasPeaks()) {
+                            PeakComparer comp = new PeakComparer();
+                            System.out.println(i);
+                            double cor= comp.compare(slice1.getPeakList().get(slice1.getBestPeak()), slice2.getPeakList().get(slice2.getBestPeak()));
+                            System.out.println("Correlation: " + cor);
+                            session.getListofOGroups().get(currentGroup).getListofAdducts().get(currentAdduct).setScore(new SimpleDoubleProperty(cor));
+                            
+                            
+                            }
+                            currentAdduct++;
+                            if (currentAdduct > currentGroupMax) {
+                                currentGroup++;
+                                currentAdduct = 0;
+                                currentGroupMax = session.getListofOGroups().get(currentGroup).getListofAdducts().size()-1;
+                                
+                            }
+                        }
                       
     }
         return null;

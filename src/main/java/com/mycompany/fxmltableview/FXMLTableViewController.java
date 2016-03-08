@@ -310,7 +310,7 @@ public class FXMLTableViewController implements Initializable {
             @Override
             public Void call() {
                 double test = 1 / (double) filelist.size();
-                System.out.println(test);
+               
                 if (filelist != null) {
                     for (File file : filelist) {
                         double start = System.currentTimeMillis();

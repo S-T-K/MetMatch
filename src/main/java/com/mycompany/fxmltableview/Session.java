@@ -137,4 +137,11 @@ public class Session {
         this.listofBatches.add(batch);
         
     }
+
+    /**
+     * @return the listofOGroups
+     */
+    public List<Entry> getListofOGroups() {
+        return listofOGroups;
+    }
 }

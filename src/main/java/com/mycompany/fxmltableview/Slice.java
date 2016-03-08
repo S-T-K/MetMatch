@@ -192,13 +192,10 @@ public class Slice {
     List<Float> newIntList= new ArrayList<>();
     List<Float> newMZList= new ArrayList<>();
     
-    System.out.println(retentionTimeList.size());
-    System.out.println(intensityList.size());
-     System.out.println(massList.size());
     
     for (int i =0; i<massList.size(); i++) {
        float intensity = intensityList.get(i);
-       System.out.println(i);
+       
        float mz = massList.get(i);
        while (i<retentionTimeList.size()-1 && abs(retentionTimeList.get(i)-retentionTimeList.get(i+1))<0.001) {
            if (intensityList.get(i+1)> intensity) {

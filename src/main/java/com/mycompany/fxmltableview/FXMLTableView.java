@@ -29,11 +29,8 @@ public class FXMLTableView extends Application {
         primaryStage.show();
         //get reference to controller
         FXMLTableViewController controller = loader.<FXMLTableViewController>getController();
-        System.out.println(controller);
-        //add Metabolite to Table
-        //controller.addMet("Test", 999);
-        //remove the first two Metabolites
-        //controller.metTable.getItems().remove(0, 2);
+       
+        
         
         
         

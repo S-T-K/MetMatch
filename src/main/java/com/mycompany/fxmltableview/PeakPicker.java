@@ -59,11 +59,11 @@ public class PeakPicker {
 
             if (longenough) {
                 slice.addPeak(new Peak(maxint, i, j - 1, slice));
-                System.out.println("MZ: " + mz);
-                System.out.println("RT: " + rtList.get(maxint));
-                System.out.println("int: " + intensityList.get(maxint));
-                System.out.println("start: " + rtList.get(i));
-                System.out.println("end: " + rtList.get(j - 1));
+//                System.out.println("MZ: " + mz);
+//                System.out.println("RT: " + rtList.get(maxint));
+//                System.out.println("int: " + intensityList.get(maxint));
+//                System.out.println("start: " + rtList.get(i));
+//                System.out.println("end: " + rtList.get(j - 1));
                 i = j;
 
             }
@@ -148,9 +148,7 @@ public class PeakPicker {
             if (end - start > 10) {
             slice.addPeak(new Peak(peak, start,end,slice ));
             slice.setHasPeaks(true); }
-            System.out.println(slice.getRetentionTimeList().get(start));
-            System.out.println(slice.getRetentionTimeList().get(peak));
-            System.out.println(slice.getRetentionTimeList().get(end));
+      
             
             }
         }
