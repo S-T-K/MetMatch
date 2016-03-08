@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import static javafx.application.Application.launch;
 import javafx.scene.layout.Pane;
 import static javafx.application.Application.launch;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 public class FXMLTableView extends Application {
 

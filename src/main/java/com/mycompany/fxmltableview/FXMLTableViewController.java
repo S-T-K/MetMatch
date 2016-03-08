@@ -56,7 +56,6 @@ import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import org.jfree.fx.FXGraphics2D;
 
-
 //this is the Controller for the Main GUI
 public class FXMLTableViewController implements Initializable {
 
@@ -92,78 +91,73 @@ public class FXMLTableViewController implements Initializable {
     Accordion accordion;
 
     @FXML
-    Button  addBatchButton;
-    
+    Button addBatchButton;
+
     @FXML
     MenuBar referenceMenu;
-    
+
     @FXML
     TableView<RawDataFile> referenceFileView;
-    
+
     @FXML
     TableColumn<RawDataFile, String> fileColumn;
-    
+
     @FXML
     TableColumn widthColumn;
-    
+
     @FXML
     TableColumn<RawDataFile, Color> colorColumn;
-    
+
     @FXML
     TextField refdefwidth, refsetwidth, paneName;
-    
+
     @FXML
     ColorPicker refdefcol, refsetcol;
-    
+
     @FXML
     ProgressBar progressbar;
-    
 
     //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
-  
+
     //current session, storing all information
     Session session;
     FXGraphics2D test;
-    
+
     //number of current batches, as an index
     int batchcount;
-
 
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
-        
+
         fileColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, String>("name"));
         colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
         colorColumn.setCellFactory(ColorTableCell::new);
-        
-        
+
         //enables edit functionality for width cell
         widthColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         widthColumn.setOnEditCommit(
-        new EventHandler<CellEditEvent<RawDataFile, Number>>() {
-        @Override
-        public void handle(CellEditEvent<RawDataFile, Number> t) {
-            ((RawDataFile) t.getTableView().getItems().get(
-                t.getTablePosition().getRow())
-                ).setWidth(new SimpleDoubleProperty(t.getNewValue().doubleValue()));
+                new EventHandler<CellEditEvent<RawDataFile, Number>>() {
+            @Override
+            public void handle(CellEditEvent<RawDataFile, Number> t) {
+                ((RawDataFile) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setWidth(new SimpleDoubleProperty(t.getNewValue().doubleValue()));
+            }
         }
-    }
-);
+        );
 
         widthColumn.setCellFactory(TextFieldTableCell.<RawDataFile, Number>forTableColumn(new NumberStringConverter()));
-        
 
         //make referencePane expanded
         accordion.setExpandedPane(ReferencePane);
-        
+
         //disable not needed elements
         addBatchButton.setDisable(true);
         referenceMenu.setDisable(true);
@@ -178,39 +172,38 @@ public class FXMLTableViewController implements Initializable {
                 referenceButton.requestFocus();
             }
         });
-        
+
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
-        
+
         //set batchcount to 0,
-        batchcount = 0; 
-        
+        batchcount = 0;
+
         //bind default values
         refdefwidth.textProperty().bindBidirectional(session.getReference().getWidthProperty(), new NumberStringConverter());
         refdefcol.valueProperty().bindBidirectional(session.getReference().getColorProperty());
-        
-        
+
         //add functionality to set the color for all files
         refsetcol.setOnAction(new EventHandler() {
             public void handle(Event t) {
-                for (int i = 0; i<session.getReference().getListofFiles().size(); i++) {
+                for (int i = 0; i < session.getReference().getListofFiles().size(); i++) {
                     session.getReference().getListofFiles().get(i).setColor(refsetcol.getValue());
-                    
+
                 }
-                         
+
             }
         });
-        
+
         //add functionality to set the width for all files
         refsetwidth.setOnAction(new EventHandler() {
             public void handle(Event t) {
-                for (int i = 0; i<session.getReference().getListofFiles().size(); i++) {
+                for (int i = 0; i < session.getReference().getListofFiles().size(); i++) {
                     session.getReference().getListofFiles().get(i).setWidth(new SimpleDoubleProperty(Double.parseDouble(refsetwidth.getText())));
                     referenceFileView.refresh();
-                    
+
                 }
-                         
+
             }
         });
 
@@ -232,7 +225,6 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         data = session.parseReferenceTsv();
-       
 
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
@@ -261,7 +253,6 @@ public class FXMLTableViewController implements Initializable {
         referenceFileView.setDisable(false);
         referenceFileView.setVisible(true);
         addBatchButton.setDisable(false);
-        
 
         //add double click functionality to the TreeTable
         metTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -272,7 +263,7 @@ public class FXMLTableViewController implements Initializable {
                     try {
                         //get selected item
                         TreeItem<Entry> item = metTable.getSelectionModel().getSelectedItem();
-                       
+
                         //create new window
                         Stage stage = new Stage();
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_adductview.fxml"));
@@ -280,14 +271,14 @@ public class FXMLTableViewController implements Initializable {
                         Scene myScene = new Scene(myPane);
                         stage.setScene(myScene);
                         Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
-                        
+
                         //add data to new controller
                         controller.metTable = metTable;
-                        
+
                         //print graphs
                         controller.print();
                         stage.show();
-                        
+
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -300,11 +291,11 @@ public class FXMLTableViewController implements Initializable {
 
     // File Chooser for mzXML files
     public void openReferencemzxmlChooser() throws FileNotFoundException {
-        
+
         //Property to link with progressbar
         DoubleProperty progress = new SimpleDoubleProperty(0.0);
         progressbar.progressProperty().bind(progress);
-        
+
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter
@@ -312,76 +303,66 @@ public class FXMLTableViewController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show open file dialog
-        List<File> filelist  = fileChooser.showOpenMultipleDialog(null);
-        
-        
+        List<File> filelist = fileChooser.showOpenMultipleDialog(null);
+
         // create a new task
         Task task = new Task<Void>() {
-    @Override public Void call() {
-        double test = 1/(double)filelist.size();
-        System.out.println(test);
-        if (filelist != null) {
-                        for (File file : filelist) {
-                            double start = System.currentTimeMillis();
-                            
-                            session.getReference().addFile(file, data);
-                            
-                            PeakPicker picker = new PeakPicker();
-                            picker.pick(session.getReference().getListofFiles().get(0).getListofSlices().get(1), 25000, 0.2f);
-                            
-                            
-                            progress.set(progress.get()+test);
-                            System.out.println(progress.get());
-        double end = System.currentTimeMillis();
-        System.out.println(end - start);
-        //refresh files
-       referenceFileView.setItems(session.getReference().getListofFiles());
-                           
-                        }
-                        
-                        
-        referenceButton.setVisible(false);
-        addBatchButton.setDisable(false);
-        
+            @Override
+            public Void call() {
+                double test = 1 / (double) filelist.size();
+                System.out.println(test);
+                if (filelist != null) {
+                    for (File file : filelist) {
+                        double start = System.currentTimeMillis();
 
-      
+                        session.getReference().addFile(file, data)
+//
+//                            for (int i = 0; i< 5000; i++) {
+//                            picker.pick(session.getReference().getListofFiles().get(0).getListofSlices().get(1), 25000, 0.2f);}
+                        progress.set(progress.get() + test);
+                        System.out.println(progress.get());
+                        double end = System.currentTimeMillis();
+                        System.out.println(end - start);
+                        //refresh files
+                        referenceFileView.setItems(session.getReference().getListofFiles());
 
-    }
-        return null;
-    }
-    
-    };
-        
+                    }
+
+                    referenceButton.setVisible(false);
+                    addBatchButton.setDisable(false);
+
+                }
+                return null;
+            }
+
+        };
+
         //new thread that executes task
         new Thread(task).start();
-        
+
     }
-    
+
     //add a new batch
     public void addBatch() {
-        
+
         try {
             AnchorPane test = new AnchorPane();
             TitledPane tps = new TitledPane("", test);
             tps.setExpanded(true);
             accordion.getPanes().add(tps);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
-            
+
             Batch batch = new Batch(batchcount);
-            batch.setName("Batch Nr. " + (batchcount+1));
+            batch.setName("Batch Nr. " + (batchcount + 1));
             session.addBatch(batch);
             batchcount++;
             loader.setController(new BatchController(session, batch, progressbar, data, tps));
-            
-            
+
             loader.setRoot(test);
-            test  = (AnchorPane) loader.load();
+            test = (AnchorPane) loader.load();
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-        
-        
 
     }
 

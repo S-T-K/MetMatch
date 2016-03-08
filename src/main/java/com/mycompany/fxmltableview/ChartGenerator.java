@@ -24,13 +24,11 @@ import javafx.scene.shape.Shape;
 /**
  *
  * @author stefankoch TODO: Just read every slice once and generate all the
- * different graphs
- * TODO: Performance: http://stackoverflow.com/questions/28850211/performance-issue-with-javafx-linechart-with-65000-data-points
+ * different graphs TODO: Performance:
+ * http://stackoverflow.com/questions/28850211/performance-issue-with-javafx-linechart-with-65000-data-points
  *
  */
 public class ChartGenerator {
-    
-    
 
     public ChartGenerator() {
     }
@@ -44,13 +42,14 @@ public class ChartGenerator {
         yAxis.setLabel("Intensity");
         LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
 
+        //double startouter = System.currentTimeMillis();
         // for all slices (= for all files)
         for (int i = 0; i < adduct.getListofSlices().size(); i++) {
             Slice currentSlice = adduct.getListofSlices().get(i);
-
             XYChart.Series newSeries = new XYChart.Series();
 
             //while the next RT is the same as the one before, add Intensities
+            //double startinner = System.currentTimeMillis();
             for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
                 float intensity = currentSlice.getIntensityList().get(j);
                 float currentRT = currentSlice.getRetentionTimeList().get(j);
@@ -65,6 +64,38 @@ public class ChartGenerator {
                 newSeries.getData().add(data);
 
             }
+            //double endinner = System.currentTimeMillis();
+//System.out.println("Inner loop: " + (endinner - startinner));
+
+//peaks
+//PeakPicker picker = new PeakPicker();
+//picker.pick(currentSlice, 5000);
+//PeakComparer comp = new PeakComparer();
+//
+//if (currentSlice.isHasPeaks()) {
+//    XYChart.Series peakSeries = new XYChart.Series();
+//    Peak currentpeak = currentSlice.getPeakList().get(currentSlice.getBestPeak());
+//    System.out.println("Correlation: " + comp.compare(currentpeak, currentpeak));
+//    XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(currentpeak.getRt()), 0);
+//    peakSeries.getData().add(data);
+//    linechart.getData().add(peakSeries);
+//    linechart.applyCss();
+//    ((Path) peakSeries.getNode()).setStroke(Color.RED);
+//    ((Path) peakSeries.getNode()).setStrokeWidth(3.0);
+//    
+//     XYChart.Series wSeries = new XYChart.Series();
+//    data = new XYChart.Data(currentSlice.getRetentionTimeList().get(currentpeak.getRtstart()), (i+1)*5000);
+//    peakSeries.getData().add(data);
+//    data = new XYChart.Data(currentSlice.getRetentionTimeList().get(currentpeak.getRtend()), (i+1)*5000);
+//     peakSeries.getData().add(data);
+//    linechart.getData().add(wSeries);
+//    linechart.applyCss();
+//    ((Path) wSeries.getNode()).setStroke(Color.GREEN);
+//    ((Path) wSeries.getNode()).setStrokeWidth(2.0);
+//   
+//    
+//}
+
 
             // add new Series
             linechart.getData().add(newSeries);
@@ -74,28 +105,28 @@ public class ChartGenerator {
             ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
             ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
 
-            
-
         }
+        //double endouter = System.currentTimeMillis();
+        //System.out.println("Outer loop: " + (endouter-startouter));
         //don't draw symbols
-            linechart.setCreateSymbols(false);
-            //set size of chart
-            linechart.setMaxSize(300, 200);
+        linechart.setCreateSymbols(false);
+        //set size of chart
+        linechart.setMaxSize(300, 200);
 
-            //set Range
-            xAxis.setAutoRanging(false);
-            xAxis.setTickUnit((upper-lower) / 7);
-            xAxis.setLowerBound(lower);
-            xAxis.setUpperBound(upper);
-            
-            linechart.setAnimated(false);
-            linechart.setCache(true);
-            linechart.setCacheHint(CacheHint.SPEED);
+        //set Range
+        xAxis.setAutoRanging(false);
+        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setLowerBound(lower);
+        xAxis.setUpperBound(upper);
+
+        linechart.setAnimated(false);
+        linechart.setCache(true);
+        linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
 
-    public LineChart generateNormalizedEIC(Entry adduct, float lower, float upper ) {
+    public LineChart generateNormalizedEIC(Entry adduct, float lower, float upper) {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -105,13 +136,14 @@ public class ChartGenerator {
         LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
 
         // for all slices (= for all files)
+        //double startouter = System.currentTimeMillis();
         for (int i = 0; i < adduct.getListofSlices().size(); i++) {
             Slice currentSlice = adduct.getListofSlices().get(i);
 
             XYChart.Series newSeries = new XYChart.Series();
 
             float maxIntensity = Collections.max(currentSlice.getIntensityList());
-
+            //double startinner = System.currentTimeMillis();
             for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
                 float intensity = currentSlice.getIntensityList().get(j);
                 float currentRT = currentSlice.getRetentionTimeList().get(j);
@@ -124,6 +156,8 @@ public class ChartGenerator {
                 newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
 
             }
+            //double endinner = System.currentTimeMillis();
+            //System.out.println("Inner loop norm: " + (endinner-startinner));
             linechart.getData().add(newSeries);
             linechart.applyCss();
             ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
@@ -131,21 +165,21 @@ public class ChartGenerator {
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(300, 200);
 
-            
-
         }
+        //double endouter = System.currentTimeMillis();
+        //System.out.println("Outer loop norm: " + (endouter-startouter));
 //set Range
-            xAxis.setAutoRanging(false);
-            xAxis.setTickUnit((upper-lower) / 7);
-            xAxis.setLowerBound(lower);
-            xAxis.setUpperBound(upper);
+        xAxis.setAutoRanging(false);
+        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setLowerBound(lower);
+        xAxis.setUpperBound(upper);
 
-            yAxis.setAutoRanging(false);
-            yAxis.setLowerBound(0);
-            yAxis.setUpperBound(1);
-            linechart.setAnimated(false);
-            linechart.setCache(true);
-            linechart.setCacheHint(CacheHint.SPEED);
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(1);
+        linechart.setAnimated(false);
+        linechart.setCache(true);
+        linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
@@ -160,13 +194,14 @@ public class ChartGenerator {
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
 
         // for all slices (= for all files)
+        //double startouter = System.currentTimeMillis();
         for (int i = 0; i < adduct.getListofSlices().size(); i++) {
             Slice currentSlice = adduct.getListofSlices().get(i);
 
             XYChart.Series newSeries = new XYChart.Series();
             float maxIntensity = Collections.max(currentSlice.getIntensityList());
             double width = currentSlice.getFile().getWidth() + 1.5;
-
+//double startinner = System.currentTimeMillis();
             for (int j = 0; j < currentSlice.getMassList().size(); j++) {
                 if (currentSlice.getMassList().get(j) != null) {
                     XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(j), currentSlice.getMassList().get(j));
@@ -174,41 +209,42 @@ public class ChartGenerator {
                     //rect is the node of the plot
                     Rectangle rect1 = new Rectangle(width, width);
                     rect1.setFill(currentSlice.getFile().getColor());
-                    
+
                     //set rect as node
                     data.setNode(rect1);
-                    
+
                     //set opacity
                     data.getNode().setOpacity(currentSlice.getIntensityList().get(j) / maxIntensity);
-                    
-                    //set Tooltip
-                    Tooltip tooltip = new Tooltip();
-                    tooltip.setText(currentSlice.getIntensityList().get(j).toString());
-                    Tooltip.install(data.getNode(), tooltip);
 
+                    //set Tooltip
+                    //Tooltip tooltip = new Tooltip();
+                    //tooltip.setText(currentSlice.getIntensityList().get(j).toString());
+                    //Tooltip.install(data.getNode(), tooltip);
                     newSeries.getData().add(data);
                 }
 
             }
+            //double endinner = System.currentTimeMillis();
+//System.out.println("Inner loop mass: " + (endinner-startinner));
             scatterchart.getData().add(newSeries);
             scatterchart.setMaxSize(300, 200);
 
             //set Range
-            
-
         }
+        //double endouter = System.currentTimeMillis();
+        //System.out.println("Outer loop mass: " + (endouter-startouter));
         xAxis.setAutoRanging(false);
-            xAxis.setTickUnit((upper-lower) / 7);
-            xAxis.setLowerBound(lower);
-            xAxis.setUpperBound(upper);
+        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setLowerBound(lower);
+        xAxis.setUpperBound(upper);
 
-            yAxis.setAutoRanging(false);
-            yAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxMZ() - adduct.getListofSlices().get(0).getMinMZ()) / 5);
-            yAxis.setLowerBound(adduct.getListofSlices().get(0).getMinMZ());
-            yAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxMZ());
-            scatterchart.setAnimated(false);
-            scatterchart.setCache(true);
-            scatterchart.setCacheHint(CacheHint.SPEED);
+        yAxis.setAutoRanging(false);
+        yAxis.setTickUnit((adduct.getListofSlices().get(0).getMaxMZ() - adduct.getListofSlices().get(0).getMinMZ()) / 5);
+        yAxis.setLowerBound(adduct.getListofSlices().get(0).getMinMZ());
+        yAxis.setUpperBound(adduct.getListofSlices().get(0).getMaxMZ());
+        scatterchart.setAnimated(false);
+        scatterchart.setCache(true);
+        scatterchart.setCacheHint(CacheHint.SPEED);
         scatterchart.setLegendVisible(false);
         return scatterchart;
 

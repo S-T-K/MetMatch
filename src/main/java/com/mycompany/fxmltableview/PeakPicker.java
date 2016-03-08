@@ -7,6 +7,7 @@ package com.mycompany.fxmltableview;
 
 import static java.lang.Math.abs;
 import java.util.List;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -23,14 +24,14 @@ public class PeakPicker {
 
     //simple Baseline peak detection
     //picks continuous peaks above the baseline
-    public void pick(Slice slice, float baseline, float minlength) {
+    public void simplepick(Slice slice, float baseline, float minlength) {
 
         List<Float> intensityList = slice.getIntensityList();
         List<Float> rtList = slice.getRetentionTimeList();
         List<Float> mzList = slice.getMassList();
 
         for (int i = 0; i < intensityList.size()-2; i = getnextvalue(rtList, intensityList, i)) {
-System.out.println(i);
+
             boolean longenough = false;
             int length = 0;
             float mz = 0;
@@ -57,7 +58,7 @@ System.out.println(i);
             }
 
             if (longenough) {
-                slice.addPeak(new Peak(mz, rtList.get(maxint), rtList.get(i), rtList.get(j - 1), slice));
+                slice.addPeak(new Peak(maxint, i, j - 1, slice));
                 System.out.println("MZ: " + mz);
                 System.out.println("RT: " + rtList.get(maxint));
                 System.out.println("int: " + intensityList.get(maxint));
@@ -111,4 +112,50 @@ System.out.println(i);
         this.method = method;
     }
 
+    public void pick(Slice slice, float baseline) {
+        //climbs up the peaks
+        slice.clean();
+        int start;
+        int peak;
+        int end;
+        List<Float> smooth = slice.smooth(5);
+        
+        
+        
+        for (int i = 0; i< slice.getIntensityList().size(); i++) {
+            
+            
+            //we go down until minimum
+            while (i < (slice.getIntensityList().size()-2) && smooth.get(i)>= smooth.get(i+1)) {
+                i++;
+            }
+            start = i;
+            
+            //we go up until maximum
+            while (i < (slice.getIntensityList().size()-2) && smooth.get(i)<= smooth.get(i+1)) {
+                i++;
+            }
+            
+            if (slice.getIntensityList().get(i)> baseline) {
+            peak = i;
+            
+            //we go down until minimum
+            while (i < (slice.getIntensityList().size()-2) && smooth.get(i)>= smooth.get(i+1)) {
+                i++;
+            }
+            end = i;
+         
+            if (end - start > 10) {
+            slice.addPeak(new Peak(peak, start,end,slice ));
+            slice.setHasPeaks(true); }
+            System.out.println(slice.getRetentionTimeList().get(start));
+            System.out.println(slice.getRetentionTimeList().get(peak));
+            System.out.println(slice.getRetentionTimeList().get(end));
+            
+            }
+        }
+        
+        
+    }
+    
 }
