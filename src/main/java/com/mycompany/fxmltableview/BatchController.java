@@ -207,7 +207,7 @@ public class BatchController implements Initializable {
                         RawDataFile ref = session.getReference().getListofFiles().get(0);
                         RawDataFile bat = batch.getListofFiles().get(0);
                         PeakPicker picker = new PeakPicker();
-                        
+                        picker.extractPeak(session.getListofOGroups().get(1).getListofAdducts());
                         System.out.println(ref.getListofSlices().size());
                         int currentGroup = 0;
                         int currentAdduct = 0;
@@ -239,6 +239,8 @@ public class BatchController implements Initializable {
                                 
                             }
                         }
+                        System.out.println("Done");
+                        
                       
     }
         return null;
