@@ -10,6 +10,8 @@ import java.util.List;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.Collections;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -116,7 +118,7 @@ public class PeakPicker {
 
     public void pick(Slice slice, float baseline) {
         //climbs up the peaks
-        slice.clean();
+       
         int start;
         int peak;
         int end;
@@ -158,7 +160,7 @@ public class PeakPicker {
         
     }
     
-    
+    //extract "typical" peak
     public void extractPeak(List<Entry> listofAdducts) {
         List<float[]> listofpeaks;
         List<Integer> starts = new ArrayList<>();
@@ -171,7 +173,7 @@ public class PeakPicker {
         for (int i =0; i<listofAdducts.size(); i++) {
             //get first slice(=first file)
             Slice slice = listofAdducts.get(i).getListofSlices().get(0);
-            slice.clean();
+            
             int size = slice.getIntensityList().size();
              List<Float> smooth = slice.smooth(10);
              listofcurves.add(smooth);
@@ -245,4 +247,12 @@ public class PeakPicker {
         
         
     }
+    
+    //generates average peak
+    //TODO smooth
+    //TODO check for EIC quality
+    
+  
+            
+    
 }

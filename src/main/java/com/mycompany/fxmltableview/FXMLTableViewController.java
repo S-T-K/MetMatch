@@ -225,6 +225,8 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         data = session.parseReferenceTsv();
+        session.setRTTolerance(0.83f);
+        session.setMZTolerance(0.002f);
 
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
@@ -315,7 +317,8 @@ public class FXMLTableViewController implements Initializable {
                     for (File file : filelist) {
                         double start = System.currentTimeMillis();
 
-                        session.getReference().addFile(file, data);
+
+                        session.getReference().addFile(file, data, session.getRTTolerance(), session.getMZTolerance());
 //
 //                            for (int i = 0; i< 5000; i++) {
 //                            picker.pick(session.getReference().getListofFiles().get(0).getListofSlices().get(1), 25000, 0.2f);}

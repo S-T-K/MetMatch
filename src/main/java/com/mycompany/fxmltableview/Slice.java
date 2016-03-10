@@ -8,6 +8,11 @@ package com.mycompany.fxmltableview;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.List;
+import static java.lang.Math.abs;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 /**
  *
@@ -25,6 +30,7 @@ public class Slice {
     private List<Peak> peakList = new ArrayList<Peak>();
     private int bestPeak;
     private boolean hasPeaks = false;
+    private PolynomialSplineFunction intensityFunction;
    
     public Slice(RawDataFile file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
         this.file = file;
@@ -38,14 +44,27 @@ public class Slice {
         
     }
     
-    public void extractSlice(List<Scan> listofScans) {
+    //Copy constructor, used when generating avgEIC
+    public Slice(Slice slice) {
+        this.file = slice.getFile();
+        this.Num=slice.getNum();
+        this.minRT = slice.getMinRT();
+        this.maxRT = slice.getMaxRT();
+        this.minMZ = slice.getMinMZ();
+        this.maxMZ = slice.getMaxMZ();
+        this.RT = slice.getRT();
+
+    }
+    
+    public void extractSlicefromScans(List<Scan> listofScans) {
          //for all Scans
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
             boolean found;
             float currentRT = listofScans.get(i).getRetentionTime();
             
-        if (currentRT>= getMinRT() && currentRT<= getMaxRT()) {
+            //0.05 so that ranges for the interpolation are smaller than the actual ranges, otherwise out of range
+        if (currentRT>= (getMinRT()) && currentRT<= (getMaxRT())) {
             
                         found = false;
                         
@@ -72,9 +91,25 @@ public class Slice {
                     }
         }
       
-     
+     this.clean();
     }
     
+    
+    //interpolates intensities
+    public  void generateIntensityFunction() {
+       double[] RT = new double[this.retentionTimeList.size()];
+       double[] Intensity = new double[this.retentionTimeList.size()];
+       for (int i =0; i<RT.length; i++) {
+           RT[i] = this.retentionTimeList.get(i);
+           Intensity[i] = this.intensityList.get(i);
+       }
+        
+        
+        
+       LinearInterpolator interpolator = new LinearInterpolator();
+       
+       this.intensityFunction = interpolator.interpolate(RT, Intensity);
+    }
 
     /**
      * @return the retentionTimeList
@@ -166,7 +201,7 @@ public class Slice {
        float min = 1000;
      
         for (int i = 0; i< peakList.size(); i++) {
-           float dist = abs(retentionTimeList.get(peakList.get(i).getRt())-RT);
+           float dist = abs(retentionTimeList.get(peakList.get(i).getRt())-getRT());
            if (dist < min) {
                bestPeak = i;
                min = dist;
@@ -214,9 +249,9 @@ public class Slice {
         
     }
         
-    retentionTimeList=newRTList;
+        setRetentionTimeList(newRTList);
         setIntensityList(newIntList);
-    massList = newMZList;
+        setMassList(newMZList);
         
 }
 
@@ -256,6 +291,62 @@ public class Slice {
      */
     public void setHasPeaks(boolean hasPeaks) {
         this.hasPeaks = hasPeaks;
+    }
+
+    /**
+     * @return the Num
+     */
+    public int getNum() {
+        return Num;
+    }
+
+    /**
+     * @param Num the Num to set
+     */
+    public void setNum(int Num) {
+        this.Num = Num;
+    }
+
+    /**
+     * @return the RT
+     */
+    public float getRT() {
+        return RT;
+    }
+
+    /**
+     * @param RT the RT to set
+     */
+    public void setRT(float RT) {
+        this.RT = RT;
+    }
+
+    /**
+     * @param retentionTimeList the retentionTimeList to set
+     */
+    public void setRetentionTimeList(List<Float> retentionTimeList) {
+        this.retentionTimeList = retentionTimeList;
+    }
+
+    /**
+     * @param massList the massList to set
+     */
+    public void setMassList(List<Float> massList) {
+        this.massList = massList;
+    }
+
+    /**
+     * @return the intensityFunction
+     */
+    public PolynomialSplineFunction getIntensityFunction() {
+        return intensityFunction;
+    }
+
+    /**
+     * @param intensityFunction the intensityFunction to set
+     */
+    public void setIntensityFunction(PolynomialSplineFunction intensityFunction) {
+        this.intensityFunction = intensityFunction;
     }
 
 }

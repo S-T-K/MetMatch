@@ -76,11 +76,11 @@ public class Fxml_adductviewController implements Initializable {
            //generate graphs
           
            gridPane.addRow(i,label);
-           LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i), lower, upper);
+           LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(1,linechart1);
-           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEIC(entry.getListofAdducts().get(i), lower, upper);
+           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(2, linechart2);
-           ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i), lower, upper);
+           ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
            gridPane.addColumn(3, scatterchart);
            
           

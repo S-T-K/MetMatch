@@ -6,6 +6,8 @@
 package com.mycompany.fxmltableview;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -34,12 +36,17 @@ public class Entry {
     private Entry OGroupObject;
     private List<Entry> listofAdducts;
     private List<Slice> listofSlices;
+    private Session session;
 
+    //Interpolated Arrays
+    private double[] RTArray;
+    private double[] IntensityArray;
+    
     public Entry() {
     }
 
     //constructor for Adduct
-    public Entry(int Num, double MZ, double RT, int Xn, int OGroup, String Ion, double M) {
+    public Entry(int Num, double MZ, double RT, int Xn, int OGroup, String Ion, double M, Session session) {
         this.Num = new SimpleIntegerProperty(Num);
         this.MZ = new SimpleDoubleProperty(MZ);
         this.RT = new SimpleDoubleProperty(RT);
@@ -49,17 +56,20 @@ public class Entry {
         this.M = new SimpleDoubleProperty(M);
         this.Score = new SimpleDoubleProperty(0);
         this.listofSlices = new ArrayList<Slice>();
+        this.session=session;
         
     }
     
    
     //constructor for OGroup/Metabolite
-    public Entry(Entry adduct) {
+    public Entry(Entry adduct, Session session) {
         this.listofAdducts= new ArrayList<>();
         this.listofAdducts.add(adduct);
         this.RT = new SimpleDoubleProperty(adduct.getRT());
         this.OGroup = new SimpleIntegerProperty(adduct.getOGroup());
         this.Score = new SimpleDoubleProperty(0);
+        this.session = session;
+        adduct.setOGroupObject(this);
 
     }
     
@@ -73,6 +83,7 @@ public class Entry {
     public void addAduct(Entry adduct) {
         this.getListofAdducts().add(adduct);
         this.setRT(new SimpleDoubleProperty(((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size()));
+        adduct.setOGroupObject(this);
 
     }
 
@@ -219,5 +230,81 @@ public class Entry {
     public List<Slice> getListofSlices() {
         return listofSlices;
     }
+
     
+    
+    public void generateAvgEIC() {
+
+        
+        int resolution = 100;  
+        double startRT = this.RT.get()-session.getRTTolerance()+0.1;
+        double endRT = this.RT.get()+session.getRTTolerance()-0.1;
+
+        
+        //generate intensityFunction for all slices
+      for (int i = 0; i< this.getListofSlices().size(); i++) {
+          this.getListofSlices().get(i).generateIntensityFunction();
+      }
+        
+      RTArray = new double[resolution];
+      IntensityArray = new double[resolution];
+      double[] currentint = new double[this.getListofSlices().size()];
+     
+      
+      //fill Arrays
+      for (int i = 0; i< resolution; i++) {
+          RTArray[i] = startRT+i*(endRT/resolution);
+          currentint = new double[this.getListofSlices().size()];
+          for (int j =0; j<this.getListofSlices().size()-2; j++) {
+              currentint[j] = (this.getListofSlices().get(j).getIntensityFunction().value(RTArray[i]));
+          }
+          Arrays.sort(currentint);
+          IntensityArray[i]=median(currentint);
+
+      }
+   
+    }
+
+    /**
+     * @return the RTArray
+     */
+    public double[] getRTArray() {
+        return RTArray;
+    }
+
+    /**
+     * @param RTArray the RTArray to set
+     */
+    public void setRTArray(double[] RTArray) {
+        this.RTArray = RTArray;
+    }
+
+    /**
+     * @return the IntensityArray
+     */
+    public double[] getIntensityArray() {
+        return IntensityArray;
+    }
+
+    /**
+     * @param IntensityArray the IntensityArray to set
+     */
+    public void setIntensityArray(double[] IntensityArray) {
+        this.IntensityArray = IntensityArray;
+    }
+
+    
+    public double median(double[] m) {
+    int middle = m.length/2;
+    if (m.length%2 == 1) {
+        return m[middle];
+    } else {
+        return (m[middle-1] + m[middle]) / 2.0;
+    }
+}
+    
+    public double getOGroupRT() {
+        
+        return this.OGroupObject.getRT();
+    }
 }

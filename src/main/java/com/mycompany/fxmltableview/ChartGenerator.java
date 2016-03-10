@@ -20,6 +20,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -33,7 +34,7 @@ public class ChartGenerator {
     public ChartGenerator() {
     }
 
-    public LineChart generateEIC(Entry adduct, float lower, float upper) {
+    public LineChart generateEIC(Entry adduct) {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -64,38 +65,6 @@ public class ChartGenerator {
                 newSeries.getData().add(data);
 
             }
-            //double endinner = System.currentTimeMillis();
-//System.out.println("Inner loop: " + (endinner - startinner));
-
-//peaks
-//PeakPicker picker = new PeakPicker();
-//picker.pick(currentSlice, 5000);
-//PeakComparer comp = new PeakComparer();
-//
-//if (currentSlice.isHasPeaks()) {
-//    XYChart.Series peakSeries = new XYChart.Series();
-//    Peak currentpeak = currentSlice.getPeakList().get(currentSlice.getBestPeak());
-//    System.out.println("Correlation: " + comp.compare(currentpeak, currentpeak));
-//    XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(currentpeak.getRt()), 0);
-//    peakSeries.getData().add(data);
-//    linechart.getData().add(peakSeries);
-//    linechart.applyCss();
-//    ((Path) peakSeries.getNode()).setStroke(Color.RED);
-//    ((Path) peakSeries.getNode()).setStrokeWidth(3.0);
-//    
-//     XYChart.Series wSeries = new XYChart.Series();
-//    data = new XYChart.Data(currentSlice.getRetentionTimeList().get(currentpeak.getRtstart()), (i+1)*5000);
-//    peakSeries.getData().add(data);
-//    data = new XYChart.Data(currentSlice.getRetentionTimeList().get(currentpeak.getRtend()), (i+1)*5000);
-//     peakSeries.getData().add(data);
-//    linechart.getData().add(wSeries);
-//    linechart.applyCss();
-//    ((Path) wSeries.getNode()).setStroke(Color.GREEN);
-//    ((Path) wSeries.getNode()).setStrokeWidth(2.0);
-//   
-//    
-//}
-
 
             // add new Series
             linechart.getData().add(newSeries);
@@ -106,13 +75,14 @@ public class ChartGenerator {
             ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
 
         }
-        //double endouter = System.currentTimeMillis();
-        //System.out.println("Outer loop: " + (endouter-startouter));
+
         //don't draw symbols
         linechart.setCreateSymbols(false);
         //set size of chart
         linechart.setMaxSize(300, 200);
 
+        float lower = adduct.getListofSlices().get(0).getMinRT();
+        float upper = adduct.getListofSlices().get(0).getMaxRT();
         //set Range
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit((upper - lower) / 7);
@@ -126,7 +96,7 @@ public class ChartGenerator {
         return linechart;
     }
 
-    public LineChart generateNormalizedEIC(Entry adduct, float lower, float upper) {
+    public LineChart generateNormalizedEIC(Entry adduct) {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -166,9 +136,12 @@ public class ChartGenerator {
             linechart.setMaxSize(300, 200);
 
         }
+        
         //double endouter = System.currentTimeMillis();
         //System.out.println("Outer loop norm: " + (endouter-startouter));
 //set Range
+float lower = adduct.getListofSlices().get(0).getMinRT();
+        float upper = adduct.getListofSlices().get(0).getMaxRT();
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit((upper - lower) / 7);
         xAxis.setLowerBound(lower);
@@ -184,7 +157,7 @@ public class ChartGenerator {
         return linechart;
     }
 
-    public ScatterChart generateMassChart(Entry adduct, float lower, float upper) {
+    public ScatterChart generateMassChart(Entry adduct) {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -233,6 +206,8 @@ public class ChartGenerator {
         }
         //double endouter = System.currentTimeMillis();
         //System.out.println("Outer loop mass: " + (endouter-startouter));
+        float lower = adduct.getListofSlices().get(0).getMinRT();
+        float upper = adduct.getListofSlices().get(0).getMaxRT();
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit((upper - lower) / 7);
         xAxis.setLowerBound(lower);
@@ -248,5 +223,78 @@ public class ChartGenerator {
         scatterchart.setLegendVisible(false);
         return scatterchart;
 
+    }
+    
+     public LineChart generateNormalizedEICAVG(Entry adduct, float lower, float upper) {
+
+        adduct.generateAvgEIC();
+         
+        //Basic Chart attributes
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Intensity (normalized)");
+        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+
+        // for all slices (= for all files)
+        //double startouter = System.currentTimeMillis();
+        for (int i = 0; i < adduct.getListofSlices().size(); i++) {
+            Slice currentSlice = adduct.getListofSlices().get(i);
+          
+
+            XYChart.Series newSeries = new XYChart.Series();
+
+            float maxIntensity = Collections.max(currentSlice.getIntensityList());
+            //double startinner = System.currentTimeMillis();
+            for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
+                float intensity = currentSlice.getIntensityList().get(j);
+                float currentRT = currentSlice.getRetentionTimeList().get(j);
+                while (j < currentSlice.getIntensityList().size() - 1 && abs(currentRT - currentSlice.getRetentionTimeList().get(j + 1)) < 0.0001) {
+                    j++;
+                    intensity = intensity + currentSlice.getIntensityList().get(j);
+
+                }
+
+                newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
+
+            }
+            //double endinner = System.currentTimeMillis();
+            //System.out.println("Inner loop norm: " + (endinner-startinner));
+            linechart.getData().add(newSeries);
+            linechart.applyCss();
+            ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
+            ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
+            linechart.setCreateSymbols(false);
+            linechart.setMaxSize(300, 200);
+
+        }
+        
+        XYChart.Series newSeries = new XYChart.Series();
+        for (int j = 0; j < adduct.getRTArray().length; j++){
+            newSeries.getData().add(new XYChart.Data(adduct.getRTArray()[j], adduct.getIntensityArray()[j]));
+            
+        }
+        
+        linechart.getData().add(newSeries);
+        linechart.applyCss();
+        ((Path) newSeries.getNode()).setStroke(Color.RED);
+        ((Path) newSeries.getNode()).setStrokeWidth(2.0);
+        
+        //double endouter = System.currentTimeMillis();
+        //System.out.println("Outer loop norm: " + (endouter-startouter));
+//set Range
+        xAxis.setAutoRanging(false);
+        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setLowerBound(lower);
+        xAxis.setUpperBound(upper);
+
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(1);
+        linechart.setAnimated(false);
+        linechart.setCache(true);
+        linechart.setCacheHint(CacheHint.SPEED);
+        linechart.setLegendVisible(false);
+        return linechart;
     }
 }

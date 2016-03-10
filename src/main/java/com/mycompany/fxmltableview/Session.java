@@ -28,6 +28,8 @@ public class Session {
     private List<Entry> listofOGroups;
     private Reference reference;
     private List<Batch> listofBatches;
+    private float RTTolerance;
+    private float MZTolerance;
     
     
     public Session() {
@@ -91,13 +93,13 @@ public class Session {
             OGroup = Integer.parseInt(allRows.get(i)[indexOGroup]);
             Ion = allRows.get(i)[indexIon];
             M = parseDoubleSafely(allRows.get(i)[indexM]);
-            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M);
+            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,this);
             
             
             if (lastOGroup.equals(allRows.get(i)[indexOGroup])) {
                 obsList.get(obsList.size()-1).addAduct(adduct);
             } else {
-                obsList.add(new Entry(adduct));
+                obsList.add(new Entry(adduct, this));
             }
      
             lastOGroup = allRows.get(i)[indexOGroup];
@@ -143,5 +145,33 @@ public class Session {
      */
     public List<Entry> getListofOGroups() {
         return listofOGroups;
+    }
+
+    /**
+     * @return the RTTolerance
+     */
+    public float getRTTolerance() {
+        return RTTolerance;
+    }
+
+    /**
+     * @param RTTolerance the RTTolerance to set
+     */
+    public void setRTTolerance(float RTTolerance) {
+        this.RTTolerance = RTTolerance;
+    }
+
+    /**
+     * @return the MZTolerance
+     */
+    public float getMZTolerance() {
+        return MZTolerance;
+    }
+
+    /**
+     * @param MZTolerance the MZTolerance to set
+     */
+    public void setMZTolerance(float MZTolerance) {
+        this.MZTolerance = MZTolerance;
     }
 }
