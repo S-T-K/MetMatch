@@ -225,7 +225,7 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
 
     }
     
-     public LineChart generateNormalizedEICAVG(Entry adduct, float lower, float upper) {
+     public LineChart generateNormalizedEICAVG(Entry adduct) {
 
         adduct.generateAvgEIC();
          
@@ -283,6 +283,8 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
         //double endouter = System.currentTimeMillis();
         //System.out.println("Outer loop norm: " + (endouter-startouter));
 //set Range
+float lower = adduct.getListofSlices().get(0).getMinRT();
+        float upper = adduct.getListofSlices().get(0).getMaxRT();
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit((upper - lower) / 7);
         xAxis.setLowerBound(lower);

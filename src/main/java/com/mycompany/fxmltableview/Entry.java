@@ -236,9 +236,10 @@ public class Entry {
     public void generateAvgEIC() {
 
         
-        int resolution = 100;  
-        double startRT = this.RT.get()-session.getRTTolerance()+0.1;
-        double endRT = this.RT.get()+session.getRTTolerance()-0.1;
+        int resolution = 30;  
+        double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
+        double endRT = (this.getOGroupRT()+(session.getRTTolerance()-0.05));
+       
 
         
         //generate intensityFunction for all slices
@@ -253,16 +254,24 @@ public class Entry {
       
       //fill Arrays
       for (int i = 0; i< resolution; i++) {
-          RTArray[i] = startRT+i*(endRT/resolution);
+          RTArray[i] = startRT+(((endRT-startRT))/(resolution-1))*i;
           currentint = new double[this.getListofSlices().size()];
-          for (int j =0; j<this.getListofSlices().size()-2; j++) {
+          for (int j =0; j<this.getListofSlices().size(); j++) {
               currentint[j] = (this.getListofSlices().get(j).getIntensityFunction().value(RTArray[i]));
           }
           Arrays.sort(currentint);
           IntensityArray[i]=median(currentint);
 
       }
-   
+    
+     double[] MaxArray  = Arrays.copyOf(IntensityArray, resolution);
+     Arrays.sort(MaxArray);
+     
+     for (int i = 0; i< resolution; i++) {
+         IntensityArray[i] = IntensityArray[i]/MaxArray[resolution-1];
+         
+     }
+      
     }
 
     /**
@@ -302,6 +311,15 @@ public class Entry {
         return (m[middle-1] + m[middle]) / 2.0;
     }
 }
+    
+    public double summ(double[] m) {
+        double sum =0;
+        for (int i =0; i<m.length; i++) {
+            sum+=m[i];
+            
+        }
+        return sum;
+    }
     
     public double getOGroupRT() {
         

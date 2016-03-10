@@ -9,6 +9,7 @@ import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.List;
 import static java.lang.Math.abs;
+import java.util.Arrays;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
@@ -32,6 +33,10 @@ public class Slice {
     private boolean hasPeaks = false;
     private PolynomialSplineFunction intensityFunction;
    
+    
+    private double[] RTArray ;
+    private double[] IntensityArray;
+    
     public Slice(RawDataFile file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
         this.file = file;
         this.Num=Num;
@@ -349,4 +354,65 @@ public class Slice {
         this.intensityFunction = intensityFunction;
     }
 
+    
+    public void generateAvgEIC() {
+
+        
+        int resolution = 30;  
+        double startRT = this.minRT+0.05;
+        double endRT = this.maxRT-0.05;
+       
+
+        
+       generateIntensityFunction();
+        
+        setRTArray(new double[resolution]);
+        setIntensityArray(new double[resolution]);
+      
+     
+      
+      //fill Arrays
+      for (int i = 0; i< resolution; i++) {
+            getRTArray()[i] = startRT+(((endRT-startRT))/(resolution-1))*i;
+            getIntensityArray()[i]=getIntensityFunction().value(getRTArray()[i]);
+
+      }
+    
+     double[] MaxArray  = Arrays.copyOf(getIntensityArray(), resolution);
+     Arrays.sort(MaxArray);
+     
+     for (int i = 0; i< resolution; i++) {
+            getIntensityArray()[i] = getIntensityArray()[i]/MaxArray[resolution-1];
+         
+     }
+      
+    }
+
+    /**
+     * @return the RTArray
+     */
+    public double[] getRTArray() {
+        return RTArray;
+    }
+
+    /**
+     * @param RTArray the RTArray to set
+     */
+    public void setRTArray(double[] RTArray) {
+        this.RTArray = RTArray;
+    }
+
+    /**
+     * @return the IntensityArray
+     */
+    public double[] getIntensityArray() {
+        return IntensityArray;
+    }
+
+    /**
+     * @param IntensityArray the IntensityArray to set
+     */
+    public void setIntensityArray(double[] IntensityArray) {
+        this.IntensityArray = IntensityArray;
+    }
 }

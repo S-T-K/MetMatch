@@ -78,12 +78,17 @@ public class Fxml_adductviewController implements Initializable {
            gridPane.addRow(i,label);
            LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(1,linechart1);
-           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEIC(entry.getListofAdducts().get(i));
+           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEICAVG(entry.getListofAdducts().get(i));
            gridPane.addColumn(2, linechart2);
            ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
            gridPane.addColumn(3, scatterchart);
            
-          
+          System.out.println(entry.getListofAdducts().get(i).getOGroupRT());
+          for (int j = 0; j< entry.getListofAdducts().get(i).getListofSlices().size(); j++) {
+              System.out.println(entry.getListofAdducts().get(i).getListofSlices().get(j).getMinRT());
+              System.out.println(entry.getListofAdducts().get(i).getListofSlices().get(j).getMaxRT());
+              
+          }
         
        }
        
@@ -94,16 +99,20 @@ public class Fxml_adductviewController implements Initializable {
     
     //select next metabolite, changes Selection in Main GUI
     public void next() {
-        metTable.getSelectionModel().getSelectedItem().setExpanded(false);
-        metTable.getSelectionModel().selectNext();
+        if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
+        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
+        }
+        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().nextSibling());
         print();
         
     }
     
     //select previous metablite, changes Selection in Main GUI
     public void previous() {
-        metTable.getSelectionModel().getSelectedItem().setExpanded(false);
-        metTable.getSelectionModel().selectPrevious();
+        if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
+        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
+        }
+        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().previousSibling());
         print();
         
     }

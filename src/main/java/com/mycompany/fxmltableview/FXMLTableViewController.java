@@ -335,6 +335,7 @@ public class FXMLTableViewController implements Initializable {
                     addBatchButton.setDisable(false);
 
                 }
+                finalizeReference();
                 return null;
             }
 
@@ -343,6 +344,7 @@ public class FXMLTableViewController implements Initializable {
         //new thread that executes task
         new Thread(task).start();
 
+        
     }
 
     //add a new batch
@@ -373,4 +375,17 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
+    
+    //all Adducts generate AvgEIC over all Slices
+    public void finalizeReference() {
+        for (int i = 0; i<data.size(); i++) {
+            for (int j = 0; j<data.get(i).getListofAdducts().size(); j++) {
+                Entry currentAdduct = data.get(i).getListofAdducts().get(j);
+                currentAdduct.generateAvgEIC();
+                
+            }
+            
+        }
+        
+    }
 }
