@@ -14,6 +14,8 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -33,9 +35,10 @@ public class Slice {
     private boolean hasPeaks = false;
     private PolynomialSplineFunction intensityFunction;
    
-    
+    //for Batch Slices, to be compared with the reference AVGEIC 
     private double[] RTArray ;
     private double[] IntensityArray;
+    private double[] NormIntensityArray;
     
     public Slice(RawDataFile file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
         this.file = file;
@@ -355,7 +358,7 @@ public class Slice {
     }
 
     
-    public void generateAvgEIC() {
+    public void generateInterpolatedEIC() {
 
         
         int resolution = 30;  
@@ -368,6 +371,7 @@ public class Slice {
         
         setRTArray(new double[resolution]);
         setIntensityArray(new double[resolution]);
+        setNormIntensityArray(new double[resolution]);
       
      
       
@@ -382,7 +386,7 @@ public class Slice {
      Arrays.sort(MaxArray);
      
      for (int i = 0; i< resolution; i++) {
-            getIntensityArray()[i] = getIntensityArray()[i]/MaxArray[resolution-1];
+            getNormIntensityArray()[i] = getIntensityArray()[i]/MaxArray[resolution-1];
          
      }
       
@@ -414,5 +418,19 @@ public class Slice {
      */
     public void setIntensityArray(double[] IntensityArray) {
         this.IntensityArray = IntensityArray;
+    }
+
+    /**
+     * @return the NormIntensityArray
+     */
+    public double[] getNormIntensityArray() {
+        return NormIntensityArray;
+    }
+
+    /**
+     * @param NormIntensityArray the NormIntensityArray to set
+     */
+    public void setNormIntensityArray(double[] NormIntensityArray) {
+        this.NormIntensityArray = NormIntensityArray;
     }
 }

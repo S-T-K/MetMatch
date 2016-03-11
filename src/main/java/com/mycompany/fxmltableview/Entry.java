@@ -35,7 +35,8 @@ public class Entry {
     private DoubleProperty M;
     private Entry OGroupObject;
     private List<Entry> listofAdducts;
-    private List<Slice> listofSlices;
+    private List<Slice> listofSlices;   //stores all slices
+    private List<Slice> listofRefSlices;    //stores only reference slices, 
     private Session session;
 
     //Interpolated Arrays
@@ -56,6 +57,7 @@ public class Entry {
         this.M = new SimpleDoubleProperty(M);
         this.Score = new SimpleDoubleProperty(0);
         this.listofSlices = new ArrayList<Slice>();
+        this.listofRefSlices = new ArrayList<Slice>();
         this.session=session;
         
     }
@@ -76,6 +78,12 @@ public class Entry {
     //add Slice to Adduct
     public void addSlice(Slice slice) {
         getListofSlices().add(slice);
+        
+    }
+    
+    //add Reference Slice
+    public void addRefSlice(Slice slice) {
+        getListofRefSlices().add(slice);
         
     }
     
@@ -243,24 +251,24 @@ public class Entry {
 
         
         //generate intensityFunction for all slices
-      for (int i = 0; i< this.getListofSlices().size(); i++) {
-          this.getListofSlices().get(i).generateIntensityFunction();
+      for (int i = 0; i< this.getListofRefSlices().size(); i++) {
+          this.getListofRefSlices().get(i).generateInterpolatedEIC();
       }
         
       RTArray = new double[resolution];
       IntensityArray = new double[resolution];
-      double[] currentint = new double[this.getListofSlices().size()];
+      double[] currentint = new double[this.getListofRefSlices().size()];
      
       
       //fill Arrays
+      RTArray = this.getListofRefSlices().get(0).getRTArray();
       for (int i = 0; i< resolution; i++) {
-          RTArray[i] = startRT+(((endRT-startRT))/(resolution-1))*i;
-          currentint = new double[this.getListofSlices().size()];
-          for (int j =0; j<this.getListofSlices().size(); j++) {
-              currentint[j] = (this.getListofSlices().get(j).getIntensityFunction().value(RTArray[i]));
+          currentint = new double[this.getListofRefSlices().size()];
+          for (int j =0; j<this.getListofRefSlices().size(); j++) {
+              currentint[j] = (this.getListofRefSlices().get(j).getIntensityArray()[i]);
           }
           Arrays.sort(currentint);
-          IntensityArray[i]=median(currentint);
+          IntensityArray[i]=summ(currentint);
 
       }
     
@@ -324,5 +332,19 @@ public class Entry {
     public double getOGroupRT() {
         
         return this.OGroupObject.getRT();
+    }
+
+    /**
+     * @return the listofRefSlices
+     */
+    public List<Slice> getListofRefSlices() {
+        return listofRefSlices;
+    }
+
+    /**
+     * @param listofRefSlices the listofRefSlices to set
+     */
+    public void setListofRefSlices(List<Slice> listofRefSlices) {
+        this.listofRefSlices = listofRefSlices;
     }
 }

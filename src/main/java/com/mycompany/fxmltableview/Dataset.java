@@ -50,12 +50,12 @@ public class Dataset {
     
     
     //add new File and parse it
-    public void addFile(File file, ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
+    public void addFile(boolean isreference, File file, ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
         RawDataFile newfile = new RawDataFile(file, this.color, this.Width);
         this.listofFiles.add(newfile); 
         newfile.parseFile();
         System.out.println("parsed");
-        newfile.extractSlices(data, RTTolerance, MZTolerance);
+        newfile.extractSlices(isreference, data, RTTolerance, MZTolerance);
         
         
     }

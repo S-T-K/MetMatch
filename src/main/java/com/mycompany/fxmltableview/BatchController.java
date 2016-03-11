@@ -195,7 +195,7 @@ public class BatchController implements Initializable {
                         for (File file : filelist) {
                             double start = System.currentTimeMillis();
                             
-                            batch.addFile(file, data, session.getRTTolerance(), session.getMZTolerance());
+                            batch.addFile(false, file, data, session.getRTTolerance(), session.getMZTolerance());
                             progress.set(progress.get()+test);
                             System.out.println(progress.get());
         double end = System.currentTimeMillis();
@@ -216,7 +216,7 @@ public class BatchController implements Initializable {
                         
                         for (int i =0; i< bat.getListofSlices().size(); i++) {
                             Slice batch = bat.getListofSlices().get(i);
-                            batch.generateAvgEIC();
+                            batch.generateInterpolatedEIC();
 
                             
   

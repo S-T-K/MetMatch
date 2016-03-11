@@ -58,7 +58,7 @@ public class RawDataFile {
     }
 
     //extract Slices, according to tolerances
-    public void extractSlices(ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
+    public void extractSlices(boolean isreference, ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
         this.setListofSlices(new ArrayList<>());
 
 
@@ -72,6 +72,11 @@ public class RawDataFile {
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 getListofSlices().add(newSlice);
                 
+                //add to reference Slices if reference
+                if (isreference) {
+                    data.get(i).getListofAdducts().get(j).addRefSlice(newSlice);
+                    
+                }
                 
             }
      

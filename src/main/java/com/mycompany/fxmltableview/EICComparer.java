@@ -31,4 +31,11 @@ public class EICComparer {
         return corr;
     }
     
+    //analyses EIC, 
+//    public getEICQuality () {
+        
+        
+        
+//    }
+    
 }

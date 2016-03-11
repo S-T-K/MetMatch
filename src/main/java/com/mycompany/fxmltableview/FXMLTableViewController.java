@@ -318,7 +318,7 @@ public class FXMLTableViewController implements Initializable {
                         double start = System.currentTimeMillis();
 
 
-                        session.getReference().addFile(file, data, session.getRTTolerance(), session.getMZTolerance());
+                        session.getReference().addFile(true, file, data, session.getRTTolerance(), session.getMZTolerance());
 //
 //                            for (int i = 0; i< 5000; i++) {
 //                            picker.pick(session.getReference().getListofFiles().get(0).getListofSlices().get(1), 25000, 0.2f);}
