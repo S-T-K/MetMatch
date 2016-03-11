@@ -361,7 +361,7 @@ public class Slice {
     public void generateInterpolatedEIC() {
 
         
-        int resolution = 30;  
+        int resolution = 100;  
         double startRT = this.minRT+0.05;
         double endRT = this.maxRT-0.05;
        

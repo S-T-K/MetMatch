@@ -244,7 +244,7 @@ public class Entry {
     public void generateAvgEIC() {
 
         
-        int resolution = 30;  
+        
         double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
         double endRT = (this.getOGroupRT()+(session.getRTTolerance()-0.05));
        
@@ -254,6 +254,7 @@ public class Entry {
       for (int i = 0; i< this.getListofRefSlices().size(); i++) {
           this.getListofRefSlices().get(i).generateInterpolatedEIC();
       }
+      int resolution = this.getListofRefSlices().get(0).getIntensityArray().length;
         
       RTArray = new double[resolution];
       IntensityArray = new double[resolution];
