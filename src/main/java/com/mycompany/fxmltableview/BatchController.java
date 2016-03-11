@@ -224,8 +224,8 @@ public class BatchController implements Initializable {
                             EICComparer comp = new EICComparer();
                             double cor= comp.compare(data.get(currentGroup).getListofAdducts().get(currentAdduct), batch);
                             System.out.println("Correlation: " + cor);
-                            System.out.println("Quality: " + comp.getEICQuality(batch));
-                            session.getListofOGroups().get(currentGroup).getListofAdducts().get(currentAdduct).setScore(new SimpleDoubleProperty(cor));
+                           
+                            session.getListofOGroups().get(currentGroup).getListofAdducts().get(currentAdduct).setScore(new SimpleDoubleProperty(comp.getEICQuality(batch)));
                             
                             
                             

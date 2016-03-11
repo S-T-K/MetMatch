@@ -5,6 +5,7 @@
  */
 package com.mycompany.fxmltableview;
 
+import flanagan.analysis.CurveSmooth;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 /**
@@ -39,15 +40,15 @@ public class EICComparer {
         int resolution = slice.getIntensityArray().length;
         int middle = resolution/2;
         double[] smooth = slice.getIntensityArray().clone();
-        double[] construction = new double[resolution];
         
-        //smoothing
-        for (int i = 0; i< 5; i++) {    //iterations
-            for (int j = 1; j<resolution-2; j++) {
-                construction[j]= (smooth[j-1]+smooth[j]+smooth[j+1])/3;
-            }
-            smooth = construction.clone();
-        }
+        
+        //CurveSmooth csm = new CurveSmooth(smooth);
+       //smooth = csm.savitzkyGolay(25);
+        
+        
+        
+        
+        smooth = movingAverageSmooth(smooth);
         
         
         
@@ -91,6 +92,7 @@ public class EICComparer {
 
             }
 
+            
             //calculate quality
             //heigth quality
             double height = 0;
@@ -104,7 +106,7 @@ public class EICComparer {
 
             //width quality
             double width = 0;
-            if (end - start < 3) {
+            if (end - start < 5 || end-peakint<2 || peakint-start<2) {
                 width = 0;
             } else if (slice.getRTArray()[end] - slice.getRTArray()[start] < 0.6) {
                 width = 1;
@@ -125,7 +127,51 @@ public class EICComparer {
                 quality = height*width*heightabove;
                 
                 
+                
+                //Test: Delete everything but peak
+                for (int i = 0; i< start; i++) {
+                    slice.getIntensityArray()[i] = -1.0;
+                }
+                
+                for (int i = end; i< resolution; i++) {
+                    slice.getIntensityArray()[i] = -1.0;
+                }
+                
+                
                 return quality; 
         }
+    
+    
+    public double[] movingAverageSmooth(double[] smooth) {
+        int resolution = smooth.length;
+        double[] construction = new double[resolution];
+        
+        //smoothing
+        //we want 5% windows around each point, minimum 1 point
+        int range = (int) Math.ceil(resolution/40);
+        
+       System.out.println("Range: " + (range*2+1));
+        
+        for (int i = 0; i< 3; i++) {    //iterations
+            for (int j = range; j<(resolution-range-1); j++) {
+                construction[j]=0;
+                for (int k = j-range; k<j+range; k++) {
+                    construction[j]+=smooth[k];           
+                }
+                construction[j] =  construction[j]/(range*2+1);
+            }
+            smooth = construction.clone();
+           
+        }
+        
+        return smooth;
     }
+    
+    
+    }
+
+
+
+
+
 

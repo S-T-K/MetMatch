@@ -282,6 +282,51 @@ public class Entry {
      }
       
     }
+    
+    public void generateBestEIC() {
+        
+                double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
+        double endRT = (this.getOGroupRT()+(session.getRTTolerance()-0.05));
+       
+EICComparer comp = new EICComparer();
+        
+        //generate intensityFunction for all slices
+      for (int i = 0; i< this.getListofRefSlices().size(); i++) {
+          this.getListofRefSlices().get(i).generateInterpolatedEIC();
+      }
+      int resolution = this.getListofRefSlices().get(0).getIntensityArray().length;
+        
+      RTArray = new double[resolution];
+      IntensityArray = new double[resolution];
+      
+      double max = 0;
+      int best = 0;
+      for (int i = 0; i < this.getListofRefSlices().size(); i++) {
+          double qual = comp.getEICQuality(this.getListofRefSlices().get(i));
+          if (qual>max) {
+              max = qual;
+              best = i;
+          }
+          
+      }
+      
+      if (max > 0.1) {
+          RTArray = this.getListofRefSlices().get(best).getRTArray();
+          IntensityArray = this.getListofRefSlices().get(best).getIntensityArray();
+          
+      }
+      
+      double[] MaxArray  = Arrays.copyOf(IntensityArray, resolution);
+     Arrays.sort(MaxArray);
+     
+     for (int i = 0; i< resolution; i++) {
+         IntensityArray[i] = IntensityArray[i]/MaxArray[resolution-1];
+         
+     }
+        
+        
+        
+    }
 
     /**
      * @return the RTArray

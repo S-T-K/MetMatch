@@ -28,6 +28,11 @@
                         <version>3.5</version>
                         <type>jar</type>
                 </dependency>
+                <dependency>
+                        <groupId>flanagan</groupId>
+                        <artifactId>flanagan</artifactId>
+                        <version>1.0</version>
+                </dependency>
         </dependencies>
 
     <properties>

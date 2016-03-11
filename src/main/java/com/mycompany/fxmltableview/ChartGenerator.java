@@ -229,7 +229,7 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
     
      public LineChart generateNormalizedEICAVG(Entry adduct) {
 
-        adduct.generateAvgEIC();
+        
          
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
