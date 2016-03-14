@@ -9,77 +9,25 @@ package com.mycompany.fxmltableview;
  *
  * @author stefankoch
  * holds information of a peak
- * belongs to a slice, and therefore to a file
+ * a peak is a part of an EIC, that has been detected as a peak
+ * 
  */
 public class Peak {
     
-    private int rt, rtstart, rtend;
-    private Slice slice;
+    private int RT, RTstart, RTend;
+    private double[] IntensityArray;
+    private double[] RTArray;
     
-    public Peak(int rt, int rtstart, int rtend, Slice slice) {
-        this.rt = rt;
-        this.rtstart = rtstart;
-        this.rtend = rtend;
-        this.slice = slice;
-        
-        
+    //constructor
+    public Peak(int rt, int rtstart, int rtend, double[] intensityArray, double[] RTArray) {
+       this.RT=rt;
+       this.RTstart = rtstart;
+       this.RTend = rtend;
+       this.IntensityArray = intensityArray;
+       this.RTArray = RTArray;
     }
 
-    /**
-     * @return the rt
-     */
-    public int getRt() {
-        return rt;
-    }
-
-    /**
-     * @param rt the rt to set
-     */
-    public void setRt(int rt) {
-        this.rt = rt;
-    }
-
-    /**
-     * @return the rtstart
-     */
-    public int getRtstart() {
-        return rtstart;
-    }
-
-    /**
-     * @param rtstart the rtstart to set
-     */
-    public void setRtstart(int rtstart) {
-        this.rtstart = rtstart;
-    }
-
-    /**
-     * @return the rtend
-     */
-    public int getRtend() {
-        return rtend;
-    }
-
-    /**
-     * @param rtend the rtend to set
-     */
-    public void setRtend(int rtend) {
-        this.rtend = rtend;
-    }
-
-    /**
-     * @return the slice
-     */
-    public Slice getSlice() {
-        return slice;
-    }
-
-    /**
-     * @param slice the slice to set
-     */
-    public void setSlice(Slice slice) {
-        this.slice = slice;
-    }
+   
 
     
 }

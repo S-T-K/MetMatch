@@ -138,6 +138,7 @@ public class EICComparer {
                 }
                 
                 
+                
                 return quality; 
         }
     

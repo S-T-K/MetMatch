@@ -52,17 +52,7 @@ public class Slice {
         
     }
     
-    //Copy constructor, used when generating avgEIC
-    public Slice(Slice slice) {
-        this.file = slice.getFile();
-        this.Num=slice.getNum();
-        this.minRT = slice.getMinRT();
-        this.maxRT = slice.getMaxRT();
-        this.minMZ = slice.getMinMZ();
-        this.maxMZ = slice.getMaxMZ();
-        this.RT = slice.getRT();
 
-    }
     
     public void extractSlicefromScans(List<Scan> listofScans) {
          //for all Scans
@@ -200,26 +190,7 @@ public class Slice {
         this.peakList = peakList;
     }
 
-    /**
-     * @return the bestPeak
-     */
-    public int getBestPeak() {
-       bestPeak = 0; 
-        
-       float min = 1000;
-     
-        for (int i = 0; i< peakList.size(); i++) {
-           float dist = abs(retentionTimeList.get(peakList.get(i).getRt())-getRT());
-           if (dist < min) {
-               bestPeak = i;
-               min = dist;
-               
-           }
-            
-        }
-     
-        return bestPeak;
-    }
+    
 
     /**
      * @param bestPeak the bestPeak to set
