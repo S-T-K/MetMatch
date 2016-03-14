@@ -381,7 +381,7 @@ public class FXMLTableViewController implements Initializable {
         for (int i = 0; i<data.size(); i++) {
             for (int j = 0; j<data.get(i).getListofAdducts().size(); j++) {
                 Entry currentAdduct = data.get(i).getListofAdducts().get(j);
-                currentAdduct.generateBestEIC();
+                currentAdduct.generateBestPeakEIC();
                 
             }
             

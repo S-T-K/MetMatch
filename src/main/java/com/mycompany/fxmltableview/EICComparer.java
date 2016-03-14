@@ -126,6 +126,8 @@ public class EICComparer {
                 
                 quality = height*width*heightabove;
                 
+                slice.setPeak(new Peak(peakint, start, end, slice.getIntensityArray(), slice.getRTArray()));
+                
                 
                 
                 //Test: Delete everything but peak

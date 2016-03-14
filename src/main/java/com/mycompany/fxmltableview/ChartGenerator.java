@@ -23,6 +23,10 @@ import javafx.scene.shape.Shape;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -272,8 +276,10 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
         }
         
         XYChart.Series newSeries = new XYChart.Series();
-        for (int j = 0; j < adduct.getRTArray().length; j++){
-            newSeries.getData().add(new XYChart.Data(adduct.getRTArray()[j], adduct.getIntensityArray()[j]));
+        Peak peak = adduct.getPeak();
+        peak.normalize();
+        for (int j = 0; j < peak.getRTArray().length; j++){
+            newSeries.getData().add(new XYChart.Data(peak.getRTArray()[j], peak.getIntensityArray()[j]));
             
         }
         

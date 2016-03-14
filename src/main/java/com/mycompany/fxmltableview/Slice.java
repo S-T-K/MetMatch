@@ -30,11 +30,10 @@ public class Slice {
     private List<Float> retentionTimeList = new ArrayList<Float>();
     private List<Float> intensityList = new ArrayList<Float>();
     private List<Float> massList = new ArrayList<Float>();
-    private List<Peak> peakList = new ArrayList<Peak>();
-    private int bestPeak;
-    private boolean hasPeaks = false;
     private PolynomialSplineFunction intensityFunction;
    
+    
+    private Peak peak;
     //for Batch Slices, to be compared with the reference AVGEIC 
     private double[] RTArray ;
     private double[] IntensityArray;
@@ -90,6 +89,8 @@ public class Slice {
         }
       
      this.clean();
+     this.generateInterpolatedEIC();
+     
     }
     
     
@@ -172,32 +173,10 @@ public class Slice {
         this.file = file;
     }
 
-    public void addPeak(Peak peak) {
-        this.peakList.add(peak);
-        
-    }
-    /**
-     * @return the peakList
-     */
-    public List<Peak> getPeakList() {
-        return peakList;
-    }
-
-    /**
-     * @param peakList the peakList to set
-     */
-    public void setPeakList(List<Peak> peakList) {
-        this.peakList = peakList;
-    }
+    
 
     
 
-    /**
-     * @param bestPeak the bestPeak to set
-     */
-    public void setBestPeak(int bestPeak) {
-        this.bestPeak = bestPeak;
-    }
     
     //removes duplicate RT entries, only takes the max intensity
     public void clean() {
@@ -258,20 +237,7 @@ public class Slice {
         this.intensityList = intensityList;
     }
 
-    /**
-     * @return the hasPeaks
-     */
-    public boolean isHasPeaks() {
-        return hasPeaks;
-    }
-
-    /**
-     * @param hasPeaks the hasPeaks to set
-     */
-    public void setHasPeaks(boolean hasPeaks) {
-        this.hasPeaks = hasPeaks;
-    }
-
+   
     /**
      * @return the Num
      */
@@ -404,4 +370,154 @@ public class Slice {
     public void setNormIntensityArray(double[] NormIntensityArray) {
         this.NormIntensityArray = NormIntensityArray;
     }
+
+    /**
+     * @return the peak
+     */
+    public Peak getPeak() {
+        return peak;
+    }
+
+    /**
+     * @param peak the peak to set
+     */
+    public void setPeak(Peak peak) {
+        this.peak = peak;
+    }
+    
+    public void generateRefPeak () {
+        double quality = 0;
+        
+        int resolution = this.getIntensityArray().length;
+        int middle = resolution/2;
+        double[] smooth = this.getIntensityArray().clone();
+        
+        
+        //CurveSmooth csm = new CurveSmooth(smooth);
+       //smooth = csm.savitzkyGolay(25);
+        
+        
+        
+        
+        smooth = movingAverageSmooth(smooth);
+        
+        
+        
+        //look for highest point in the middle +-10%
+        double max = smooth[middle];
+        int peakint = middle;
+        for (int i = 0; i < resolution/10; i++) {
+            //look left and right
+            if (max < smooth[middle+i]) {
+                max = smooth[middle+i];
+                peakint = middle+i;
+            }
+            if (max < smooth[middle-i]) {
+                max = smooth[middle-i];
+                peakint = middle-i;
+            }
+        }
+  
+        //if peak found, check the range of the peak
+        int end = peakint;
+        int start = peakint;
+        
+            //look right while the slope is steep enough
+            double difend=0;
+            while (end < resolution - 2 && (smooth[end]-smooth[end+1]>=difend)) {
+                difend = (smooth[end]-smooth[end+1])*0.8;
+                if (difend < 0) {
+                    difend = 0;                   
+                }
+                end = end + 1;
+            }
+            
+            //look left while the slope is steep enough
+            double difstart = 0;
+            while (start > 1 && (smooth[start]-smooth[start-1]>=difstart)) {
+                difstart = (smooth[start]-smooth[start-1])*0.8;
+                if (difstart < 0) {
+                    difstart = 0;                   
+                }
+                start = start - 1;
+
+            }
+
+            
+            //calculate quality
+            //heigth quality
+            double height = 0;
+            if (this.getIntensityArray()[peakint] > 500000) {
+                height = 1;
+            } else if (this.getIntensityArray()[peakint] < 5000) {
+                height = 0;
+            } else {
+                height = Math.log10(this.getIntensityArray()[peakint]) / Math.log10(500000);
+            }
+
+            //width quality
+            double width = 0;
+            if (end - start < 5 || end-peakint<2 || peakint-start<2) {
+                width = 0;
+            } else if (this.getRTArray()[end] - this.getRTArray()[start] < 0.6) {
+                width = 1;
+            } else {
+                width = 0.6/(this.getRTArray()[end] - this.getRTArray()[start]);
+            }
+            
+            //heigth above baseline
+            double heightabove = 0;
+            double bheigth = (this.getIntensityArray()[start]+this.getIntensityArray()[end])/2;
+            if (bheigth/this.getIntensityArray()[peakint]<=0.2) {
+                heightabove = 1;
+            } else { 
+                heightabove = 1- (bheigth/this.getIntensityArray()[peakint]);
+            }
+                
+                
+                quality = height*width*heightabove;
+                
+                this.setPeak(new Peak(peakint, start, end, this.getIntensityArray(), this.getRTArray()));
+                
+                
+                
+                //Test: Delete everything but peak
+                for (int i = 0; i< start; i++) {
+                    this.getIntensityArray()[i] = -1.0;
+                }
+                
+                for (int i = end; i< resolution; i++) {
+                    this.getIntensityArray()[i] = -1.0;
+                }
+                
+                
+                
+                this.getPeak().setQuality(quality);
+        }
+    
+     public double[] movingAverageSmooth(double[] smooth) {
+        int resolution = smooth.length;
+        double[] construction = new double[resolution];
+        
+        //smoothing
+        //we want 5% windows around each point, minimum 1 point
+        int range = (int) Math.ceil(resolution/40);
+        
+       System.out.println("Range: " + (range*2+1));
+        
+        for (int i = 0; i< 3; i++) {    //iterations
+            for (int j = range; j<(resolution-range-1); j++) {
+                construction[j]=0;
+                for (int k = j-range; k<j+range; k++) {
+                    construction[j]+=smooth[k];           
+                }
+                construction[j] =  construction[j]/(range*2+1);
+            }
+            smooth = construction.clone();
+           
+        }
+        
+        return smooth;
+    }
+    
 }

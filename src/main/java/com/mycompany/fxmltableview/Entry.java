@@ -38,6 +38,7 @@ public class Entry {
     private List<Slice> listofSlices;   //stores all slices
     private List<Slice> listofRefSlices;    //stores only reference slices, 
     private Session session;
+    private Peak peak;
 
     //Interpolated Arrays
     private double[] RTArray;
@@ -84,6 +85,7 @@ public class Entry {
     //add Reference Slice
     public void addRefSlice(Slice slice) {
         getListofRefSlices().add(slice);
+        slice.generateRefPeak();
         
     }
     
@@ -283,26 +285,25 @@ public class Entry {
       
     }
     
-    public void generateBestEIC() {
+    public void generateBestPeakEIC() {
         
-                double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
+        double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
         double endRT = (this.getOGroupRT()+(session.getRTTolerance()-0.05));
-       
-EICComparer comp = new EICComparer();
+      
         
-        //generate intensityFunction for all slices
-      for (int i = 0; i< this.getListofRefSlices().size(); i++) {
-          this.getListofRefSlices().get(i).generateInterpolatedEIC();
-      }
+     
       int resolution = this.getListofRefSlices().get(0).getIntensityArray().length;
         
       RTArray = new double[resolution];
       IntensityArray = new double[resolution];
       
+          this.peak = new Peak(0,0,0,new double[] {0}, new double[] {0});
+      
+      
       double max = 0;
       int best = 0;
       for (int i = 0; i < this.getListofRefSlices().size(); i++) {
-          double qual = comp.getEICQuality(this.getListofRefSlices().get(i));
+          double qual = this.getListofRefSlices().get(i).getPeak().getQuality();
           if (qual>max) {
               max = qual;
               best = i;
@@ -314,15 +315,11 @@ EICComparer comp = new EICComparer();
           RTArray = this.getListofRefSlices().get(best).getRTArray();
           IntensityArray = this.getListofRefSlices().get(best).getIntensityArray();
           
+          this.peak = this.getListofRefSlices().get(best).getPeak();
+          System.out.println("peak added");
+          
       }
-      
-      double[] MaxArray  = Arrays.copyOf(IntensityArray, resolution);
-     Arrays.sort(MaxArray);
      
-     for (int i = 0; i< resolution; i++) {
-         IntensityArray[i] = IntensityArray[i]/MaxArray[resolution-1];
-         
-     }
         
      
         
@@ -393,5 +390,19 @@ EICComparer comp = new EICComparer();
      */
     public void setListofRefSlices(List<Slice> listofRefSlices) {
         this.listofRefSlices = listofRefSlices;
+    }
+
+    /**
+     * @return the peak
+     */
+    public Peak getPeak() {
+        return peak;
+    }
+
+    /**
+     * @param peak the peak to set
+     */
+    public void setPeak(Peak peak) {
+        this.peak = peak;
     }
 }
