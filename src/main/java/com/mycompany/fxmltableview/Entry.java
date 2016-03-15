@@ -38,7 +38,7 @@ public class Entry {
     private List<Slice> listofSlices;   //stores all slices
     private List<Slice> listofRefSlices;    //stores only reference slices, 
     private Session session;
-    private Peak peak;
+    private Peak RefPeak;
 
     //Interpolated Arrays
     private double[] RTArray;
@@ -297,7 +297,7 @@ public class Entry {
       RTArray = new double[resolution];
       IntensityArray = new double[resolution];
       
-          this.peak = new Peak(0,0,0,new double[] {0}, new double[] {0});
+          this.RefPeak = new Peak(0,0,0,new double[] {0}, new double[] {0});
       
       
       double max = 0;
@@ -315,8 +315,7 @@ public class Entry {
           RTArray = this.getListofRefSlices().get(best).getRTArray();
           IntensityArray = this.getListofRefSlices().get(best).getIntensityArray();
           
-          this.peak = this.getListofRefSlices().get(best).getPeak();
-          System.out.println("peak added");
+          this.RefPeak = this.getListofRefSlices().get(best).getPeak();
           
       }
      
@@ -393,16 +392,16 @@ public class Entry {
     }
 
     /**
-     * @return the peak
+     * @return the RefPeak
      */
     public Peak getPeak() {
-        return peak;
+        return RefPeak;
     }
 
     /**
-     * @param peak the peak to set
+     * @param peak the RefPeak to set
      */
     public void setPeak(Peak peak) {
-        this.peak = peak;
+        this.RefPeak = peak;
     }
 }

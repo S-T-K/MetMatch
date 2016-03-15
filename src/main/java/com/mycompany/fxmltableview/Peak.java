@@ -31,8 +31,8 @@ public class Peak {
        this.RT=rt;
        this.RTstart = rtstart;
        this.RTend = rtend;
-       this.IntensityArray = intensityArray;
-       this.RTArray = RTArray;
+       this.IntensityArray = Arrays.copyOfRange(intensityArray, RTstart, RTend+1);
+       this.RTArray = Arrays.copyOfRange(RTArray, RTstart, RTend+1);
        
     }
 

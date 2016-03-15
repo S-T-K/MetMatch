@@ -130,15 +130,7 @@ public class EICComparer {
                 
                 
                 
-                //Test: Delete everything but peak
-                for (int i = 0; i< start; i++) {
-                    slice.getIntensityArray()[i] = -1.0;
-                }
-                
-                for (int i = end; i< resolution; i++) {
-                    slice.getIntensityArray()[i] = -1.0;
-                }
-                
+               
                 
                 
                 return quality; 
@@ -152,8 +144,7 @@ public class EICComparer {
         //smoothing
         //we want 5% windows around each point, minimum 1 point
         int range = (int) Math.ceil(resolution/40);
-        
-       System.out.println("Range: " + (range*2+1));
+      
         
         for (int i = 0; i< 3; i++) {    //iterations
             for (int j = range; j<(resolution-range-1); j++) {

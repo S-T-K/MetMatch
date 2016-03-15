@@ -225,7 +225,7 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         data = session.parseReferenceTsv();
-        session.setRTTolerance(0.83f);
+        session.setRTTolerance(1.5f);
         session.setMZTolerance(0.002f);
 
         //Convert List into TreeTable Entries

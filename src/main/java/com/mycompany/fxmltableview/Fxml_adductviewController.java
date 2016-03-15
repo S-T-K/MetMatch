@@ -60,8 +60,8 @@ public class Fxml_adductviewController implements Initializable {
         
        //get selected Entry
        Entry entry = metTable.getSelectionModel().getSelectedItem().getValue();
-       float upper = (float) (entry.getRT()+0.83);
-       float lower = (float) (entry.getRT()-0.83);
+       float upper = (float) (entry.getRT()+1.5);
+       float lower = (float) (entry.getRT()-1.5);
        
        //delete previous graphs
        gridPane.getChildren().clear();
@@ -78,17 +78,12 @@ public class Fxml_adductviewController implements Initializable {
            gridPane.addRow(i,label);
            LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(1,linechart1);
-           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEICAVG(entry.getListofAdducts().get(i));
+           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedBestPeakEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(2, linechart2);
            ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
            gridPane.addColumn(3, scatterchart);
            
-          System.out.println(entry.getListofAdducts().get(i).getOGroupRT());
-          for (int j = 0; j< entry.getListofAdducts().get(i).getListofSlices().size(); j++) {
-              System.out.println(entry.getListofAdducts().get(i).getListofSlices().get(j).getMinRT());
-              System.out.println(entry.getListofAdducts().get(i).getListofSlices().get(j).getMaxRT());
-              
-          }
+         
         
        }
        

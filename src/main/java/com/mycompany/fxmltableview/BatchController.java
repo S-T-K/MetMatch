@@ -199,7 +199,6 @@ public class BatchController implements Initializable {
                             progress.set(progress.get()+test);
                             System.out.println(progress.get());
         double end = System.currentTimeMillis();
-        System.out.println(end - start);
         //refresh files
        batchFileView.setItems(batch.getListofFiles());
                            

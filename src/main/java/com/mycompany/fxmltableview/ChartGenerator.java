@@ -5,6 +5,7 @@
  */
 package com.mycompany.fxmltableview;
 
+import flanagan.analysis.CurveSmooth;
 import static java.lang.Math.abs;
 import java.util.Collections;
 import javafx.scene.CacheHint;
@@ -20,6 +21,32 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import java.util.Arrays;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
@@ -231,7 +258,7 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
 
     }
     
-     public LineChart generateNormalizedEICAVG(Entry adduct) {
+     public LineChart generateNormalizedBestPeakEIC(Entry adduct) {
 
         
          
@@ -299,12 +326,118 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
         xAxis.setUpperBound(upper);
 
         yAxis.setAutoRanging(false);
-        yAxis.setLowerBound(0);
+        yAxis.setLowerBound(-1);
         yAxis.setUpperBound(1);
         linechart.setAnimated(false);
         linechart.setCache(true);
         linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
+        
+        PeakTestReferencevsGauss(adduct, linechart);
         return linechart;
+    }
+     
+                 public void PeakTestReferencevsGauss(Entry adduct, LineChart<Number, Number> linechart) {
+         
+         if (adduct.getPeak().getIntensityArray().length>1) {
+         double[] peakArray = adduct.getPeak().getIntensityArray();
+         int peakint = adduct.getPeak().getRT()-adduct.getPeak().getRTstart();
+
+         double[] completeArray = adduct.getListofSlices().get(adduct.getListofSlices().size()-1).getIntensityArray();
+         
+         PearsonsCorrelation pear = new PearsonsCorrelation();
+         
+         System.out.println();
+         System.out.println("Correlation alignment-----------------");
+         XYChart.Series newSeries = new XYChart.Series();
+        for (int i = 0; i< (completeArray.length-peakArray.length); i++) {
+        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(completeArray, i, i+peakArray.length));
+        newSeries.getData().add(new XYChart.Data(adduct.getRTArray()[i+peakint], corr));
+        System.out.println(corr);
+        
+        
+       
+       
+         
+        
+     }
+        linechart.getData().add(newSeries);
+        linechart.applyCss();
+        ((Path) newSeries.getNode()).setStroke(Color.BLUE);
+        ((Path) newSeries.getNode()).setStrokeWidth(1.0);
+        
+        double[] peakArray2 = {0.30562389380800614, 0.4045593930181101, 0.5010142078557377, 0.5697809675082599, 0.7126271863152996, 0.7675927216635093, 0.8845355890078511, 0.9218788811348794, 0.9336462411287345, 1.0, 0.9712913331424721, 0.7660152062379959, 0.7391207258124926, 0.6103812352993977, 0.47315901034928215, 0.4162911178032002, 0.30054754596741007}; 
+         int peakint2 = 9;
+
+         
+         
+         PearsonsCorrelation pear2 = new PearsonsCorrelation();
+         
+         System.out.println();
+         System.out.println("Correlation alignment-----------------");
+         XYChart.Series newSeries2 = new XYChart.Series();
+        for (int i = 0; i< (completeArray.length-peakArray2.length); i++) {
+        double corr = pear2.correlation(peakArray2 ,Arrays.copyOfRange(completeArray, i, i+peakArray2.length));
+        newSeries2.getData().add(new XYChart.Data(adduct.getRTArray()[i+peakint2], corr));
+        System.out.println(corr);
+        
+        
+       
+       
+         
+        
+     }
+        linechart.getData().add(newSeries2);
+        linechart.applyCss();
+        ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
+        ((Path) newSeries2.getNode()).setStrokeWidth(1.0);
+        
+        
+//        CurveSmooth csm = new CurveSmooth(completeArray);
+//        completeArray = csm.savitzkyGolay(40);
+//         double[][] maxima;
+//             maxima = csm.getMaximaSavitzkyGolay();
+//        for (int i = 0; i< maxima[0].length; i++) {
+//            System.out.println("Savitzky Golay Maxima at: "+ maxima[0][i]);
+//            
+//        }
+        } else {
+            System.out.println("No Peak");
+        }
+    }
+
+    public void PeakTestEICCorrelation(Entry adduct, LineChart<Number, Number> linechart) {
+double[] referenceArray = adduct.getListofRefSlices().get(0).getIntensityArray();
+double[] batchArray = adduct.getListofSlices().get(1).getIntensityArray();
+
+XYChart.Series newSeries = new XYChart.Series();
+for (int i = 0; i < referenceArray.length; i++) {
+    int lower = -51+i;
+    int upper = lower+100;
+    if (upper>99){
+        upper = 99;
+    }
+    if (lower<0) {
+        lower = 0;
+    }
+    int range = upper-lower;
+    
+    double[] a = Arrays.copyOfRange(referenceArray, lower, upper+1);
+    double[] b = Arrays.copyOfRange(batchArray, 99-upper, 100-lower);
+    
+    PearsonsCorrelation pear = new PearsonsCorrelation();
+         
+         
+    double corr = pear.correlation(a,b);
+    newSeries.getData().add(new XYChart.Data(adduct.getRTArray()[i], corr));
+   
+    
+    
+}
+       linechart.getData().add(newSeries);
+        linechart.applyCss();
+        ((Path) newSeries.getNode()).setStroke(Color.GREEN);
+        ((Path) newSeries.getNode()).setStrokeWidth(1.0); 
+        
     }
 }
