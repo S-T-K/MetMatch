@@ -15,6 +15,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.chart.XYChart;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 /**
  *
@@ -38,7 +40,12 @@ public class Entry {
     private List<Slice> listofSlices;   //stores all slices
     private List<Slice> listofRefSlices;    //stores only reference slices, 
     private Session session;
+    
+    //RefPeak is the best peak of all reference slices
     private Peak RefPeak;
+    
+    //for peak probability
+    private double[] PropArray;
 
     //Interpolated Arrays
     private double[] RTArray;
@@ -285,6 +292,7 @@ public class Entry {
       
     }
     
+    //picks Peak EIC from all adducts with the highest quality
     public void generateBestPeakEIC() {
         
         double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
@@ -324,6 +332,35 @@ public class Entry {
         
         
     }
+    //generates an array with gaussian peak probability through correlation with such a peak over all slices
+    public void generateGaussProp() {
+         //initialize Array holding probabilities
+        setPropArray(new double[this.IntensityArray.length]);
+         double[] peakArray = {0.30562389380800614, 0.4045593930181101, 0.5010142078557377, 0.5697809675082599, 0.7126271863152996, 0.7675927216635093, 0.8845355890078511, 0.9218788811348794, 0.9336462411287345, 1.0, 0.9712913331424721, 0.7660152062379959, 0.7391207258124926, 0.6103812352993977, 0.47315901034928215, 0.4162911178032002, 0.30054754596741007}; 
+         int peakint = 9;
+
+         
+         
+         PearsonsCorrelation pear = new PearsonsCorrelation();
+
+        for (int j = 0; j< this.listofSlices.size(); j++) {
+        for (int i = 0; i< (this.getListofSlices().get(j).getIntensityArray().length-peakArray.length); i++) {
+        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(this.getListofSlices().get(j).getIntensityArray(), i, i+peakArray.length));
+                getPropArray()[i+peakint]+= corr;
+        
+        }
+    }
+    }
+    
+    public void generateEntryGaussProp() {
+        for (int i = 0; i< this.listofAdducts.size(); i++) {
+            
+            
+        }
+        
+        
+    }
+    
 
     /**
      * @return the RTArray
@@ -403,5 +440,19 @@ public class Entry {
      */
     public void setPeak(Peak peak) {
         this.RefPeak = peak;
+    }
+
+    /**
+     * @return the PropArray
+     */
+    public double[] getPropArray() {
+        return PropArray;
+    }
+
+    /**
+     * @param PropArray the PropArray to set
+     */
+    public void setPropArray(double[] PropArray) {
+        this.PropArray = PropArray;
     }
 }

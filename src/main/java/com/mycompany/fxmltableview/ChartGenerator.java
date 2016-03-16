@@ -6,6 +6,7 @@
 package com.mycompany.fxmltableview;
 
 import flanagan.analysis.CurveSmooth;
+import static java.lang.Double.NaN;
 import static java.lang.Math.abs;
 import java.util.Collections;
 import javafx.scene.CacheHint;
@@ -54,6 +55,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
+import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  *
@@ -187,6 +190,7 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.setCache(true);
         linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
+        PropArray(adduct, linechart);
         return linechart;
     }
 
@@ -333,7 +337,7 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         
-        PeakTestReferencevsGauss(adduct, linechart);
+        PropArray(adduct, linechart);
         return linechart;
     }
      
@@ -438,6 +442,30 @@ for (int i = 0; i < referenceArray.length; i++) {
         linechart.applyCss();
         ((Path) newSeries.getNode()).setStroke(Color.GREEN);
         ((Path) newSeries.getNode()).setStrokeWidth(1.0); 
+        
+    }
+    
+    public void PropArray(Entry adduct, LineChart<Number, Number> linechart) {
+        adduct.generateGaussProp();
+        double[] PropArray = adduct.getPropArray();
+        for (int i = 0; i< PropArray.length; i++) {
+            if (Double.isNaN(PropArray[i])) {
+                PropArray[i]=0;
+            }
+            
+        }
+        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
+        double max = (double) Collections.max(asList);
+        double[] RTArray = adduct.getListofSlices().get(0).getRTArray();
+        XYChart.Series newSeries = new XYChart.Series();
+        for (int i =0; i<PropArray.length; i++) {
+            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]/max));
+            
+        }
+        linechart.getData().add(newSeries);
+        linechart.applyCss();
+        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
+        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
         
     }
 }
