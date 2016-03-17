@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.datamodel;
+
 
 import flanagan.analysis.CurveSmooth;
 import static java.lang.Math.abs;
@@ -34,7 +35,7 @@ public class Slice {
     private PolynomialSplineFunction intensityFunction;
    
     
-    private Peak peak;
+    
     //for Batch Slices, to be compared with the reference AVGEIC 
     private double[] RTArray ;
     private double[] IntensityArray;
@@ -372,19 +373,7 @@ public class Slice {
         this.NormIntensityArray = NormIntensityArray;
     }
 
-    /**
-     * @return the peak
-     */
-    public Peak getPeak() {
-        return peak;
-    }
-
-    /**
-     * @param peak the peak to set
-     */
-    public void setPeak(Peak peak) {
-        this.peak = peak;
-    }
+   
     
     public void generateRefPeak () {
         double quality = 0;
@@ -478,14 +467,14 @@ public class Slice {
                 
                 quality = height*width*heightabove;
                 
-                this.setPeak(new Peak(peakint, start, end, this.getIntensityArray(), this.getRTArray()));
                 
                 
                 
                 
                 
                 
-                this.getPeak().setQuality(quality);
+                
+                
         }
     
      public double[] movingAverageSmooth(double[] smooth) {

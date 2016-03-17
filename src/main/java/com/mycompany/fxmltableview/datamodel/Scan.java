@@ -1,4 +1,4 @@
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.datamodel;
 
 // class that holds the information of a scan
 public class Scan {

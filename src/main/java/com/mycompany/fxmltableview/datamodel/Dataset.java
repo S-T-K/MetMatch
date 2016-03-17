@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.datamodel;
 
+import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
@@ -43,19 +44,19 @@ public class Dataset {
         
         this.listofFiles = FXCollections.observableArrayList();
         //default values for new Dataset
-        this.Width = new SimpleDoubleProperty(2.0);
+        this.Width = new SimpleDoubleProperty(1.5);
         this.color = new SimpleObjectProperty(Color.BLACK);
         
     }
     
     
     //add new File and parse it
-    public void addFile(boolean isreference, File file, ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
+    public void addFile(boolean isreference, File file, Session session) {
         RawDataFile newfile = new RawDataFile(file, this.color, this.Width);
         this.listofFiles.add(newfile); 
         newfile.parseFile();
         System.out.println("parsed");
-        newfile.extractSlices(isreference, data, RTTolerance, MZTolerance);
+        newfile.extractSlices(isreference, session.getListofOGroups(), session.getRTTolerance(), session.getMZTolerance());
         
         
     }

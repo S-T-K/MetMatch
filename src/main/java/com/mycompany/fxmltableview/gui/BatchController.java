@@ -1,5 +1,10 @@
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.gui;
 
+import com.mycompany.fxmltableview.datamodel.Batch;
+import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.RawDataFile;
+import com.mycompany.fxmltableview.datamodel.Slice;
+import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
@@ -195,7 +200,7 @@ public class BatchController implements Initializable {
                         for (File file : filelist) {
                             double start = System.currentTimeMillis();
                             
-                            batch.addFile(false, file, data, session.getRTTolerance(), session.getMZTolerance());
+                            batch.addFile(false, file, session);
                             progress.set(progress.get()+test);
                             System.out.println(progress.get());
         double end = System.currentTimeMillis();
@@ -220,11 +225,9 @@ public class BatchController implements Initializable {
                             
   
                            
-                            EICComparer comp = new EICComparer();
-                            double cor= comp.compare(data.get(currentGroup).getListofAdducts().get(currentAdduct), batch);
-                            System.out.println("Correlation: " + cor);
                            
-                            session.getListofOGroups().get(currentGroup).getListofAdducts().get(currentAdduct).setScore(new SimpleDoubleProperty(comp.getEICQuality(batch)));
+                           
+                           
                             
                             
                             

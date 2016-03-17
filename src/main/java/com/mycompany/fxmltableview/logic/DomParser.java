@@ -1,6 +1,7 @@
 // from http://www.java-samples.com/showtutorial.php?tutorialid=152
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.logic;
 
+import com.mycompany.fxmltableview.datamodel.Scan;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class DomParser {
     public List ParseFile() {
 
         parseXmlFile();
-        parseDocument();
+
 
         return parseDocument();
 

@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.collections.*?>
-<?import com.mycompany.fxmltableview.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="826.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.FXMLTableViewController">
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="826.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.FXMLTableViewController">
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="826.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>

@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.datamodel;
 
+
+
+import com.mycompany.fxmltableview.logic.Session;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,8 +44,8 @@ public class Entry {
     private List<Slice> listofRefSlices;    //stores only reference slices, 
     private Session session;
     
-    //RefPeak is the best peak of all reference slices
-    private Peak RefPeak;
+
+    
     
     //for peak probability
     private double[] PropArray;
@@ -55,7 +58,7 @@ public class Entry {
     }
 
     //constructor for Adduct
-    public Entry(int Num, double MZ, double RT, int Xn, int OGroup, String Ion, double M, Session session) {
+    public Entry(int Num, double MZ, double RT, int Xn, int OGroup, String Ion, double M, Session session, Entry ogroup) {
         this.Num = new SimpleIntegerProperty(Num);
         this.MZ = new SimpleDoubleProperty(MZ);
         this.RT = new SimpleDoubleProperty(RT);
@@ -67,19 +70,19 @@ public class Entry {
         this.listofSlices = new ArrayList<Slice>();
         this.listofRefSlices = new ArrayList<Slice>();
         this.session=session;
+        this.OGroupObject=ogroup;
         
     }
     
    
     //constructor for OGroup/Metabolite
-    public Entry(Entry adduct, Session session) {
+    public Entry(int OGroup, Session session) {
         this.listofAdducts= new ArrayList<>();
-        this.listofAdducts.add(adduct);
-        this.RT = new SimpleDoubleProperty(adduct.getRT());
-        this.OGroup = new SimpleIntegerProperty(adduct.getOGroup());
+        this.RT = new SimpleDoubleProperty(0);
+        this.OGroup = new SimpleIntegerProperty(OGroup);
         this.Score = new SimpleDoubleProperty(0);
         this.session = session;
-        adduct.setOGroupObject(this);
+        this.OGroupObject=null;
 
     }
     
@@ -97,10 +100,9 @@ public class Entry {
     }
     
     //add adduct to an OGroup
-    public void addAduct(Entry adduct) {
+    public void addAdduct(Entry adduct) {
         this.getListofAdducts().add(adduct);
         this.setRT(new SimpleDoubleProperty(((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size()));
-        adduct.setOGroupObject(this);
 
     }
 
@@ -292,46 +294,8 @@ public class Entry {
       
     }
     
-    //picks Peak EIC from all adducts with the highest quality
-    public void generateBestPeakEIC() {
-        
-        double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
-        double endRT = (this.getOGroupRT()+(session.getRTTolerance()-0.05));
-      
-        
-     
-      int resolution = this.getListofRefSlices().get(0).getIntensityArray().length;
-        
-      RTArray = new double[resolution];
-      IntensityArray = new double[resolution];
-      
-          this.RefPeak = new Peak(0,0,0,new double[] {0}, new double[] {0});
-      
-      
-      double max = 0;
-      int best = 0;
-      for (int i = 0; i < this.getListofRefSlices().size(); i++) {
-          double qual = this.getListofRefSlices().get(i).getPeak().getQuality();
-          if (qual>max) {
-              max = qual;
-              best = i;
-          }
-          
-      }
-      
-      if (max > 0.1) {
-          RTArray = this.getListofRefSlices().get(best).getRTArray();
-          IntensityArray = this.getListofRefSlices().get(best).getIntensityArray();
-          
-          this.RefPeak = this.getListofRefSlices().get(best).getPeak();
-          
-      }
-     
-        
-     
-        
-        
-    }
+    
+    
     //generates an array with gaussian peak probability through correlation with such a peak over all slices
     public void generateGaussProp() {
          //initialize Array holding probabilities
@@ -428,19 +392,8 @@ public class Entry {
         this.listofRefSlices = listofRefSlices;
     }
 
-    /**
-     * @return the RefPeak
-     */
-    public Peak getPeak() {
-        return RefPeak;
-    }
-
-    /**
-     * @param peak the RefPeak to set
-     */
-    public void setPeak(Peak peak) {
-        this.RefPeak = peak;
-    }
+   
+    
 
     /**
      * @return the PropArray
@@ -455,4 +408,27 @@ public class Entry {
     public void setPropArray(double[] PropArray) {
         this.PropArray = PropArray;
     }
+    
+    public double getMinRT() {
+        if(OGroupObject!=null){
+            return (OGroupObject.getRT()-session.getRTTolerance());
+        } else {
+            return (getRT()-session.getRTTolerance());
+        }
+    }
+     public double getMaxRT() {
+        if(OGroupObject!=null){
+            return (OGroupObject.getRT()+session.getRTTolerance());
+        } else {
+            return (getRT()+session.getRTTolerance());
+        }
+    }
+     public double getMinMZ() {
+        return (getMZ()-session.getMZTolerance());
+    }
+      public double getMaxMZ() {
+        return (getMZ()+session.getMZTolerance());
+    }
+      
+      
 }

@@ -1,4 +1,4 @@
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.gui;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -6,7 +6,8 @@ package com.mycompany.fxmltableview;
  * and open the template in the editor.
  */
 
-import com.mycompany.fxmltableview.Entry;
+import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.Entry;
 
 import java.net.URL;
 import java.util.ResourceBundle;

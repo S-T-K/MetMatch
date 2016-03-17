@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.datamodel;
 
+import com.mycompany.fxmltableview.logic.DomParser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +59,7 @@ public class RawDataFile {
     }
 
     //extract Slices, according to tolerances
-    public void extractSlices(boolean isreference, ObservableList<Entry> data, float RTTolerance, float MZTolerance) {
+    public void extractSlices(boolean isreference, List<Entry> data, float RTTolerance, float MZTolerance) {
         this.setListofSlices(new ArrayList<>());
 
 

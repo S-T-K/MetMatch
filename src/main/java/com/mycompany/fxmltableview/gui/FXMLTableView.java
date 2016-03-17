@@ -1,4 +1,4 @@
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.gui;
 
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;

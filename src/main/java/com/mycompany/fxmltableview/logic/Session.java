@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.logic;
 
+import com.mycompany.fxmltableview.datamodel.Batch;
+import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.Reference;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
@@ -84,7 +87,8 @@ public class Session {
         double M;
         
         
-        String lastOGroup = "0";
+        String lastOGroup = "-1";
+        Entry ogroup = null;
         for (int i = 1; i < allRows.size(); i++) {
             Num = Integer.parseInt(allRows.get(i)[indexNum]);
             MZ = Double.parseDouble(allRows.get(i)[indexMZ]);
@@ -93,17 +97,19 @@ public class Session {
             OGroup = Integer.parseInt(allRows.get(i)[indexOGroup]);
             Ion = allRows.get(i)[indexIon];
             M = parseDoubleSafely(allRows.get(i)[indexM]);
-            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,this);
             
-            
-            if (lastOGroup.equals(allRows.get(i)[indexOGroup])) {
-                obsList.get(obsList.size()-1).addAduct(adduct);
-            } else {
-                obsList.add(new Entry(adduct, this));
+            //if new Ogroup, make new Ogroup
+            if (!(lastOGroup.equals(allRows.get(i)[indexOGroup]))) {
+                ogroup = new Entry(OGroup, this);
+                lastOGroup = allRows.get(i)[indexOGroup];
+                obsList.add(ogroup);
             }
-     
-            lastOGroup = allRows.get(i)[indexOGroup];
+            //add Adduct to current Ogroup
+            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,this,ogroup);
+            ogroup.addAdduct(adduct);
             
+            
+           
         }
         
         this.listofOGroups= obsList;

@@ -1,5 +1,9 @@
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.gui;
 
+import com.mycompany.fxmltableview.datamodel.Batch;
+import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.RawDataFile;
+import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
@@ -117,8 +121,8 @@ public class FXMLTableViewController implements Initializable {
     @FXML
     ProgressBar progressbar;
 
-    //List with data for table, Ogroups (adducts within the Ogroups)
-    ObservableList<Entry> data;
+    //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
+    ObservableList<Entry> MasterListofOGroups;
 
     //current session, storing all information
     Session session;
@@ -224,7 +228,7 @@ public class FXMLTableViewController implements Initializable {
         File file = fileChooser.showOpenDialog(null);
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
-        data = session.parseReferenceTsv();
+        MasterListofOGroups = session.parseReferenceTsv();
         session.setRTTolerance(1.5f);
         session.setMZTolerance(0.002f);
 
@@ -232,13 +236,13 @@ public class FXMLTableViewController implements Initializable {
         TreeItem<Entry> superroot = new TreeItem<>();
 
         //for all OGroups
-        for (int i = 0; i < data.size(); i++) {
-            TreeItem<Entry> root = new TreeItem<>(data.get(i));
+        for (int i = 0; i < MasterListofOGroups.size(); i++) {
+            TreeItem<Entry> root = new TreeItem<>(MasterListofOGroups.get(i));
             root.setExpanded(false);
             superroot.getChildren().add(root);
 
-            for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
-                TreeItem<Entry> childNode1 = new TreeItem<>(data.get(i).getListofAdducts().get(j));
+            for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                TreeItem<Entry> childNode1 = new TreeItem<>(MasterListofOGroups.get(i).getListofAdducts().get(j));
                 root.getChildren().add(childNode1);
 
             }
@@ -274,7 +278,7 @@ public class FXMLTableViewController implements Initializable {
                         stage.setScene(myScene);
                         Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
 
-                        //add data to new controller
+                        //add MasterListofOGroups to new controller
                         controller.metTable = metTable;
 
                         //print graphs
@@ -318,10 +322,7 @@ public class FXMLTableViewController implements Initializable {
                         double start = System.currentTimeMillis();
 
 
-                        session.getReference().addFile(true, file, data, session.getRTTolerance(), session.getMZTolerance());
-//
-//                            for (int i = 0; i< 5000; i++) {
-//                            picker.pick(session.getReference().getListofFiles().get(0).getListofSlices().get(1), 25000, 0.2f);}
+                        session.getReference().addFile(true, file, session);                    
                         progress.set(progress.get() + test);
                         System.out.println(progress.get());
                         double end = System.currentTimeMillis();
@@ -361,7 +362,7 @@ public class FXMLTableViewController implements Initializable {
             batch.setName("Batch Nr. " + (batchcount + 1));
             session.addBatch(batch);
             batchcount++;
-            loader.setController(new BatchController(session, batch, progressbar, data, tps));
+            loader.setController(new BatchController(session, batch, progressbar, MasterListofOGroups, tps));
 
             loader.setRoot(test);
             test = (AnchorPane) loader.load();
@@ -378,10 +379,10 @@ public class FXMLTableViewController implements Initializable {
     
     //all Adducts generate AvgEIC over all Slices
     public void finalizeReference() {
-        for (int i = 0; i<data.size(); i++) {
-            for (int j = 0; j<data.get(i).getListofAdducts().size(); j++) {
-                Entry currentAdduct = data.get(i).getListofAdducts().get(j);
-                currentAdduct.generateBestPeakEIC();
+        for (int i = 0; i<MasterListofOGroups.size(); i++) {
+            for (int j = 0; j<MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                Entry currentAdduct = MasterListofOGroups.get(i).getListofAdducts().get(j);
+               
                 
             }
             

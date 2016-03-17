@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.fxmltableview;
+package com.mycompany.fxmltableview.gui;
 
+import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.Slice;
 import flanagan.analysis.CurveSmooth;
 import static java.lang.Double.NaN;
 import static java.lang.Math.abs;
@@ -117,8 +119,8 @@ public class ChartGenerator {
         //set size of chart
         linechart.setMaxSize(300, 200);
 
-        float lower = adduct.getListofSlices().get(0).getMinRT();
-        float upper = adduct.getListofSlices().get(0).getMaxRT();
+        double lower = adduct.getListofSlices().get(0).getMinRT();
+        double upper = adduct.getListofSlices().get(0).getMaxRT();
         //set Range
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit((upper - lower) / 7);
@@ -176,8 +178,8 @@ public class ChartGenerator {
         //double endouter = System.currentTimeMillis();
         //System.out.println("Outer loop norm: " + (endouter-startouter));
 //set Range
-float lower = adduct.getListofSlices().get(0).getMinRT();
-        float upper = adduct.getListofSlices().get(0).getMaxRT();
+double lower = adduct.getListofSlices().get(0).getMinRT();
+        double upper = adduct.getListofSlices().get(0).getMaxRT();
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit((upper - lower) / 7);
         xAxis.setLowerBound(lower);
@@ -190,7 +192,7 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.setCache(true);
         linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
-        PropArray(adduct, linechart);
+        //PropArray(adduct, linechart);
         return linechart;
     }
 
@@ -243,8 +245,8 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
         }
         //double endouter = System.currentTimeMillis();
         //System.out.println("Outer loop mass: " + (endouter-startouter));
-        float lower = adduct.getListofSlices().get(0).getMinRT();
-        float upper = adduct.getListofSlices().get(0).getMaxRT();
+        double lower = adduct.getListofSlices().get(0).getMinRT();
+        double upper = adduct.getListofSlices().get(0).getMaxRT();
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit((upper - lower) / 7);
         xAxis.setLowerBound(lower);
@@ -262,210 +264,29 @@ float lower = adduct.getListofSlices().get(0).getMinRT();
 
     }
     
-     public LineChart generateNormalizedBestPeakEIC(Entry adduct) {
-
-        
-         
-        //Basic Chart attributes
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("RT [minutes]");
-        yAxis.setLabel("Intensity (normalized)");
-        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
-
-        // for all slices (= for all files)
-        //double startouter = System.currentTimeMillis();
-        for (int i = 0; i < adduct.getListofSlices().size(); i++) {
-            Slice currentSlice = adduct.getListofSlices().get(i);
-          
-
-            XYChart.Series newSeries = new XYChart.Series();
-
-            float maxIntensity = Collections.max(currentSlice.getIntensityList());
-            //double startinner = System.currentTimeMillis();
-            for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
-                float intensity = currentSlice.getIntensityList().get(j);
-                float currentRT = currentSlice.getRetentionTimeList().get(j);
-                while (j < currentSlice.getIntensityList().size() - 1 && abs(currentRT - currentSlice.getRetentionTimeList().get(j + 1)) < 0.0001) {
-                    j++;
-                    intensity = intensity + currentSlice.getIntensityList().get(j);
-
-                }
-
-                newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
-
-            }
-            //double endinner = System.currentTimeMillis();
-            //System.out.println("Inner loop norm: " + (endinner-startinner));
-            linechart.getData().add(newSeries);
-            linechart.applyCss();
-            ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
-            ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
-            linechart.setCreateSymbols(false);
-            linechart.setMaxSize(300, 200);
-
-        }
-        
-        XYChart.Series newSeries = new XYChart.Series();
-        Peak peak = adduct.getPeak();
-        peak.normalize();
-        for (int j = 0; j < peak.getRTArray().length; j++){
-            newSeries.getData().add(new XYChart.Data(peak.getRTArray()[j], peak.getIntensityArray()[j]));
-            
-        }
-        
-        linechart.getData().add(newSeries);
-        linechart.applyCss();
-        ((Path) newSeries.getNode()).setStroke(Color.RED);
-        ((Path) newSeries.getNode()).setStrokeWidth(2.0);
-        
-        //double endouter = System.currentTimeMillis();
-        //System.out.println("Outer loop norm: " + (endouter-startouter));
-//set Range
-float lower = adduct.getListofSlices().get(0).getMinRT();
-        float upper = adduct.getListofSlices().get(0).getMaxRT();
-        xAxis.setAutoRanging(false);
-        xAxis.setTickUnit((upper - lower) / 7);
-        xAxis.setLowerBound(lower);
-        xAxis.setUpperBound(upper);
-
-        yAxis.setAutoRanging(false);
-        yAxis.setLowerBound(-1);
-        yAxis.setUpperBound(1);
-        linechart.setAnimated(false);
-        linechart.setCache(true);
-        linechart.setCacheHint(CacheHint.SPEED);
-        linechart.setLegendVisible(false);
-        
-        PropArray(adduct, linechart);
-        return linechart;
-    }
-     
-                 public void PeakTestReferencevsGauss(Entry adduct, LineChart<Number, Number> linechart) {
-         
-         if (adduct.getPeak().getIntensityArray().length>1) {
-         double[] peakArray = adduct.getPeak().getIntensityArray();
-         int peakint = adduct.getPeak().getRT()-adduct.getPeak().getRTstart();
-
-         double[] completeArray = adduct.getListofSlices().get(adduct.getListofSlices().size()-1).getIntensityArray();
-         
-         PearsonsCorrelation pear = new PearsonsCorrelation();
-         
-         System.out.println();
-         System.out.println("Correlation alignment-----------------");
-         XYChart.Series newSeries = new XYChart.Series();
-        for (int i = 0; i< (completeArray.length-peakArray.length); i++) {
-        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(completeArray, i, i+peakArray.length));
-        newSeries.getData().add(new XYChart.Data(adduct.getRTArray()[i+peakint], corr));
-        System.out.println(corr);
-        
-        
-       
-       
-         
-        
-     }
-        linechart.getData().add(newSeries);
-        linechart.applyCss();
-        ((Path) newSeries.getNode()).setStroke(Color.BLUE);
-        ((Path) newSeries.getNode()).setStrokeWidth(1.0);
-        
-        double[] peakArray2 = {0.30562389380800614, 0.4045593930181101, 0.5010142078557377, 0.5697809675082599, 0.7126271863152996, 0.7675927216635093, 0.8845355890078511, 0.9218788811348794, 0.9336462411287345, 1.0, 0.9712913331424721, 0.7660152062379959, 0.7391207258124926, 0.6103812352993977, 0.47315901034928215, 0.4162911178032002, 0.30054754596741007}; 
-         int peakint2 = 9;
-
-         
-         
-         PearsonsCorrelation pear2 = new PearsonsCorrelation();
-         
-         System.out.println();
-         System.out.println("Correlation alignment-----------------");
-         XYChart.Series newSeries2 = new XYChart.Series();
-        for (int i = 0; i< (completeArray.length-peakArray2.length); i++) {
-        double corr = pear2.correlation(peakArray2 ,Arrays.copyOfRange(completeArray, i, i+peakArray2.length));
-        newSeries2.getData().add(new XYChart.Data(adduct.getRTArray()[i+peakint2], corr));
-        System.out.println(corr);
-        
-        
-       
-       
-         
-        
-     }
-        linechart.getData().add(newSeries2);
-        linechart.applyCss();
-        ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
-        ((Path) newSeries2.getNode()).setStrokeWidth(1.0);
-        
-        
-//        CurveSmooth csm = new CurveSmooth(completeArray);
-//        completeArray = csm.savitzkyGolay(40);
-//         double[][] maxima;
-//             maxima = csm.getMaximaSavitzkyGolay();
-//        for (int i = 0; i< maxima[0].length; i++) {
-//            System.out.println("Savitzky Golay Maxima at: "+ maxima[0][i]);
+    
+    
+//    public void PropArray(Entry adduct, LineChart<Number, Number> linechart) {
+//        adduct.generateGaussProp();
+//        double[] PropArray = adduct.getPropArray();
+//        for (int i = 0; i< PropArray.length; i++) {
+//            if (Double.isNaN(PropArray[i])) {
+//                PropArray[i]=0;
+//            }
 //            
 //        }
-        } else {
-            System.out.println("No Peak");
-        }
-    }
-
-    public void PeakTestEICCorrelation(Entry adduct, LineChart<Number, Number> linechart) {
-double[] referenceArray = adduct.getListofRefSlices().get(0).getIntensityArray();
-double[] batchArray = adduct.getListofSlices().get(1).getIntensityArray();
-
-XYChart.Series newSeries = new XYChart.Series();
-for (int i = 0; i < referenceArray.length; i++) {
-    int lower = -51+i;
-    int upper = lower+100;
-    if (upper>99){
-        upper = 99;
-    }
-    if (lower<0) {
-        lower = 0;
-    }
-    int range = upper-lower;
-    
-    double[] a = Arrays.copyOfRange(referenceArray, lower, upper+1);
-    double[] b = Arrays.copyOfRange(batchArray, 99-upper, 100-lower);
-    
-    PearsonsCorrelation pear = new PearsonsCorrelation();
-         
-         
-    double corr = pear.correlation(a,b);
-    newSeries.getData().add(new XYChart.Data(adduct.getRTArray()[i], corr));
-   
-    
-    
-}
-       linechart.getData().add(newSeries);
-        linechart.applyCss();
-        ((Path) newSeries.getNode()).setStroke(Color.GREEN);
-        ((Path) newSeries.getNode()).setStrokeWidth(1.0); 
-        
-    }
-    
-    public void PropArray(Entry adduct, LineChart<Number, Number> linechart) {
-        adduct.generateGaussProp();
-        double[] PropArray = adduct.getPropArray();
-        for (int i = 0; i< PropArray.length; i++) {
-            if (Double.isNaN(PropArray[i])) {
-                PropArray[i]=0;
-            }
-            
-        }
-        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
-        double max = (double) Collections.max(asList);
-        double[] RTArray = adduct.getListofSlices().get(0).getRTArray();
-        XYChart.Series newSeries = new XYChart.Series();
-        for (int i =0; i<PropArray.length; i++) {
-            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]/max));
-            
-        }
-        linechart.getData().add(newSeries);
-        linechart.applyCss();
-        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
-        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
-        
-    }
+//        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
+//        double max = (double) Collections.max(asList);
+//        double[] RTArray = adduct.getListofSlices().get(0).getRTArray();
+//        XYChart.Series newSeries = new XYChart.Series();
+//        for (int i =0; i<PropArray.length; i++) {
+//            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]/max));
+//            
+//        }
+//        linechart.getData().add(newSeries);
+//        linechart.applyCss();
+//        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
+//        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
+//        
+//    }
 }
