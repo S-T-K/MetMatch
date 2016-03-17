@@ -26,14 +26,13 @@ import static java.lang.Math.abs;
 public class Slice {
     
     private RawDataFile file;
-    private int Num; //Num from Intput Matrix, each adduct has its own Num
-    private float minRT, maxRT, RT;
-    private float minMZ, maxMZ;
+    
     private List<Float> retentionTimeList = new ArrayList<Float>();
     private List<Float> intensityList = new ArrayList<Float>();
     private List<Float> massList = new ArrayList<Float>();
     private PolynomialSplineFunction intensityFunction;
    
+    private Entry adduct;
     
     
     //for Batch Slices, to be compared with the reference AVGEIC 
@@ -41,14 +40,10 @@ public class Slice {
     private double[] IntensityArray;
     private double[] NormIntensityArray;
     
-    public Slice(RawDataFile file, int Num, float MZ, float MZTolerance, float RT, float RTTolerance) {
+    public Slice(RawDataFile file, Entry adduct) {
         this.file = file;
-        this.Num=Num;
-        this.minRT = RT-RTTolerance;
-        this.maxRT = RT+RTTolerance;
-        this.minMZ = MZ-MZTolerance;
-        this.maxMZ = MZ+MZTolerance;
-        this.RT = RT;
+        
+        this.adduct = adduct;
         
         
     }
@@ -136,29 +131,29 @@ public class Slice {
     /**
      * @return the minRT
      */
-    public float getMinRT() {
-        return minRT;
+    public double getMinRT() {
+        return adduct.getMinRT();
     }
 
     /**
      * @return the maxRT
      */
-    public float getMaxRT() {
-        return maxRT;
+    public double getMaxRT() {
+        return adduct.getMaxRT();
     }
 
     /**
      * @return the minMZ
      */
-    public float getMinMZ() {
-        return minMZ;
+    public double getMinMZ() {
+        return adduct.getMinMZ();
     }
 
     /**
      * @return the maxMZ
      */
-    public float getMaxMZ() {
-        return maxMZ;
+    public double getMaxMZ() {
+        return adduct.getMaxMZ();
     }
 
     /**
@@ -244,29 +239,19 @@ public class Slice {
      * @return the Num
      */
     public int getNum() {
-        return Num;
+        return adduct.getNum();
     }
 
-    /**
-     * @param Num the Num to set
-     */
-    public void setNum(int Num) {
-        this.Num = Num;
-    }
+ 
 
     /**
      * @return the RT
      */
-    public float getRT() {
-        return RT;
+    public double getRT() {
+        return adduct.getRT();
     }
 
-    /**
-     * @param RT the RT to set
-     */
-    public void setRT(float RT) {
-        this.RT = RT;
-    }
+ 
 
     /**
      * @param retentionTimeList the retentionTimeList to set
@@ -301,8 +286,8 @@ public class Slice {
 
         
         int resolution = 100;  
-        double startRT = this.minRT+0.05;
-        double endRT = this.maxRT-0.05;
+        double startRT = this.getMinRT()+0.05;
+        double endRT = this.getMaxRT()-0.05;
        
 
         
