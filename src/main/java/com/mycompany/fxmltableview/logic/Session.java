@@ -33,11 +33,13 @@ public class Session {
     private List<Batch> listofBatches;
     private float RTTolerance;
     private float MZTolerance;
+    private int resolution;
     
     
     public Session() {
         this.reference= new Reference();
         this.listofBatches = new ArrayList<>();
+        this.resolution = 100;
         
     }
 
@@ -100,6 +102,8 @@ public class Session {
             
             //if new Ogroup, make new Ogroup
             if (!(lastOGroup.equals(allRows.get(i)[indexOGroup]))) {
+                if (ogroup!=null){
+                ogroup.generateRTArray();}
                 ogroup = new Entry(OGroup, this);
                 lastOGroup = allRows.get(i)[indexOGroup];
                 obsList.add(ogroup);
@@ -111,6 +115,7 @@ public class Session {
             
            
         }
+        ogroup.generateRTArray();
         
         this.listofOGroups= obsList;
         return obsList;
@@ -179,5 +184,19 @@ public class Session {
      */
     public void setMZTolerance(float MZTolerance) {
         this.MZTolerance = MZTolerance;
+    }
+
+    /**
+     * @return the resolution
+     */
+    public int getResolution() {
+        return resolution;
+    }
+
+    /**
+     * @param resolution the resolution to set
+     */
+    public void setResolution(int resolution) {
+        this.resolution = resolution;
     }
 }

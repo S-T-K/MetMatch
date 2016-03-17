@@ -90,20 +90,57 @@ public class Entry {
     public void addSlice(Slice slice) {
         getListofSlices().add(slice);
         
-    }
-    
-    //add Reference Slice
-    public void addRefSlice(Slice slice) {
-        getListofRefSlices().add(slice);
-        slice.generateRefPeak();
-        
+        if (slice.getDataset().equals(getSession().getReference())) {
+            listofRefSlices.add(slice);
+            
+        }
     }
     
     //add adduct to an OGroup
     public void addAdduct(Entry adduct) {
         this.getListofAdducts().add(adduct);
         this.setRT(new SimpleDoubleProperty(((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size()));
+    }
+    
+    public void generateRTArray() {
+        
+        int resolution = getSession().getResolution();
+        double startRT = this.getMinRT()+0.05;
+        double endRT = this.getMaxRT()-0.05;
+        setRTArray(new double[resolution]);
+        
+     
+      
+      //fill Arrays
+      for (int i = 0; i< resolution; i++) {
+            getRTArray()[i] = startRT+(((endRT-startRT))/(resolution-1))*i;
+      }
+        
+        
+    }
+    public void generateAdductPropArray() {
+        PropArray = new double[getSession().getResolution()];
 
+        for (int i = 0; i < listofRefSlices.size(); i++) {
+            listofRefSlices.get(i).generateGaussProp();
+            for (int j = 0; j < getSession().getResolution(); j++) {
+                PropArray[j] += listofRefSlices.get(i).getPropArray()[j];
+            }
+        }
+    }
+    
+    //generates average PropArray over all Adducts
+    //TODO: Avg?
+    public void generateOGroupPropArray() {
+        PropArray = new double[getSession().getResolution()];
+        for (int i = 0; i<listofAdducts.size(); i++) {
+            listofAdducts.get(i).generateAdductPropArray();
+            for (int j = 0; j<session.getResolution(); j++) {
+                PropArray[j]+=listofAdducts.get(i).getPropArray()[j];
+            }
+            
+        }
+        
     }
 
     /**
@@ -252,85 +289,21 @@ public class Entry {
 
     
     
-    public void generateAvgEIC() {
-
-        
-        
-        double startRT = this.getOGroupRT()-session.getRTTolerance()+0.05;
-        double endRT = (this.getOGroupRT()+(session.getRTTolerance()-0.05));
-       
-
-        
-        //generate intensityFunction for all slices
-      for (int i = 0; i< this.getListofRefSlices().size(); i++) {
-          this.getListofRefSlices().get(i).generateInterpolatedEIC();
-      }
-      int resolution = this.getListofRefSlices().get(0).getIntensityArray().length;
-        
-      RTArray = new double[resolution];
-      IntensityArray = new double[resolution];
-      double[] currentint = new double[this.getListofRefSlices().size()];
-     
-      
-      //fill Arrays
-      RTArray = this.getListofRefSlices().get(0).getRTArray();
-      for (int i = 0; i< resolution; i++) {
-          currentint = new double[this.getListofRefSlices().size()];
-          for (int j =0; j<this.getListofRefSlices().size(); j++) {
-              currentint[j] = (this.getListofRefSlices().get(j).getIntensityArray()[i]);
-          }
-          Arrays.sort(currentint);
-          IntensityArray[i]=summ(currentint);
-
-      }
-    
-     double[] MaxArray  = Arrays.copyOf(IntensityArray, resolution);
-     Arrays.sort(MaxArray);
-     
-     for (int i = 0; i< resolution; i++) {
-         IntensityArray[i] = IntensityArray[i]/MaxArray[resolution-1];
-         
-     }
-      
-    }
-    
-    
     
     //generates an array with gaussian peak probability through correlation with such a peak over all slices
-    public void generateGaussProp() {
-         //initialize Array holding probabilities
-        setPropArray(new double[this.IntensityArray.length]);
-         double[] peakArray = {0.30562389380800614, 0.4045593930181101, 0.5010142078557377, 0.5697809675082599, 0.7126271863152996, 0.7675927216635093, 0.8845355890078511, 0.9218788811348794, 0.9336462411287345, 1.0, 0.9712913331424721, 0.7660152062379959, 0.7391207258124926, 0.6103812352993977, 0.47315901034928215, 0.4162911178032002, 0.30054754596741007}; 
-         int peakint = 9;
-
-         
-         
-         PearsonsCorrelation pear = new PearsonsCorrelation();
-
-        for (int j = 0; j< this.listofSlices.size(); j++) {
-        for (int i = 0; i< (this.getListofSlices().get(j).getIntensityArray().length-peakArray.length); i++) {
-        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(this.getListofSlices().get(j).getIntensityArray(), i, i+peakArray.length));
-                getPropArray()[i+peakint]+= corr;
-        
-        }
-    }
-    }
+   
     
-    public void generateEntryGaussProp() {
-        for (int i = 0; i< this.listofAdducts.size(); i++) {
-            
-            
-        }
-        
-        
-    }
-    
+   
 
     /**
      * @return the RTArray
      */
     public double[] getRTArray() {
-        return RTArray;
+       if(OGroupObject!=null){
+            return (OGroupObject.getRTArray());
+        } else {
+            return (RTArray);
+        }
     }
 
     /**
@@ -411,23 +384,37 @@ public class Entry {
     
     public double getMinRT() {
         if(OGroupObject!=null){
-            return (OGroupObject.getRT()-session.getRTTolerance());
+            return (OGroupObject.getRT()-getSession().getRTTolerance());
         } else {
-            return (getRT()-session.getRTTolerance());
+            return (getRT()-getSession().getRTTolerance());
         }
     }
      public double getMaxRT() {
         if(OGroupObject!=null){
-            return (OGroupObject.getRT()+session.getRTTolerance());
+            return (OGroupObject.getRT()+getSession().getRTTolerance());
         } else {
-            return (getRT()+session.getRTTolerance());
+            return (getRT()+getSession().getRTTolerance());
         }
     }
      public double getMinMZ() {
-        return (getMZ()-session.getMZTolerance());
+        return (getMZ()-getSession().getMZTolerance());
     }
       public double getMaxMZ() {
-        return (getMZ()+session.getMZTolerance());
+        return (getMZ()+getSession().getMZTolerance());
+    }
+
+    /**
+     * @return the session
+     */
+    public Session getSession() {
+        return session;
+    }
+
+    /**
+     * @param session the session to set
+     */
+    public void setSession(Session session) {
+        this.session = session;
     }
       
       

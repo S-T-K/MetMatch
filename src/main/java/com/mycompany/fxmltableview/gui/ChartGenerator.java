@@ -192,7 +192,7 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.setCache(true);
         linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
-        //PropArray(adduct, linechart);
+        PropArray(adduct, linechart);
         return linechart;
     }
 
@@ -266,27 +266,27 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
     
     
     
-//    public void PropArray(Entry adduct, LineChart<Number, Number> linechart) {
-//        adduct.generateGaussProp();
-//        double[] PropArray = adduct.getPropArray();
-//        for (int i = 0; i< PropArray.length; i++) {
-//            if (Double.isNaN(PropArray[i])) {
-//                PropArray[i]=0;
-//            }
-//            
-//        }
-//        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
-//        double max = (double) Collections.max(asList);
-//        double[] RTArray = adduct.getListofSlices().get(0).getRTArray();
-//        XYChart.Series newSeries = new XYChart.Series();
-//        for (int i =0; i<PropArray.length; i++) {
-//            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]/max));
-//            
-//        }
-//        linechart.getData().add(newSeries);
-//        linechart.applyCss();
-//        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
-//        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
-//        
-//    }
+    public void PropArray(Entry adduct, LineChart<Number, Number> linechart) {
+        adduct.getOGroupObject().generateOGroupPropArray();
+        double[] PropArray = adduct.getOGroupObject().getPropArray();
+        for (int i = 0; i< PropArray.length; i++) {
+            if (Double.isNaN(PropArray[i])) {
+                PropArray[i]=0;
+            }
+            
+        }
+        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
+        double max = (double) Collections.max(asList);
+        double[] RTArray = adduct.getRTArray();
+        XYChart.Series newSeries = new XYChart.Series();
+        for (int i =0; i<PropArray.length; i++) {
+            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]/max));
+            
+        }
+        linechart.getData().add(newSeries);
+        linechart.applyCss();
+        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
+        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
+        
+    }
 }

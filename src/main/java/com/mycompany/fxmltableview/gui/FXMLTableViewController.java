@@ -180,6 +180,10 @@ public class FXMLTableViewController implements Initializable {
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
+        session.setResolution(100);
+        session.setRTTolerance(1.5f);
+        session.setMZTolerance(0.002f);
+        
 
         //set batchcount to 0,
         batchcount = 0;
@@ -229,8 +233,7 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         MasterListofOGroups = session.parseReferenceTsv();
-        session.setRTTolerance(1.5f);
-        session.setMZTolerance(0.002f);
+        
 
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
@@ -336,7 +339,6 @@ public class FXMLTableViewController implements Initializable {
                     addBatchButton.setDisable(false);
 
                 }
-                finalizeReference();
                 return null;
             }
 
@@ -372,21 +374,7 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
-    public void printInfo() {
-
-    }
-
+  
     
-    //all Adducts generate AvgEIC over all Slices
-    public void finalizeReference() {
-        for (int i = 0; i<MasterListofOGroups.size(); i++) {
-            for (int j = 0; j<MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
-                Entry currentAdduct = MasterListofOGroups.get(i).getListofAdducts().get(j);
-               
-                
-            }
-            
-        }
-        
-    }
+    
 }

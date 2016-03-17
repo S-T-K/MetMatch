@@ -33,6 +33,7 @@ import javafx.scene.paint.Color;
 public class RawDataFile {
 
     private File file;
+    private Dataset dataset;
     private List<Scan> listofScans;
     private List<Slice> listofSlices;
     private StringProperty name;
@@ -44,11 +45,12 @@ public class RawDataFile {
     
 
     //Constructor for new Raw Data file
-    public RawDataFile(File file, Property color,  DoubleProperty width) {
+    public RawDataFile(Dataset dataset, File file) {
         this.file=file;
+        this.dataset=dataset;
         this.name = new SimpleStringProperty(file.getName());
-        this.color= new SimpleObjectProperty(color.getValue());
-        this.Width = new SimpleDoubleProperty(width.get());
+        this.color= new SimpleObjectProperty(dataset.getColor());
+        this.Width = new SimpleDoubleProperty(dataset.getWidth());
     }
 
     // parse Scans
@@ -73,11 +75,6 @@ public class RawDataFile {
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 getListofSlices().add(newSlice);
                 
-                //add to reference Slices if reference
-                if (isreference) {
-                    data.get(i).getListofAdducts().get(j).addRefSlice(newSlice);
-                    
-                }
                 
             }
      
@@ -141,5 +138,19 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
      */
     public void setListofSlices(List<Slice> listofSlices) {
         this.listofSlices = listofSlices;
+    }
+
+    /**
+     * @return the dataset
+     */
+    public Dataset getDataset() {
+        return dataset;
+    }
+
+    /**
+     * @param dataset the dataset to set
+     */
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
     }
 }

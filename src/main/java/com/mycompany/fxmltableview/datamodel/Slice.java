@@ -18,6 +18,7 @@ import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 /**
  *
@@ -33,16 +34,16 @@ public class Slice {
     private PolynomialSplineFunction intensityFunction;
    
     private Entry adduct;
+    private Dataset dataset;
     
     
-    //for Batch Slices, to be compared with the reference AVGEIC 
-    private double[] RTArray ;
     private double[] IntensityArray;
     private double[] NormIntensityArray;
+    private double[] PropArray;
     
     public Slice(RawDataFile file, Entry adduct) {
         this.file = file;
-        
+        this.dataset = file.getDataset();
         this.adduct = adduct;
         
         
@@ -106,7 +107,67 @@ public class Slice {
        
        this.intensityFunction = interpolator.interpolate(RT, Intensity);
     }
+    
+    //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
+ public void generateGaussProp() {
+         //initialize Array holding probabilities
+        setPropArray(new double[this.IntensityArray.length]);
+         double[] peakArray = {0.30562389380800614, 0.4045593930181101, 0.5010142078557377, 0.5697809675082599, 0.7126271863152996, 0.7675927216635093, 0.8845355890078511, 0.9218788811348794, 0.9336462411287345, 1.0, 0.9712913331424721, 0.7660152062379959, 0.7391207258124926, 0.6103812352993977, 0.47315901034928215, 0.4162911178032002, 0.30054754596741007}; 
+         int peakint = 9;
 
+         
+         
+         PearsonsCorrelation pear = new PearsonsCorrelation();
+
+        
+        for (int i = 0; i< (IntensityArray.length-peakArray.length); i++) {
+        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(IntensityArray, i, i+peakArray.length));
+                getPropArray()[i+peakint]+= corr;
+        
+        }
+        generatePeakArray();
+    }
+ 
+ //generates Array filled with Peak probabilites
+ //TODO: negative Maxima
+ public void generatePeakArray() {
+     CurveSmooth csm = new CurveSmooth(PropArray);
+     double[][] maxima = csm.getMaximaUnsmoothed();
+     
+     
+     
+     
+     //delete array except for ragion around maxima
+     int current = 0;
+     for (int i = 0; i<maxima[0].length; i++) {
+         while (current < PropArray.length && current<maxima[0][i]-1) {
+             PropArray[current] = 0;
+             current++;
+         }
+         current = current+3;
+     }
+     while (current<PropArray.length) {
+         PropArray[current] = 0;
+             current++;
+     }
+ }
+
+    /**
+     * @return the PropArray
+     */
+    public double[] getPropArray() {
+        return PropArray;
+    }
+
+    /**
+     * @param PropArray the PropArray to set
+     */
+    public void setPropArray(double[] PropArray) {
+        this.PropArray = PropArray;
+    }
+    
+    
+    
     /**
      * @return the retentionTimeList
      */
@@ -285,15 +346,12 @@ public class Slice {
     public void generateInterpolatedEIC() {
 
         
-        int resolution = 100;  
-        double startRT = this.getMinRT()+0.05;
-        double endRT = this.getMaxRT()-0.05;
+        int resolution = adduct.getSession().getResolution();
        
 
         
        generateIntensityFunction();
         
-        setRTArray(new double[resolution]);
         setIntensityArray(new double[resolution]);
         setNormIntensityArray(new double[resolution]);
       
@@ -301,7 +359,6 @@ public class Slice {
       
       //fill Arrays
       for (int i = 0; i< resolution; i++) {
-            getRTArray()[i] = startRT+(((endRT-startRT))/(resolution-1))*i;
             getIntensityArray()[i]=getIntensityFunction().value(getRTArray()[i]);
 
       }
@@ -320,15 +377,10 @@ public class Slice {
      * @return the RTArray
      */
     public double[] getRTArray() {
-        return RTArray;
+        return adduct.getRTArray();
     }
 
-    /**
-     * @param RTArray the RTArray to set
-     */
-    public void setRTArray(double[] RTArray) {
-        this.RTArray = RTArray;
-    }
+ 
 
     /**
      * @return the IntensityArray
@@ -485,6 +537,20 @@ public class Slice {
         }
         
         return smooth;
+    }
+
+    /**
+     * @return the dataset
+     */
+    public Dataset getDataset() {
+        return dataset;
+    }
+
+    /**
+     * @param dataset the dataset to set
+     */
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
     }
     
 }
