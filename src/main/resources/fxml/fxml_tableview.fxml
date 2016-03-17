@@ -14,7 +14,6 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.collections.*?>
 
-
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="826.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.FXMLTableViewController">
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="826.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -56,6 +55,7 @@
                                                         <Menu mnemonicParsing="false" text="Files">
                                                             <items>
                                                                 <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openReferencemzxmlChooser" text="Add new .mzXML" />
+                                                <MenuItem fx:id="calculate" mnemonicParsing="false" onAction="#calculate" text="Calculate Shift" />
                                                 <Menu mnemonicParsing="false" text="Rename">
                                                   <items>
                                                     <MenuItem mnemonicParsing="false">

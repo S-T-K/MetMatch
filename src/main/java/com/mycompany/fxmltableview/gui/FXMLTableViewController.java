@@ -6,10 +6,14 @@ import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -374,7 +378,40 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
-  
+  public void calculate() {
+      Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException {
+                
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+              new FileOutputStream("filename.txt"), "utf-8"))) {
+ 
+                double[][] matrix = new double[MasterListofOGroups.size()][session.getResolution()];
+                for (int i = 0; i<MasterListofOGroups.size(); i++) {
+                    double[] PropArray = MasterListofOGroups.get(i).generateOGroupPropArray();
+                    for (int j =0; j<session.getResolution(); j++) {
+                        matrix[i][j] = PropArray[j];
+                        writer.write("\t" + PropArray[j]);
+                        
+                    }
+                    writer.write("\n");
+                    
+                }
+                }
+                
+                
+               return null; 
+            }
+
+        };
+
+        //new thread that executes task
+        new Thread(task).start();
+
+        
+  }
+    
+    
     
     
 }

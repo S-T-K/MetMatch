@@ -131,7 +131,7 @@ public class Entry {
     
     //generates average PropArray over all Adducts
     //TODO: Avg?
-    public void generateOGroupPropArray() {
+    public double[] generateOGroupPropArray() {
         PropArray = new double[getSession().getResolution()];
         for (int i = 0; i<listofAdducts.size(); i++) {
             listofAdducts.get(i).generateAdductPropArray();
@@ -140,7 +140,7 @@ public class Entry {
             }
             
         }
-        
+        return PropArray;
     }
 
     /**

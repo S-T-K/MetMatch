@@ -54,6 +54,7 @@ public class Fxml_adductviewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         //add ChartGenerator
       chartGenerator = new ChartGenerator();
+      
     }    
     
     //method that generates the graphs
