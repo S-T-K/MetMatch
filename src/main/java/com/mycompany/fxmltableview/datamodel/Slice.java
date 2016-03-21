@@ -55,11 +55,13 @@ public class Slice {
     
     public void extractSlicefromScans(List<Scan> listofScans) {
          //for all Scans
+         setMinIntensity(900000000);
+         setMaxIntensity(0);
+         boolean found;
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
-            boolean found;
-            setMinIntensity(900000000);
-            setMaxIntensity(0);
+            
+            
             float currentRT = listofScans.get(i).getRetentionTime();
             
             //0.05 so that ranges for the interpolation are smaller than the actual ranges, otherwise out of range
@@ -76,11 +78,11 @@ public class Slice {
                                 getRetentionTimeList().add(currentRT);
                                 getIntensityList().add(listofScans.get(i).getIntensity()[l]);
                                 getMassList().add(listofScans.get(i).getMassovercharge()[l]);
-                                if (listofScans.get(i).getMassovercharge()[l]>getMaxIntensity()) {
-                                    setMaxIntensity(listofScans.get(i).getMassovercharge()[l]);
+                                if (listofScans.get(i).getIntensity()[l]>getMaxIntensity()) {
+                                    setMaxIntensity(listofScans.get(i).getIntensity()[l]);
                                 }
-                                if (listofScans.get(i).getMassovercharge()[l] < getMinIntensity()) {
-                                    setMinIntensity(listofScans.get(i).getMassovercharge()[l]);
+                                if (listofScans.get(i).getIntensity()[l] < getMinIntensity()) {
+                                    setMinIntensity(listofScans.get(i).getIntensity()[l]);
                                 }
                                 found = true;
                                 

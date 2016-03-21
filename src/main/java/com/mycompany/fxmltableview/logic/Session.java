@@ -41,7 +41,7 @@ public class Session {
         this.reference= new Reference();
         this.listofBatches = new ArrayList<>();
         this.resolution = 100;
-        this.baseline = 30000;
+        this.baseline = 5000;
         
     }
 
