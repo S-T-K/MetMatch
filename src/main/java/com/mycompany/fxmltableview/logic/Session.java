@@ -34,12 +34,14 @@ public class Session {
     private float RTTolerance;
     private float MZTolerance;
     private int resolution;
+    private float baseline;
     
     
     public Session() {
         this.reference= new Reference();
         this.listofBatches = new ArrayList<>();
         this.resolution = 100;
+        this.baseline = 30000;
         
     }
 
@@ -198,5 +200,19 @@ public class Session {
      */
     public void setResolution(int resolution) {
         this.resolution = resolution;
+    }
+
+    /**
+     * @return the baseline
+     */
+    public float getBaseline() {
+        return baseline;
+    }
+
+    /**
+     * @param baseline the baseline to set
+     */
+    public void setBaseline(float baseline) {
+        this.baseline = baseline;
     }
 }

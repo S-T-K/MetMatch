@@ -32,6 +32,8 @@ public class Slice {
     private List<Float> intensityList = new ArrayList<Float>();
     private List<Float> massList = new ArrayList<Float>();
     private PolynomialSplineFunction intensityFunction;
+    private float minIntensity;
+    private float maxIntensity;
    
     private Entry adduct;
     private Dataset dataset;
@@ -56,9 +58,12 @@ public class Slice {
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
             boolean found;
+            setMinIntensity(900000000);
+            setMaxIntensity(0);
             float currentRT = listofScans.get(i).getRetentionTime();
             
             //0.05 so that ranges for the interpolation are smaller than the actual ranges, otherwise out of range
+           
         if (currentRT>= (getMinRT()) && currentRT<= (getMaxRT())) {
             
                         found = false;
@@ -66,10 +71,17 @@ public class Slice {
                         
                         //TODO binary search!!!!!!
                         for (int l=0; l<listofScans.get(i).getPeakscount(); l++) {
+                           
                             if (listofScans.get(i).getMassovercharge()[l] >= getMinMZ() && listofScans.get(i).getMassovercharge()[l] <= getMaxMZ()) {
                                 getRetentionTimeList().add(currentRT);
                                 getIntensityList().add(listofScans.get(i).getIntensity()[l]);
                                 getMassList().add(listofScans.get(i).getMassovercharge()[l]);
+                                if (listofScans.get(i).getMassovercharge()[l]>getMaxIntensity()) {
+                                    setMaxIntensity(listofScans.get(i).getMassovercharge()[l]);
+                                }
+                                if (listofScans.get(i).getMassovercharge()[l] < getMinIntensity()) {
+                                    setMinIntensity(listofScans.get(i).getMassovercharge()[l]);
+                                }
                                 found = true;
                                 
                                 
@@ -84,7 +96,95 @@ public class Slice {
                             
                         }
                     }
+        
         }
+      
+     this.clean();
+     this.generateInterpolatedEIC();
+     
+    }
+    
+    //not yet working...
+    public void binaryExtractSlicefromScans(List<Scan> listofScans) {
+         //for all Scans
+         int start = 0;
+         int end = listofScans.size()-1;
+         int middle = end/2;
+         boolean found = false;
+         
+         while (!found) {
+             if (listofScans.get(middle).getRetentionTime() < getMinRT()) {
+                 start = middle +1;
+             } else if (listofScans.get(middle).getRetentionTime() > getMaxRT()) {
+                 end = middle-1;
+             } else {
+                 found = true;
+             }
+             middle = (start+end)/2;
+         }
+         
+         start = middle;
+         end = middle;
+         while (listofScans.get(start).getRetentionTime()>getMinRT()) {
+             start--;
+         }
+         start++;
+         
+         while (listofScans.get(end).getRetentionTime()<getMaxRT()) {
+             end++;
+         }
+         end--;
+         
+         for (int i = start; i<= end; i++) {
+             found = false;
+             float currentRT = listofScans.get(i).getRetentionTime();
+                        
+             int startp = 0;
+             int endp = listofScans.get(i).getPeakscount();
+             middle = endp/2;
+             
+             while ((startp<endp) && !found) {
+                 if (listofScans.get(i).getMassovercharge()[middle] < getMinMZ()) {
+                     startp = middle+1;
+                 } else if (listofScans.get(i).getMassovercharge()[middle] > getMaxMZ()) {
+                     endp = middle-1;
+                 } else {
+                     found = true;
+                 }
+                 middle = (startp+endp)/2;
+             }
+             startp = middle;
+             endp = middle;
+             
+             
+             if (found) {
+                 while (listofScans.get(i).getMassovercharge()[startp]>getMinMZ()) {
+                     getRetentionTimeList().add(currentRT);
+                     getIntensityList().add(listofScans.get(i).getIntensity()[startp]);
+                     getMassList().add(listofScans.get(i).getMassovercharge()[startp]);
+                     startp--;
+                 }
+                 while (listofScans.get(i).getMassovercharge()[endp]<getMaxMZ()) {
+                     getRetentionTimeList().add(currentRT);
+                     getIntensityList().add(listofScans.get(i).getIntensity()[endp]);
+                     getMassList().add(listofScans.get(i).getMassovercharge()[endp]);
+                     endp++;
+                     
+                 }
+                     
+                 
+             } else {
+             getRetentionTimeList().add(currentRT);
+                            getIntensityList().add(0.0f);
+                            getMassList().add(0.0f);
+             }
+             
+             
+         }
+         
+         
+         
+       
       
      this.clean();
      this.generateInterpolatedEIC();
@@ -119,13 +219,24 @@ public class Slice {
          
          PearsonsCorrelation pear = new PearsonsCorrelation();
 
-        
+         
+         //baseline correct IntensityArray
+            double[] correctedIntArray = new double[IntensityArray.length];
+            for ( int j = 0; j<IntensityArray.length; j++)  {
+                if (IntensityArray[j]>=adduct.getSession().getBaseline()) {
+                    correctedIntArray[j]=IntensityArray[j]-adduct.getSession().getBaseline();
+                }
+                
+            }
+            
         for (int i = 0; i< (IntensityArray.length-peakArray.length); i++) {
-        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(IntensityArray, i, i+peakArray.length));
-                getPropArray()[i+peakint]+= corr;
+            
+        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
+                //scale according to maxIntensity
+                getPropArray()[i+peakint]= corr*Math.log10(maxIntensity);
         
         }
-        generatePeakArray();
+        //generatePeakArray();
     }
  
  //generates Array filled with Peak probabilites
@@ -137,7 +248,7 @@ public class Slice {
      
      
      
-     //delete array except for ragion around maxima
+     //delete array except for region around maxima
      int current = 0;
      for (int i = 0; i<maxima[0].length; i++) {
          while (current < PropArray.length && current<maxima[0][i]-1) {
@@ -551,6 +662,34 @@ public class Slice {
      */
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
+    }
+
+    /**
+     * @return the minIntensity
+     */
+    public float getMinIntensity() {
+        return minIntensity;
+    }
+
+    /**
+     * @param minIntensity the minIntensity to set
+     */
+    public void setMinIntensity(float minIntensity) {
+        this.minIntensity = minIntensity;
+    }
+
+    /**
+     * @return the maxIntensity
+     */
+    public float getMaxIntensity() {
+        return maxIntensity;
+    }
+
+    /**
+     * @param maxIntensity the maxIntensity to set
+     */
+    public void setMaxIntensity(float maxIntensity) {
+        this.maxIntensity = maxIntensity;
     }
     
 }

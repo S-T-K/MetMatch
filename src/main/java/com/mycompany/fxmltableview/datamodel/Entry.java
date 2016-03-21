@@ -11,6 +11,7 @@ import com.mycompany.fxmltableview.logic.Session;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -49,6 +50,9 @@ public class Entry {
     
     //for peak probability
     private double[] PropArray;
+    
+    //maxIntensity of all Slices
+    private float maxIntensity;
 
     //Interpolated Arrays
     private double[] RTArray;
@@ -71,6 +75,7 @@ public class Entry {
         this.listofRefSlices = new ArrayList<Slice>();
         this.session=session;
         this.OGroupObject=ogroup;
+        this.maxIntensity = 0;
         
     }
     
@@ -89,6 +94,9 @@ public class Entry {
     //add Slice to Adduct
     public void addSlice(Slice slice) {
         getListofSlices().add(slice);
+        if (slice.getMaxIntensity()>maxIntensity) {
+            maxIntensity = slice.getMaxIntensity();
+        }
         
         if (slice.getDataset().equals(getSession().getReference())) {
             listofRefSlices.add(slice);
@@ -124,7 +132,8 @@ public class Entry {
         for (int i = 0; i < listofRefSlices.size(); i++) {
             listofRefSlices.get(i).generateGaussProp();
             for (int j = 0; j < getSession().getResolution(); j++) {
-                PropArray[j] += listofRefSlices.get(i).getPropArray()[j];
+                if (listofRefSlices.get(i).getPropArray()[j]>PropArray[j]){
+                PropArray[j] = listofRefSlices.get(i).getPropArray()[j];}
             }
         }
     }
@@ -136,7 +145,8 @@ public class Entry {
         for (int i = 0; i<listofAdducts.size(); i++) {
             listofAdducts.get(i).generateAdductPropArray();
             for (int j = 0; j<session.getResolution(); j++) {
-                PropArray[j]+=listofAdducts.get(i).getPropArray()[j];
+                if(listofAdducts.get(i).getPropArray()[j]>PropArray[j]){
+                PropArray[j]=listofAdducts.get(i).getPropArray()[j];}
             }
             
         }
@@ -417,5 +427,17 @@ public class Entry {
         this.session = session;
     }
       
-      
+    
+    //Comparator to sort List of Entries
+    public static class orderbyRT implements Comparator<Entry> {
+
+        @Override
+        public int compare(Entry o1, Entry o2) {
+            return Double.valueOf(o1.getRT()).compareTo(Double.valueOf(o2.getRT()));
+        }
+    }
+
+
+    
+    
 }

@@ -2,6 +2,7 @@ package com.mycompany.fxmltableview.gui;
 
 import com.mycompany.fxmltableview.datamodel.Batch;
 import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.Entry.orderbyRT;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -388,6 +390,7 @@ public class FXMLTableViewController implements Initializable {
  
                 double[][] matrix = new double[MasterListofOGroups.size()][session.getResolution()];
                 for (int i = 0; i<MasterListofOGroups.size(); i++) {
+                    Collections.sort(MasterListofOGroups, new orderbyRT());
                     double[] PropArray = MasterListofOGroups.get(i).generateOGroupPropArray();
                     for (int j =0; j<session.getResolution(); j++) {
                         matrix[i][j] = PropArray[j];
@@ -397,7 +400,67 @@ public class FXMLTableViewController implements Initializable {
                     writer.write("\n");
                     
                 }
+                //calculate weight matrix
+                double[][] weights = new double[MasterListofOGroups.size()][session.getResolution()];
+                //fill first row
+                for (int j =0; j<session.getResolution(); j++) {
+                    weights[0][j] = matrix[0][j];
+                    
                 }
+                
+                //fill rest of weights matrix
+                for (int i = 1; i<MasterListofOGroups.size(); i++) {
+                    for (int j =0; j<session.getResolution(); j++) {
+                        double max = 0;
+                        if((j-1)>0 && weights[i-1][j-1]>max){
+                            max = weights[i-1][j-1];}
+                        if(weights[i-1][j]>max){
+                            max=weights[i-1][j];}
+                        if ((j+1)<session.getResolution() && weights[i-1][j+1]>max){
+                            max = weights[i-1][j+1];
+                        }
+                        weights[i][j] = max+matrix[i][j];
+                        
+                        
+                        
+                    }
+  
+                }
+                //get max in last row
+                double max = 0;
+                int maxint = 0;
+                for (int j =0; j<session.getResolution(); j++) {
+                    if (weights[MasterListofOGroups.size()-1][j]> max) {
+                        maxint = j;
+                        max = weights[MasterListofOGroups.size()-1][j];
+                    }
+                }
+                System.out.println(maxint);
+                
+                
+                for (int i = MasterListofOGroups.size()-2; i>-1; i--){
+                    max = 0;
+                    int j = maxint;
+                    if((j-1)>0 && weights[i][j-1]> max) {
+                        max = weights[i][j-1];
+                        maxint = j-1;
+                    }
+                    if(weights[i][j]> max) {
+                        max = weights[i][j];
+                        maxint = j;
+                    }
+                    if((j+1)<session.getResolution() && weights[i][j+1]> max) {
+                        max = weights[i][j+1];
+                        maxint = j+1;
+                    }
+                    System.out.println(maxint);
+                    
+                }
+               
+                
+                }
+                
+                
                 
                 
                return null; 

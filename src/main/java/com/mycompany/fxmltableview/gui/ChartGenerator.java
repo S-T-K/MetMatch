@@ -269,12 +269,7 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
     public void PropArray(Entry adduct, LineChart<Number, Number> linechart) {
         adduct.getOGroupObject().generateOGroupPropArray();
         double[] PropArray = adduct.getOGroupObject().getPropArray();
-        for (int i = 0; i< PropArray.length; i++) {
-            if (Double.isNaN(PropArray[i])) {
-                PropArray[i]=0;
-            }
-            
-        }
+        
         List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
         double max = (double) Collections.max(asList);
         double[] RTArray = adduct.getRTArray();
