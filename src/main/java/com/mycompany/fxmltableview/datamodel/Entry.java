@@ -50,6 +50,7 @@ public class Entry {
     
     //for peak probability
     private double[] PropArray;
+    private int fittedShift;
     
     //maxIntensity of all Slices
     private float maxIntensity;
@@ -425,6 +426,20 @@ public class Entry {
      */
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    /**
+     * @return the fittedShift
+     */
+    public int getFittedShift() {
+        return fittedShift;
+    }
+
+    /**
+     * @param fittedShift the fittedShift to set
+     */
+    public void setFittedShift(int fittedShift) {
+        this.fittedShift = fittedShift;
     }
       
     

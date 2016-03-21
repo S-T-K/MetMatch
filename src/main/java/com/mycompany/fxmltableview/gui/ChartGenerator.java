@@ -283,5 +283,13 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
         ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
         
+        
+        XYChart.Series newSeries2 = new XYChart.Series();
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift()], PropArray[adduct.getOGroupObject().getFittedShift()]/max));
+        linechart.getData().add(newSeries2);
+        linechart.applyCss();
+        ((Path) newSeries2.getNode()).setStroke(Color.RED);
+        ((Path) newSeries2.getNode()).setStrokeWidth(5.0); 
+        
     }
 }

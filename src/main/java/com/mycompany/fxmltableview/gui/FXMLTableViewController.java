@@ -385,21 +385,40 @@ public class FXMLTableViewController implements Initializable {
             @Override
             public Void call() throws IOException {
                 
-                try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
               new FileOutputStream("filename.txt"), "utf-8"))) {
- 
+                Collections.sort(MasterListofOGroups, new orderbyRT());
                 double[][] matrix = new double[MasterListofOGroups.size()][session.getResolution()];
                 for (int i = 0; i<MasterListofOGroups.size(); i++) {
-                    Collections.sort(MasterListofOGroups, new orderbyRT());
+                   
+
                     double[] PropArray = MasterListofOGroups.get(i).generateOGroupPropArray();
                     for (int j =0; j<session.getResolution(); j++) {
                         matrix[i][j] = PropArray[j];
-                        writer.write("\t" + PropArray[j]);
                         
                     }
-                    writer.write("\n");
                     
                 }
+                
+                //Test artificial shift
+                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
+                for (int i = 0; i< MasterListofOGroups.size(); i++) {
+                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT()/2)*10)));
+                    for (int j = 0; j<currentshift; j++) {
+                        matrix2[i][j] = 0; 
+                    }
+                    for (int j = currentshift; j<session.getResolution(); j++) {
+                        matrix2[i][j] = matrix[i][j-currentshift];
+                        
+                    }
+                }
+               
+                matrix = matrix2;
+                
+                
+                
+                
+                
                 //calculate weight matrix
                 double[][] weights = new double[MasterListofOGroups.size()][session.getResolution()];
                 //fill first row
@@ -407,17 +426,18 @@ public class FXMLTableViewController implements Initializable {
                     weights[0][j] = matrix[0][j];
                     
                 }
-                
+                //TODO: Penalty for change in j
                 //fill rest of weights matrix
+                double penalty = 0.99;
                 for (int i = 1; i<MasterListofOGroups.size(); i++) {
                     for (int j =0; j<session.getResolution(); j++) {
                         double max = 0;
-                        if((j-1)>0 && weights[i-1][j-1]>max){
-                            max = weights[i-1][j-1];}
                         if(weights[i-1][j]>max){
                             max=weights[i-1][j];}
-                        if ((j+1)<session.getResolution() && weights[i-1][j+1]>max){
-                            max = weights[i-1][j+1];
+                        if((j-1)>0 && weights[i-1][j-1]*penalty>max){
+                            max = weights[i-1][j-1]*penalty;}
+                        if ((j+1)<session.getResolution() && weights[i-1][j+1]*penalty>max){
+                            max = weights[i-1][j+1]*penalty;
                         }
                         weights[i][j] = max+matrix[i][j];
                         
@@ -436,6 +456,11 @@ public class FXMLTableViewController implements Initializable {
                     }
                 }
                 System.out.println(maxint);
+                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(maxint);
+                writer.write(MasterListofOGroups.get(MasterListofOGroups.size()-1).getRT() + "\t" + maxint+ "\t" + MasterListofOGroups.get(MasterListofOGroups.size()-1).getOGroup());
+                writer.newLine();
+                
+             
                 
                 
                 for (int i = MasterListofOGroups.size()-2; i>-1; i--){
@@ -454,6 +479,9 @@ public class FXMLTableViewController implements Initializable {
                         maxint = j+1;
                     }
                     System.out.println(maxint);
+                    MasterListofOGroups.get(i).setFittedShift(maxint);
+                writer.write(MasterListofOGroups.get(i).getRT() + "\t" + maxint+ "\t" + MasterListofOGroups.get(i).getOGroup());
+                writer.newLine();
                     
                 }
                

@@ -238,7 +238,7 @@ public class Slice {
                 getPropArray()[i+peakint]= corr*Math.log10(maxIntensity);
         
         }
-        //generatePeakArray();
+        generatePeakArray();
     }
  
  //generates Array filled with Peak probabilites
