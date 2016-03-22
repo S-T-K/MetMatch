@@ -18,6 +18,7 @@ import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 /**
@@ -214,8 +215,27 @@ public class Slice {
  public void generateGaussProp() {
          //initialize Array holding probabilities
         setPropArray(new double[this.IntensityArray.length]);
-         double[] peakArray = {0.30562389380800614, 0.4045593930181101, 0.5010142078557377, 0.5697809675082599, 0.7126271863152996, 0.7675927216635093, 0.8845355890078511, 0.9218788811348794, 0.9336462411287345, 1.0, 0.9712913331424721, 0.7660152062379959, 0.7391207258124926, 0.6103812352993977, 0.47315901034928215, 0.4162911178032002, 0.30054754596741007}; 
-         int peakint = 9;
+        
+        int arraylength = adduct.getSession().getResolution()/8;
+        if (arraylength%2==0) {
+                   arraylength++;
+        }
+        
+        double[] peakArray = new double[arraylength];
+        int peakint = Math.floorDiv(arraylength, 2);
+        NormalDistribution normdist = new NormalDistribution();
+        //edge of peak is at X std
+        double peakedge = 2;
+        double increment = peakedge/(peakint-1);
+        for (int i = 0; i<=peakint; i++) {
+            peakArray[i]=normdist.density(peakedge-i*increment);
+            peakArray[(arraylength-1)-i]=peakArray[i];
+        }
+        
+        
+        
+       
+  
 
          
          
@@ -235,7 +255,7 @@ public class Slice {
             
         double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
                 //scale according to maxIntensity
-                getPropArray()[i+peakint]= corr*Math.log10(maxIntensity);
+                getPropArray()[i+peakint]= corr*Math.log(maxIntensity);
         
         }
         generatePeakArray();
@@ -253,11 +273,11 @@ public class Slice {
      //delete array except for region around maxima
      int current = 0;
      for (int i = 0; i<maxima[0].length; i++) {
-         while (current < PropArray.length && current<maxima[0][i]-1) {
+         while (current < PropArray.length && current<maxima[0][i]) {
              PropArray[current] = 0;
              current++;
          }
-         current = current+3;
+         current = current+2;
      }
      while (current<PropArray.length) {
          PropArray[current] = 0;

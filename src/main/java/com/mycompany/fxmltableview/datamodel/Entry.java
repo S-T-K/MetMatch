@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.chart.XYChart;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 /**
@@ -151,6 +152,16 @@ public class Entry {
             }
             
         }
+        
+        //normalize
+//        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
+//        double max = (double) Collections.max(asList);
+//        
+//        for (int i = 0; i<PropArray.length; i++) {
+//            PropArray[i] = PropArray[i]/max;
+//            
+//        }
+        
         return PropArray;
     }
 
