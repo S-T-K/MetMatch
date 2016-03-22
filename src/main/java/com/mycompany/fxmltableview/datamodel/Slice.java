@@ -246,7 +246,7 @@ public class Slice {
             double[] correctedIntArray = new double[IntensityArray.length];
             for ( int j = 0; j<IntensityArray.length; j++)  {
                 if (IntensityArray[j]>=adduct.getSession().getBaseline()) {
-                    correctedIntArray[j]=IntensityArray[j]-adduct.getSession().getBaseline();
+                    correctedIntArray[j]=IntensityArray[j];
                 }
                 
             }
@@ -254,11 +254,14 @@ public class Slice {
         for (int i = 0; i< (IntensityArray.length-peakArray.length); i++) {
             
         double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
+        
                 //scale according to maxIntensity
-                getPropArray()[i+peakint]= corr*Math.log(maxIntensity);
+               //and weaken weak signals
+               if (corr > 0) {
+                getPropArray()[i+peakint]= (corr*corr)*Math.log10(IntensityArray[i+peakint]-minIntensity);}
         
         }
-        generatePeakArray();
+        //generatePeakArray();
     }
  
  //generates Array filled with Peak probabilites

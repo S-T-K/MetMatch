@@ -401,19 +401,19 @@ public class FXMLTableViewController implements Initializable {
                 }
                 
                 //Test artificial shift
-//                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
-//                for (int i = 0; i< MasterListofOGroups.size(); i++) {
-//                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
-//                    for (int j = 0; j<currentshift; j++) {
-//                        matrix2[i][j] = 0; 
-//                    }
-//                    for (int j = currentshift; j<session.getResolution(); j++) {
-//                        matrix2[i][j] = matrix[i][j-currentshift];
-//                        
-//                    }
-//                }
-//               
-//                matrix = matrix2;
+                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
+                for (int i = 0; i< MasterListofOGroups.size(); i++) {
+                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
+                    for (int j = 0; j<currentshift; j++) {
+                        matrix2[i][j] = 0; 
+                    }
+                    for (int j = currentshift; j<session.getResolution(); j++) {
+                        matrix2[i][j] = matrix[i][j-currentshift];
+                        
+                    }
+                }
+               
+                matrix = matrix2;
                 
                 
                 
@@ -428,7 +428,7 @@ public class FXMLTableViewController implements Initializable {
                 }
                 //TODO: Penalty for change in j
                 //fill rest of weights matrix
-                double penalty = 0.95;
+                double penalty = 0.98;
                 for (int i = 1; i<MasterListofOGroups.size(); i++) {
                     for (int j =0; j<session.getResolution(); j++) {
                         double max = 0;
