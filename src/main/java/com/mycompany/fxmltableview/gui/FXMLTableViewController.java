@@ -119,7 +119,7 @@ public class FXMLTableViewController implements Initializable {
     TableColumn<RawDataFile, Color> colorColumn;
 
     @FXML
-    TextField refdefwidth, refsetwidth, paneName;
+    TextField refdefwidth, refsetwidth, paneName, refsetpen;
 
     @FXML
     ColorPicker refdefcol, refsetcol;
@@ -197,6 +197,7 @@ public class FXMLTableViewController implements Initializable {
         //bind default values
         refdefwidth.textProperty().bindBidirectional(session.getReference().getWidthProperty(), new NumberStringConverter());
         refdefcol.valueProperty().bindBidirectional(session.getReference().getColorProperty());
+        refsetpen.textProperty().bindBidirectional(session.getReference().getPenaltyProperty(), new NumberStringConverter());
 
         //add functionality to set the color for all files
         refsetcol.setOnAction(new EventHandler() {
@@ -401,19 +402,19 @@ public class FXMLTableViewController implements Initializable {
                 }
                 
                 //Test artificial shift
-                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
-                for (int i = 0; i< MasterListofOGroups.size(); i++) {
-                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
-                    for (int j = 0; j<currentshift; j++) {
-                        matrix2[i][j] = 0; 
-                    }
-                    for (int j = currentshift; j<session.getResolution(); j++) {
-                        matrix2[i][j] = matrix[i][j-currentshift];
-                        
-                    }
-                }
-               
-                matrix = matrix2;
+//                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
+//                for (int i = 0; i< MasterListofOGroups.size(); i++) {
+//                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
+//                    for (int j = 0; j<currentshift; j++) {
+//                        matrix2[i][j] = 0; 
+//                    }
+//                    for (int j = currentshift; j<session.getResolution(); j++) {
+//                        matrix2[i][j] = matrix[i][j-currentshift];
+//                        
+//                    }
+//                }
+//               
+//                matrix = matrix2;
                 
                 
                 
@@ -428,18 +429,18 @@ public class FXMLTableViewController implements Initializable {
                 }
                 //TODO: Penalty for change in j
                 //fill rest of weights matrix
-                double penalty = 0.98;
+                double penalty = session.getReference().getPenalty();
                 for (int i = 1; i<MasterListofOGroups.size(); i++) {
                     for (int j =0; j<session.getResolution(); j++) {
                         double max = 0;
                         if(weights[i-1][j]>max){
-                            max=weights[i-1][j];}
-                        if((j-1)>0 && weights[i-1][j-1]*penalty>max){
-                            max = weights[i-1][j-1]*penalty;}
-                        if ((j+1)<session.getResolution() && weights[i-1][j+1]*penalty>max){
-                            max = weights[i-1][j+1]*penalty;
+                            max=weights[i-1][j]+matrix[i][j];}
+                        if((j-1)>0 && weights[i-1][j-1]+matrix[i][j]-penalty>max){
+                            max = weights[i-1][j-1]+matrix[i][j]-penalty;}
+                        if ((j+1)<session.getResolution() && weights[i-1][j+1]+matrix[i][j]-penalty>max){
+                            max = weights[i-1][j+1]+matrix[i][j]-penalty;
                         }
-                        weights[i][j] = max+matrix[i][j];
+                        weights[i][j] = max;
                         
                         
                         

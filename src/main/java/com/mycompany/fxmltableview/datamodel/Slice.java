@@ -216,7 +216,19 @@ public class Slice {
          //initialize Array holding probabilities
         setPropArray(new double[this.IntensityArray.length]);
         
-        int arraylength = adduct.getSession().getResolution()/8;
+        addGaussCorrelation(0.6);
+        addGaussCorrelation(0.5);
+        addGaussCorrelation(0.4);
+        
+        
+        //generatePeakArray();
+    }
+ 
+ //adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
+ public void addGaussCorrelation(double length) {
+     
+      double valuesperminute = adduct.getSession().getResolution()/(adduct.getSession().getRTTolerance()*2);
+      int arraylength = (int) (valuesperminute*length);
         if (arraylength%2==0) {
                    arraylength++;
         }
@@ -231,14 +243,7 @@ public class Slice {
             peakArray[i]=normdist.density(peakedge-i*increment);
             peakArray[(arraylength-1)-i]=peakArray[i];
         }
-        
-        
-        
-       
-  
-
-         
-         
+                
          PearsonsCorrelation pear = new PearsonsCorrelation();
 
          
@@ -246,7 +251,7 @@ public class Slice {
             double[] correctedIntArray = new double[IntensityArray.length];
             for ( int j = 0; j<IntensityArray.length; j++)  {
                 if (IntensityArray[j]>=adduct.getSession().getBaseline()) {
-                    correctedIntArray[j]=IntensityArray[j];
+                    correctedIntArray[j]=IntensityArray[j]-adduct.getSession().getBaseline();
                 }
                 
             }
@@ -257,12 +262,23 @@ public class Slice {
         
                 //scale according to maxIntensity
                //and weaken weak signals
-               if (corr > 0) {
-                getPropArray()[i+peakint]= (corr*corr)*Math.log10(IntensityArray[i+peakint]-minIntensity);}
+               if (corr > 0.4) {
+                   double newcorr = (corr*corr)*asymptoticFunction(IntensityArray[i+peakint]-minIntensity);
+                   if ((getPropArray()[i+peakint]<newcorr)) {
+                       getPropArray()[i+peakint]= newcorr;}
+               }
         
         }
-        //generatePeakArray();
-    }
+     
+ }
+ 
+ 
+ //returns value between 0 and 1, rapidly falling for values lower than the baseline
+ public double asymptoticFunction(double intensity) {
+     float baseline = adduct.getSession().getBaseline();
+     
+     return (intensity-baseline/(baseline*10))/(1+intensity-baseline/(baseline*10));
+ }
  
  //generates Array filled with Peak probabilites
  //TODO: negative Maxima

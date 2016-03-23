@@ -267,44 +267,50 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
     
     
     public void PropArray(Entry adduct, LineChart<Number, Number> linechart) {
-        adduct.getOGroupObject().generateOGroupPropArray();
+        
+        if (adduct.getOGroupObject().getPropArray() == null) {
+            adduct.getOGroupObject().generateOGroupPropArray();
+        }
+        
+        
         double[] PropArray = adduct.getOGroupObject().getPropArray();
-        
-        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
-        double max = (double) Collections.max(asList);
+//        
+//        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
+//        double max = (double) Collections.max(asList);
         double[] RTArray = adduct.getRTArray();
-        XYChart.Series newSeries = new XYChart.Series();
-        for (int i =0; i<PropArray.length; i++) {
-            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]/max));
-            
-        }
-        linechart.getData().add(newSeries);
-        linechart.applyCss();
-        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
-        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
-        
-        double[] PropArray2 = adduct.getPropArray();
-        
-        List asList2 = Arrays.asList(ArrayUtils.toObject(PropArray2));
-        double max2 = (double) Collections.max(asList2);
-        double[] RTArray2 = adduct.getRTArray();
-        XYChart.Series newSeries3 = new XYChart.Series();
-        for (int i =0; i<PropArray2.length; i++) {
-            newSeries3.getData().add(new XYChart.Data(RTArray2[i], PropArray2[i]/max2));
-            
-        }
-        linechart.getData().add(newSeries3);
-        linechart.applyCss();
-        ((Path) newSeries3.getNode()).setStroke(Color.RED);
-        ((Path) newSeries3.getNode()).setStrokeWidth(2.0); 
-        
+//        XYChart.Series newSeries = new XYChart.Series();
+//        for (int i =0; i<PropArray.length; i++) {
+//            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]));
+//            
+//        }
+//        linechart.getData().add(newSeries);
+//        linechart.applyCss();
+//        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
+//        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
+//        
+//        double[] PropArray2 = adduct.getPropArray();
+//        
+//        List asList2 = Arrays.asList(ArrayUtils.toObject(PropArray2));
+//        double max2 = (double) Collections.max(asList2);
+//        double[] RTArray2 = adduct.getRTArray();
+//        XYChart.Series newSeries3 = new XYChart.Series();
+//        for (int i =0; i<PropArray2.length; i++) {
+//            newSeries3.getData().add(new XYChart.Data(RTArray2[i], PropArray2[i]));
+//            
+//        }
+//        linechart.getData().add(newSeries3);
+//        linechart.applyCss();
+//        ((Path) newSeries3.getNode()).setStroke(Color.RED);
+//        ((Path) newSeries3.getNode()).setStrokeWidth(2.0); 
+//        
         
         XYChart.Series newSeries2 = new XYChart.Series();
-        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift()], PropArray[adduct.getOGroupObject().getFittedShift()]/max));
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift()], 0));
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift()], 1));
         linechart.getData().add(newSeries2);
         linechart.applyCss();
-        ((Path) newSeries2.getNode()).setStroke(Color.RED);
-        ((Path) newSeries2.getNode()).setStrokeWidth(5.0); 
+        ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
+        ((Path) newSeries2.getNode()).setStrokeWidth(2.0); 
         
     }
 }

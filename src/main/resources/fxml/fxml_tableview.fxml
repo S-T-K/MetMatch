@@ -55,7 +55,16 @@
                                                         <Menu mnemonicParsing="false" text="Files">
                                                             <items>
                                                                 <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openReferencemzxmlChooser" text="Add new .mzXML" />
-                                                <MenuItem fx:id="calculate" mnemonicParsing="false" onAction="#calculate" text="Calculate Shift" />
+                                                <Menu mnemonicParsing="false" text="Shift">
+                                                  <items>
+                                                      <MenuItem fx:id="calculate" mnemonicParsing="false" onAction="#calculate" text="Calculate Shift" />
+                                                      <MenuItem mnemonicParsing="false" text="Change Penalty">
+                                                         <graphic>
+                                                            <TextField fx:id="refsetpen" maxWidth="40.0" />
+                                                         </graphic>
+                                                      </MenuItem>
+                                                  </items>
+                                                </Menu>
                                                 <Menu mnemonicParsing="false" text="Rename">
                                                   <items>
                                                     <MenuItem mnemonicParsing="false">

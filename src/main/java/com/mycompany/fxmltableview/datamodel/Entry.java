@@ -134,7 +134,13 @@ public class Entry {
         for (int i = 0; i < listofRefSlices.size(); i++) {
             listofRefSlices.get(i).generateGaussProp();
             for (int j = 0; j < getSession().getResolution(); j++) {
-                if (listofRefSlices.get(i).getPropArray()[j]>0){
+                if (listofRefSlices.get(i).getPropArray()[j]+PropArray[j]>1){
+                    if (listofRefSlices.get(i).getPropArray()[j]>PropArray[j]) {
+                        PropArray[j]=PropArray[j]*0.1+listofRefSlices.get(i).getPropArray()[j];
+                    } else {
+                        PropArray[j]=PropArray[j]+listofRefSlices.get(i).getPropArray()[j]*0.1;
+                    }
+                } else {
                 PropArray[j] += listofRefSlices.get(i).getPropArray()[j];}
             }
         }
@@ -147,7 +153,13 @@ public class Entry {
         for (int i = 0; i<listofAdducts.size(); i++) {
             listofAdducts.get(i).generateAdductPropArray();
             for (int j = 0; j<session.getResolution(); j++) {
-                if(listofAdducts.get(i).getPropArray()[j]>0){
+                if(listofAdducts.get(i).getPropArray()[j]+PropArray[j]>1){
+                    if (listofAdducts.get(i).getPropArray()[j]>PropArray[j]) {
+                        PropArray[j]=PropArray[j]*0.1+listofAdducts.get(i).getPropArray()[j];
+                    } else {
+                        PropArray[j]=PropArray[j]+listofAdducts.get(i).getPropArray()[j]*0.1;
+                    }
+                } else {
                 PropArray[j]+=listofAdducts.get(i).getPropArray()[j];}
             }
             
@@ -163,11 +175,11 @@ public class Entry {
 //        }
         
         //log normalize
-        for (int i = 0; i<PropArray.length; i++) {
-            if (PropArray[i]>0) {
-            PropArray[i] = Math.log10(PropArray[i]);}
-            
-        }
+//        for (int i = 0; i<PropArray.length; i++) {
+//            if (PropArray[i]>0) {
+//            PropArray[i] = Math.log10(PropArray[i]);}
+//            
+//        }
         
         return PropArray;
     }

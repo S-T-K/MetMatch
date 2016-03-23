@@ -36,6 +36,9 @@ public class Dataset {
     //Default values for new Files
     private Property<Color> color;
     private DoubleProperty Width;
+    
+    //penalty for path calculation
+    private SimpleDoubleProperty penalty;
 
     
     
@@ -46,6 +49,7 @@ public class Dataset {
         //default values for new Dataset
         this.Width = new SimpleDoubleProperty(1.5);
         this.color = new SimpleObjectProperty(Color.BLACK);
+        this.penalty = new SimpleDoubleProperty(0.5);
         
     }
     
@@ -114,5 +118,23 @@ public class Dataset {
     
     public DoubleProperty getWidthProperty() {
         return Width;
+    }
+
+    public double getPenalty() {
+        return this.penalty.get();
+    }
+    
+    /**
+     * @return the penalty
+     */
+    public SimpleDoubleProperty getPenaltyProperty() {
+        return penalty;
+    }
+
+    /**
+     * @param penalty the penalty to set
+     */
+    public void setPenalty(double penalty) {
+        this.penalty = new SimpleDoubleProperty(penalty);
     }
 }
