@@ -8,6 +8,7 @@ package com.mycompany.fxmltableview.gui;
 
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry;
+import java.io.IOException;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,13 +23,19 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  * FXML Controller class
@@ -41,11 +48,17 @@ public class Fxml_shiftviewController implements Initializable {
     
     //Gridpane holding all the graphs
     @FXML
-    GridPane gridPane;
+    VBox box;
     
+    @FXML
+    TextField refsetpen;
     
-    TreeTableView<Entry> metTable;
+    @FXML 
+    Button button;
+    
     ChartGenerator chartGenerator;
+    private FXMLTableViewController supercontroller;
+    ObservableList<Entry> olist;
 
     /**
      * Initializes the controller class.
@@ -55,62 +68,50 @@ public class Fxml_shiftviewController implements Initializable {
         //add ChartGenerator
       chartGenerator = new ChartGenerator();
       
+      
     }    
     
     //method that generates the graphs
-    public void print() {
-        
+    public void print(ObservableList<Entry> list) {
+    olist = list;   
        //get selected Entry
-       Entry entry = metTable.getSelectionModel().getSelectedItem().getValue();
-       float upper = (float) (entry.getRT()+1.5);
-       float lower = (float) (entry.getRT()-1.5);
        
-       //delete previous graphs
-       gridPane.getChildren().clear();
-       
-       //for every Adduct/Fragment
-       for (int i = 0; i<entry.getListofAdducts().size(); i++) {
-           
-           //Label showing the MZ
-           Label label = new Label(Double.toString(entry.getListofAdducts().get(i).getMZ()));
-           label.setRotate(270);
-           
-           //generate graphs
           
-           gridPane.addRow(i,label);
-           LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
-           gridPane.addColumn(1,linechart1);
-           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEIC(entry.getListofAdducts().get(i));
-           gridPane.addColumn(2, linechart2);
-           ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
-           gridPane.addColumn(3, scatterchart);
+    
+           LineChart<Number,Number> linechart1 = chartGenerator.generateShiftChart(olist);
+           box.getChildren().add(linechart1);
+           
            
          
         
        }
+    
+    public void recalculate() throws IOException, InterruptedException {
+        supercontroller.calculate();
+        LineChart<Number,Number> linechart1 = chartGenerator.generateShiftChart(olist);
+        box.getChildren().remove(box.getChildren().size()-1);
+        box.getChildren().add(linechart1);
+    }
+
+    /**
+     * @return the supercontroller
+     */
+    public FXMLTableViewController getSupercontroller() {
+        return supercontroller;
+    }
+
+    /**
+     * @param supercontroller the supercontroller to set
+     */
+    public void setSupercontroller(FXMLTableViewController supercontroller) {
+        this.supercontroller = supercontroller;
+        refsetpen.textProperty().bindBidirectional(supercontroller.session.getReference().getPenaltyProperty(), new NumberStringConverter());
+    }
        
       
      
         
-    }
     
-    //select next metabolite, changes Selection in Main GUI
-    public void next() {
-        if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
-        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
-        }
-        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().nextSibling());
-        print();
-        
-    }
     
-    //select previous metablite, changes Selection in Main GUI
-    public void previous() {
-        if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
-        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
-        }
-        metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().previousSibling());
-        print();
-        
-    }
+    
 }

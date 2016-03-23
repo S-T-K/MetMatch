@@ -262,7 +262,7 @@ public class Slice {
         
                 //scale according to maxIntensity
                //and weaken weak signals
-               if (corr > 0.4) {
+               if (corr > 0) {
                    double newcorr = (corr*corr)*asymptoticFunction(IntensityArray[i+peakint]-minIntensity);
                    if ((getPropArray()[i+peakint]<newcorr)) {
                        getPropArray()[i+peakint]= newcorr;}

@@ -58,6 +58,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import java.util.List;
+import javafx.collections.ObservableList;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -192,6 +193,76 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.setCache(true);
         linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
+        
+        
+        XYChart.Series newSeries2 = new XYChart.Series();
+        double[] RTArray = adduct.getRTArray();
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift()], 0));
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift()], 1));
+        linechart.getData().add(newSeries2);
+        linechart.applyCss();
+        ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
+        ((Path) newSeries2.getNode()).setStrokeWidth(2.0); 
+        
+        return linechart;
+    }
+    
+    public LineChart generateNormalizedEICwithProp(Entry adduct) {
+
+        //Basic Chart attributes
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Intensity (normalized)");
+        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+
+        // for all slices (= for all files)
+        //double startouter = System.currentTimeMillis();
+        for (int i = 0; i < adduct.getListofSlices().size(); i++) {
+            Slice currentSlice = adduct.getListofSlices().get(i);
+
+            XYChart.Series newSeries = new XYChart.Series();
+
+            float maxIntensity = Collections.max(currentSlice.getIntensityList());
+            //double startinner = System.currentTimeMillis();
+            for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
+                float intensity = currentSlice.getIntensityList().get(j);
+                float currentRT = currentSlice.getRetentionTimeList().get(j);
+                while (j < currentSlice.getIntensityList().size() - 1 && abs(currentRT - currentSlice.getRetentionTimeList().get(j + 1)) < 0.0001) {
+                    j++;
+                    intensity = intensity + currentSlice.getIntensityList().get(j);
+
+                }
+
+                newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
+
+            }
+            //double endinner = System.currentTimeMillis();
+            //System.out.println("Inner loop norm: " + (endinner-startinner));
+            linechart.getData().add(newSeries);
+            linechart.applyCss();
+            ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor());
+            ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
+            linechart.setCreateSymbols(false);
+            linechart.setMaxSize(300, 200);
+
+        }
+        
+        //double endouter = System.currentTimeMillis();
+        //System.out.println("Outer loop norm: " + (endouter-startouter));
+//set Range
+double lower = adduct.getListofSlices().get(0).getMinRT();
+        double upper = adduct.getListofSlices().get(0).getMaxRT();
+        xAxis.setAutoRanging(false);
+        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setLowerBound(lower);
+        xAxis.setUpperBound(upper);
+
+        
+        linechart.setAnimated(false);
+        linechart.setCache(true);
+        linechart.setCacheHint(CacheHint.SPEED);
+        linechart.setLegendVisible(false);
         PropArray(adduct, linechart);
         return linechart;
     }
@@ -275,34 +346,34 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         
         double[] PropArray = adduct.getOGroupObject().getPropArray();
 //        
-//        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
-//        double max = (double) Collections.max(asList);
+        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
+        double max = (double) Collections.max(asList);
         double[] RTArray = adduct.getRTArray();
-//        XYChart.Series newSeries = new XYChart.Series();
-//        for (int i =0; i<PropArray.length; i++) {
-//            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]));
-//            
-//        }
-//        linechart.getData().add(newSeries);
-//        linechart.applyCss();
-//        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
-//        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
-//        
-//        double[] PropArray2 = adduct.getPropArray();
-//        
-//        List asList2 = Arrays.asList(ArrayUtils.toObject(PropArray2));
-//        double max2 = (double) Collections.max(asList2);
-//        double[] RTArray2 = adduct.getRTArray();
-//        XYChart.Series newSeries3 = new XYChart.Series();
-//        for (int i =0; i<PropArray2.length; i++) {
-//            newSeries3.getData().add(new XYChart.Data(RTArray2[i], PropArray2[i]));
-//            
-//        }
-//        linechart.getData().add(newSeries3);
-//        linechart.applyCss();
-//        ((Path) newSeries3.getNode()).setStroke(Color.RED);
-//        ((Path) newSeries3.getNode()).setStrokeWidth(2.0); 
-//        
+        XYChart.Series newSeries = new XYChart.Series();
+        for (int i =0; i<PropArray.length; i++) {
+            newSeries.getData().add(new XYChart.Data(RTArray[i], PropArray[i]));
+            
+        }
+        linechart.getData().add(newSeries);
+        linechart.applyCss();
+        ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
+        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
+        
+        double[] PropArray2 = adduct.getPropArray();
+        
+        List asList2 = Arrays.asList(ArrayUtils.toObject(PropArray2));
+        double max2 = (double) Collections.max(asList2);
+        double[] RTArray2 = adduct.getRTArray();
+        XYChart.Series newSeries3 = new XYChart.Series();
+        for (int i =0; i<PropArray2.length; i++) {
+            newSeries3.getData().add(new XYChart.Data(RTArray2[i], PropArray2[i]));
+            
+        }
+        linechart.getData().add(newSeries3);
+        linechart.applyCss();
+        ((Path) newSeries3.getNode()).setStroke(Color.RED);
+        ((Path) newSeries3.getNode()).setStrokeWidth(2.0); 
+        
         
         XYChart.Series newSeries2 = new XYChart.Series();
         newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift()], 0));
@@ -312,5 +383,31 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
         ((Path) newSeries2.getNode()).setStrokeWidth(2.0); 
         
+    }
+    
+    
+    public LineChart generateShiftChart(ObservableList<Entry> list) {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Shift");
+        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+        XYChart.Series newSeries = new XYChart.Series();
+        
+        
+        for (int i = 0; i< list.size(); i++) {
+            XYChart.Data data = new XYChart.Data(list.get(i).getRT(), list.get(i).getFittedShift());
+            newSeries.getData().add(data);
+        }
+        linechart.getData().add(newSeries);
+            linechart.applyCss();
+            ((Path) newSeries.getNode()).setStroke(Color.RED);
+            ((Path) newSeries.getNode()).setStrokeWidth(2.0);
+            linechart.setCreateSymbols(false);
+            linechart.setMaxSize(2000, 500);
+            linechart.setLegendVisible(false);
+        
+        
+        return linechart;
     }
 }

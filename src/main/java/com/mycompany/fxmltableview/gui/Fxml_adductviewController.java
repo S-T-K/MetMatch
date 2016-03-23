@@ -8,6 +8,8 @@ package com.mycompany.fxmltableview.gui;
 
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry;
+import com.sun.webkit.ContextMenuItem;
+import java.awt.Checkbox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +24,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
@@ -43,9 +46,12 @@ public class Fxml_adductviewController implements Initializable {
     @FXML
     GridPane gridPane;
     
+ 
+    
     
     TreeTableView<Entry> metTable;
     ChartGenerator chartGenerator;
+    boolean showProp;
 
     /**
      * Initializes the controller class.
@@ -54,7 +60,6 @@ public class Fxml_adductviewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         //add ChartGenerator
       chartGenerator = new ChartGenerator();
-      
     }    
     
     //method that generates the graphs
@@ -80,8 +85,14 @@ public class Fxml_adductviewController implements Initializable {
            gridPane.addRow(i,label);
            LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(1,linechart1);
+           if (showProp) {
+           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(entry.getListofAdducts().get(i));
+           gridPane.addColumn(2, linechart2);
+           } else {
            LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEIC(entry.getListofAdducts().get(i));
            gridPane.addColumn(2, linechart2);
+           }
+           
            ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
            gridPane.addColumn(3, scatterchart);
            
@@ -110,6 +121,12 @@ public class Fxml_adductviewController implements Initializable {
         metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
         }
         metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().previousSibling());
+        print();
+        
+    }
+    
+    public void setShowProp() {
+        showProp=!showProp;
         print();
         
     }
