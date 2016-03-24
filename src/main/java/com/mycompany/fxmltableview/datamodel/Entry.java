@@ -438,10 +438,10 @@ public class Entry {
         }
     }
      public double getMinMZ() {
-        return (getMZ()-getSession().getMZTolerance());
+        return (getMZ()*(1-(getSession().getMZTolerance()/1000000)));
     }
       public double getMaxMZ() {
-        return (getMZ()+getSession().getMZTolerance());
+        return (getMZ()*(1+(getSession().getMZTolerance()/1000000)));
     }
 
     /**

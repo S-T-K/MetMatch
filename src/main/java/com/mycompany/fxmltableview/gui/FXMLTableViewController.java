@@ -189,7 +189,7 @@ public class FXMLTableViewController implements Initializable {
         session.getReference().setName("Reference");
         session.setResolution(100);
         session.setRTTolerance(1.5f);
-        session.setMZTolerance(0.002f);
+        session.setMZTolerance(10); //ppm
         
 
         //set batchcount to 0,
