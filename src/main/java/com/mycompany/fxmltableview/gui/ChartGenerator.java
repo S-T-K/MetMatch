@@ -124,7 +124,7 @@ public class ChartGenerator {
         double upper = adduct.getListofSlices().get(0).getMaxRT();
         //set Range
         xAxis.setAutoRanging(false);
-        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setTickUnit((upper - lower) / 6);
         xAxis.setLowerBound(lower);
         xAxis.setUpperBound(upper);
 
@@ -182,7 +182,7 @@ public class ChartGenerator {
 double lower = adduct.getListofSlices().get(0).getMinRT();
         double upper = adduct.getListofSlices().get(0).getMaxRT();
         xAxis.setAutoRanging(false);
-        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setTickUnit((upper - lower) / 6);
         xAxis.setLowerBound(lower);
         xAxis.setUpperBound(upper);
 
@@ -254,7 +254,7 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
 double lower = adduct.getListofSlices().get(0).getMinRT();
         double upper = adduct.getListofSlices().get(0).getMaxRT();
         xAxis.setAutoRanging(false);
-        xAxis.setTickUnit((upper - lower) / 7);
+        xAxis.setTickUnit((upper - lower) / 6);
         xAxis.setLowerBound(lower);
         xAxis.setUpperBound(upper);
 
@@ -357,7 +357,7 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.getData().add(newSeries);
         linechart.applyCss();
         ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
-        ((Path) newSeries.getNode()).setStrokeWidth(2.0); 
+        ((Path) newSeries.getNode()).setStrokeWidth(1.5); 
         
         double[] PropArray2 = adduct.getPropArray();
         
@@ -372,7 +372,7 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.getData().add(newSeries3);
         linechart.applyCss();
         ((Path) newSeries3.getNode()).setStroke(Color.RED);
-        ((Path) newSeries3.getNode()).setStrokeWidth(2.0); 
+        ((Path) newSeries3.getNode()).setStrokeWidth(1.5); 
         
         
         XYChart.Series newSeries2 = new XYChart.Series();
@@ -381,7 +381,7 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         linechart.getData().add(newSeries2);
         linechart.applyCss();
         ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
-        ((Path) newSeries2.getNode()).setStrokeWidth(2.0); 
+        ((Path) newSeries2.getNode()).setStrokeWidth(2); 
         
     }
     
@@ -390,23 +390,38 @@ double lower = adduct.getListofSlices().get(0).getMinRT();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
-        yAxis.setLabel("Shift");
+        yAxis.setLabel("Shift [seconds]");
         LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
         XYChart.Series newSeries = new XYChart.Series();
         
+        double shiftiter = (list.get(0).getSession().getRTTolerance()*2)/list.get(0).getSession().getResolution();
+        int middleint = (list.get(0).getSession().getResolution()/2)-1;
+        
+        double upper = 0;
+        double lower = 0;
         
         for (int i = 0; i< list.size(); i++) {
-            XYChart.Data data = new XYChart.Data(list.get(i).getRT(), list.get(i).getFittedShift());
+            double shift = (list.get(i).getFittedShift()-middleint)*shiftiter*60;
+            XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
             newSeries.getData().add(data);
+            if(shift>upper) {
+                upper = shift;
+            } else if (shift<lower) {
+                lower = shift;
+            }
         }
         linechart.getData().add(newSeries);
             linechart.applyCss();
             ((Path) newSeries.getNode()).setStroke(Color.RED);
             ((Path) newSeries.getNode()).setStrokeWidth(2.0);
+            
             linechart.setCreateSymbols(false);
             linechart.setMaxSize(2000, 500);
             linechart.setLegendVisible(false);
-        
+                    
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(lower - 20);
+        yAxis.setUpperBound(upper + 20);
         
         return linechart;
     }

@@ -57,7 +57,7 @@
                                                                 <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openReferencemzxmlChooser" text="Add new .mzXML" />
                                                 <Menu mnemonicParsing="false" text="Shift">
                                                   <items>
-                                                      <MenuItem fx:id="calculate" mnemonicParsing="false" onAction="#calculate" text="Calculate Shift" />
+                                                      <MenuItem fx:id="calculate" mnemonicParsing="false" onAction="#newwindowcalculate" text="Calculate Shift" />
                                                       <MenuItem mnemonicParsing="false" text="Change Penalty">
                                                          <graphic>
                                                             <TextField fx:id="refsetpen" maxWidth="40.0" />
@@ -137,6 +137,13 @@
                                                     <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
+                                       <contextMenu>
+                                          <ContextMenu>
+                                            <items>
+                                              <MenuItem mnemonicParsing="false" onAction="#openReferencemzxmlChooser" text="Add new .mzXML" />
+                                            </items>
+                                          </ContextMenu>
+                                       </contextMenu>
                                                 </TableView>
                                             </children>
                                         </AnchorPane>
@@ -187,6 +194,5 @@
                 </AnchorPane>
             </items>
         </SplitPane>
-        <Accordion layoutX="-101.0" layoutY="66.0" />
     </children>
 </AnchorPane>

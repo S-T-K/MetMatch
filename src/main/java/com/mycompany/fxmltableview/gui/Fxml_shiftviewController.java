@@ -12,8 +12,10 @@ import java.io.IOException;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -87,7 +89,23 @@ public class Fxml_shiftviewController implements Initializable {
        }
     
     public void recalculate() throws IOException, InterruptedException {
-        supercontroller.calculate();
+       CountDownLatch latch = new CountDownLatch(1);
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
+                supercontroller.calculate(latch);
+                
+                
+                return null;
+            }
+        };
+       new Thread(task).start();
+       latch.await();
+        
+      
+        
+        
+        
         LineChart<Number,Number> linechart1 = chartGenerator.generateShiftChart(olist);
         box.getChildren().remove(box.getChildren().size()-1);
         box.getChildren().add(linechart1);

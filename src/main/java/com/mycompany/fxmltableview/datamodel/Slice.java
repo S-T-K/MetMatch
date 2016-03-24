@@ -214,13 +214,14 @@ public class Slice {
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
  public void generateGaussProp() {
          //initialize Array holding probabilities
+        if (getPropArray()==null){ 
         setPropArray(new double[this.IntensityArray.length]);
         
         addGaussCorrelation(0.6);
         addGaussCorrelation(0.5);
         addGaussCorrelation(0.4);
         
-        
+        }
         //generatePeakArray();
     }
  

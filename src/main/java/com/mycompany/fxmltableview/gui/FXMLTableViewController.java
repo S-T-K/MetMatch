@@ -278,8 +278,7 @@ public class FXMLTableViewController implements Initializable {
                 if (event.getClickCount() == 2) {
 
                     try {
-                        //get selected item
-                        TreeItem<Entry> item = metTable.getSelectionModel().getSelectedItem();
+
 
                         //create new window
                         Stage stage = new Stage();
@@ -382,10 +381,43 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
-    
-  public void calculate() throws IOException, InterruptedException {
+ //calculates Shift and opens a new window
+   public void newwindowcalculate() throws IOException, InterruptedException {
+       CountDownLatch latch = new CountDownLatch(1);
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
+                calculate(latch);
+                
+                
+                return null;
+            }
+        };
+       new Thread(task).start();
+       latch.await();
+        
+        //open new window
+              Stage stage = new Stage();
+              FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_shiftview.fxml"));
+              Pane myPane = (Pane) loader.load();
+              Scene myScene = new Scene(myPane);
+              stage.setScene(myScene);
+              Fxml_shiftviewController controller = loader.<Fxml_shiftviewController>getController();
+              controller.setSupercontroller(this);
+
+              //print graphs
+              controller.print(MasterListofOGroups);
+              System.out.println("PRINT");
+              stage.show();
       
-      CountDownLatch latch = new CountDownLatch(1);
+       
+   }
+    
+    
+    //does the Shift calculation
+  public void calculate(CountDownLatch latch) throws IOException, InterruptedException {
+      
+      
       
       Task task = new Task<Void>() {
             @Override
@@ -408,19 +440,19 @@ public class FXMLTableViewController implements Initializable {
                 
                 
                 //Test artificial shift
-                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
-                for (int i = 0; i< MasterListofOGroups.size(); i++) {
-                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
-                    for (int j = 0; j<currentshift; j++) {
-                        matrix2[i][j] = 0; 
-                    }
-                    for (int j = currentshift; j<session.getResolution(); j++) {
-                        matrix2[i][j] = matrix[i][j-currentshift];
-                        
-                    }
-                }
-               
-                matrix = matrix2;
+//                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
+//                for (int i = 0; i< MasterListofOGroups.size(); i++) {
+//                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
+//                    for (int j = 0; j<currentshift; j++) {
+//                        matrix2[i][j] = 0; 
+//                    }
+//                    for (int j = currentshift; j<session.getResolution(); j++) {
+//                        matrix2[i][j] = matrix[i][j-currentshift];
+//                        
+//                    }
+//                }
+//               
+//                matrix = matrix2;
                 
                 
                 
@@ -487,7 +519,16 @@ public class FXMLTableViewController implements Initializable {
                       }
                       System.out.println(maxint);
                       MasterListofOGroups.get(i).setFittedShift(maxint);
+                      
+                      //set score for OPGroup
                       MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getPropArray()[MasterListofOGroups.get(i).getFittedShift()]));
+                      
+                      //set score for every addact
+                      for (int a = 0; a<MasterListofOGroups.get(i).getListofAdducts().size(); a++) {
+                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getPropArray()[MasterListofOGroups.get(i).getFittedShift()]));
+                      }
+                      
+                      metTable.refresh();
                       writer.write(MasterListofOGroups.get(i).getRT() + "\t" + maxint + "\t" + MasterListofOGroups.get(i).getOGroup());
                       writer.newLine();
 
@@ -504,23 +545,6 @@ public class FXMLTableViewController implements Initializable {
 
         //new thread that executes task
         new Thread(task).start();
-        latch.await();
-        
-        //open new window
-              Stage stage = new Stage();
-              FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_shiftview.fxml"));
-              Pane myPane = (Pane) loader.load();
-              Scene myScene = new Scene(myPane);
-              stage.setScene(myScene);
-              Fxml_shiftviewController controller = loader.<Fxml_shiftviewController>getController();
-              controller.setSupercontroller(this);
-
-              //print graphs
-              controller.print(MasterListofOGroups);
-              System.out.println("PRINT");
-              stage.show();
-      
-
         
   }
     

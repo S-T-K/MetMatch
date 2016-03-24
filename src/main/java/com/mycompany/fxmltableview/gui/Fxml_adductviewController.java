@@ -26,6 +26,8 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
@@ -46,7 +48,8 @@ public class Fxml_adductviewController implements Initializable {
     @FXML
     GridPane gridPane;
     
- 
+ @FXML 
+   ScrollPane scrollPane;
     
     
     TreeTableView<Entry> metTable;
@@ -66,34 +69,49 @@ public class Fxml_adductviewController implements Initializable {
     public void print() {
         
        //get selected Entry
-       Entry entry = metTable.getSelectionModel().getSelectedItem().getValue();
-       float upper = (float) (entry.getRT()+1.5);
-       float lower = (float) (entry.getRT()-1.5);
+       int adductnumber = 0;
+       Entry entry;
+       TreeItem<Entry> OGroupItem;
+        if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
+         entry = metTable.getSelectionModel().getSelectedItem().getValue().getOGroupObject();
+         TreeItem<Entry> AdductItem = metTable.getSelectionModel().getSelectedItem();
+         OGroupItem = metTable.getSelectionModel().getSelectedItem().getParent();
+         adductnumber = OGroupItem.getChildren().indexOf(AdductItem);
+         System.out.println(adductnumber);
+        } else {
+       entry = metTable.getSelectionModel().getSelectedItem().getValue();
+       OGroupItem = metTable.getSelectionModel().getSelectedItem();}
        
        //delete previous graphs
        gridPane.getChildren().clear();
+       scrollPane.setVvalue(((double)adductnumber)/(entry.getListofAdducts().size()-1));
+       scrollPane.get
        
        //for every Adduct/Fragment
        for (int i = 0; i<entry.getListofAdducts().size(); i++) {
            
+           Entry adduct = OGroupItem.getChildren().get(i).getValue();
+           
+           
            //Label showing the MZ
-           Label label = new Label(Double.toString(entry.getListofAdducts().get(i).getMZ()));
+           Label label = new Label(Double.toString(adduct.getMZ()));
            label.setRotate(270);
            
            //generate graphs
           
+           
            gridPane.addRow(i,label);
-           LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(entry.getListofAdducts().get(i));
+           LineChart<Number,Number> linechart1 = chartGenerator.generateEIC(adduct);
            gridPane.addColumn(1,linechart1);
            if (showProp) {
-           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(entry.getListofAdducts().get(i));
+           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(adduct);
            gridPane.addColumn(2, linechart2);
            } else {
-           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEIC(entry.getListofAdducts().get(i));
+           LineChart<Number,Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
            gridPane.addColumn(2, linechart2);
            }
            
-           ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(entry.getListofAdducts().get(i));
+           ScatterChart<Number,Number> scatterchart = chartGenerator.generateMassChart(adduct);
            gridPane.addColumn(3, scatterchart);
            
          
@@ -101,7 +119,8 @@ public class Fxml_adductviewController implements Initializable {
        }
        
       
-     
+    System.out.println(scrollPane.getVmax());
+     System.out.println(scrollPane.getVmin());
         
     }
     
