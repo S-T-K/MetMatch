@@ -85,7 +85,6 @@ public class Fxml_adductviewController implements Initializable {
        //delete previous graphs
        gridPane.getChildren().clear();
        scrollPane.setVvalue(((double)adductnumber)/(entry.getListofAdducts().size()-1));
-       scrollPane.get
        
        //for every Adduct/Fragment
        for (int i = 0; i<entry.getListofAdducts().size(); i++) {
