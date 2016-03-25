@@ -430,7 +430,8 @@ public class FXMLTableViewController implements Initializable {
                 for (int i = 0; i<MasterListofOGroups.size(); i++) {
                    
 
-                    double[] PropArray = MasterListofOGroups.get(i).generateOGroupPropArray();
+                    MasterListofOGroups.get(i).generateOGroupPropArray(session.getReference());
+                    double[] PropArray = MasterListofOGroups.get(i).getOGroupPropArray(session.getReference());
                     for (int j =0; j<session.getResolution(); j++) {
                         matrix[i][j] = PropArray[j];
                         
@@ -495,7 +496,7 @@ public class FXMLTableViewController implements Initializable {
                     }
                 }
                 System.out.println(maxint);
-                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(maxint);
+                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(session.getReference(),maxint);
                 writer.write(MasterListofOGroups.get(MasterListofOGroups.size()-1).getRT() + "\t" + maxint+ "\t" + MasterListofOGroups.get(MasterListofOGroups.size()-1).getOGroup());
                 writer.newLine();
                 
@@ -519,14 +520,14 @@ public class FXMLTableViewController implements Initializable {
                           maxint = j + 1;
                       }
                       System.out.println(maxint);
-                      MasterListofOGroups.get(i).setFittedShift(maxint);
+                      MasterListofOGroups.get(i).setFittedShift(session.getReference(), maxint);
                       
                       //set score for OPGroup
-                      MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getPropArray()[MasterListofOGroups.get(i).getFittedShift()]));
+                      MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getOGroupPropArray(session.getReference())[MasterListofOGroups.get(i).getFittedShift(session.getReference())]));
                       
                       //set score for every addact
                       for (int a = 0; a<MasterListofOGroups.get(i).getListofAdducts().size(); a++) {
-                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getPropArray()[MasterListofOGroups.get(i).getFittedShift()]));
+                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(session.getReference())[MasterListofOGroups.get(i).getFittedShift(session.getReference())]));
                       }
                       
                       metTable.refresh();

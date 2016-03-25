@@ -6,6 +6,7 @@
 package com.mycompany.fxmltableview.logic;
 
 import com.mycompany.fxmltableview.datamodel.Batch;
+import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Reference;
 import com.univocity.parsers.tsv.TsvParser;
@@ -35,6 +36,7 @@ public class Session {
     private float MZTolerance;
     private int resolution;
     private float baseline;
+    private Dataset currentdataset;
     
     
     public Session() {

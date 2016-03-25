@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -42,16 +44,16 @@ public class Entry {
     private DoubleProperty M;
     private Entry OGroupObject;
     private List<Entry> listofAdducts;
-    private List<Slice> listofSlices;   //stores all slices
-    private List<Slice> listofRefSlices;    //stores only reference slices, 
+    private HashMap<RawDataFile, Slice> listofSlices;   //stores all slices
     private Session session;
     
 
     
     
     //for peak probability
-    private double[] PropArray;
-    private int fittedShift;
+    private HashMap<Dataset, double[]> AdductPropArray;
+    private HashMap<Dataset, double[]> OGroupPropArray;
+    private HashMap<Dataset, Integer> fittedShift;
     
     //maxIntensity of all Slices
     private float maxIntensity;
@@ -73,8 +75,8 @@ public class Entry {
         this.Ion = new SimpleStringProperty(Ion);
         this.M = new SimpleDoubleProperty(M);
         this.Score = new SimpleDoubleProperty(0);
-        this.listofSlices = new ArrayList<Slice>();
-        this.listofRefSlices = new ArrayList<Slice>();
+        this.listofSlices = new HashMap<RawDataFile, Slice>();
+        this.AdductPropArray = new HashMap<Dataset, double[]>();
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
@@ -90,20 +92,18 @@ public class Entry {
         this.Score = new SimpleDoubleProperty(0);
         this.session = session;
         this.OGroupObject=null;
+        this.OGroupPropArray = new HashMap<Dataset, double[]>();
+        fittedShift = new HashMap<>();
 
     }
     
     //add Slice to Adduct
     public void addSlice(Slice slice) {
-        getListofSlices().add(slice);
+        listofSlices.put(slice.getFile(), slice);
         if (slice.getMaxIntensity()>maxIntensity) {
             maxIntensity = slice.getMaxIntensity();
         }
         
-        if (slice.getDataset().equals(getSession().getReference())) {
-            listofRefSlices.add(slice);
-            
-        }
     }
     
     //add adduct to an OGroup
@@ -128,40 +128,47 @@ public class Entry {
         
         
     }
-    public void generateAdductPropArray() {
-        PropArray = new double[getSession().getResolution()];
+    
+    //generates PropArray of a dataset for an Adduct 
+    public void generateAdductPropArray(Dataset dataset) {
+        double [] propArray = new double[getSession().getResolution()];
 
-        for (int i = 0; i < listofRefSlices.size(); i++) {
-            listofRefSlices.get(i).generateGaussProp();
+        
+        for (int i = 0; i< dataset.getListofFiles().size(); i++) {
+        Slice currentSlice = listofSlices.get(dataset.getListofFiles().get(i));
+            currentSlice.generateGaussProp();
             for (int j = 0; j < getSession().getResolution(); j++) {
-                if (listofRefSlices.get(i).getPropArray()[j]+PropArray[j]>1){
-                    if (listofRefSlices.get(i).getPropArray()[j]>PropArray[j]) {
-                        PropArray[j]=PropArray[j]*0.1+listofRefSlices.get(i).getPropArray()[j];
+                if (currentSlice.getPropArray()[j]+propArray[j]>1){
+                    if (currentSlice.getPropArray()[j]>propArray[j]) {
+                        propArray[j]=propArray[j]*0.1+currentSlice.getPropArray()[j];
                     } else {
-                        PropArray[j]=PropArray[j]+listofRefSlices.get(i).getPropArray()[j]*0.1;
+                        propArray[j]=propArray[j]+currentSlice.getPropArray()[j]*0.1;
                     }
                 } else {
-                PropArray[j] += listofRefSlices.get(i).getPropArray()[j];}
+                propArray[j] += currentSlice.getPropArray()[j];}
             }
         }
+        
+        AdductPropArray.put(dataset, propArray);
     }
     
-    //generates average PropArray over all Adducts
+    //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?
-    public double[] generateOGroupPropArray() {
-        PropArray = new double[getSession().getResolution()];
+    public void generateOGroupPropArray(Dataset dataset) {
+        
+        double [] propArray = new double[getSession().getResolution()];
         for (int i = 0; i<listofAdducts.size(); i++) {
-            listofAdducts.get(i).generateAdductPropArray();
+            listofAdducts.get(i).generateAdductPropArray(dataset);
             for (int j = 0; j<session.getResolution(); j++) {
-                if(listofAdducts.get(i).getPropArray()[j]+PropArray[j]>1){
-                    if (listofAdducts.get(i).getPropArray()[j]>PropArray[j]) {
-                        PropArray[j]=PropArray[j]*0.1+listofAdducts.get(i).getPropArray()[j];
+                if(listofAdducts.get(i).getAdductPropArray(dataset)[j]+propArray[j]>1){
+                    if (listofAdducts.get(i).getAdductPropArray(dataset)[j]>propArray[j]) {
+                        propArray[j]=propArray[j]*0.1+listofAdducts.get(i).getAdductPropArray(dataset)[j];
                     } else {
-                        PropArray[j]=PropArray[j]+listofAdducts.get(i).getPropArray()[j]*0.1;
+                        propArray[j]=propArray[j]+listofAdducts.get(i).getAdductPropArray(dataset)[j]*0.1;
                     }
                 } else {
-                PropArray[j]+=listofAdducts.get(i).getPropArray()[j];}
-            }
+                propArray[j]+=listofAdducts.get(i).getAdductPropArray(dataset)[j];}
+            
             
         }
         
@@ -180,8 +187,9 @@ public class Entry {
 //            PropArray[i] = Math.log10(PropArray[i]);}
 //            
 //        }
-        
-        return PropArray;
+        OGroupPropArray.put(dataset, propArray);
+        }
+      
     }
 
     /**
@@ -324,7 +332,7 @@ public class Entry {
     /**
      * @return the listofSlices
      */
-    public List<Slice> getListofSlices() {
+    public HashMap<RawDataFile, Slice> getListofSlices() {
         return listofSlices;
     }
 
@@ -392,36 +400,11 @@ public class Entry {
         return this.OGroupObject.getRT();
     }
 
-    /**
-     * @return the listofRefSlices
-     */
-    public List<Slice> getListofRefSlices() {
-        return listofRefSlices;
-    }
-
-    /**
-     * @param listofRefSlices the listofRefSlices to set
-     */
-    public void setListofRefSlices(List<Slice> listofRefSlices) {
-        this.listofRefSlices = listofRefSlices;
-    }
+  
 
    
     
 
-    /**
-     * @return the PropArray
-     */
-    public double[] getPropArray() {
-        return PropArray;
-    }
-
-    /**
-     * @param PropArray the PropArray to set
-     */
-    public void setPropArray(double[] PropArray) {
-        this.PropArray = PropArray;
-    }
     
     public double getMinRT() {
         if(OGroupObject!=null){
@@ -461,15 +444,47 @@ public class Entry {
     /**
      * @return the fittedShift
      */
-    public int getFittedShift() {
-        return fittedShift;
+    public int getFittedShift(Dataset dataset) {
+        if (fittedShift.containsKey(dataset)){
+        return fittedShift.get(dataset);}
+        else {
+            return 0;
+        }
     }
 
     /**
      * @param fittedShift the fittedShift to set
      */
-    public void setFittedShift(int fittedShift) {
-        this.fittedShift = fittedShift;
+    public void setFittedShift(Dataset dataset, int shift) {
+        this.fittedShift.put(dataset, shift);
+    }
+
+    /**
+     * @return the AdductPropArray
+     */
+    public double[] getAdductPropArray(Dataset dataset) {
+        return AdductPropArray.get(dataset);
+    }
+
+    /**
+     * @param AdductPropArray the AdductPropArray to set
+     */
+    public void setAdductPropArray(HashMap<Dataset, double[]> AdductPropArray) {
+        this.AdductPropArray = AdductPropArray;
+    }
+
+    /**
+     * @return the OGroupPropArray
+     */
+    public double[] getOGroupPropArray(Dataset dataset) {
+        return OGroupPropArray.get(dataset);
+    }
+
+    /**
+     * @param OGroupPropArray the OGroupPropArray to set
+     */
+    public void setOGroupPropArray(HashMap<Dataset, double[]> OGroupPropArray) {
+        this.OGroupPropArray = OGroupPropArray;
     }
       
     
