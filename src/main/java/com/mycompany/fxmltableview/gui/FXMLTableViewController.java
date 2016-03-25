@@ -501,20 +501,21 @@ public class FXMLTableViewController implements Initializable {
                 
              
                 
-                
+                //TODO: calculate range as function of time
                 for (int i = MasterListofOGroups.size()-2; i>-1; i--){
                     max = 0;
+                    int range = 1;
                     int j = maxint;
-                    if((j-1)>0 && weights[i][j-1]> max) {
-                        max = weights[i][j-1];
+                    if((j-1)>0 && getmaxofrange(weights, i, j-1, range)> max) {
+                        max = getmaxofrange(weights, i, j-1, range);
                         maxint = j-1;
                     }
-                    if(weights[i][j]> max) {
-                        max = weights[i][j];
+                    if(getmaxofrange(weights, i, j, range)> max) {
+                        max = getmaxofrange(weights, i, j, range);
                         maxint = j;
                     }
-                      if ((j + 1) < session.getResolution() && weights[i][j + 1] > max) {
-                          max = weights[i][j + 1];
+                      if ((j + 1) < session.getResolution() && getmaxofrange(weights, i, j+1, range) > max) {
+                          max = getmaxofrange(weights, i, j+1, range);
                           maxint = j + 1;
                       }
                       System.out.println(maxint);
@@ -548,7 +549,20 @@ public class FXMLTableViewController implements Initializable {
         
   }
     
-    
+    public double getmaxofrange(double[][] weights, int row, int col, int range) {
+        double max = 0;
+        
+        for ( int i =(col-range); i<=(col+range); i++ ) {
+            if (i<session.getResolution() && i>= 0 && weights[row][i]>max) {
+                max += weights[row][i];
+            }
+            
+        }
+        
+        
+        
+        return max;
+    }
     
     
 }
