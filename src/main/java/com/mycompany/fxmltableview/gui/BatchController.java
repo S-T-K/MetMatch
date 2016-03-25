@@ -97,6 +97,8 @@ public class BatchController implements Initializable {
     ProgressBar progressbar;
     TitledPane pane;
     
+    
+    
     //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
 
@@ -108,6 +110,7 @@ public class BatchController implements Initializable {
         this.progressbar= bar;
         this.data = data;
         this.pane=tps;
+      
         
     }
 
@@ -259,5 +262,6 @@ public class BatchController implements Initializable {
     public void printInfo() {
 
     }
+
 
 }

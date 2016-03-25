@@ -1,6 +1,7 @@
 package com.mycompany.fxmltableview.gui;
 
 import com.mycompany.fxmltableview.datamodel.Batch;
+import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry.orderbyRT;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
@@ -17,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
@@ -134,6 +136,7 @@ public class FXMLTableViewController implements Initializable {
     //current session, storing all information
     Session session;
     FXGraphics2D test;
+    HashMap<TitledPane,Dataset> panelink;
 
     //number of current batches, as an index
     int batchcount;
@@ -191,6 +194,8 @@ public class FXMLTableViewController implements Initializable {
         session.setRTTolerance(1.5f);
         session.setMZTolerance(10); //ppm
         
+        panelink = new HashMap<>();
+        panelink.put(ReferencePane, session.getReference());
 
         //set batchcount to 0,
         batchcount = 0;
@@ -222,6 +227,20 @@ public class FXMLTableViewController implements Initializable {
 
             }
         });
+        
+        //add functionality to change the active dataset
+        accordion.expandedPaneProperty().addListener(new 
+            ChangeListener<TitledPane>() {
+                public void changed(ObservableValue<? extends TitledPane> ov,
+                    TitledPane old_val, TitledPane new_val) {
+                        Dataset dataset;
+                        if(new_val!=null){
+                        dataset = panelink.get(new_val);
+                        session.setCurrentdataset(dataset);}
+                    
+              }
+        });
+        
 
         paneName.textProperty().bindBidirectional(session.getReference().getNameProperty());
         ReferencePane.textProperty().bind(session.getReference().getNameProperty());
@@ -366,15 +385,14 @@ public class FXMLTableViewController implements Initializable {
             tps.setExpanded(true);
             accordion.getPanes().add(tps);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
-
             Batch batch = new Batch(batchcount);
             batch.setName("Batch Nr. " + (batchcount + 1));
             session.addBatch(batch);
             batchcount++;
             loader.setController(new BatchController(session, batch, progressbar, MasterListofOGroups, tps));
-
             loader.setRoot(test);
             test = (AnchorPane) loader.load();
+            panelink.put(tps, batch);
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -430,8 +448,8 @@ public class FXMLTableViewController implements Initializable {
                 for (int i = 0; i<MasterListofOGroups.size(); i++) {
                    
 
-                    MasterListofOGroups.get(i).generateOGroupPropArray(session.getReference());
-                    double[] PropArray = MasterListofOGroups.get(i).getOGroupPropArray(session.getReference());
+                    MasterListofOGroups.get(i).generateOGroupPropArray(session.getCurrentdataset());
+                    double[] PropArray = MasterListofOGroups.get(i).getOGroupPropArray(session.getCurrentdataset());
                     for (int j =0; j<session.getResolution(); j++) {
                         matrix[i][j] = PropArray[j];
                         
@@ -468,7 +486,7 @@ public class FXMLTableViewController implements Initializable {
                 }
                 //TODO: Penalty for change in j
                 //fill rest of weights matrix
-                double penalty = session.getReference().getPenalty();
+                double penalty = session.getCurrentdataset().getPenalty();
                 for (int i = 1; i<MasterListofOGroups.size(); i++) {
                     for (int j =0; j<session.getResolution(); j++) {
                         double max = 0;
@@ -496,7 +514,7 @@ public class FXMLTableViewController implements Initializable {
                     }
                 }
                 System.out.println(maxint);
-                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(session.getReference(),maxint);
+                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(session.getCurrentdataset(),maxint);
                 writer.write(MasterListofOGroups.get(MasterListofOGroups.size()-1).getRT() + "\t" + maxint+ "\t" + MasterListofOGroups.get(MasterListofOGroups.size()-1).getOGroup());
                 writer.newLine();
                 
@@ -520,14 +538,14 @@ public class FXMLTableViewController implements Initializable {
                           maxint = j + 1;
                       }
                       System.out.println(maxint);
-                      MasterListofOGroups.get(i).setFittedShift(session.getReference(), maxint);
+                      MasterListofOGroups.get(i).setFittedShift(session.getCurrentdataset(), maxint);
                       
                       //set score for OPGroup
-                      MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getOGroupPropArray(session.getReference())[MasterListofOGroups.get(i).getFittedShift(session.getReference())]));
+                      MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getOGroupPropArray(session.getCurrentdataset())[MasterListofOGroups.get(i).getFittedShift(session.getCurrentdataset())]));
                       
                       //set score for every addact
                       for (int a = 0; a<MasterListofOGroups.get(i).getListofAdducts().size(); a++) {
-                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(session.getReference())[MasterListofOGroups.get(i).getFittedShift(session.getReference())]));
+                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(session.getCurrentdataset())[MasterListofOGroups.get(i).getFittedShift(session.getCurrentdataset())]));
                       }
                       
                       metTable.refresh();

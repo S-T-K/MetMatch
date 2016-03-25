@@ -166,11 +166,11 @@ double lower = adduct.getMinRT();
         linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         
-          if (adduct.getOGroupObject().getFittedShift(adduct.getSession().getReference())>0) {
+          if (adduct.getOGroupObject().getFittedShift(adduct.getSession().getCurrentdataset())>0) {
         XYChart.Series newSeries2 = new XYChart.Series();
         double[] RTArray = adduct.getRTArray();
-        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getReference())], 0));
-        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getReference())], 1));
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getCurrentdataset())], 0));
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getCurrentdataset())], 1));
         linechart.getData().add(newSeries2);
         linechart.applyCss();
         ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
@@ -313,12 +313,12 @@ double lower = adduct.getMinRT();
     
     public double PropArray(Entry adduct, LineChart<Number, Number> linechart) {
         
-        if (adduct.getOGroupObject().getOGroupPropArray(adduct.getSession().getReference())== null) {
-            adduct.getOGroupObject().generateOGroupPropArray(adduct.getOGroupObject().getSession().getReference());
+        if (adduct.getOGroupObject().getOGroupPropArray(adduct.getSession().getCurrentdataset())== null) {
+            adduct.getOGroupObject().generateOGroupPropArray(adduct.getOGroupObject().getSession().getCurrentdataset());
         }
         
         
-        double[] PropArray = adduct.getOGroupObject().getOGroupPropArray(adduct.getOGroupObject().getSession().getReference());
+        double[] PropArray = adduct.getOGroupObject().getOGroupPropArray(adduct.getOGroupObject().getSession().getCurrentdataset());
 //        
         List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
         double max = (double) Collections.max(asList);
@@ -336,7 +336,7 @@ double lower = adduct.getMinRT();
         ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
         ((Path) newSeries.getNode()).setStrokeWidth(1.5); 
         
-        double[] PropArray2 = adduct.getAdductPropArray(adduct.getOGroupObject().getSession().getReference());
+        double[] PropArray2 = adduct.getAdductPropArray(adduct.getOGroupObject().getSession().getCurrentdataset());
         
         List asList2 = Arrays.asList(ArrayUtils.toObject(PropArray2));
         double max2 = (double) Collections.max(asList2);
@@ -352,10 +352,10 @@ double lower = adduct.getMinRT();
         ((Path) newSeries3.getNode()).setStroke(Color.RED);
         ((Path) newSeries3.getNode()).setStrokeWidth(1.5); 
         
-        if (adduct.getOGroupObject().getFittedShift(adduct.getSession().getReference())>0) {
+        if (adduct.getOGroupObject().getFittedShift(adduct.getSession().getCurrentdataset())>0) {
         XYChart.Series newSeries2 = new XYChart.Series();
-        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getReference())], 0));
-        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getReference())], maxProp));
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getCurrentdataset())], 0));
+        newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(adduct.getSession().getCurrentdataset())], maxProp));
         linechart.getData().add(newSeries2);
         linechart.applyCss();
         ((Path) newSeries2.getNode()).setStroke(Color.GREEN);
@@ -380,7 +380,7 @@ double lower = adduct.getMinRT();
         double lower = 0;
         
         for (int i = 0; i< list.size(); i++) {
-            double shift = (list.get(i).getFittedShift(list.get(i).getSession().getReference())-middleint)*shiftiter*60;
+            double shift = (list.get(i).getFittedShift(list.get(i).getSession().getCurrentdataset())-middleint)*shiftiter*60;
             XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
             newSeries.getData().add(data);
             if(shift>upper) {

@@ -217,4 +217,18 @@ public class Session {
     public void setBaseline(float baseline) {
         this.baseline = baseline;
     }
+
+    /**
+     * @return the currentdataset
+     */
+    public Dataset getCurrentdataset() {
+        return currentdataset;
+    }
+
+    /**
+     * @param currentdataset the currentdataset to set
+     */
+    public void setCurrentdataset(Dataset currentdataset) {
+        this.currentdataset = currentdataset;
+    }
 }
