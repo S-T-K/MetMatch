@@ -44,6 +44,7 @@ public class Session {
         this.listofBatches = new ArrayList<>();
         this.resolution = 100;
         this.baseline = 1000;
+        this.currentdataset=reference;
         
     }
 
