@@ -20,6 +20,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import org.rosuda.JRI.Rengine;
 
 /**
  *
@@ -35,6 +36,7 @@ public class Slice {
     private PolynomialSplineFunction intensityFunction;
     private float minIntensity;
     private float maxIntensity;
+    private List<Peak> listofPeaks;
    
     private Entry adduct;
     private Dataset dataset;
@@ -210,9 +212,68 @@ public class Slice {
        
        this.intensityFunction = interpolator.interpolate(RT, Intensity);
     }
+
+    
+//generates Array filled with "probabilities", correspond to wavelet peaks 
+//caluclated with R MassSpecWavelet
+    public void generateWaveletProp() {
+        double startc = System.currentTimeMillis();
+        if (getPropArray() == null) {
+            setPropArray(new double[this.IntensityArray.length]);
+            
+        
+
+        
+        double start1 = System.currentTimeMillis();
+        // Create an R vector in the form of a string.
+        String EIC = Arrays.toString(IntensityArray);
+        EIC = EIC.substring(1, EIC.length()-1);
+        //100 zeros at start and end, 50 are not enough
+        EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
+        EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
+        System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
+        System.out.println(EIC);
+        
+        // Start Rengine.
+        Rengine engine = adduct.getSession().getEngine();
+
+        // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
+        //=INPUTS
+        engine.eval("eic=" + EIC);
+       
+        
+        
+        //Retrieve values, see script for names
+        //=OUTPUTS
+        double start3 = System.currentTimeMillis();
+        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 30), snrTh=3)").asDoubleMatrix();
+        System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
+        
+        //Print output values, work with them...
+        if (ret!=null) {
+            double start4 = System.currentTimeMillis();
+        for(int i = 0; i<1; i++) {
+            for (int j = 0; j<ret[0].length; j++) {
+                //101 because of 100 zeros at start and R starts at 1
+                if (((int)ret[0][j]-101)<100) {
+                getPropArray()[(int)ret[0][j]-101]=1;
+            }}
+            
+        }
+        System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
+        }
+        //end Rengine, otherwise thread doesn't terminate
+        //engine.end();
+        
+}
+        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+    }
+    
+    
     
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
  public void generateGaussProp() {
+     double startc = System.currentTimeMillis();
          //initialize Array holding probabilities
         if (getPropArray()==null){ 
         setPropArray(new double[this.IntensityArray.length]);
@@ -223,6 +284,7 @@ public class Slice {
         
         }
         //generatePeakArray();
+        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
  
  //adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
@@ -732,6 +794,20 @@ public class Slice {
      */
     public void setMaxIntensity(float maxIntensity) {
         this.maxIntensity = maxIntensity;
+    }
+
+    /**
+     * @return the listofPeaks
+     */
+    public List<Peak> getListofPeaks() {
+        return listofPeaks;
+    }
+
+    /**
+     * @param listofPeaks the listofPeaks to set
+     */
+    public void setListofPeaks(List<Peak> listofPeaks) {
+        this.listofPeaks = listofPeaks;
     }
     
 }

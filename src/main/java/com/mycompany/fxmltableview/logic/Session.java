@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.rosuda.JRI.Rengine;
 
 
 /**
@@ -37,6 +38,7 @@ public class Session {
     private int resolution;
     private float baseline;
     private Dataset currentdataset;
+    private Rengine engine;
     
     
     public Session() {
@@ -45,7 +47,8 @@ public class Session {
         this.resolution = 100;
         this.baseline = 1000;
         this.currentdataset=reference;
-        
+        engine = new Rengine(new String[] { "--no-save" }, false, null);
+        engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
     }
 
     /**
@@ -231,5 +234,19 @@ public class Session {
      */
     public void setCurrentdataset(Dataset currentdataset) {
         this.currentdataset = currentdataset;
+    }
+
+    /**
+     * @return the engine
+     */
+    public Rengine getEngine() {
+        return engine;
+    }
+
+    /**
+     * @param engine the engine to set
+     */
+    public void setEngine(Rengine engine) {
+        this.engine = engine;
     }
 }

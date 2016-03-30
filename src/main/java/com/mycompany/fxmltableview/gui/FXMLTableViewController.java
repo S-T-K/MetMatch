@@ -146,7 +146,6 @@ public class FXMLTableViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         
-        
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
@@ -447,6 +446,10 @@ public class FXMLTableViewController implements Initializable {
               new FileOutputStream("filename.txt"), "utf-8"))) {
                 Collections.sort(MasterListofOGroups, new orderbyRT());
                 double[][] matrix = new double[MasterListofOGroups.size()][session.getResolution()];
+                
+                DoubleProperty progress = new SimpleDoubleProperty(0.0);
+                progressbar.progressProperty().bind(progress);
+        
                 for (int i = 0; i<MasterListofOGroups.size(); i++) {
                    
 
@@ -457,6 +460,8 @@ public class FXMLTableViewController implements Initializable {
                         
                     }
                     
+                    progress = new SimpleDoubleProperty((double)i/MasterListofOGroups.size());
+                    System.out.println(progress.get()*100 + "%");
                 }
                 
                 
@@ -525,7 +530,7 @@ public class FXMLTableViewController implements Initializable {
                 //TODO: calculate range as function of time
                 for (int i = MasterListofOGroups.size()-2; i>-1; i--){
                     max = 0;
-                    int range = 1;
+                    int range = 0;
                     int j = maxint;
                     if((j-1)>0 && getmaxofrange(weights, i, j-1, range)> max) {
                         max = getmaxofrange(weights, i, j-1, range);

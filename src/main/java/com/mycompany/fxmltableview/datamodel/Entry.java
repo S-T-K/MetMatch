@@ -136,7 +136,7 @@ public class Entry {
         
         for (int i = 0; i< dataset.getListofFiles().size(); i++) {
         Slice currentSlice = listofSlices.get(dataset.getListofFiles().get(i));
-            currentSlice.generateGaussProp();
+            currentSlice.generateWaveletProp();
             for (int j = 0; j < getSession().getResolution(); j++) {
                 if (currentSlice.getPropArray()[j]+propArray[j]>1){
                     if (currentSlice.getPropArray()[j]>propArray[j]) {
