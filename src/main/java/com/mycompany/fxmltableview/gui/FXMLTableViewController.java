@@ -145,6 +145,8 @@ public class FXMLTableViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        
+        
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
