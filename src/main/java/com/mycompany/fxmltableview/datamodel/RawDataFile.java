@@ -42,8 +42,8 @@ public class RawDataFile {
     private final Property<Color> color;
     private DoubleProperty Width;
    
-    
-
+    //for M/Z cleaning
+   
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file) {
         this.file=file;
@@ -51,6 +51,7 @@ public class RawDataFile {
         this.name = new SimpleStringProperty(file.getName());
         this.color= new SimpleObjectProperty(dataset.getColor());
         this.Width = new SimpleDoubleProperty(dataset.getWidth());
+        
     }
 
     // parse Scans

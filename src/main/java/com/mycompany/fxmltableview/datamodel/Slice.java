@@ -220,7 +220,7 @@ public class Slice {
         double startc = System.currentTimeMillis();
         if (getPropArray() == null) {
             setPropArray(new double[this.IntensityArray.length]);
-            
+            setListofPeaks(new ArrayList<>());
         
 
         
@@ -232,7 +232,7 @@ public class Slice {
         EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
         EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
         System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
-        System.out.println(EIC);
+       
         
         // Start Rengine.
         Rengine engine = adduct.getSession().getEngine();
@@ -246,20 +246,21 @@ public class Slice {
         //Retrieve values, see script for names
         //=OUTPUTS
         double start3 = System.currentTimeMillis();
-        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 30), snrTh=3)").asDoubleMatrix();
+        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
         System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
         
         //Print output values, work with them...
         if (ret!=null) {
             double start4 = System.currentTimeMillis();
-        for(int i = 0; i<1; i++) {
+        
             for (int j = 0; j<ret[0].length; j++) {
                 //101 because of 100 zeros at start and R starts at 1
                 if (((int)ret[0][j]-101)<100) {
                 getPropArray()[(int)ret[0][j]-101]=1;
+                addPeak(new Peak(((int)ret[0][j]-101), ret[1][j], ret[2][j], ret[3][j], this));
             }}
             
-        }
+        
         System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
         }
         //end Rengine, otherwise thread doesn't terminate
@@ -810,4 +811,7 @@ public class Slice {
         this.listofPeaks = listofPeaks;
     }
     
+    public void addPeak(Peak peak){
+        this.listofPeaks.add(peak);
+    }
 }

@@ -247,7 +247,7 @@ double lower = adduct.getMinRT();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
-        yAxis.setLabel("M/Z");
+        yAxis.setLabel("ppm M/Z deviation");
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
 
         // for all slices (= for all files)
@@ -261,7 +261,7 @@ double lower = adduct.getMinRT();
 //double startinner = System.currentTimeMillis();
             for (int j = 0; j < currentSlice.getMassList().size(); j++) {
                 if (currentSlice.getMassList().get(j) != null) {
-                    XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(j), currentSlice.getMassList().get(j));
+                    XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(j), getppm(adduct.getMZ(),currentSlice.getMassList().get(j)));
 
                     //rect is the node of the plot
                     Rectangle rect1 = new Rectangle(width, width);
@@ -298,13 +298,15 @@ double lower = adduct.getMinRT();
         xAxis.setUpperBound(upper);
 
         yAxis.setAutoRanging(false);
-        yAxis.setTickUnit((adduct.getMaxMZ() - adduct.getMinMZ()) / 5);
-        yAxis.setLowerBound(adduct.getMinMZ());
-        yAxis.setUpperBound(adduct.getMaxMZ());
+        yAxis.setTickUnit((adduct.getSession().getMZTolerance()*2 / 5));
+        yAxis.setLowerBound(-1*adduct.getSession().getMZTolerance());
+        yAxis.setUpperBound(adduct.getSession().getMZTolerance());
         scatterchart.setAnimated(false);
         scatterchart.setCache(true);
         scatterchart.setCacheHint(CacheHint.SPEED);
         scatterchart.setLegendVisible(false);
+       scatterchart.setHorizontalZeroLineVisible(false);
+        
         return scatterchart;
 
     }
@@ -404,4 +406,12 @@ double lower = adduct.getMinRT();
         
         return linechart;
     }
+    
+    public float getppm(double massref, float mass) {
+        float dif = (float)massref-mass;
+
+        return dif/((float)massref/1000000);
+    }
+    
+    
 }
