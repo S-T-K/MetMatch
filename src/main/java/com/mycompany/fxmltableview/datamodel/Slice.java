@@ -46,6 +46,8 @@ public class Slice {
     private double[] NormIntensityArray;
     private double[] PropArray;
     
+    private double[] Bins;
+    
     public Slice(RawDataFile file, Entry adduct) {
         this.file = file;
         this.dataset = file.getDataset();
@@ -57,6 +59,7 @@ public class Slice {
 
     
     public void extractSlicefromScans(List<Scan> listofScans) {
+        generateBins();
          //for all Scans
          setMinIntensity(900000000);
          setMaxIntensity(0);
@@ -81,6 +84,9 @@ public class Slice {
                                 getRetentionTimeList().add(currentRT);
                                 getIntensityList().add(listofScans.get(i).getIntensity()[l]);
                                 getMassList().add(listofScans.get(i).getMassovercharge()[l]);
+                                //add mass to bins for "median" calculation
+                                addmasstoBin(listofScans.get(i).getMassovercharge()[l]);
+                                
                                 if (listofScans.get(i).getIntensity()[l]>getMaxIntensity()) {
                                     setMaxIntensity(listofScans.get(i).getIntensity()[l]);
                                 }
@@ -104,9 +110,9 @@ public class Slice {
         
         }
       
-     this.clean();
-     this.generateInterpolatedEIC();
-     
+     //this.clean();
+     //this.generateInterpolatedEIC();
+     Bins = null;
     }
     
     //not yet working...
@@ -191,8 +197,8 @@ public class Slice {
          
        
       
-     this.clean();
-     this.generateInterpolatedEIC();
+     //this.clean();
+     //this.generateInterpolatedEIC();
      
     }
     
@@ -222,11 +228,19 @@ public class Slice {
             setPropArray(new double[this.IntensityArray.length]);
             setListofPeaks(new ArrayList<>());
         
+            //baseline correct IntensityArray
+            double[] correctedIntArray = new double[IntensityArray.length];
+            for ( int j = 0; j<IntensityArray.length; j++)  {
+                if (IntensityArray[j]>=adduct.getSession().getBaseline()) {
+                    correctedIntArray[j]=IntensityArray[j]-adduct.getSession().getBaseline();
+                }
+                
+            }
 
         
         double start1 = System.currentTimeMillis();
         // Create an R vector in the form of a string.
-        String EIC = Arrays.toString(IntensityArray);
+        String EIC = Arrays.toString(correctedIntArray);
         EIC = EIC.substring(1, EIC.length()-1);
         //100 zeros at start and end, 50 are not enough
         EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
@@ -453,23 +467,36 @@ public class Slice {
 
     
     //removes duplicate RT entries, only takes the max intensity
+    //within tolerance range around mzshift
     public void clean() {
         
     List<Float> newRTList = new ArrayList<>();
     List<Float> newIntList= new ArrayList<>();
     List<Float> newMZList= new ArrayList<>();
     
+    double shiftedMZ = adduct.getMZ()-adduct.getMZ()/1000000*file.getMzshift();
+    double maxMZ = shiftedMZ+shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
+    double minMZ = shiftedMZ-shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
+    
     
     for (int i =0; i<massList.size(); i++) {
-       float intensity = intensityList.get(i);
+        
+       float intensity = 0;
        
-       float mz = massList.get(i);
+       float mz =0;
+       if (massList.get(i)<=maxMZ&&massList.get(i)>=minMZ){
+       mz = massList.get(i); 
+       intensity = intensityList.get(i);}
        while (i<retentionTimeList.size()-1 && abs(retentionTimeList.get(i)-retentionTimeList.get(i+1))<0.001) {
+           if (massList.get(i+1)<=maxMZ&&massList.get(i+1)>=minMZ){
            if (intensityList.get(i+1)> intensity) {
+               
                intensity = intensityList.get(i+1);
                mz = massList.get(i+1);
            }
+           }
            i++; 
+       
        }
        
        newRTList.add(retentionTimeList.get(i));
@@ -480,11 +507,12 @@ public class Slice {
         
         
     }
+       
         
         setRetentionTimeList(newRTList);
         setIntensityList(newIntList);
         setMassList(newMZList);
-        
+    
 }
 
     
@@ -755,6 +783,39 @@ public class Slice {
         return smooth;
     }
 
+     
+     public void generateBins() {
+         double step = this.adduct.getMaxMZ()-this.adduct.getMinMZ();
+         step = step/file.getMzbins().length;
+         Bins = new double[file.getMzbins().length];
+         
+         //store upper limits for each bin
+         Bins[0]=this.adduct.getMinMZ()+step;
+         for (int i =1; i< Bins.length; i++) {
+             Bins[i] = Bins[i-1]+step;
+         }
+         
+     }
+     
+     public void addmasstoBin(float mass) {
+         //add mass to corresponding bin using binary search
+         int start = 0;
+         int end = Bins.length-1;
+         int middle;
+         
+         while (end > start) {
+             middle = (end+start)/2;
+             if (Bins[middle]<mass) {
+                 start = middle+1;
+             } else if (Bins[middle]>=mass) {
+                 end = middle;
+             }
+         }
+         
+         file.addtoBin(start);
+         
+     }
+     
     /**
      * @return the dataset
      */

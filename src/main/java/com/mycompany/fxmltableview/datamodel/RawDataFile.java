@@ -6,11 +6,15 @@
 package com.mycompany.fxmltableview.datamodel;
 
 import com.mycompany.fxmltableview.logic.DomParser;
+import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -37,21 +41,25 @@ public class RawDataFile {
     private List<Scan> listofScans;
     private List<Slice> listofSlices;
     private StringProperty name;
+    private Session session;
     
     
     private final Property<Color> color;
     private DoubleProperty Width;
    
     //for M/Z cleaning
-   
+    private int[] mzbins;
+    private double mzshift;
+
     //Constructor for new Raw Data file
-    public RawDataFile(Dataset dataset, File file) {
+    public RawDataFile(Dataset dataset, File file, Session session) {
         this.file=file;
         this.dataset=dataset;
         this.name = new SimpleStringProperty(file.getName());
         this.color= new SimpleObjectProperty(dataset.getColor());
         this.Width = new SimpleDoubleProperty(dataset.getWidth());
-        
+        this.session = session;
+        mzbins = new int[100];
     }
 
     // parse Scans
@@ -78,9 +86,30 @@ public class RawDataFile {
                 
                 
             }
-     
+           
+            
         }
-       
+ //get max bin
+ int maxint = 0;
+ int max = 0;
+ for (int i =0; i<mzbins.length; i++) {
+     if (mzbins[i]>max){
+         max = mzbins[i];
+         maxint = i;   
+     }
+ }
+ 
+ //calculate "median" shift
+double step = session.getMZTolerance()/(mzbins.length)*2;
+mzshift = session.getMZTolerance()-maxint*step;
+
+//clean slices according to shift and tolerance
+for (int i =0; i< listofSlices.size(); i++) {
+    listofSlices.get(i).clean();
+    listofSlices.get(i).generateInterpolatedEIC();
+    
+}
+        
         
 this.listofScans=null; //get rid of Scans, they are not needed any more
 
@@ -154,4 +183,53 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
     }
+    
+    public void addtoBin(int bin){
+        mzbins[bin]++;
+        
+    }
+
+    /**
+     * @return the mzbins
+     */
+    public int[] getMzbins() {
+        return mzbins;
+    }
+
+    /**
+     * @param mzbins the mzbins to set
+     */
+    public void setMzbins(int[] mzbins) {
+        this.mzbins = mzbins;
+    }
+
+    /**
+     * @return the mzshift
+     */
+    public double getMzshift() {
+        return mzshift;
+    }
+
+    /**
+     * @param mzshift the mzshift to set
+     */
+    public void setMzshift(double mzshift) {
+        this.mzshift = mzshift;
+    }
+
+    /**
+     * @return the session
+     */
+    public Session getSession() {
+        return session;
+    }
+
+    /**
+     * @param session the session to set
+     */
+    public void setSession(Session session) {
+        this.session = session;
+    }
+    
+    
 }

@@ -39,6 +39,7 @@ public class Session {
     private float baseline;
     private Dataset currentdataset;
     private Rengine engine;
+    private double SliceMZTolerance;
     
     
     public Session() {
@@ -46,6 +47,7 @@ public class Session {
         this.listofBatches = new ArrayList<>();
         this.resolution = 100;
         this.baseline = 1000;
+        SliceMZTolerance = 2.5;
         this.currentdataset=reference;
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
@@ -248,5 +250,19 @@ public class Session {
      */
     public void setEngine(Rengine engine) {
         this.engine = engine;
+    }
+
+    /**
+     * @return the SliceMZTolerance
+     */
+    public double getSliceMZTolerance() {
+        return SliceMZTolerance;
+    }
+
+    /**
+     * @param SliceMZTolerance the SliceMZTolerance to set
+     */
+    public void setSliceMZTolerance(double SliceMZTolerance) {
+        this.SliceMZTolerance = SliceMZTolerance;
     }
 }

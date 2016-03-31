@@ -56,7 +56,7 @@ public class Dataset {
     
     //add new File and parse it
     public void addFile(boolean isreference, File file, Session session) {
-        RawDataFile newfile = new RawDataFile(this, file);
+        RawDataFile newfile = new RawDataFile(this, file, session);
         this.listofFiles.add(newfile); 
         newfile.parseFile();
         System.out.println("parsed");
