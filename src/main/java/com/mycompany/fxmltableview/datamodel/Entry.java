@@ -46,6 +46,7 @@ public class Entry {
     private List<Entry> listofAdducts;
     private HashMap<RawDataFile, Slice> listofSlices;   //stores all slices
     private Session session;
+    private HashMap<RawDataFile, Double> Scores;
     
 
     
@@ -77,6 +78,7 @@ public class Entry {
         this.Score = new SimpleDoubleProperty(0);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
         this.AdductPropArray = new HashMap<RawDataFile, double[]>();
+        this.Scores = new HashMap<RawDataFile, Double>();
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
@@ -94,6 +96,7 @@ public class Entry {
         this.OGroupObject=null;
         this.OGroupPropArray = new HashMap<RawDataFile, double[]>();
         fittedShift = new HashMap<>();
+        this.Scores = new HashMap<RawDataFile, Double>();
 
     }
     
@@ -222,6 +225,9 @@ public class Entry {
         return Score.get();
     }
 
+    public SimpleDoubleProperty ScoreProperty() {
+        return Score;
+    }
     /**
      * @param Score the Score to set
      */
@@ -498,7 +504,20 @@ public class Entry {
         }
     }
 
+public void addScore(RawDataFile file, double score) {
+    this.Scores.put(file, score);
+}
 
+public void setScore(RawDataFile file) {
+    if (Scores.containsKey(file)) {
+        setScore(new SimpleDoubleProperty(Scores.get(file)));
+    }
+    
+}
+
+public double getScore(RawDataFile file) {
+    return Scores.get(file);
+}
     
     
 }

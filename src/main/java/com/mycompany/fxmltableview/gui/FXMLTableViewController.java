@@ -31,6 +31,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -138,6 +139,7 @@ public class FXMLTableViewController implements Initializable {
     Session session;
     FXGraphics2D test;
     HashMap<TitledPane,Dataset> panelink;
+   
 
     //number of current batches, as an index
     int batchcount;
@@ -183,11 +185,47 @@ public class FXMLTableViewController implements Initializable {
         
         //enable FileView functionality
         referenceFileView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        referenceFileView.getSelectionModel().getSelectedItems().addListener((obs, oldSelection[], newSelection[]) -> {
-    S
-    }
-});
+        referenceFileView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<RawDataFile>() {
+             @Override
+         public void onChanged(Change<? extends RawDataFile> c) {
+          Task task = new Task<Void>() {
+            @Override
+            //sets Score to the max over all selected Files
+            public Void call() throws InterruptedException {
+               session.setSelectedFiles(referenceFileView.getSelectionModel().getSelectedItems());
+               for (int i =0; i<MasterListofOGroups.size(); i++) {
+                   double maxScore = 0;
+                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
+                       RawDataFile file = session.getSelectedFiles().get(f);
+                       if (MasterListofOGroups.get(i).getScore(file)>maxScore) {
+                           maxScore = MasterListofOGroups.get(i).getScore(file);
+                       }
+                   MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(maxScore));
+                   }
+                   for (int j = 0; j<MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                       maxScore = 0;
+                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
+                       RawDataFile file = session.getSelectedFiles().get(f);
+                       if (MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
+                           maxScore = MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file);
+                       }
+                   MasterListofOGroups.get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
+                   }
+                   }
+                   
+                   
+               }
+              
+                return null;
+            }
 
+        };   
+         
+         new Thread(task).start();
+         metTable.refresh();
+         }
+         
+     });
         
 
         //highlight the Button, can't be done the normal way
@@ -452,8 +490,7 @@ public class FXMLTableViewController implements Initializable {
             @Override
             public Void call() throws IOException {
                 
-                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-              new FileOutputStream("filename.txt"), "utf-8"))) {
+                
                     for (int f = 0; f<session.getCurrentdataset().getListofFiles().size(); f++) {
                         RawDataFile currentfile = session.getCurrentdataset().getListofFiles().get(f);
                     
@@ -535,8 +572,7 @@ public class FXMLTableViewController implements Initializable {
                 }
                 System.out.println(maxint);
                 MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(currentfile,maxint);
-                writer.write(MasterListofOGroups.get(MasterListofOGroups.size()-1).getRT() + "\t" + maxint+ "\t" + MasterListofOGroups.get(MasterListofOGroups.size()-1).getOGroup());
-                writer.newLine();
+                
                 
              
                 
@@ -561,21 +597,20 @@ public class FXMLTableViewController implements Initializable {
                       MasterListofOGroups.get(i).setFittedShift(currentfile, maxint);
                       
                       //set score for OPGroup
-                      MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getOGroupPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
+                      MasterListofOGroups.get(i).addScore(currentfile,(MasterListofOGroups.get(i).getOGroupPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
                       
                       //set score for every addact
                       for (int a = 0; a<MasterListofOGroups.get(i).getListofAdducts().size(); a++) {
-                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
+                          MasterListofOGroups.get(i).getListofAdducts().get(a).addScore(currentfile,(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
                       }
                       
                       metTable.refresh();
-                      writer.write(MasterListofOGroups.get(i).getRT() + "\t" + maxint + "\t" + MasterListofOGroups.get(i).getOGroup());
-                      writer.newLine();
+                      
 
                   }
 
               }
-}
+
               
               latch.countDown();
               return null;

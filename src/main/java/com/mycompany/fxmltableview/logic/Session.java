@@ -8,6 +8,7 @@ package com.mycompany.fxmltableview.logic;
 import com.mycompany.fxmltableview.datamodel.Batch;
 import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
@@ -38,6 +39,7 @@ public class Session {
     private int resolution;
     private float baseline;
     private Dataset currentdataset;
+    private ObservableList<RawDataFile> selectedFiles;
     private Rengine engine;
     private double SliceMZTolerance;
     
@@ -264,5 +266,19 @@ public class Session {
      */
     public void setSliceMZTolerance(double SliceMZTolerance) {
         this.SliceMZTolerance = SliceMZTolerance;
+    }
+
+    /**
+     * @return the selectedFiles
+     */
+    public ObservableList<RawDataFile> getSelectedFiles() {
+        return selectedFiles;
+    }
+
+    /**
+     * @param selectedFiles the selectedFiles to set
+     */
+    public void setSelectedFiles(ObservableList<RawDataFile> selectedFiles) {
+        this.selectedFiles = selectedFiles;
     }
 }
