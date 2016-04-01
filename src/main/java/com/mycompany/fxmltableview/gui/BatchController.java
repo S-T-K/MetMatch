@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -37,6 +38,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -83,12 +85,13 @@ public class BatchController implements Initializable {
     TableColumn<RawDataFile, Color> colorColumn;
     
     @FXML
-    TextField batdefwidth, batsetwidth, paneName;
+    TextField batdefwidth, batsetwidth, paneName, batsetpen;
     
     @FXML
     ColorPicker batdefcol, batsetcol;
     
- 
+ @FXML
+    MenuItem deleteFile;
   
   
     //current session, storing all information
@@ -96,6 +99,7 @@ public class BatchController implements Initializable {
     Batch batch;
     ProgressBar progressbar;
     TitledPane pane;
+    FXMLTableViewController TVcontroller;
     
     
     
@@ -104,13 +108,13 @@ public class BatchController implements Initializable {
 
     
     //constructor, has reference to the session
-    public BatchController(Session session, Batch batch, ProgressBar bar, ObservableList<Entry> data, TitledPane tps) {
+    public BatchController(Session session, Batch batch, ProgressBar bar, ObservableList<Entry> data, TitledPane tps, FXMLTableViewController tvController) {
         this.session = session;
         this.batch= batch;
         this.progressbar= bar;
         this.data = data;
         this.pane=tps;
-      
+      this.TVcontroller=tvController;
         
     }
 
@@ -145,7 +149,7 @@ public class BatchController implements Initializable {
         //bind default values
         batdefwidth.textProperty().bindBidirectional(batch.getWidthProperty(), new NumberStringConverter());
         batdefcol.valueProperty().bindBidirectional(batch.getColorProperty());
-        
+        batsetpen.textProperty().bindBidirectional(batch.getPenaltyProperty(), new NumberStringConverter());
         
         //add functionality to set the color for all files
         batsetcol.setOnAction(new EventHandler() {
@@ -180,10 +184,10 @@ public class BatchController implements Initializable {
     // File Chooser for mzXML files
     public void openBatchmzxmlChooser() throws FileNotFoundException {
         
-        //Property to link with progressbar
+//Property to link with progressbar
         DoubleProperty progress = new SimpleDoubleProperty(0.0);
         progressbar.progressProperty().bind(progress);
-        
+
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter
@@ -191,70 +195,40 @@ public class BatchController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show open file dialog
-        List<File> filelist  = fileChooser.showOpenMultipleDialog(null);
-        
-        
+        List<File> filelist = fileChooser.showOpenMultipleDialog(null);
+
         // create a new task
         Task task = new Task<Void>() {
-    @Override public Void call() {
-        double test = 1/(double)filelist.size();
-        
-        if (filelist != null) {
-                        for (File file : filelist) {
-                            double start = System.currentTimeMillis();
-                            
-                            batch.addFile(false, file, session);
-                            progress.set(progress.get()+test);
-                            System.out.println(progress.get());
-        double end = System.currentTimeMillis();
-        //refresh files
-       batchFileView.setItems(batch.getListofFiles());
-                           
-                        }
-                        
-                        RawDataFile bat = batch.getListofFiles().get(0);
-                        
-                        
-                     
-                        int currentGroup = 0;
-                        int currentAdduct = 0;
-                        int currentGroupMax = session.getListofOGroups().get(0).getListofAdducts().size()-1;
-                        
-                        
-                        for (int i =0; i< bat.getListofSlices().size(); i++) {
-                            Slice batch = bat.getListofSlices().get(i);
-                            batch.generateInterpolatedEIC();
-
-                            
-  
-                           
-                           
-                           
-                           
-                            
-                            
-                            
-                            currentAdduct++;
-                            if (currentAdduct > currentGroupMax) {
-                                currentGroup++;
-                                currentAdduct = 0;
-                                currentGroupMax = session.getListofOGroups().get(currentGroup).getListofAdducts().size()-1;
-                                
-                            }
-                        }
-                        System.out.println("Done");
-                        
+            @Override
+            public Void call() {
+                double test = 1 / (double) filelist.size();
+               
+                if (filelist != null) {
+                    for (File file : filelist) {
+                        double start = System.currentTimeMillis();
 
 
-                      
-    }
-        return null;
-    }
-    
-    };
-        
+                        batch.addFile(true, file, session);                    
+                        progress.set(progress.get() + test);
+                        batchFileView.refresh();
+                        System.out.println(progress.get());
+                        double end = System.currentTimeMillis();
+                        System.out.println(end - start);
+                        //refresh files
+                        batchFileView.setItems(batch.getListofFiles());
+
+                    }
+
+
+                }
+                return null;
+            }
+
+        };
+
         //new thread that executes task
         new Thread(task).start();
+
         
     }
     
@@ -263,5 +237,79 @@ public class BatchController implements Initializable {
 
     }
 
+public void newwindowcalculate() throws IOException, InterruptedException {
+    TVcontroller.newwindowcalculate();
+}
 
+
+    
+    public void deleteFile() {
+        ObservableList<RawDataFile> list = batchFileView.getSelectionModel().getSelectedItems();
+        for (int i = 0; i< list.size(); i++) {
+            list.get(i).deleteFile();
+            
+        }
+        batchFileView.getSelectionModel().clearSelection();
+    }
+    
+    public void checkforFile() {
+        ObservableList<RawDataFile> list = batchFileView.getSelectionModel().getSelectedItems();
+        if (list.size()<1) {
+            deleteFile.setDisable(true);
+            deleteFile.setVisible(false);
+        } else {
+            deleteFile.setDisable(false);
+            deleteFile.setVisible(true);
+        }
+        
+    }
+    
+    public void changedFile() {        
+          Task task = new Task<Void>() {
+            @Override
+            //sets Score to the max over all selected Files
+            public Void call() throws InterruptedException {
+               session.setSelectedFiles(batchFileView.getSelectionModel().getSelectedItems());
+               for (int i =0; i<TVcontroller.getMasterListofOGroups().size(); i++) {
+                   double maxScore = 0;
+                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
+                       RawDataFile file = session.getSelectedFiles().get(f);
+                       if (TVcontroller.getMasterListofOGroups().get(i).getScore(file)>maxScore) {
+                           maxScore = TVcontroller.getMasterListofOGroups().get(i).getScore(file);
+                       }
+                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
+                   }
+                   for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
+                       maxScore = 0;
+                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
+                       RawDataFile file = session.getSelectedFiles().get(f);
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
+                           maxScore = TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
+                       }
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
+                   }
+                   }
+                   
+                   
+               }
+              
+                return null;
+            }
+
+        };   
+         
+         new Thread(task).start();
+         TVcontroller.getMetTable().refresh();
+         }
+    
+    public void deleteBatch() {
+        for (int i = 0; i< batch.getListofFiles().size(); i++) {
+            batch.getListofFiles().get(i).deleteFile();
+           
+        }
+        session.getListofBatches().remove(batch);
+        batchFileView.getItems().clear();
+        TVcontroller.getAccordion().getPanes().remove(pane);
+         System.out.println("Deleted Batch");
+    }
 }

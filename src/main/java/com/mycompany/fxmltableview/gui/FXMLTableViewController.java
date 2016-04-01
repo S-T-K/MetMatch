@@ -78,7 +78,7 @@ public class FXMLTableViewController implements Initializable {
 
     //link fxml information to controller
     @FXML
-    TreeTableView<Entry> metTable;
+    private TreeTableView<Entry> metTable;
 
     @FXML
     TreeTableColumn nameColumn;
@@ -105,7 +105,7 @@ public class FXMLTableViewController implements Initializable {
     TitledPane ReferencePane;
 
     @FXML
-    Accordion accordion;
+    private Accordion accordion;
 
     @FXML
     Button addBatchButton;
@@ -141,7 +141,7 @@ public class FXMLTableViewController implements Initializable {
     ContextMenu fileContextMenu;
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
-    ObservableList<Entry> MasterListofOGroups;
+    private ObservableList<Entry> MasterListofOGroups;
 
     //current session, storing all information
     Session session;
@@ -182,7 +182,7 @@ public class FXMLTableViewController implements Initializable {
         widthColumn.setCellFactory(TextFieldTableCell.<RawDataFile, Number>forTableColumn(new NumberStringConverter()));
 
         //make referencePane expanded
-        accordion.setExpandedPane(ReferencePane);
+        getAccordion().setExpandedPane(ReferencePane);
 
         //disable not needed elements
         addBatchButton.setDisable(true);
@@ -247,7 +247,7 @@ public class FXMLTableViewController implements Initializable {
         });
         
         //add functionality to change the active dataset
-        accordion.expandedPaneProperty().addListener(new 
+        getAccordion().expandedPaneProperty().addListener(new 
             ChangeListener<TitledPane>() {
                 public void changed(ObservableValue<? extends TitledPane> ov,
                     TitledPane old_val, TitledPane new_val) {
@@ -277,27 +277,27 @@ public class FXMLTableViewController implements Initializable {
         File file = fileChooser.showOpenDialog(null);
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
-        MasterListofOGroups = session.parseReferenceTsv();
+        setMasterListofOGroups(session.parseReferenceTsv());
         
 
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
 
         //for all OGroups
-        for (int i = 0; i < MasterListofOGroups.size(); i++) {
-            TreeItem<Entry> root = new TreeItem<>(MasterListofOGroups.get(i));
+        for (int i = 0; i < getMasterListofOGroups().size(); i++) {
+            TreeItem<Entry> root = new TreeItem<>(getMasterListofOGroups().get(i));
             root.setExpanded(false);
             superroot.getChildren().add(root);
 
-            for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
-                TreeItem<Entry> childNode1 = new TreeItem<>(MasterListofOGroups.get(i).getListofAdducts().get(j));
+            for (int j = 0; j < getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
+                TreeItem<Entry> childNode1 = new TreeItem<>(getMasterListofOGroups().get(i).getListofAdducts().get(j));
                 root.getChildren().add(childNode1);
 
             }
 
         }
-        metTable.setRoot(superroot);
-        metTable.setShowRoot(false);
+        getMetTable().setRoot(superroot);
+        getMetTable().setShowRoot(false);
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
         DataMatrixLabel.setText("Data Matrix:");
@@ -309,7 +309,7 @@ public class FXMLTableViewController implements Initializable {
         addBatchButton.setDisable(false);
 
         //add double click functionality to the TreeTable
-        metTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        getMetTable().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
@@ -326,7 +326,7 @@ public class FXMLTableViewController implements Initializable {
                         Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
 
                         //add MasterListofOGroups to new controller
-                        controller.metTable = metTable;
+                        controller.metTable = getMetTable();
 
                         //print graphs
                         controller.print();
@@ -402,13 +402,14 @@ public class FXMLTableViewController implements Initializable {
             AnchorPane test = new AnchorPane();
             TitledPane tps = new TitledPane("", test);
             tps.setExpanded(true);
-            accordion.getPanes().add(tps);
+            getAccordion().getPanes().add(tps);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             Batch batch = new Batch(batchcount);
+            getAccordion().setExpandedPane(tps);
             batch.setName("Batch Nr. " + (batchcount + 1));
             session.addBatch(batch);
             batchcount++;
-            loader.setController(new BatchController(session, batch, progressbar, MasterListofOGroups, tps));
+            loader.setController(new BatchController(session, batch, progressbar, getMasterListofOGroups(), tps, this));
             loader.setRoot(test);
             test = (AnchorPane) loader.load();
             panelink.put(tps, batch);
@@ -443,7 +444,7 @@ public class FXMLTableViewController implements Initializable {
               controller.setSupercontroller(this);
 
               //print graphs
-              controller.print(MasterListofOGroups);
+              controller.print(getMasterListofOGroups());
               System.out.println("PRINT");
               stage.show();
       
@@ -464,23 +465,23 @@ public class FXMLTableViewController implements Initializable {
                     for (int f = 0; f<session.getCurrentdataset().getListofFiles().size(); f++) {
                         RawDataFile currentfile = session.getCurrentdataset().getListofFiles().get(f);
                     
-                Collections.sort(MasterListofOGroups, new orderbyRT());
-                double[][] matrix = new double[MasterListofOGroups.size()][session.getResolution()];
+                Collections.sort(getMasterListofOGroups(), new orderbyRT());
+                double[][] matrix = new double[getMasterListofOGroups().size()][session.getResolution()];
                 
                 DoubleProperty progress = new SimpleDoubleProperty(0.0);
                 progressbar.progressProperty().bind(progress);
         
-                for (int i = 0; i<MasterListofOGroups.size(); i++) {
+                for (int i = 0; i<getMasterListofOGroups().size(); i++) {
                    
 
-                    MasterListofOGroups.get(i).generateOGroupPropArray(currentfile);
-                    double[] PropArray = MasterListofOGroups.get(i).getOGroupPropArray(currentfile);
+                        getMasterListofOGroups().get(i).generateOGroupPropArray(currentfile);
+                    double[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArray(currentfile);
                     for (int j =0; j<session.getResolution(); j++) {
                         matrix[i][j] = PropArray[j];
                         
                     }
                     
-                    progress = new SimpleDoubleProperty((double)i/MasterListofOGroups.size());
+                    progress = new SimpleDoubleProperty((double)i/getMasterListofOGroups().size());
                     System.out.println(progress.get()*100 + "%");
                 }
                 
@@ -505,7 +506,7 @@ public class FXMLTableViewController implements Initializable {
                 
                 
                 //calculate weight matrix
-                double[][] weights = new double[MasterListofOGroups.size()][session.getResolution()];
+                double[][] weights = new double[getMasterListofOGroups().size()][session.getResolution()];
                 //fill first row
                 for (int j =0; j<session.getResolution(); j++) {
                     weights[0][j] = matrix[0][j];
@@ -514,7 +515,7 @@ public class FXMLTableViewController implements Initializable {
                 //TODO: Penalty for change in j
                 //fill rest of weights matrix
                 double penalty = session.getCurrentdataset().getPenalty();
-                for (int i = 1; i<MasterListofOGroups.size(); i++) {
+                for (int i = 1; i<getMasterListofOGroups().size(); i++) {
                     for (int j =0; j<session.getResolution(); j++) {
                         double max = 0;
                         if(weights[i-1][j]>max){
@@ -535,19 +536,19 @@ public class FXMLTableViewController implements Initializable {
                 double max = 0;
                 int maxint = 0;
                 for (int j =0; j<session.getResolution(); j++) {
-                    if (weights[MasterListofOGroups.size()-1][j]> max) {
+                    if (weights[getMasterListofOGroups().size()-1][j]> max) {
                         maxint = j;
-                        max = weights[MasterListofOGroups.size()-1][j];
+                        max = weights[getMasterListofOGroups().size()-1][j];
                     }
                 }
                 System.out.println(maxint);
-                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(currentfile,maxint);
+                    getMasterListofOGroups().get(getMasterListofOGroups().size()-1).setFittedShift(currentfile,maxint);
                 
                 
              
                 
                 //TODO: calculate range as function of time
-                for (int i = MasterListofOGroups.size()-2; i>-1; i--){
+                for (int i = getMasterListofOGroups().size()-2; i>-1; i--){
                     max = 0;
                     int range = 0;
                     int j = maxint;
@@ -564,17 +565,17 @@ public class FXMLTableViewController implements Initializable {
                           maxint = j + 1;
                       }
                       System.out.println(maxint);
-                      MasterListofOGroups.get(i).setFittedShift(currentfile, maxint);
+                        getMasterListofOGroups().get(i).setFittedShift(currentfile, maxint);
                       
                       //set score for OPGroup
-                      MasterListofOGroups.get(i).addScore(currentfile,(MasterListofOGroups.get(i).getOGroupPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
+                        getMasterListofOGroups().get(i).addScore(currentfile,(getMasterListofOGroups().get(i).getOGroupPropArray(currentfile)[getMasterListofOGroups().get(i).getFittedShift(currentfile)]));
                       
                       //set score for every addact
-                      for (int a = 0; a<MasterListofOGroups.get(i).getListofAdducts().size(); a++) {
-                          MasterListofOGroups.get(i).getListofAdducts().get(a).addScore(currentfile,(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
+                      for (int a = 0; a<getMasterListofOGroups().get(i).getListofAdducts().size(); a++) {
+                            getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile,(getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getFittedShift(currentfile)]));
                       }
                       
-                      metTable.refresh();
+                        getMetTable().refresh();
                       
 
                   }
@@ -637,23 +638,23 @@ public class FXMLTableViewController implements Initializable {
             //sets Score to the max over all selected Files
             public Void call() throws InterruptedException {
                session.setSelectedFiles(referenceFileView.getSelectionModel().getSelectedItems());
-               for (int i =0; i<MasterListofOGroups.size(); i++) {
+               for (int i =0; i<getMasterListofOGroups().size(); i++) {
                    double maxScore = 0;
                    for (int f = 0; f<session.getSelectedFiles().size(); f++) {
                        RawDataFile file = session.getSelectedFiles().get(f);
-                       if (MasterListofOGroups.get(i).getScore(file)>maxScore) {
-                           maxScore = MasterListofOGroups.get(i).getScore(file);
+                       if (getMasterListofOGroups().get(i).getScore(file)>maxScore) {
+                           maxScore = getMasterListofOGroups().get(i).getScore(file);
                        }
-                   MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(maxScore));
+                        getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
                    }
-                   for (int j = 0; j<MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                   for (int j = 0; j<getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                        maxScore = 0;
                    for (int f = 0; f<session.getSelectedFiles().size(); f++) {
                        RawDataFile file = session.getSelectedFiles().get(f);
-                       if (MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
-                           maxScore = MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file);
+                       if ( getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
+                           maxScore = getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
                        }
-                   MasterListofOGroups.get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
+                            getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
                    }
                    }
                    
@@ -666,7 +667,49 @@ public class FXMLTableViewController implements Initializable {
         };   
          
          new Thread(task).start();
-         metTable.refresh();
+         getMetTable().refresh();
          }
+
+    /**
+     * @return the metTable
+     */
+    public TreeTableView<Entry> getMetTable() {
+        return metTable;
+    }
+
+    /**
+     * @param metTable the metTable to set
+     */
+    public void setMetTable(TreeTableView<Entry> metTable) {
+        this.metTable = metTable;
+    }
+
+    /**
+     * @return the MasterListofOGroups
+     */
+    public ObservableList<Entry> getMasterListofOGroups() {
+        return MasterListofOGroups;
+    }
+
+    /**
+     * @param MasterListofOGroups the MasterListofOGroups to set
+     */
+    public void setMasterListofOGroups(ObservableList<Entry> MasterListofOGroups) {
+        this.MasterListofOGroups = MasterListofOGroups;
+    }
+
+    /**
+     * @return the accordion
+     */
+    public Accordion getAccordion() {
+        return accordion;
+    }
+
+    /**
+     * @param accordion the accordion to set
+     */
+    public void setAccordion(Accordion accordion) {
+        this.accordion = accordion;
+    }
     
 }

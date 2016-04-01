@@ -149,7 +149,7 @@ public class Entry {
                 } else {
                 propArray[j] += currentSlice.getPropArray()[j];}
             }
-            AdductPropArray.put(file, propArray);
+            getAdductPropArray().put(file, propArray);
         
         
         
@@ -192,7 +192,7 @@ public class Entry {
 //        }
         
         }
-        OGroupPropArray.put(file, propArray);
+        getOGroupPropArray().put(file, propArray);
       
     }
 
@@ -452,8 +452,8 @@ public class Entry {
      * @return the fittedShift
      */
     public int getFittedShift(RawDataFile file) {
-        if (fittedShift.containsKey(file)){
-        return fittedShift.get(file);}
+        if (getFittedShift().containsKey(file)){
+        return getFittedShift().get(file);}
         else {
             return 0;
         }
@@ -463,14 +463,14 @@ public class Entry {
      * @param fittedShift the fittedShift to set
      */
     public void setFittedShift(RawDataFile file, int shift) {
-        this.fittedShift.put(file, shift);
+        this.getFittedShift().put(file, shift);
     }
 
     /**
      * @return the AdductPropArray
      */
     public double[] getAdductPropArray(RawDataFile file) {
-        return AdductPropArray.get(file);
+        return getAdductPropArray().get(file);
     }
 
     /**
@@ -484,7 +484,7 @@ public class Entry {
      * @return the OGroupPropArray
      */
     public double[] getOGroupPropArray(RawDataFile file) {
-        return OGroupPropArray.get(file);
+        return getOGroupPropArray().get(file);
     }
 
     /**
@@ -492,6 +492,48 @@ public class Entry {
      */
     public void setOGroupPropArray(HashMap<RawDataFile, double[]> OGroupPropArray) {
         this.OGroupPropArray = OGroupPropArray;
+    }
+
+    /**
+     * @return the Scores
+     */
+    public HashMap<RawDataFile, Double> getScores() {
+        return Scores;
+    }
+
+    /**
+     * @param Scores the Scores to set
+     */
+    public void setScores(HashMap<RawDataFile, Double> Scores) {
+        this.Scores = Scores;
+    }
+
+    /**
+     * @return the AdductPropArray
+     */
+    public HashMap<RawDataFile, double[]> getAdductPropArray() {
+        return AdductPropArray;
+    }
+
+    /**
+     * @return the OGroupPropArray
+     */
+    public HashMap<RawDataFile, double[]> getOGroupPropArray() {
+        return OGroupPropArray;
+    }
+
+    /**
+     * @return the fittedShift
+     */
+    public HashMap<RawDataFile, Integer> getFittedShift() {
+        return fittedShift;
+    }
+
+    /**
+     * @param fittedShift the fittedShift to set
+     */
+    public void setFittedShift(HashMap<RawDataFile, Integer> fittedShift) {
+        this.fittedShift = fittedShift;
     }
       
     
@@ -505,18 +547,18 @@ public class Entry {
     }
 
 public void addScore(RawDataFile file, double score) {
-    this.Scores.put(file, score);
+    this.getScores().put(file, score);
 }
 
 public void setScore(RawDataFile file) {
-    if (Scores.containsKey(file)) {
-        setScore(new SimpleDoubleProperty(Scores.get(file)));
+    if (getScores().containsKey(file)) {
+        setScore(new SimpleDoubleProperty(getScores().get(file)));
     }
     
 }
 
 public double getScore(RawDataFile file) {
-    return Scores.get(file);
+    return getScores().get(file);
 }
     
     

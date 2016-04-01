@@ -234,8 +234,20 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
     
     public void deleteFile() {
         dataset.getListofFiles().remove(this);
-        
-        
+        List<Entry> list = session.getListofOGroups();
+        for (int i = 0; i<list.size(); i++) {
+            list.get(i).getScores().remove(this);
+            list.get(i).getOGroupPropArray().remove(this);
+            list.get(i).getFittedShift().remove(this);
+            for (int j =0; j<list.get(i).getListofAdducts().size(); j++) {
+                list.get(i).getListofAdducts().get(j).getListofSlices().remove(this);
+                list.get(i).getListofAdducts().get(j).getScores().remove(this);
+                list.get(i).getListofAdducts().get(j).getAdductPropArray().remove(this);
+                
+            }
+        }
+       System.out.println("Deleted File");
+        System.gc();
     }
     
 }

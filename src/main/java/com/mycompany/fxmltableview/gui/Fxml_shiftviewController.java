@@ -123,7 +123,7 @@ public class Fxml_shiftviewController implements Initializable {
      */
     public void setSupercontroller(FXMLTableViewController supercontroller) {
         this.supercontroller = supercontroller;
-        refsetpen.textProperty().bindBidirectional(supercontroller.session.getReference().getPenaltyProperty(), new NumberStringConverter());
+        refsetpen.textProperty().bindBidirectional(supercontroller.session.getCurrentdataset().getPenaltyProperty(), new NumberStringConverter());
     }
        
       

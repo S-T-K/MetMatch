@@ -159,7 +159,7 @@ public class Session {
     
     
     public void addBatch(Batch batch) {
-        this.listofBatches.add(batch);
+        this.getListofBatches().add(batch);
         
     }
 
@@ -280,5 +280,19 @@ public class Session {
      */
     public void setSelectedFiles(ObservableList<RawDataFile> selectedFiles) {
         this.selectedFiles = selectedFiles;
+    }
+
+    /**
+     * @return the listofBatches
+     */
+    public List<Batch> getListofBatches() {
+        return listofBatches;
+    }
+
+    /**
+     * @param listofBatches the listofBatches to set
+     */
+    public void setListofBatches(List<Batch> listofBatches) {
+        this.listofBatches = listofBatches;
     }
 }
