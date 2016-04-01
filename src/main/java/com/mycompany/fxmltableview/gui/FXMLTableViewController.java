@@ -44,8 +44,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -131,6 +133,12 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     ProgressBar progressbar;
+    
+    @FXML
+    MenuItem deleteFile;
+    
+    @FXML
+    ContextMenu fileContextMenu;
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> MasterListofOGroups;
@@ -183,50 +191,11 @@ public class FXMLTableViewController implements Initializable {
         referenceFileView.setDisable(true);
         referenceFileView.setVisible(false);
         
+        
         //enable FileView functionality
         referenceFileView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        referenceFileView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<RawDataFile>() {
-             @Override
-         public void onChanged(Change<? extends RawDataFile> c) {
-          Task task = new Task<Void>() {
-            @Override
-            //sets Score to the max over all selected Files
-            public Void call() throws InterruptedException {
-               session.setSelectedFiles(referenceFileView.getSelectionModel().getSelectedItems());
-               for (int i =0; i<MasterListofOGroups.size(); i++) {
-                   double maxScore = 0;
-                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
-                       RawDataFile file = session.getSelectedFiles().get(f);
-                       if (MasterListofOGroups.get(i).getScore(file)>maxScore) {
-                           maxScore = MasterListofOGroups.get(i).getScore(file);
-                       }
-                   MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(maxScore));
-                   }
-                   for (int j = 0; j<MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
-                       maxScore = 0;
-                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
-                       RawDataFile file = session.getSelectedFiles().get(f);
-                       if (MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
-                           maxScore = MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file);
-                       }
-                   MasterListofOGroups.get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
-                   }
-                   }
-                   
-                   
-               }
-              
-                return null;
-            }
+       
 
-        };   
-         
-         new Thread(task).start();
-         metTable.refresh();
-         }
-         
-     });
-        
 
         //highlight the Button, can't be done the normal way
         Platform.runLater(new Runnable() {
@@ -402,6 +371,7 @@ public class FXMLTableViewController implements Initializable {
 
                         session.getReference().addFile(true, file, session);                    
                         progress.set(progress.get() + test);
+                        referenceFileView.refresh();
                         System.out.println(progress.get());
                         double end = System.currentTimeMillis();
                         System.out.println(end - start);
@@ -639,5 +609,64 @@ public class FXMLTableViewController implements Initializable {
         return max;
     }
     
+    
+    public void deleteFile() {
+        ObservableList<RawDataFile> list = referenceFileView.getSelectionModel().getSelectedItems();
+        for (int i = 0; i< list.size(); i++) {
+            list.get(i).deleteFile();
+            
+        }
+        referenceFileView.getSelectionModel().clearSelection();
+    }
+    
+    public void checkforFile() {
+        ObservableList<RawDataFile> list = referenceFileView.getSelectionModel().getSelectedItems();
+        if (list.size()<1) {
+            deleteFile.setDisable(true);
+            deleteFile.setVisible(false);
+        } else {
+            deleteFile.setDisable(false);
+            deleteFile.setVisible(true);
+        }
+        
+    }
+    
+    public void changedFile() {        
+          Task task = new Task<Void>() {
+            @Override
+            //sets Score to the max over all selected Files
+            public Void call() throws InterruptedException {
+               session.setSelectedFiles(referenceFileView.getSelectionModel().getSelectedItems());
+               for (int i =0; i<MasterListofOGroups.size(); i++) {
+                   double maxScore = 0;
+                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
+                       RawDataFile file = session.getSelectedFiles().get(f);
+                       if (MasterListofOGroups.get(i).getScore(file)>maxScore) {
+                           maxScore = MasterListofOGroups.get(i).getScore(file);
+                       }
+                   MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(maxScore));
+                   }
+                   for (int j = 0; j<MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                       maxScore = 0;
+                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
+                       RawDataFile file = session.getSelectedFiles().get(f);
+                       if (MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
+                           maxScore = MasterListofOGroups.get(i).getListofAdducts().get(j).getScore(file);
+                       }
+                   MasterListofOGroups.get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
+                   }
+                   }
+                   
+                   
+               }
+              
+                return null;
+            }
+
+        };   
+         
+         new Thread(task).start();
+         metTable.refresh();
+         }
     
 }

@@ -232,5 +232,10 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
         this.session = session;
     }
     
+    public void deleteFile() {
+        dataset.getListofFiles().remove(this);
+        
+        
+    }
     
 }

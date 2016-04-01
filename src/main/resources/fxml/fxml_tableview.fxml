@@ -117,7 +117,7 @@
                                                         </Menu>
                                                     </menus>
                                                 </MenuBar>
-                                                <TableView fx:id="referenceFileView" editable="true" layoutY="57.0" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
+                                                <TableView fx:id="referenceFileView" editable="true" layoutY="57.0" onMouseClicked="#changedFile" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
                                                     <columns>
                                                         <TableColumn fx:id="fileColumn" prefWidth="199.9999634027481" text="File">
                                                             <cellValueFactory>
@@ -143,9 +143,10 @@
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                                        <contextMenu>
-                                          <ContextMenu>
+                                          <ContextMenu fx:id="fileContextMenu" onShowing="#checkforFile">
                                             <items>
                                               <MenuItem mnemonicParsing="false" onAction="#openReferencemzxmlChooser" text="Add new .mzXML" />
+                                                <MenuItem fx:id="deleteFile" mnemonicParsing="false" onAction="#deleteFile" text="Delete file" />
                                             </items>
                                           </ContextMenu>
                                        </contextMenu>
