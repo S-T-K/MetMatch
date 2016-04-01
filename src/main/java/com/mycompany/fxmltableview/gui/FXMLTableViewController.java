@@ -46,6 +46,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableRow;
@@ -116,7 +117,7 @@ public class FXMLTableViewController implements Initializable {
     TableColumn<RawDataFile, String> fileColumn;
 
     @FXML
-    TableColumn widthColumn;
+    TableColumn widthColumn, shiftColumn;
 
     @FXML
     TableColumn<RawDataFile, Color> colorColumn;
@@ -179,6 +180,15 @@ public class FXMLTableViewController implements Initializable {
         referenceMenu.setVisible(false);
         referenceFileView.setDisable(true);
         referenceFileView.setVisible(false);
+        
+        //enable FileView functionality
+        referenceFileView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        referenceFileView.getSelectionModel().getSelectedItems().addListener((obs, oldSelection[], newSelection[]) -> {
+    S
+    }
+});
+
+        
 
         //highlight the Button, can't be done the normal way
         Platform.runLater(new Runnable() {
@@ -444,6 +454,9 @@ public class FXMLTableViewController implements Initializable {
                 
                 try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
               new FileOutputStream("filename.txt"), "utf-8"))) {
+                    for (int f = 0; f<session.getCurrentdataset().getListofFiles().size(); f++) {
+                        RawDataFile currentfile = session.getCurrentdataset().getListofFiles().get(f);
+                    
                 Collections.sort(MasterListofOGroups, new orderbyRT());
                 double[][] matrix = new double[MasterListofOGroups.size()][session.getResolution()];
                 
@@ -453,8 +466,8 @@ public class FXMLTableViewController implements Initializable {
                 for (int i = 0; i<MasterListofOGroups.size(); i++) {
                    
 
-                    MasterListofOGroups.get(i).generateOGroupPropArray(session.getCurrentdataset());
-                    double[] PropArray = MasterListofOGroups.get(i).getOGroupPropArray(session.getCurrentdataset());
+                    MasterListofOGroups.get(i).generateOGroupPropArray(currentfile);
+                    double[] PropArray = MasterListofOGroups.get(i).getOGroupPropArray(currentfile);
                     for (int j =0; j<session.getResolution(); j++) {
                         matrix[i][j] = PropArray[j];
                         
@@ -521,7 +534,7 @@ public class FXMLTableViewController implements Initializable {
                     }
                 }
                 System.out.println(maxint);
-                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(session.getCurrentdataset(),maxint);
+                MasterListofOGroups.get(MasterListofOGroups.size()-1).setFittedShift(currentfile,maxint);
                 writer.write(MasterListofOGroups.get(MasterListofOGroups.size()-1).getRT() + "\t" + maxint+ "\t" + MasterListofOGroups.get(MasterListofOGroups.size()-1).getOGroup());
                 writer.newLine();
                 
@@ -545,14 +558,14 @@ public class FXMLTableViewController implements Initializable {
                           maxint = j + 1;
                       }
                       System.out.println(maxint);
-                      MasterListofOGroups.get(i).setFittedShift(session.getCurrentdataset(), maxint);
+                      MasterListofOGroups.get(i).setFittedShift(currentfile, maxint);
                       
                       //set score for OPGroup
-                      MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getOGroupPropArray(session.getCurrentdataset())[MasterListofOGroups.get(i).getFittedShift(session.getCurrentdataset())]));
+                      MasterListofOGroups.get(i).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getOGroupPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
                       
                       //set score for every addact
                       for (int a = 0; a<MasterListofOGroups.get(i).getListofAdducts().size(); a++) {
-                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(session.getCurrentdataset())[MasterListofOGroups.get(i).getFittedShift(session.getCurrentdataset())]));
+                          MasterListofOGroups.get(i).getListofAdducts().get(a).setScore(new SimpleDoubleProperty(MasterListofOGroups.get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[MasterListofOGroups.get(i).getFittedShift(currentfile)]));
                       }
                       
                       metTable.refresh();
@@ -562,11 +575,12 @@ public class FXMLTableViewController implements Initializable {
                   }
 
               }
-
+}
               
               latch.countDown();
               return null;
           }
+            
 
         };
 

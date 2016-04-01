@@ -133,6 +133,11 @@
                                                                 <PropertyValueFactory property="Width" />
                                                             </cellValueFactory>
                                                             </TableColumn>
+                                          <TableColumn fx:id="shiftColumn" maxWidth="77.0" minWidth="0.0" prefWidth="0.0" text="Shift [ppm]">
+                                             <cellValueFactory>
+                                                <PropertyValueFactory property="mzshift" />
+                                             </cellValueFactory>
+                                          </TableColumn>
                                                     </columns>
                                                     <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

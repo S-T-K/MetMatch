@@ -49,7 +49,7 @@ public class RawDataFile {
    
     //for M/Z cleaning
     private int[] mzbins;
-    private double mzshift;
+    private DoubleProperty mzshift;
 
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file, Session session) {
@@ -60,6 +60,7 @@ public class RawDataFile {
         this.Width = new SimpleDoubleProperty(dataset.getWidth());
         this.session = session;
         mzbins = new int[100];
+        mzshift = new SimpleDoubleProperty();
     }
 
     // parse Scans
@@ -101,7 +102,7 @@ public class RawDataFile {
  
  //calculate "median" shift
 double step = session.getMZTolerance()/(mzbins.length)*2;
-mzshift = session.getMZTolerance()-maxint*step;
+mzshift = new SimpleDoubleProperty(session.getMZTolerance()-maxint*step);
 
 //clean slices according to shift and tolerance
 for (int i =0; i< listofSlices.size(); i++) {
@@ -207,13 +208,13 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
      * @return the mzshift
      */
     public double getMzshift() {
-        return mzshift;
+        return mzshift.get();
     }
 
     /**
      * @param mzshift the mzshift to set
      */
-    public void setMzshift(double mzshift) {
+    public void setMzshift(DoubleProperty mzshift) {
         this.mzshift = mzshift;
     }
 

@@ -51,9 +51,9 @@ public class Entry {
     
     
     //for peak probability
-    private HashMap<Dataset, double[]> AdductPropArray;
-    private HashMap<Dataset, double[]> OGroupPropArray;
-    private HashMap<Dataset, Integer> fittedShift;
+    private HashMap<RawDataFile, double[]> AdductPropArray;
+    private HashMap<RawDataFile, double[]> OGroupPropArray;
+    private HashMap<RawDataFile, Integer> fittedShift;
     
     //maxIntensity of all Slices
     private float maxIntensity;
@@ -76,7 +76,7 @@ public class Entry {
         this.M = new SimpleDoubleProperty(M);
         this.Score = new SimpleDoubleProperty(0);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
-        this.AdductPropArray = new HashMap<Dataset, double[]>();
+        this.AdductPropArray = new HashMap<RawDataFile, double[]>();
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
@@ -92,7 +92,7 @@ public class Entry {
         this.Score = new SimpleDoubleProperty(0);
         this.session = session;
         this.OGroupObject=null;
-        this.OGroupPropArray = new HashMap<Dataset, double[]>();
+        this.OGroupPropArray = new HashMap<RawDataFile, double[]>();
         fittedShift = new HashMap<>();
 
     }
@@ -130,13 +130,12 @@ public class Entry {
     }
     
     //generates PropArray of a dataset for an Adduct 
-    public void generateAdductPropArray(Dataset dataset) {
+    public void generateAdductPropArray(RawDataFile file) {
         double [] propArray = new double[getSession().getResolution()];
 
-        
-        for (int i = 0; i< dataset.getListofFiles().size(); i++) {
-        Slice currentSlice = listofSlices.get(dataset.getListofFiles().get(i));
-            currentSlice.generateWaveletProp();
+        Slice currentSlice = listofSlices.get(file);
+            //currentSlice.generateWaveletProp();
+            currentSlice.generateGaussProp();
             for (int j = 0; j < getSession().getResolution(); j++) {
                 if (currentSlice.getPropArray()[j]+propArray[j]>1){
                     if (currentSlice.getPropArray()[j]>propArray[j]) {
@@ -147,27 +146,28 @@ public class Entry {
                 } else {
                 propArray[j] += currentSlice.getPropArray()[j];}
             }
-        }
+            AdductPropArray.put(file, propArray);
         
-        AdductPropArray.put(dataset, propArray);
+        
+        
     }
     
     //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?
-    public void generateOGroupPropArray(Dataset dataset) {
+    public void generateOGroupPropArray(RawDataFile file) {
         
         double [] propArray = new double[getSession().getResolution()];
         for (int i = 0; i<listofAdducts.size(); i++) {
-            listofAdducts.get(i).generateAdductPropArray(dataset);
+            listofAdducts.get(i).generateAdductPropArray(file);
             for (int j = 0; j<session.getResolution(); j++) {
-                if(listofAdducts.get(i).getAdductPropArray(dataset)[j]+propArray[j]>1){
-                    if (listofAdducts.get(i).getAdductPropArray(dataset)[j]>propArray[j]) {
-                        propArray[j]=propArray[j]*0.1+listofAdducts.get(i).getAdductPropArray(dataset)[j];
+                if(listofAdducts.get(i).getAdductPropArray(file)[j]+propArray[j]>1){
+                    if (listofAdducts.get(i).getAdductPropArray(file)[j]>propArray[j]) {
+                        propArray[j]=propArray[j]*0.1+listofAdducts.get(i).getAdductPropArray(file)[j];
                     } else {
-                        propArray[j]=propArray[j]+listofAdducts.get(i).getAdductPropArray(dataset)[j]*0.1;
+                        propArray[j]=propArray[j]+listofAdducts.get(i).getAdductPropArray(file)[j]*0.1;
                     }
                 } else {
-                propArray[j]+=listofAdducts.get(i).getAdductPropArray(dataset)[j];}
+                propArray[j]+=listofAdducts.get(i).getAdductPropArray(file)[j];}
             
             
         }
@@ -187,8 +187,9 @@ public class Entry {
 //            PropArray[i] = Math.log10(PropArray[i]);}
 //            
 //        }
-        OGroupPropArray.put(dataset, propArray);
+        
         }
+        OGroupPropArray.put(file, propArray);
       
     }
 
@@ -444,9 +445,9 @@ public class Entry {
     /**
      * @return the fittedShift
      */
-    public int getFittedShift(Dataset dataset) {
-        if (fittedShift.containsKey(dataset)){
-        return fittedShift.get(dataset);}
+    public int getFittedShift(RawDataFile file) {
+        if (fittedShift.containsKey(file)){
+        return fittedShift.get(file);}
         else {
             return 0;
         }
@@ -455,35 +456,35 @@ public class Entry {
     /**
      * @param fittedShift the fittedShift to set
      */
-    public void setFittedShift(Dataset dataset, int shift) {
-        this.fittedShift.put(dataset, shift);
+    public void setFittedShift(RawDataFile file, int shift) {
+        this.fittedShift.put(file, shift);
     }
 
     /**
      * @return the AdductPropArray
      */
-    public double[] getAdductPropArray(Dataset dataset) {
-        return AdductPropArray.get(dataset);
+    public double[] getAdductPropArray(RawDataFile file) {
+        return AdductPropArray.get(file);
     }
 
     /**
      * @param AdductPropArray the AdductPropArray to set
      */
-    public void setAdductPropArray(HashMap<Dataset, double[]> AdductPropArray) {
+    public void setAdductPropArray(HashMap<RawDataFile, double[]> AdductPropArray) {
         this.AdductPropArray = AdductPropArray;
     }
 
     /**
      * @return the OGroupPropArray
      */
-    public double[] getOGroupPropArray(Dataset dataset) {
-        return OGroupPropArray.get(dataset);
+    public double[] getOGroupPropArray(RawDataFile file) {
+        return OGroupPropArray.get(file);
     }
 
     /**
      * @param OGroupPropArray the OGroupPropArray to set
      */
-    public void setOGroupPropArray(HashMap<Dataset, double[]> OGroupPropArray) {
+    public void setOGroupPropArray(HashMap<RawDataFile, double[]> OGroupPropArray) {
         this.OGroupPropArray = OGroupPropArray;
     }
       
