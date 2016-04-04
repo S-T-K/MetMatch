@@ -84,6 +84,7 @@ public class RawDataFile {
                 newSlice.extractSlicefromScans(listofScans);
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 getListofSlices().add(newSlice);
+               
                 
                 
             }
@@ -245,6 +246,11 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
                 list.get(i).getListofAdducts().get(j).getAdductPropArray().remove(this);
                 
             }
+        }
+        
+        for ( int i =0; i<listofSlices.size(); i++) {
+            listofSlices.get(i).deleteSlice();
+            
         }
        System.out.println("Deleted File");
         System.gc();

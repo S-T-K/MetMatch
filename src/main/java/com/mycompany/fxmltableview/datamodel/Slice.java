@@ -7,6 +7,11 @@ package com.mycompany.fxmltableview.datamodel;
 
 
 import flanagan.analysis.CurveSmooth;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +33,9 @@ import org.rosuda.JRI.Rengine;
  */
 public class Slice {
     
+    
     private RawDataFile file;
+    private String name;
     
     private List<Float> retentionTimeList = new ArrayList<Float>();
     private List<Float> intensityList = new ArrayList<Float>();
@@ -52,7 +59,7 @@ public class Slice {
         this.file = file;
         this.dataset = file.getDataset();
         this.adduct = adduct;
-        
+        this.name = (this+"intList.ser");
         
     }
     
@@ -217,6 +224,7 @@ public class Slice {
        LinearInterpolator interpolator = new LinearInterpolator();
        
        this.intensityFunction = interpolator.interpolate(RT, Intensity);
+     
     }
 
     
@@ -874,5 +882,67 @@ public class Slice {
     
     public void addPeak(Peak peak){
         this.listofPeaks.add(peak);
+    }
+    
+    public void deleteSlice() {
+        this.file= null;
+        this.dataset = null;
+        this.adduct = null;
+        this.retentionTimeList = null;
+        this.intensityList = null;
+        this.massList = null;
+        
+        if(this.IntensityArray!=null){
+            this.IntensityArray=null;
+        }
+        if(this.NormIntensityArray!=null){
+            this.NormIntensityArray=null;
+        }
+        if(this.PropArray!=null){
+            this.PropArray=null;
+        }
+        if(this.intensityFunction!=null){
+            this.intensityFunction=null;
+        }
+        
+    }
+    
+    public void storeIntensityList() {
+        try
+      {
+         FileOutputStream fileOut =
+         new FileOutputStream(name);
+         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+         out.writeObject(this.IntensityArray);
+         out.close();
+         fileOut.close();
+         System.out.printf("Serialized data is saved in " + name);
+      }catch(IOException i)
+      {
+          i.printStackTrace();
+      }
+        
+    }
+    
+    public void loadIntensityList() {
+        try
+      {
+         FileInputStream fileIn = new FileInputStream("/tmp/employee.ser");
+         ObjectInputStream in = new ObjectInputStream(fileIn);
+         this.intensityList = (List<Float>) in.readObject();
+         in.close();
+         fileIn.close();
+      }catch(IOException i)
+      {
+         i.printStackTrace();
+         return;
+      }catch(ClassNotFoundException c)
+      {
+         System.out.println("List class not found");
+         c.printStackTrace();
+         return;
+      }
+      System.out.println("Deserialized List...");
+        
     }
 }
