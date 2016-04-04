@@ -59,7 +59,7 @@ public class RawDataFile {
         this.color= new SimpleObjectProperty(dataset.getColor());
         this.Width = new SimpleDoubleProperty(dataset.getWidth());
         this.session = session;
-        mzbins = new int[100];
+        mzbins = new int[session.getResolution()];
         mzshift = new SimpleDoubleProperty();
     }
 
@@ -72,6 +72,7 @@ public class RawDataFile {
 
     //extract Slices, according to tolerances
     public void extractSlices(boolean isreference, List<Entry> data, float RTTolerance, float MZTolerance) {
+        double start = System.currentTimeMillis();
         this.setListofSlices(new ArrayList<>());
 
 
@@ -81,10 +82,9 @@ public class RawDataFile {
                 float MZ = (float) data.get(i).getListofAdducts().get(j).getMZ();
                 float RT = (float) data.get(i).getListofAdducts().get(j).getOGroupRT();   //RT in Minutes
                 Slice newSlice = new Slice(this, data.get(i).getListofAdducts().get(j)); 
-                newSlice.extractSlicefromScans(listofScans);
+                newSlice.binaryExtractSlicefromScans(listofScans);
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 getListofSlices().add(newSlice);
-               
                 
                 
             }
@@ -114,7 +114,8 @@ for (int i =0; i< listofSlices.size(); i++) {
         
         
 this.listofScans=null; //get rid of Scans, they are not needed any more
-
+double end = System.currentTimeMillis();
+System.out.println("Complete Extraction: " + (end-start));
     }
 
     /**

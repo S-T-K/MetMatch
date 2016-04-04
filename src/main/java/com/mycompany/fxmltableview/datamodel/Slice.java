@@ -37,10 +37,13 @@ public class Slice {
     private RawDataFile file;
     private String name;
     
+    //TODO: one RTList/OGroup or calculation every time
+    //TODO: maybe less precision for Intensity?
     private List<Float> retentionTimeList = new ArrayList<Float>();
     private List<Float> intensityList = new ArrayList<Float>();
     private List<Float> massList = new ArrayList<Float>();
     private PolynomialSplineFunction intensityFunction;
+    private PolynomialSplineFunction mzFunction;
     private float minIntensity;
     private float maxIntensity;
     private List<Peak> listofPeaks;
@@ -48,9 +51,9 @@ public class Slice {
     private Entry adduct;
     private Dataset dataset;
     
-    
+    //processed information
+    private double[] MZArray;
     private double[] IntensityArray;
-    private double[] NormIntensityArray;
     private double[] PropArray;
     
     private double[] Bins;
@@ -66,11 +69,14 @@ public class Slice {
 
     
     public void extractSlicefromScans(List<Scan> listofScans) {
+        double start = System.currentTimeMillis();
         generateBins();
          //for all Scans
          setMinIntensity(900000000);
          setMaxIntensity(0);
          boolean found;
+         
+         
         for (int i = 0; i< listofScans.size(); i++) {
             //if RT is within tolerance
             
@@ -86,13 +92,13 @@ public class Slice {
                         
                         //TODO binary search!!!!!!
                         for (int l=0; l<listofScans.get(i).getPeakscount(); l++) {
-                           
-                            if (listofScans.get(i).getMassovercharge()[l] >= getMinMZ() && listofScans.get(i).getMassovercharge()[l] <= getMaxMZ()) {
+                           float mz = listofScans.get(i).getMassovercharge()[l];
+                            if (mz >= getMinMZ() && mz <= getMaxMZ()) {
                                 getRetentionTimeList().add(currentRT);
                                 getIntensityList().add(listofScans.get(i).getIntensity()[l]);
-                                getMassList().add(listofScans.get(i).getMassovercharge()[l]);
+                                getMassList().add(mz);
                                 //add mass to bins for "median" calculation
-                                addmasstoBin(listofScans.get(i).getMassovercharge()[l]);
+                                addmasstoBin(mz);
                                 
                                 if (listofScans.get(i).getIntensity()[l]>getMaxIntensity()) {
                                     setMaxIntensity(listofScans.get(i).getIntensity()[l]);
@@ -120,88 +126,118 @@ public class Slice {
      //this.clean();
      //this.generateInterpolatedEIC();
      Bins = null;
+     double end = System.currentTimeMillis();
+     //System.out.println("Extraction: " + (end-start));
     }
     
     //not yet working...
     public void binaryExtractSlicefromScans(List<Scan> listofScans) {
+       generateBins();
+         //for all Scans
+         setMinIntensity(900000000);
+         setMaxIntensity(0);
+        
          //for all Scans
          int start = 0;
          int end = listofScans.size()-1;
          int middle = end/2;
-         boolean found = false;
+         boolean foundRT = false;
+         int lower = start;
          
-         while (!found) {
+         while (!foundRT && (end-start)>0) {
              if (listofScans.get(middle).getRetentionTime() < getMinRT()) {
                  start = middle +1;
+                 lower = middle;
              } else if (listofScans.get(middle).getRetentionTime() > getMaxRT()) {
                  end = middle-1;
              } else {
-                 found = true;
+                 foundRT = true;
              }
              middle = (start+end)/2;
          }
          
-         start = middle;
-         end = middle;
-         while (listofScans.get(start).getRetentionTime()>getMinRT()) {
-             start--;
-         }
-         start++;
          
-         while (listofScans.get(end).getRetentionTime()<getMaxRT()) {
-             end++;
-         }
-         end--;
-         
-         for (int i = start; i<= end; i++) {
-             found = false;
-             float currentRT = listofScans.get(i).getRetentionTime();
-                        
-             int startp = 0;
-             int endp = listofScans.get(i).getPeakscount();
-             middle = endp/2;
-             
-             while ((startp<endp) && !found) {
-                 if (listofScans.get(i).getMassovercharge()[middle] < getMinMZ()) {
-                     startp = middle+1;
-                 } else if (listofScans.get(i).getMassovercharge()[middle] > getMaxMZ()) {
-                     endp = middle-1;
-                 } else {
-                     found = true;
-                 }
-                 middle = (startp+endp)/2;
-             }
-             startp = middle;
-             endp = middle;
-             
-             
-             if (found) {
-                 while (listofScans.get(i).getMassovercharge()[startp]>getMinMZ()) {
-                     getRetentionTimeList().add(currentRT);
-                     getIntensityList().add(listofScans.get(i).getIntensity()[startp]);
-                     getMassList().add(listofScans.get(i).getMassovercharge()[startp]);
-                     startp--;
-                 }
-                 while (listofScans.get(i).getMassovercharge()[endp]<getMaxMZ()) {
-                     getRetentionTimeList().add(currentRT);
-                     getIntensityList().add(listofScans.get(i).getIntensity()[endp]);
-                     getMassList().add(listofScans.get(i).getMassovercharge()[endp]);
-                     endp++;
-                     
-                 }
-                     
-                 
+         if (foundRT) {
+                end = middle;
+                middle = (lower+end)/2;
+             boolean foundMinRT = false;
+             while (!foundMinRT) {
+             if (listofScans.get(middle).getRetentionTime() < getMinRT()) {
+                 lower = middle+1;
+             } else if (listofScans.get(middle-1).getRetentionTime() < getMinRT()) {
+                 foundMinRT = true;
              } else {
-             getRetentionTimeList().add(currentRT);
+                 end = middle-1;
+             }
+             middle = (lower+end)/2;
+         }
+             //middle is the lowest RT
+             int current = middle;
+             Scan currentScan = listofScans.get(middle);
+             while (currentScan.getRetentionTime() < getMaxRT()) {
+                 boolean foundMZ = false;
+                 start = 0;
+                 end = currentScan.getMassovercharge().length;
+                 middle = (start + end) / 2;
+                 while (!foundMZ && (end - start) > 0) {
+                     if (currentScan.getMassovercharge()[middle] < getMinMZ()) {
+                         start = middle + 1;
+                     } else if (currentScan.getMassovercharge()[middle] > getMaxMZ()) {
+                         end = middle - 1;
+                     } else {
+                         foundMZ = true;
+                     }
+                     middle = (start + end) / 2;
+                 }
+                 
+                 //if MZ found
+                 if (foundMZ) {
+                     start = middle;
+                     end = middle+1;
+                     
+                     while (start>0 &&currentScan.getMassovercharge()[start]>=getMinMZ()) {
+                     getRetentionTimeList().add(currentScan.getRetentionTime());
+                                getIntensityList().add(currentScan.getIntensity()[start]);
+                                getMassList().add(currentScan.getMassovercharge()[start]);
+                                //add mass to bins for "median" calculation
+                                addmasstoBin(currentScan.getMassovercharge()[start]);  
+                                if (currentScan.getIntensity()[start]>getMaxIntensity()) {
+                                    setMaxIntensity(currentScan.getIntensity()[start]);
+                                }
+                                if (currentScan.getIntensity()[start] < getMinIntensity()) {
+                                    setMinIntensity(currentScan.getIntensity()[start]);
+                                }
+                                start--;
+                 }
+                     while (end<currentScan.getMassovercharge().length && currentScan.getMassovercharge()[end]<=getMaxMZ()) {
+                     getRetentionTimeList().add(currentScan.getRetentionTime());
+                                getIntensityList().add(currentScan.getIntensity()[end]);
+                                getMassList().add(currentScan.getMassovercharge()[end]);
+                                //add mass to bins for "median" calculation
+                                addmasstoBin(currentScan.getMassovercharge()[end]);
+                                if (currentScan.getIntensity()[end]>getMaxIntensity()) {
+                                    setMaxIntensity(currentScan.getIntensity()[end]);
+                                }
+                                if (currentScan.getIntensity()[end] < getMinIntensity()) {
+                                    setMinIntensity(currentScan.getIntensity()[end]);
+                                }
+                                end++;
+                 }
+                 } else {
+                 getRetentionTimeList().add(currentScan.getRetentionTime());
                             getIntensityList().add(0.0f);
                             getMassList().add(0.0f);
              }
-             
+
+                 current++;
+                 currentScan = listofScans.get(current);
+             }
+
+
              
          }
          
-         
-         
+    
        
       
      //this.clean();
@@ -213,10 +249,12 @@ public class Slice {
     //interpolates intensities
     public  void generateIntensityFunction() {
        double[] RT = new double[this.retentionTimeList.size()];
+       double[] MZ = new double[this.massList.size()];
        double[] Intensity = new double[this.retentionTimeList.size()];
        for (int i =0; i<RT.length; i++) {
            RT[i] = this.retentionTimeList.get(i);
            Intensity[i] = this.intensityList.get(i);
+           MZ[i]=this.massList.get(i);
        }
         
         
@@ -224,9 +262,9 @@ public class Slice {
        LinearInterpolator interpolator = new LinearInterpolator();
        
        this.intensityFunction = interpolator.interpolate(RT, Intensity);
-     
+     this.mzFunction = interpolator.interpolate(RT, MZ);
     }
-
+    
     
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
@@ -520,6 +558,7 @@ public class Slice {
         setRetentionTimeList(newRTList);
         setIntensityList(newIntList);
         setMassList(newMZList);
+        
     
 }
 
@@ -605,24 +644,25 @@ public class Slice {
        generateIntensityFunction();
         
         setIntensityArray(new double[resolution]);
-        setNormIntensityArray(new double[resolution]);
+        setMZArray(new double[resolution]);
+       
       
      
       
       //fill Arrays
       for (int i = 0; i< resolution; i++) {
             getIntensityArray()[i]=getIntensityFunction().value(getRTArray()[i]);
-
+            getMZArray()[i] = mzFunction.value(getRTArray()[i]);
       }
     
-     double[] MaxArray  = Arrays.copyOf(getIntensityArray(), resolution);
-     Arrays.sort(MaxArray);
      
-     for (int i = 0; i< resolution; i++) {
-            getNormIntensityArray()[i] = getIntensityArray()[i]/MaxArray[resolution-1];
-         
-     }
-      
+     //delete originals
+    this.intensityList = null;
+    this.intensityFunction = null;
+    this.massList = null;
+    this.mzFunction = null;
+    this.retentionTimeList = null;
+     
     }
 
     /**
@@ -648,19 +688,7 @@ public class Slice {
         this.IntensityArray = IntensityArray;
     }
 
-    /**
-     * @return the NormIntensityArray
-     */
-    public double[] getNormIntensityArray() {
-        return NormIntensityArray;
-    }
-
-    /**
-     * @param NormIntensityArray the NormIntensityArray to set
-     */
-    public void setNormIntensityArray(double[] NormIntensityArray) {
-        this.NormIntensityArray = NormIntensityArray;
-    }
+    
 
    
     
@@ -895,9 +923,7 @@ public class Slice {
         if(this.IntensityArray!=null){
             this.IntensityArray=null;
         }
-        if(this.NormIntensityArray!=null){
-            this.NormIntensityArray=null;
-        }
+        
         if(this.PropArray!=null){
             this.PropArray=null;
         }
@@ -944,5 +970,19 @@ public class Slice {
       }
       System.out.println("Deserialized List...");
         
+    }
+
+    /**
+     * @return the MZArray
+     */
+    public double[] getMZArray() {
+        return MZArray;
+    }
+
+    /**
+     * @param MZArray the MZArray to set
+     */
+    public void setMZArray(double[] MZArray) {
+        this.MZArray = MZArray;
     }
 }

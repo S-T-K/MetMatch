@@ -63,15 +63,9 @@ public class ChartGenerator {
 
             //while the next RT is the same as the one before, add Intensities
             //double startinner = System.currentTimeMillis();
-            for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
-                float intensity = currentSlice.getIntensityList().get(j);
-                float currentRT = currentSlice.getRetentionTimeList().get(j);
-                while (j < currentSlice.getIntensityList().size() - 1 && abs(currentRT - currentSlice.getRetentionTimeList().get(j + 1)) < 0.0001) {
-                    j++;
-                    intensity = intensity + currentSlice.getIntensityList().get(j);
-
-                }
-
+            for (int j = 0; j < currentSlice.getIntensityArray().length; j++) {
+                double intensity = currentSlice.getIntensityArray()[j];
+                double currentRT = currentSlice.getRTArray()[j];
                 XYChart.Data data = new XYChart.Data(currentRT, intensity);
 
                 newSeries.getData().add(data);
@@ -126,17 +120,11 @@ public class ChartGenerator {
 
             XYChart.Series newSeries = new XYChart.Series();
 
-            float maxIntensity = Collections.max(currentSlice.getIntensityList());
+            double maxIntensity = Arrays.stream(currentSlice.getIntensityArray()).max().getAsDouble();
             //double startinner = System.currentTimeMillis();
-            for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
-                float intensity = currentSlice.getIntensityList().get(j);
-                float currentRT = currentSlice.getRetentionTimeList().get(j);
-                while (j < currentSlice.getIntensityList().size() - 1 && abs(currentRT - currentSlice.getRetentionTimeList().get(j + 1)) < 0.0001) {
-                    j++;
-                    intensity = intensity + currentSlice.getIntensityList().get(j);
-
-                }
-
+            for (int j = 0; j < currentSlice.getIntensityArray().length; j++) {
+                double intensity = currentSlice.getIntensityArray()[j];
+                double currentRT = currentSlice.getRTArray()[j];
                 newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
 
             }
@@ -203,17 +191,11 @@ public class ChartGenerator {
 
             XYChart.Series newSeries = new XYChart.Series();
 
-            float maxIntensity = Collections.max(currentSlice.getIntensityList());
+            double maxIntensity = Arrays.stream(currentSlice.getIntensityArray()).max().getAsDouble();
             //double startinner = System.currentTimeMillis();
-            for (int j = 0; j < currentSlice.getIntensityList().size(); j++) {
-                float intensity = currentSlice.getIntensityList().get(j);
-                float currentRT = currentSlice.getRetentionTimeList().get(j);
-                while (j < currentSlice.getIntensityList().size() - 1 && abs(currentRT - currentSlice.getRetentionTimeList().get(j + 1)) < 0.0001) {
-                    j++;
-                    intensity = intensity + currentSlice.getIntensityList().get(j);
-
-                }
-
+            for (int j = 0; j < currentSlice.getIntensityArray().length; j++) {
+                double intensity = currentSlice.getIntensityArray()[j];
+                double currentRT = currentSlice.getRTArray()[j];
                 newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
 
             }
@@ -265,12 +247,11 @@ double lower = adduct.getMinRT();
             Slice currentSlice = adduct.getListofSlices().get(currentfile);
 
             XYChart.Series newSeries = new XYChart.Series();
-            float maxIntensity = Collections.max(currentSlice.getIntensityList());
+            double maxIntensity = Arrays.stream(currentSlice.getIntensityArray()).max().getAsDouble();
             double width = currentSlice.getFile().getWidth() + 1.5;
 //double startinner = System.currentTimeMillis();
-            for (int j = 0; j < currentSlice.getMassList().size(); j++) {
-                if (currentSlice.getMassList().get(j) != null) {
-                    XYChart.Data data = new XYChart.Data(currentSlice.getRetentionTimeList().get(j), getppm(adduct.getMZ(),currentSlice.getMassList().get(j)));
+            for (int j = 0; j < currentSlice.getMZArray().length; j++) {
+                    XYChart.Data data = new XYChart.Data(currentSlice.getRTArray()[j], getppm(adduct.getMZ(),currentSlice.getMZArray()[j]));
 
                     //rect is the node of the plot
                     Rectangle rect1 = new Rectangle(width, width);
@@ -280,7 +261,7 @@ double lower = adduct.getMinRT();
                     data.setNode(rect1);
 
                     //set opacity
-                    data.getNode().setOpacity(currentSlice.getIntensityList().get(j) / maxIntensity);
+                    data.getNode().setOpacity(currentSlice.getIntensityArray()[j] / maxIntensity);
 
                     //set Tooltip
                     //Tooltip tooltip = new Tooltip();
@@ -289,7 +270,7 @@ double lower = adduct.getMinRT();
                     newSeries.getData().add(data);
                 }
 
-            }
+            
             //double endinner = System.currentTimeMillis();
 //System.out.println("Inner loop mass: " + (endinner-startinner));
             scatterchart.getData().add(newSeries);
@@ -436,10 +417,10 @@ double lower = adduct.getMinRT();
         return linechart;
     }
     
-    public float getppm(double massref, float mass) {
-        float dif = (float)massref-mass;
+    public double getppm(double massref, double mass) {
+        double dif = massref-mass;
 
-        return dif/((float)massref/1000000);
+        return dif/(massref/1000000);
     }
     
     

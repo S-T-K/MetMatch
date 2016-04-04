@@ -47,7 +47,7 @@ public class Session {
     public Session() {
         this.reference= new Reference();
         this.listofBatches = new ArrayList<>();
-        this.resolution = 100;
+        this.resolution = 30;
         this.baseline = 1000;
         SliceMZTolerance = 2.5;
         this.currentdataset=reference;

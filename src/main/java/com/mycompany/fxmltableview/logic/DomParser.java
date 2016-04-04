@@ -130,7 +130,7 @@ public class DomParser {
         
         
         Scan e = new Scan(number, peaksCount, retentionTime/60, massovercharge, intensity, scanType, msLevel, polarity, msInstrumentID);
-
+        peaks = null;
         return e;
     }
 
