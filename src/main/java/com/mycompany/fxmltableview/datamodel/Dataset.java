@@ -39,6 +39,7 @@ public class Dataset {
     
     //penalty for path calculation
     private SimpleDoubleProperty penalty;
+    
 
     
     

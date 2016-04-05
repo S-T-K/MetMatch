@@ -51,6 +51,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableRow;
@@ -61,6 +62,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -71,6 +73,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 import org.jfree.fx.FXGraphics2D;
 
@@ -125,6 +128,9 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     TableColumn<RawDataFile, Color> colorColumn;
+    
+    @FXML 
+    TableColumn<RawDataFile, Boolean> activeColumn;
 
     @FXML
     TextField refdefwidth, refsetwidth, paneName, refsetpen;
@@ -156,7 +162,6 @@ public class FXMLTableViewController implements Initializable {
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
@@ -167,6 +172,20 @@ public class FXMLTableViewController implements Initializable {
         fileColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, String>("name"));
         colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
         colorColumn.setCellFactory(ColorTableCell::new);
+        
+        activeColumn.setCellValueFactory(new PropertyValueFactory("active"));
+        activeColumn.setCellFactory(new Callback<TableColumn<RawDataFile, Boolean>, TableCell<RawDataFile, Boolean>>() {
+
+ 
+
+            public TableCell<RawDataFile, Boolean> call(TableColumn<RawDataFile, Boolean> p) {
+
+                return new CheckBoxTableCell<RawDataFile, Boolean>();
+
+            }
+
+        });
+
 
         //enables edit functionality for width cell
         widthColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -366,6 +385,7 @@ public class FXMLTableViewController implements Initializable {
                 double test = 1 / (double) filelist.size();
                
                 if (filelist != null) {
+                    
                     for (File file : filelist) {
                         
                         double start = System.currentTimeMillis();
@@ -467,6 +487,7 @@ public class FXMLTableViewController implements Initializable {
                 
                     for (int f = 0; f<session.getCurrentdataset().getListofFiles().size(); f++) {
                         RawDataFile currentfile = session.getCurrentdataset().getListofFiles().get(f);
+                         if(currentfile.getActive().booleanValue()) {
                     
                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
                 double[][] matrix = new double[getMasterListofOGroups().size()][session.getResolution()];
@@ -581,7 +602,7 @@ public class FXMLTableViewController implements Initializable {
                   }
                 progress.set(progress.get() +1.0d/(session.getCurrentdataset().getListofFiles().size()));
                 System.out.println("Calculation: " + progress.get() + "%");
-              }
+              }}
 
               
               latch.countDown();

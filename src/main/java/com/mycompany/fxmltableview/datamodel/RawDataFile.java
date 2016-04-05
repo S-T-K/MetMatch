@@ -17,6 +17,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -43,7 +44,7 @@ public class RawDataFile {
     private StringProperty name;
     private Session session;
     
-    
+    private Property<Boolean> active;
     private final Property<Color> color;
     private DoubleProperty Width;
    
@@ -61,6 +62,7 @@ public class RawDataFile {
         this.session = session;
         mzbins = new int[session.getResolution()];
         mzshift = new SimpleDoubleProperty();
+        active = new SimpleBooleanProperty(true);
     }
 
     // parse Scans
@@ -143,6 +145,18 @@ System.out.println("Complete Extraction: " + (end-start));
     
     public Property<Color> colorProperty() {
 	return color;
+    }
+    
+    public final Boolean getActive() {
+	return active.getValue();
+    }
+
+    public final void setActive(Boolean bool) {
+	this.active.setValue(bool);
+    }
+    
+    public Property<Boolean> activeProperty() {
+	return active;
     }
 
     /**
@@ -235,6 +249,8 @@ System.out.println("Complete Extraction: " + (end-start));
     }
     
     public void deleteFile() {
+        
+        System.out.println(this.getActive().booleanValue());
         dataset.getListofFiles().remove(this);
         List<Entry> list = session.getListofOGroups();
         for (int i = 0; i<list.size(); i++) {
@@ -256,5 +272,6 @@ System.out.println("Complete Extraction: " + (end-start));
        System.out.println("Deleted File");
         System.gc();
     }
+
     
 }

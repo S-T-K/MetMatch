@@ -119,7 +119,12 @@
                                                 </MenuBar>
                                                 <TableView fx:id="referenceFileView" editable="true" layoutY="57.0" onMouseClicked="#changedFile" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
                                                     <columns>
-                                                        <TableColumn fx:id="fileColumn" prefWidth="199.9999634027481" text="File">
+                                          <TableColumn fx:id="activeColumn" maxWidth="35.0" minWidth="0.0" prefWidth="0.0" text="Active">
+                                             <cellValueFactory>
+                                                <PropertyValueFactory property="Active" />
+                                             </cellValueFactory>
+                                          </TableColumn>
+                                                        <TableColumn fx:id="fileColumn" prefWidth="179.99999392032623" text="File">
                                                             <cellValueFactory>
                                                                 <PropertyValueFactory property="File" />
                                                             </cellValueFactory>
