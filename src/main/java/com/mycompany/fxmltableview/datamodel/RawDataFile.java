@@ -22,6 +22,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
@@ -63,6 +65,36 @@ public class RawDataFile {
         mzbins = new int[session.getResolution()];
         mzshift = new SimpleDoubleProperty();
         active = new SimpleBooleanProperty(true);
+        
+        color.addListener(new ChangeListener<Color>() {
+            @Override
+            public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
+              for (int i = 0; i< session.getSelectedFiles().size(); i++) {
+                  session.getSelectedFiles().get(i).setColor(newValue);
+              }
+            }
+
+        }); 
+        
+        active.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+              for (int i = 0; i< session.getSelectedFiles().size(); i++) {
+                  session.getSelectedFiles().get(i).setActive(newValue);
+              }
+            }
+
+        }); 
+        
+//        Width.addListener(new ChangeListener<DoubleProperty>() {
+//            @Override
+//            public void changed(ObservableValue<? extends DoubleProperty> observable, Double oldValue, Double newValue) {
+//              for (int i = 0; i< session.getSelectedFiles().size(); i++) {
+//                  session.getSelectedFiles().get(i).setWidth(new SimpleDoubleProperty(newValue));
+//              }
+//            }
+//
+//        }); 
     }
 
     // parse Scans
