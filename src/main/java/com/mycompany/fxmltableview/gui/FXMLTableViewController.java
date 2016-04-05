@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -378,7 +379,7 @@ public class FXMLTableViewController implements Initializable {
                         System.out.println(end - start);
                         //refresh files
                         referenceFileView.setItems(session.getReference().getListofFiles());
-                        return null;
+                        
                     }
 
                     referenceButton.setVisible(false);
@@ -613,7 +614,11 @@ public class FXMLTableViewController implements Initializable {
     
     
     public void deleteFile() {
-        ObservableList<RawDataFile> list = referenceFileView.getSelectionModel().getSelectedItems();
+        ArrayList<RawDataFile> list = new ArrayList();
+       for (int i = 0; i< referenceFileView.getSelectionModel().getSelectedItems().size(); i++) {
+            list.add(referenceFileView.getSelectionModel().getSelectedItems().get(i));
+        }
+        
         for (int i = 0; i< list.size(); i++) {
             list.get(i).deleteFile();
             
