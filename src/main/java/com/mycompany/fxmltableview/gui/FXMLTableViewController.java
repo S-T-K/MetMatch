@@ -366,9 +366,7 @@ public class FXMLTableViewController implements Initializable {
                
                 if (filelist != null) {
                     for (File file : filelist) {
-                        Task task = new Task<Void>() {
-            @Override
-            public Void call() {
+                        
                         double start = System.currentTimeMillis();
 
 
@@ -381,10 +379,6 @@ public class FXMLTableViewController implements Initializable {
                         //refresh files
                         referenceFileView.setItems(session.getReference().getListofFiles());
                         return null;
-            }
-
-        };
-new Thread(task).start();
                     }
 
                     referenceButton.setVisible(false);

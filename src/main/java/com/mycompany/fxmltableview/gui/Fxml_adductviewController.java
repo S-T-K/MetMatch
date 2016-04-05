@@ -114,7 +114,7 @@ public class Fxml_adductviewController implements Initializable {
            gridPane.addColumn(3, scatterchart);
            
          
-        
+        System.out.println("generated charts " + (i+1) + " of " +entry.getListofAdducts().size());
        }
        
       

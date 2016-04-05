@@ -96,8 +96,8 @@ public class ChartGenerator {
         xAxis.setUpperBound(upper);
 
         linechart.setAnimated(false);
-        linechart.setCache(true);
-        linechart.setCacheHint(CacheHint.SPEED);
+//        linechart.setCache(true);
+//        linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
@@ -168,8 +168,8 @@ public class ChartGenerator {
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(1);
         linechart.setAnimated(false);
-        linechart.setCache(true);
-        linechart.setCacheHint(CacheHint.SPEED);
+//        linechart.setCache(true);
+//        linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
@@ -222,8 +222,8 @@ double lower = adduct.getMinRT();
 
         
         linechart.setAnimated(false);
-        linechart.setCache(true);
-        linechart.setCacheHint(CacheHint.SPEED);
+//        linechart.setCache(true);
+//        linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         yAxis.setAutoRanging(false);
         yAxis.setLowerBound(0);
@@ -292,8 +292,8 @@ double lower = adduct.getMinRT();
         yAxis.setLowerBound(-1*adduct.getSession().getMZTolerance());
         yAxis.setUpperBound(adduct.getSession().getMZTolerance());
         scatterchart.setAnimated(false);
-        scatterchart.setCache(true);
-        scatterchart.setCacheHint(CacheHint.SPEED);
+//        scatterchart.setCache(true);
+//        scatterchart.setCacheHint(CacheHint.SPEED);
         scatterchart.setLegendVisible(false);
        scatterchart.setHorizontalZeroLineVisible(false);
         

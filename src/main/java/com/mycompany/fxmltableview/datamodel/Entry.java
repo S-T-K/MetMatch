@@ -118,8 +118,8 @@ public class Entry {
     public void generateRTArray() {
         
         int resolution = getSession().getResolution();
-        double startRT = this.getMinRT()+0.05;
-        double endRT = this.getMaxRT()-0.05;
+        double startRT = this.getMinRT();
+        double endRT = this.getMaxRT();
         setRTArray(new double[resolution]);
         
      

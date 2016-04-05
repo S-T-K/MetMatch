@@ -24,6 +24,7 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.rosuda.JRI.Rengine;
 
@@ -136,7 +137,11 @@ public class Slice {
          //for all Scans
          setMinIntensity(900000000);
          setMaxIntensity(0);
-        
+       double minMZ = getMinMZ();
+       double maxMZ = getMaxMZ();
+       double minRT = getMinRT();
+       double maxRT = getMaxRT();
+         
          //for all Scans
          int start = 0;
          int end = listofScans.size()-1;
@@ -153,7 +158,7 @@ public class Slice {
              } else {
                  foundRT = true;
              }
-             middle = (start+end)/2;
+             middle = start + (end - start)/2;
          }
          
          
@@ -169,29 +174,40 @@ public class Slice {
              } else {
                  end = middle-1;
              }
-             middle = (lower+end)/2;
+             middle = lower + (end - lower)/2;
          }
+             //System.out.println("RT search done");
              //middle is the lowest RT
              int current = middle;
              Scan currentScan = listofScans.get(middle);
              while (currentScan.getRetentionTime() < getMaxRT()) {
                  boolean foundMZ = false;
                  start = 0;
-                 end = currentScan.getMassovercharge().length;
-                 middle = (start + end) / 2;
-                 while (!foundMZ && (end - start) > 0) {
+                 end = currentScan.getMassovercharge().length-1;
+                 
+                 while (!foundMZ && start<=end) {
+                     middle = start + (end - start)/2;
                      if (currentScan.getMassovercharge()[middle] < getMinMZ()) {
                          start = middle + 1;
+                         //System.out.println("MZ too low");
+                         
                      } else if (currentScan.getMassovercharge()[middle] > getMaxMZ()) {
                          end = middle - 1;
+                         //System.out.println("MZ too high");
+                         
                      } else {
                          foundMZ = true;
+                        // System.out.println("MZ found");
+                         middle = start + (end - start)/2;
+                         break;
                      }
-                     middle = (start + end) / 2;
+                     
                  }
+                 //System.out.println("MZ search done");
                  
                  //if MZ found
                  if (foundMZ) {
+                     
                      start = middle;
                      end = middle+1;
                      
@@ -208,6 +224,7 @@ public class Slice {
                                     setMinIntensity(currentScan.getIntensity()[start]);
                                 }
                                 start--;
+                                //System.out.println("lower MZ found");
                  }
                      while (end<currentScan.getMassovercharge().length && currentScan.getMassovercharge()[end]<=getMaxMZ()) {
                      getRetentionTimeList().add(currentScan.getRetentionTime());
@@ -222,15 +239,20 @@ public class Slice {
                                     setMinIntensity(currentScan.getIntensity()[end]);
                                 }
                                 end++;
+                                //System.out.println("upper MZ found");
                  }
                  } else {
                  getRetentionTimeList().add(currentScan.getRetentionTime());
                             getIntensityList().add(0.0f);
                             getMassList().add(0.0f);
+                            //System.out.println("MZ not found");
              }
 
                  current++;
+                 if (current < listofScans.size()){
                  currentScan = listofScans.get(current);
+                  //System.out.println("next Scan");
+                 }
              }
 
 
@@ -651,8 +673,12 @@ public class Slice {
       
       //fill Arrays
       for (int i = 0; i< resolution; i++) {
-            getIntensityArray()[i]=getIntensityFunction().value(getRTArray()[i]);
-            getMZArray()[i] = mzFunction.value(getRTArray()[i]);
+           try { getIntensityArray()[i]=getIntensityFunction().value(getRTArray()[i]);
+            getMZArray()[i] = mzFunction.value(getRTArray()[i]); }
+           catch (OutOfRangeException e) {
+               getIntensityArray()[i] = 0;
+               getMZArray()[i] = 0;
+           }
       }
     
      
