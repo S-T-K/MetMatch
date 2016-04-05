@@ -457,7 +457,8 @@ public class FXMLTableViewController implements Initializable {
     //does the Shift calculation
   public void calculate(CountDownLatch latch) throws IOException, InterruptedException {
       
-      
+      DoubleProperty progress = new SimpleDoubleProperty(0.0);
+                progressbar.progressProperty().bind(progress);
       
       Task task = new Task<Void>() {
             @Override
@@ -470,8 +471,6 @@ public class FXMLTableViewController implements Initializable {
                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
                 double[][] matrix = new double[getMasterListofOGroups().size()][session.getResolution()];
                 
-                DoubleProperty progress = new SimpleDoubleProperty(0.0);
-                progressbar.progressProperty().bind(progress);
         
                 for (int i = 0; i<getMasterListofOGroups().size(); i++) {
                    
@@ -483,8 +482,7 @@ public class FXMLTableViewController implements Initializable {
                         
                     }
                     
-                    progress = new SimpleDoubleProperty((double)i/getMasterListofOGroups().size());
-                    System.out.println(progress.get()*100 + "%");
+                   
                 }
                 
                 
@@ -543,7 +541,7 @@ public class FXMLTableViewController implements Initializable {
                         max = weights[getMasterListofOGroups().size()-1][j];
                     }
                 }
-                System.out.println(maxint);
+                
                     getMasterListofOGroups().get(getMasterListofOGroups().size()-1).setFittedShift(currentfile,maxint);
                 
                 
@@ -554,19 +552,19 @@ public class FXMLTableViewController implements Initializable {
                     max = 0;
                     int range = 0;
                     int j = maxint;
-                    if((j-1)>0 && getmaxofrange(weights, i, j-1, range)> max) {
-                        max = getmaxofrange(weights, i, j-1, range);
+                    if((j-1)>0 && weights[i][j-1]> max) {
+                        max = weights[i][j-1];
                         maxint = j-1;
                     }
-                    if(getmaxofrange(weights, i, j, range)> max) {
-                        max = getmaxofrange(weights, i, j, range);
+                    if(weights[i][j]> max) {
+                        max = weights[i][j];
                         maxint = j;
                     }
-                      if ((j + 1) < session.getResolution() && getmaxofrange(weights, i, j+1, range) > max) {
-                          max = getmaxofrange(weights, i, j+1, range);
+                      if ((j + 1) < session.getResolution() && weights[i][j+1] > max) {
+                          //max = weights[i][j+1];
                           maxint = j + 1;
                       }
-                      System.out.println(maxint);
+                      
                         getMasterListofOGroups().get(i).setFittedShift(currentfile, maxint);
                       
                       //set score for OPGroup
@@ -581,7 +579,8 @@ public class FXMLTableViewController implements Initializable {
                       
 
                   }
-
+                progress.set(progress.get() +1.0d/(session.getCurrentdataset().getListofFiles().size()));
+                System.out.println("Calculation: " + progress.get() + "%");
               }
 
               

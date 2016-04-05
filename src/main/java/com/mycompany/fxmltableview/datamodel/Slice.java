@@ -313,7 +313,7 @@ public class Slice {
         //100 zeros at start and end, 50 are not enough
         EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
         EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
-        System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
+        //System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
        
         
         // Start Rengine.
@@ -329,7 +329,7 @@ public class Slice {
         //=OUTPUTS
         double start3 = System.currentTimeMillis();
         double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
-        System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
+        //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
         
         //Print output values, work with them...
         if (ret!=null) {
@@ -343,13 +343,13 @@ public class Slice {
             }}
             
         
-        System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
+        //System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
         }
         //end Rengine, otherwise thread doesn't terminate
         //engine.end();
         
 }
-        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
     
     
@@ -367,7 +367,7 @@ public class Slice {
         
         }
         //generatePeakArray();
-        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
  
  //adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std

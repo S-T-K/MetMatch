@@ -406,7 +406,7 @@ double lower = adduct.getMinRT();
             
                     
         
-        
+        System.out.println("Charts " + (f+1) + "of " + list.get(0).getSession().getCurrentdataset().getListofFiles().size() + " drawn");
         }
         linechart.setCreateSymbols(false);
             linechart.setMaxSize(2000, 500);
