@@ -305,5 +305,12 @@ System.out.println("Complete Extraction: " + (end-start));
         System.gc();
     }
 
+    public boolean isselected() {
+        if (session.getSelectedFiles().contains(this)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
 }

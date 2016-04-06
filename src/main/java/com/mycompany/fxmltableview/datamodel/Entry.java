@@ -82,7 +82,6 @@ public class Entry {
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
-        
     }
     
    

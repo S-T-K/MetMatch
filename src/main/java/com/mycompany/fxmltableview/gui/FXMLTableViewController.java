@@ -344,6 +344,8 @@ public class FXMLTableViewController implements Initializable {
                         Scene myScene = new Scene(myPane);
                         stage.setScene(myScene);
                         Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
+                        controller.setSession(session);
+                        controller.setMainController(getController());
 
                         //add MasterListofOGroups to new controller
                         controller.metTable = getMetTable();
@@ -701,6 +703,9 @@ public class FXMLTableViewController implements Initializable {
      */
     public TreeTableView<Entry> getMetTable() {
         return metTable;
+    }
+    public FXMLTableViewController getController() {
+        return this;
     }
 
     /**

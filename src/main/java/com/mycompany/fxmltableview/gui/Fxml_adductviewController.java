@@ -6,17 +6,25 @@ package com.mycompany.fxmltableview.gui;
  * and open the template in the editor.
  */
 
+import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.RawDataFile;
+import com.mycompany.fxmltableview.logic.Session;
 import com.sun.webkit.ContextMenuItem;
 import java.awt.Checkbox;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
@@ -27,6 +35,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
@@ -53,8 +62,13 @@ public class Fxml_adductviewController implements Initializable {
     
     
     TreeTableView<Entry> metTable;
+    private FXMLTableViewController mainController;
     ChartGenerator chartGenerator;
     boolean showProp;
+    private Session session;
+    
+    private HashMap<RawDataFile,List<XYChart.Series>> filetoseries;
+    private HashMap<XYChart.Series, RawDataFile> seriestofile;
 
     /**
      * Initializes the controller class.
@@ -62,11 +76,18 @@ public class Fxml_adductviewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //add ChartGenerator
-      chartGenerator = new ChartGenerator();
+      chartGenerator = new ChartGenerator(this);
+        setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
+        setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
+        
+        
     }    
     
     //method that generates the graphs
     public void print() {
+        //new Maps, old Series are gone
+        setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
+        setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         
        //get selected Entry
        int adductnumber = 0;
@@ -148,4 +169,116 @@ public class Fxml_adductviewController implements Initializable {
         print();
         
     }
+
+    /**
+     * @return the filetoseries
+     */
+    public HashMap<RawDataFile,List<XYChart.Series>> getFiletoseries() {
+        return filetoseries;
+    }
+
+    /**
+     * @param filetoseries the filetoseries to set
+     */
+    public void setFiletoseries(HashMap<RawDataFile,List<XYChart.Series>> filetoseries) {
+        this.filetoseries = filetoseries;
+    }
+
+    /**
+     * @return the seriestofile
+     */
+    public HashMap<XYChart.Series, RawDataFile> getSeriestofile() {
+        return seriestofile;
+    }
+
+    /**
+     * @param seriestofile the seriestofile to set
+     */
+    public void setSeriestofile(HashMap<XYChart.Series, RawDataFile> seriestofile) {
+        this.seriestofile = seriestofile;
+    }
+
+    /**
+     * @return the session
+     */
+    public Session getSession() {
+        return session;
+    }
+
+    /**
+     * @param session the session to set
+     */
+    public void setSession(Session session) {
+        this.session = session;
+        this.chartGenerator.setSession(session);
+    }
+
+    /**
+     * @return the mainController
+     */
+    public FXMLTableViewController getMainController() {
+        return mainController;
+    }
+
+    /**
+     * @param mainController the mainController to set
+     */
+    public void setMainController(FXMLTableViewController mainController) {
+        this.mainController = mainController;
+        
+        //Colors selected files in Adductview, reacts to selection
+        mainController.referenceFileView.getSelectionModel().selectedItemProperty().addListener(new 
+            ChangeListener<RawDataFile>() {
+                public void changed(ObservableValue<? extends RawDataFile> ov,
+                    RawDataFile old_val, RawDataFile new_val) {
+                    List<RawDataFile> completeList = mainController.referenceFileView.getItems();
+                    List<RawDataFile> selectedList = mainController.referenceFileView.getSelectionModel().getSelectedItems();
+                    
+                        for (int i = 0; i<completeList.size(); i++) {
+                            if (selectedList.contains(completeList.get(i))) {
+                            List<XYChart.Series> list = filetoseries.get(completeList.get(i));
+                            for (int j = 0; j< list.size(); j++) {
+                                if (list.get(j).getNode() == null) {
+                        for (int k = 0; k<list.get(j).getData().size(); k++) {
+                        Node node = (( XYChart.Data)list.get(j).getData().get(k)).getNode();
+                        //node.setEffect(hover);
+                        ((Rectangle)node).setFill(Color.RED);
+                        
+                    } }else {
+                    
+                    Node node = list.get(j).getNode();
+                    //node.setEffect(hover);
+                node.setCursor(Cursor.HAND);
+                ((Path) node).setStroke(Color.RED);
+                }
+                            }
+                        } else {
+                                List<XYChart.Series> list = filetoseries.get(completeList.get(i));
+                            for (int j = 0; j< list.size(); j++) {
+                                if (list.get(j).getNode() == null) {
+                        for (int k = 0; k<list.get(j).getData().size(); k++) {
+                        Node node = (( XYChart.Data)list.get(j).getData().get(k)).getNode();
+                        //node.setEffect(hover);
+                        ((Rectangle)node).setFill(completeList.get(i).getColor());
+                        
+                    } }else {
+                    
+                    Node node = list.get(j).getNode();
+                    //node.setEffect(hover);
+                node.setCursor(Cursor.HAND);
+                ((Path) node).setStroke(completeList.get(i).getColor());
+                }
+                            }
+                                
+                                
+                            }}
+                     
+                    
+              }
+        });
+    }
+    
+    
+    
+    
 }

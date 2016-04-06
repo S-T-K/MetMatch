@@ -68,7 +68,7 @@ public class Fxml_shiftviewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //add ChartGenerator
-      chartGenerator = new ChartGenerator();
+      chartGenerator = new ChartGenerator(null);
       
       
     }    
