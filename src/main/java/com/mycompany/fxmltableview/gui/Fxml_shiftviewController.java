@@ -12,6 +12,7 @@ import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import java.io.IOException;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -20,6 +21,7 @@ import java.util.concurrent.CountDownLatch;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
@@ -184,10 +186,11 @@ public class Fxml_shiftviewController implements Initializable {
         refsetpen.textProperty().bindBidirectional(supercontroller.session.getCurrentdataset().getPenaltyProperty(), new NumberStringConverter());
         
                 //Colors selected files in Shiftview, reacts to selection
-        supercontroller.referenceFileView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<RawDataFile>() {
-            public void changed(ObservableValue<? extends RawDataFile> ov,
-                    RawDataFile old_val, RawDataFile new_val) {
-                List<RawDataFile> completeList = supercontroller.referenceFileView.getItems();
+        supercontroller.referenceFileView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<RawDataFile>() {
+
+    @Override
+    public void onChanged(ListChangeListener.Change<? extends RawDataFile> change) {
+   List<RawDataFile> completeList = supercontroller.referenceFileView.getItems();
                 List<RawDataFile> selectedList = supercontroller.referenceFileView.getSelectionModel().getSelectedItems();
 
                 for (int i = 0; i < completeList.size(); i++) {
@@ -215,9 +218,11 @@ public class Fxml_shiftviewController implements Initializable {
 
                     }
                 }
+    }
 
-            }
-        });
+});
+                
+
     }
        
       
@@ -297,27 +302,26 @@ if (series.getNode()!=null) {
             public void run() {
                 RawDataFile file = getSeriestofile().get(series);
                 List<XYChart.Series> list = getFiletoseries().get(file);
+                
+                
                 if (getSupercontroller().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
-                    //TODO: unselect
-                    getSupercontroller().referenceFileView.getSelectionModel().clearSelection(getSupercontroller().referenceFileView.getSelectionModel().getSelectedIndices().indexOf(file));
+                    ObservableList<RawDataFile> selist = getSupercontroller().referenceFileView.getSelectionModel().getSelectedItems();
+                   
+                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
+                    for(RawDataFile sel : selist) {
+                        newlist.add(sel);
+                    }
+                    getSupercontroller().referenceFileView.getSelectionModel().clearSelection();
+                    newlist.remove(file);
+                    for(RawDataFile sel : newlist) {
+                        getSupercontroller().referenceFileView.getSelectionModel().select(sel);
+                    }
+                                       
+                    
                 } else {
                  getSupercontroller().referenceFileView.getSelectionModel().select(file);}
                 
-                                    for (int i = 0; i<list.size(); i++) {
-                    //if series is masschart
-                    if (list.get(i).getNode() == null) {
-                        for (int j = 0; j<list.get(i).getData().size(); j++) {
-                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
-                        //node.setEffect(hover);
-                        ((Rectangle)node).setFill(Color.RED);
-                        
-                    } }else {
-                    
-                    Node node = list.get(i).getNode();
-                    //node.setEffect(hover);
-                node.setCursor(Cursor.HAND);
-                ((Path) node).setStroke(Color.RED);
-                }}
+
             }
         });
                    
