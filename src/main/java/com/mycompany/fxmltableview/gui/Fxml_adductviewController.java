@@ -14,6 +14,7 @@ import com.sun.webkit.ContextMenuItem;
 import java.awt.Checkbox;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -22,6 +23,7 @@ import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -292,10 +294,11 @@ public class Fxml_adductviewController implements Initializable {
         this.mainController = mainController;
 
         //Colors selected files in Adductview, reacts to selection
-        mainController.referenceFileView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<RawDataFile>() {
-            public void changed(ObservableValue<? extends RawDataFile> ov,
-                    RawDataFile old_val, RawDataFile new_val) {
-                List<RawDataFile> completeList = mainController.referenceFileView.getItems();
+        mainController.referenceFileView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<RawDataFile>() {
+
+    @Override
+    public void onChanged(ListChangeListener.Change<? extends RawDataFile> change) {
+   List<RawDataFile> completeList = mainController.referenceFileView.getItems();
                 List<RawDataFile> selectedList = mainController.referenceFileView.getSelectionModel().getSelectedItems();
 
                 for (int i = 0; i < completeList.size(); i++) {
@@ -303,13 +306,13 @@ public class Fxml_adductviewController implements Initializable {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
                         for (int j = 0; j < list.size(); j++) {
                             if (list.get(j).getNode() == null) {
-                                for (int k = 0; k < list.get(j).getData().size(); k++) {
-                                    Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
-                                    //node.setEffect(hover);
-                                    ((Rectangle) node).setFill(Color.RED);
-
-                                }
-                            } else {
+                        for (int k = 0; k<list.get(j).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(j).getData().get(k)).getNode();
+                        //node.setEffect(hover);
+                        ((Rectangle)node).setFill(Color.RED);
+                        
+                    }} else {
+                         
 
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
@@ -320,27 +323,27 @@ public class Fxml_adductviewController implements Initializable {
                     } else {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
                         for (int j = 0; j < list.size(); j++) {
-                            if (list.get(j).getNode() == null) {
-                                for (int k = 0; k < list.get(j).getData().size(); k++) {
-                                    Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
-                                    //node.setEffect(hover);
-                                    ((Rectangle) node).setFill(completeList.get(i).getColor());
-
-                                }
-                            } else {
-
+                        if (list.get(j).getNode() == null) {
+                        for (int k = 0; k<list.get(j).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(j).getData().get(k)).getNode();
+                        //node.setEffect(hover);
+                        ((Rectangle)node).setFill(completeList.get(i).getColor());
+                        
+                    } } else {
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
                                 node.setCursor(Cursor.HAND);
                                 ((Path) node).setStroke(completeList.get(i).getColor());
-                            }
+                        }
                         }
 
                     }
                 }
+    }
 
-            }
-        });
+});
+                
+
     }
     
     private void applyMouseEvents(final XYChart.Series series) {
@@ -392,26 +395,21 @@ if (series.getNode()!=null) {
                 RawDataFile file = getSeriestofile().get(series);
                 List<XYChart.Series> list = getFiletoseries().get(file);
                 if (getMainController().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
-                    //TODO: unselect
-                    getMainController().referenceFileView.getSelectionModel().clearSelection(getMainController().referenceFileView.getSelectionModel().getSelectedIndices().indexOf(file));
-                } else {
+                    ObservableList<RawDataFile> selist = getMainController().referenceFileView.getSelectionModel().getSelectedItems();
+                   
+                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
+                    for(RawDataFile sel : selist) {
+                        newlist.add(sel);
+                    }
+                    getMainController().referenceFileView.getSelectionModel().clearSelection();
+                    newlist.remove(file);
+                    for(RawDataFile sel : newlist) {
+                        getMainController().referenceFileView.getSelectionModel().select(sel);
+                    }
+                                       
+                    } else {
                  getMainController().referenceFileView.getSelectionModel().select(file);}
-                
-                                    for (int i = 0; i<list.size(); i++) {
-                    //if series is masschart
-                    if (list.get(i).getNode() == null) {
-                        for (int j = 0; j<list.get(i).getData().size(); j++) {
-                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
-                        //node.setEffect(hover);
-                        ((Rectangle)node).setFill(Color.RED);
-                        
-                    } }else {
-                    
-                    Node node = list.get(i).getNode();
-                    //node.setEffect(hover);
-                node.setCursor(Cursor.HAND);
-                ((Path) node).setStroke(Color.RED);
-                }}
+ 
             }
         });
                    
