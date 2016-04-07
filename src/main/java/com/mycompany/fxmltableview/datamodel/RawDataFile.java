@@ -201,8 +201,8 @@ System.out.println("Complete Extraction: " + (end-start));
     /**
      * @param width the width to set
      */
-    public void setWidth(DoubleProperty width) {
-        this.Width = width;
+    public void setWidth(double width) {
+        this.Width.set(width);
     }
 
     /**
@@ -313,4 +313,11 @@ System.out.println("Complete Extraction: " + (end-start));
         }
     }
     
+    public Property getColorProperty() {
+        return color;
+    }
+    
+    public DoubleProperty getWidthProperty() {
+        return Width;
+    }
 }

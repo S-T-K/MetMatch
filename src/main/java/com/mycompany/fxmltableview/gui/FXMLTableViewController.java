@@ -168,12 +168,14 @@ public class FXMLTableViewController implements Initializable {
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
+       
 
         fileColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, String>("name"));
         colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
         colorColumn.setCellFactory(ColorTableCell::new);
         
         activeColumn.setCellValueFactory(new PropertyValueFactory("active"));
+       
         activeColumn.setCellFactory(new Callback<TableColumn<RawDataFile, Boolean>, TableCell<RawDataFile, Boolean>>() {
 
  
@@ -194,7 +196,7 @@ public class FXMLTableViewController implements Initializable {
             @Override
             public void handle(CellEditEvent<RawDataFile, Number> t) {
                 ((RawDataFile) t.getTableView().getItems().get(
-                        t.getTablePosition().getRow())).setWidth(new SimpleDoubleProperty(t.getNewValue().doubleValue()));
+                        t.getTablePosition().getRow())).setWidth((t.getNewValue().doubleValue()));
             }
         }
         );
@@ -258,7 +260,7 @@ public class FXMLTableViewController implements Initializable {
         refsetwidth.setOnAction(new EventHandler() {
             public void handle(Event t) {
                 for (int i = 0; i < session.getReference().getListofFiles().size(); i++) {
-                    session.getReference().getListofFiles().get(i).setWidth(new SimpleDoubleProperty(Double.parseDouble(refsetwidth.getText())));
+                    session.getReference().getListofFiles().get(i).setWidth((Double.parseDouble(refsetwidth.getText())));
                     referenceFileView.refresh();
 
                 }
@@ -327,6 +329,7 @@ public class FXMLTableViewController implements Initializable {
         referenceFileView.setDisable(false);
         referenceFileView.setVisible(true);
         addBatchButton.setDisable(false);
+        
 
         //add double click functionality to the TreeTable
         getMetTable().setOnMouseClicked(new EventHandler<MouseEvent>() {

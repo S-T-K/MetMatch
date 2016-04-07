@@ -138,7 +138,7 @@ public class BatchController implements Initializable {
         public void handle(CellEditEvent<RawDataFile, Number> t) {
             ((RawDataFile) t.getTableView().getItems().get(
                 t.getTablePosition().getRow())
-                ).setWidth(new SimpleDoubleProperty(t.getNewValue().doubleValue()));
+                ).setWidth((t.getNewValue().doubleValue()));
         }
     }
 );
@@ -166,7 +166,7 @@ public class BatchController implements Initializable {
         batsetwidth.setOnAction(new EventHandler() {
             public void handle(Event t) {
                 for (int i = 0; i<batch.getListofFiles().size(); i++) {
-                    batch.getListofFiles().get(i).setWidth(new SimpleDoubleProperty(Double.parseDouble(batsetwidth.getText())));
+                    batch.getListofFiles().get(i).setWidth((Double.parseDouble(batsetwidth.getText())));
                     batchFileView.refresh();
                     
                 }

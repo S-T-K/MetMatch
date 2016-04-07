@@ -43,6 +43,10 @@ import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import javafx.application.Platform;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -53,15 +57,18 @@ import javafx.application.Platform;
  */
 public class ChartGenerator {
     
-    private Fxml_adductviewController controller;
+    private Fxml_adductviewController adductcontroller;
+    private Fxml_shiftviewController shiftcontroller;
+    
     private InnerShadow hover = new InnerShadow();
     private InnerShadow select = new InnerShadow();
     private Session session;
     
 
-    public ChartGenerator(Fxml_adductviewController controller) {
+    public ChartGenerator(Fxml_adductviewController controller, Fxml_shiftviewController shiftcontroller) {
         this.session = session;
-        this.controller = controller;
+        this.adductcontroller = controller;
+        this.shiftcontroller = shiftcontroller;
         hover.setColor(Color.GREEN);
         DropShadow s = new DropShadow();
         s.setColor(Color.RED);
@@ -93,13 +100,13 @@ public class ChartGenerator {
                 XYChart.Series newSeries = new XYChart.Series();
                 
                 //add Series to HashMaps
-                controller.getSeriestofile().put(newSeries, currentfile);
-                if (controller.getFiletoseries().containsKey(currentfile)){
-                    controller.getFiletoseries().get(currentfile).add(newSeries);
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (adductcontroller.getFiletoseries().containsKey(currentfile)){
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
                 } else {
                 ArrayList list = new ArrayList();
                 list.add(newSeries);
-                controller.getFiletoseries().put(currentfile, list);
+                adductcontroller.getFiletoseries().put(currentfile, list);
                         }
 
                 //while the next RT is the same as the one before, add Intensities
@@ -169,13 +176,13 @@ public class ChartGenerator {
                 XYChart.Series newSeries = new XYChart.Series();
  
                 //add Series to HashMaps
-                controller.getSeriestofile().put(newSeries, currentfile);
-                if (controller.getFiletoseries().containsKey(currentfile)){
-                    controller.getFiletoseries().get(currentfile).add(newSeries);
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (adductcontroller.getFiletoseries().containsKey(currentfile)){
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
                 } else {
                 ArrayList list = new ArrayList();
                 list.add(newSeries);
-                controller.getFiletoseries().put(currentfile, list);
+                adductcontroller.getFiletoseries().put(currentfile, list);
                         }
                 
                 double maxIntensity = Arrays.stream(currentSlice.getIntensityArray()).max().getAsDouble();
@@ -255,13 +262,13 @@ public class ChartGenerator {
                 XYChart.Series newSeries = new XYChart.Series();
                 
                  //add Series to HashMaps
-                controller.getSeriestofile().put(newSeries, currentfile);
-                if (controller.getFiletoseries().containsKey(currentfile)){
-                    controller.getFiletoseries().get(currentfile).add(newSeries);
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (adductcontroller.getFiletoseries().containsKey(currentfile)){
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
                 } else {
                 ArrayList list = new ArrayList();
                 list.add(newSeries);
-                controller.getFiletoseries().put(currentfile, list);
+                adductcontroller.getFiletoseries().put(currentfile, list);
                         }
 
                 double maxIntensity = Arrays.stream(currentSlice.getIntensityArray()).max().getAsDouble();
@@ -327,13 +334,13 @@ public class ChartGenerator {
                 XYChart.Series newSeries = new XYChart.Series();
                 
                  //add Series to HashMaps
-                controller.getSeriestofile().put(newSeries, currentfile);
-                if (controller.getFiletoseries().containsKey(currentfile)){
-                    controller.getFiletoseries().get(currentfile).add(newSeries);
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (adductcontroller.getFiletoseries().containsKey(currentfile)){
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
                 } else {
                 ArrayList list = new ArrayList();
                 list.add(newSeries);
-                controller.getFiletoseries().put(currentfile, list);
+                adductcontroller.getFiletoseries().put(currentfile, list);
                         }
                 
                 double maxIntensity = Arrays.stream(currentSlice.getIntensityArray()).max().getAsDouble();
@@ -473,7 +480,16 @@ public class ChartGenerator {
             RawDataFile currentfile = list.get(0).getSession().getCurrentdataset().getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
                 XYChart.Series newSeries = new XYChart.Series();
-
+                
+                shiftcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (shiftcontroller.getFiletoseries().containsKey(currentfile)){
+                    shiftcontroller.getFiletoseries().get(currentfile).add(newSeries);
+                } else {
+                ArrayList array = new ArrayList();
+                array.add(newSeries);
+                shiftcontroller.getFiletoseries().put(currentfile, array);
+                        }
+                
                 double shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
                 int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
 
@@ -489,7 +505,12 @@ public class ChartGenerator {
                 }
                 linechart.getData().add(newSeries);
                 linechart.applyCss();
+                if (currentfile.isselected()) {
+                    paintselectedLine(newSeries.getNode());
+                }else{
                 ((Path) newSeries.getNode()).setStroke(currentfile.getColor());
+                }
+                
                 ((Path) newSeries.getNode()).setStrokeWidth(currentfile.getWidth());
                 applyMouseEvents(newSeries);
 
@@ -519,8 +540,8 @@ public class ChartGenerator {
 //
 //            @Override
 //            public void handle(MouseEvent arg0) {
-//                RawDataFile file = controller.getSeriestofile().get(series);
-//                List<XYChart.Series> list = controller.getFiletoseries().get(file);
+//                RawDataFile file = adductcontroller.getSeriestofile().get(series);
+//                List<XYChart.Series> list = adductcontroller.getFiletoseries().get(file);
 //                
 //                for (int i = 0; i<list.size(); i++) {
 //                    //if series is masschart
@@ -557,13 +578,13 @@ public class ChartGenerator {
                      Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                RawDataFile file = controller.getSeriestofile().get(series);
-                List<XYChart.Series> list = controller.getFiletoseries().get(file);
-                if (controller.getMainController().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
+                RawDataFile file = adductcontroller.getSeriestofile().get(series);
+                List<XYChart.Series> list = adductcontroller.getFiletoseries().get(file);
+                if (adductcontroller.getMainController().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
                     //TODO: unselect
-                    controller.getMainController().referenceFileView.getSelectionModel().clearSelection(controller.getMainController().referenceFileView.getSelectionModel().getSelectedIndices().indexOf(file));
+                    adductcontroller.getMainController().referenceFileView.getSelectionModel().clearSelection(adductcontroller.getMainController().referenceFileView.getSelectionModel().getSelectedIndices().indexOf(file));
                 } else {
-                 controller.getMainController().referenceFileView.getSelectionModel().select(file);}
+                 adductcontroller.getMainController().referenceFileView.getSelectionModel().select(file);}
                 
                                     for (int i = 0; i<list.size(); i++) {
                     //if series is masschart
