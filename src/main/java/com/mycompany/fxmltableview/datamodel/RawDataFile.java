@@ -306,11 +306,11 @@ System.out.println("Complete Extraction: " + (end-start));
     }
 
     public boolean isselected() {
+        if (session.getSelectedFiles()!=null){
         if (session.getSelectedFiles().contains(this)) {
             return true;
-        } else {
-            return false;
-        }
+        }}
+        return false;
     }
     
     public Property getColorProperty() {

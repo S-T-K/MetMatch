@@ -151,64 +151,62 @@ public class Fxml_adductviewController implements Initializable {
                     @Override
                     public void changed(ObservableValue<? extends Color> ov,
                             Color old_val, Color new_val) {
-                      if (!file.isselected()) {
+                        if (!file.isselected()) {
                             List<XYChart.Series> list = filetoseries.get(file);
-                            
-                            for (int i = 0; i<list.size(); i++) {
-                                 if (list.get(i).getNode() == null) {
-                                for (int k = 0; k < list.get(i).getData().size(); k++) {
-                                    Node node = ((XYChart.Data) list.get(i).getData().get(k)).getNode();
-                                    
-                                    ((Rectangle) node).setFill(new_val);
 
+                            for (int i = 0; i < list.size(); i++) {
+                                if (list.get(i).getNode() == null) {
+                                    for (int k = 0; k < list.get(i).getData().size(); k++) {
+                                        Node node = ((XYChart.Data) list.get(i).getData().get(k)).getNode();
+
+                                        ((Rectangle) node).setFill(new_val);
+
+                                    }
+                                } else {
+
+                                    Node node = list.get(i).getNode();
+                                    ((Path) node).setStroke(new_val);
                                 }
-                            } else {
-
-                                Node node = list.get(i).getNode();
-                                ((Path) node).setStroke(new_val);
                             }
-                            }
-                    }
+                        }
                     }
                 });
-                
-                
-                 file.getWidthProperty().addListener(new ChangeListener() {
-                   @Override
-                   public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                       System.out.println("Change");
-                            List<XYChart.Series> list = filetoseries.get(file);
-                            
-                            for (int i = 0; i<list.size(); i++) {
-                                 if (list.get(i).getNode() == null) {
+
+                file.getWidthProperty().addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ObservableValue o, Object oldVal, Object newVal) {
+                        System.out.println("Change");
+                        List<XYChart.Series> list = filetoseries.get(file);
+
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getNode() == null) {
                                 for (int k = 0; k < list.get(i).getData().size(); k++) {
                                     Node node = ((XYChart.Data) list.get(i).getData().get(k)).getNode();
-                                    
-                                    ((Rectangle) node).setHeight(file.getWidth()+1.5);
-                                    ((Rectangle) node).setWidth(file.getWidth()+1.5);
-                                   
+
+                                    ((Rectangle) node).setHeight(file.getWidth() + 1.5);
+                                    ((Rectangle) node).setWidth(file.getWidth() + 1.5);
 
                                 }
                             } else {
 
                                 Node node = list.get(i).getNode();
                                 ((Path) node).setStrokeWidth(file.getWidth());
-                              
+
                             }
-                            }
-                    
+                        }
+
                     }
                 });
 
             }
 
         }
-        
+
         Set<XYChart.Series> set = seriestofile.keySet();
-        for(XYChart.Series series:set) {
+        for (XYChart.Series series : set) {
             applyMouseEvents(series);
         }
-        
+
     }
 
     //select next metabolite, changes Selection in Main GUI
@@ -296,59 +294,72 @@ public class Fxml_adductviewController implements Initializable {
         //Colors selected files in Adductview, reacts to selection
         mainController.referenceFileView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<RawDataFile>() {
 
-    @Override
-    public void onChanged(ListChangeListener.Change<? extends RawDataFile> change) {
-   List<RawDataFile> completeList = mainController.referenceFileView.getItems();
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends RawDataFile> change) {
+                //to ensure it doesn't run before selectedFiles has been updated
+                 Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+           
+                List<RawDataFile> completeList = mainController.referenceFileView.getItems();
                 List<RawDataFile> selectedList = mainController.referenceFileView.getSelectionModel().getSelectedItems();
 
                 for (int i = 0; i < completeList.size(); i++) {
-                    if (selectedList.contains(completeList.get(i))) {
+                    if (completeList.get(i).isselected()) {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
                         for (int j = 0; j < list.size(); j++) {
                             if (list.get(j).getNode() == null) {
-                        for (int k = 0; k<list.get(j).getData().size(); j++) {
-                        Node node = (( XYChart.Data)list.get(j).getData().get(k)).getNode();
-                        //node.setEffect(hover);
-                        ((Rectangle)node).setFill(Color.RED);
-                        
-                    }} else {
-                         
+                                for (int k = 0; k < list.get(j).getData().size(); k++) {
+                                    Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
+                                    //node.setEffect(hover);
+                                    ((Rectangle) node).setFill(Color.RED);
+
+                                }
+                                System.out.println("Scatter colored Red");
+                            } else {
 
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
                                 node.setCursor(Cursor.HAND);
                                 ((Path) node).setStroke(Color.RED);
+                                System.out.println("Line colored Red");
                             }
                         }
                     } else {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
                         for (int j = 0; j < list.size(); j++) {
-                        if (list.get(j).getNode() == null) {
-                        for (int k = 0; k<list.get(j).getData().size(); j++) {
-                        Node node = (( XYChart.Data)list.get(j).getData().get(k)).getNode();
-                        //node.setEffect(hover);
-                        ((Rectangle)node).setFill(completeList.get(i).getColor());
-                        
-                    } } else {
+                            if (list.get(j).getNode() == null) {
+                                for (int k = 0; k < list.get(j).getData().size(); k++) {
+                                    Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
+                                    //node.setEffect(hover);
+                                    ((Rectangle) node).setFill(completeList.get(i).getColor());
+
+                                }
+                                System.out.println("Scatter colored normal");
+                            } else {
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
                                 node.setCursor(Cursor.HAND);
                                 ((Path) node).setStroke(completeList.get(i).getColor());
-                        }
+                                System.out.println("Line colored normal");
+                            }
                         }
 
                     }
                 }
-    }
-
-});
                 
+                     
+            }
+        });
+            }
+
+        });
 
     }
-    
+
     private void applyMouseEvents(final XYChart.Series series) {
-if (series.getNode()!=null) {
-        Node node = series.getNode();
+        if (series.getNode() != null) {
+            Node node = series.getNode();
 
 //        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
 //
@@ -374,7 +385,6 @@ if (series.getNode()!=null) {
 //                }}
 //            }
 //        });
-
 //        node.setOnMouseExited(new EventHandler<MouseEvent>() {
 //
 //            @Override
@@ -383,41 +393,40 @@ if (series.getNode()!=null) {
 //                node.setCursor(Cursor.DEFAULT);
 //            }
 //        });
+            node.setOnMouseReleased(new EventHandler<MouseEvent>() {
 
-        node.setOnMouseReleased(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                RawDataFile file = getSeriestofile().get(series);
+                                List<XYChart.Series> list = getFiletoseries().get(file);
+                                if (getMainController().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
+                                    ObservableList<RawDataFile> selist = getMainController().referenceFileView.getSelectionModel().getSelectedItems();
 
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                     Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                RawDataFile file = getSeriestofile().get(series);
-                List<XYChart.Series> list = getFiletoseries().get(file);
-                if (getMainController().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
-                    ObservableList<RawDataFile> selist = getMainController().referenceFileView.getSelectionModel().getSelectedItems();
-                   
-                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
-                    for(RawDataFile sel : selist) {
-                        newlist.add(sel);
+                                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
+                                    for (RawDataFile sel : selist) {
+                                        newlist.add(sel);
+                                    }
+                                    getMainController().referenceFileView.getSelectionModel().clearSelection();
+                                    newlist.remove(file);
+                                    for (RawDataFile sel : newlist) {
+                                        getMainController().referenceFileView.getSelectionModel().select(sel);
+                                    }
+
+                                } else {
+                                    getMainController().referenceFileView.getSelectionModel().select(file);
+                                }
+
+                            }
+                        });
+
                     }
-                    getMainController().referenceFileView.getSelectionModel().clearSelection();
-                    newlist.remove(file);
-                    for(RawDataFile sel : newlist) {
-                        getMainController().referenceFileView.getSelectionModel().select(sel);
-                    }
-                                       
-                    } else {
-                 getMainController().referenceFileView.getSelectionModel().select(file);}
- 
-            }
-        });
-                   
                 }
-            }
-        });
+            });
+        }
     }
-    }
-
 
 }

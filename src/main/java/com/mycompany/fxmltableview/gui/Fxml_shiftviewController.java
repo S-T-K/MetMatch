@@ -190,6 +190,10 @@ public class Fxml_shiftviewController implements Initializable {
 
     @Override
     public void onChanged(ListChangeListener.Change<? extends RawDataFile> change) {
+         Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+          
    List<RawDataFile> completeList = supercontroller.referenceFileView.getItems();
                 List<RawDataFile> selectedList = supercontroller.referenceFileView.getSelectionModel().getSelectedItems();
 
@@ -218,6 +222,11 @@ public class Fxml_shiftviewController implements Initializable {
 
                     }
                 }
+                
+                  
+            }
+        });   
+                
     }
 
 });
