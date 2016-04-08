@@ -316,6 +316,7 @@ public class Fxml_adductviewController implements Initializable {
                                     Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
                                     //node.setEffect(hover);
                                     ((Rectangle) node).setFill(Color.RED);
+                                    node.toFront();
 
                                 }
                                 System.out.println("Scatter colored Red");
@@ -323,6 +324,7 @@ public class Fxml_adductviewController implements Initializable {
 
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
+                                node.toFront();
                                
                                 ((Path) node).setStroke(Color.RED);
                                 System.out.println("Line colored Red");

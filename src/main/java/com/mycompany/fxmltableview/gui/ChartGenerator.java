@@ -47,6 +47,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
+import javafx.scene.control.TreeItem;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 
@@ -585,11 +586,24 @@ public class ChartGenerator {
                 double shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
                 int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
 
-                for (int i = 0; i < list.size()-1; i++) {
+                double oshift = (list.get(0).getFittedShift(currentfile) - middleint) * shiftiter * 60;
+                double oRT = list.get(0).getRT();
+                double nshift;
+                double nRT;
+                
+                for (int i = 1; i < list.size()-1; i++) {
                     double shift = (list.get(i).getFittedShift(currentfile) - middleint) * shiftiter * 60;
                     XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
                     
-                    Ellipse cir = new Ellipse(0.5,3.5);
+                    Ellipse cir = new Ellipse(1.5,4);
+                    TreeItem<Entry> item = null;
+                    for (int e = 0; e<shiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().size(); e++) {
+                        if (shiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().get(e).getValue().equals(list.get(i)))  {
+                            item = shiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().get(e);
+                            break;
+                        }
+                    }
+                    shiftcontroller.getNodetoogroup().put(cir, item);
                     if (currentfile.isselected()) {
                     cir.setFill(Color.RED);
                 }else {

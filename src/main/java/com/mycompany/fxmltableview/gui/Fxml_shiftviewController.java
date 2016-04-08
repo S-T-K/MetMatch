@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,9 +28,11 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
@@ -39,6 +43,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
@@ -51,6 +56,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -77,7 +83,7 @@ public class Fxml_shiftviewController implements Initializable {
     ObservableList<Entry> olist;
     private HashMap<RawDataFile, List<XYChart.Series>> filetoseries;
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
-    private HashMap<Ellipse,Entry> nodetoogroup;
+    private HashMap<Ellipse,TreeItem<Entry>> nodetoogroup;
 private DropShadow hover = new DropShadow();
     /**
      * Initializes the controller class.
@@ -96,7 +102,7 @@ private DropShadow hover = new DropShadow();
     public void print(ObservableList<Entry> list) {
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
-        setNodetoogroup((HashMap<Ellipse,Entry>) new HashMap());
+        setNodetoogroup((HashMap<Ellipse,TreeItem<Entry>>) new HashMap());
         
     olist = list;   
        //get selected Entry
@@ -345,6 +351,36 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    
+                    if(mouseEvent.getClickCount() == 2){
+                        supercontroller.getMetTable().getSelectionModel().select(nodetoogroup.get(node));
+                        
+                        try {
+
+
+                        //create new window
+                        Stage stage = new Stage();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_adductview.fxml"));
+                        Pane myPane = (Pane) loader.load();
+                        Scene myScene = new Scene(myPane);
+                        stage.setScene(myScene);
+                        Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
+                        controller.setSession(supercontroller.session);
+                        controller.setMainController(supercontroller);
+
+                        //add MasterListofOGroups to new controller
+                        controller.metTable = supercontroller.getMetTable();
+
+                        //print graphs
+                        controller.print();
+                        stage.show();
+
+                    } catch (IOException ex) {
+                        Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        
+                    } else {
+                    
                      Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -374,6 +410,7 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
         });
                    
                 }
+                }
             }
         });
     }
@@ -382,14 +419,14 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
     /**
      * @return the nodetoogroup
      */
-    public HashMap<Ellipse,Entry> getNodetoogroup() {
+    public HashMap<Ellipse,TreeItem<Entry>> getNodetoogroup() {
         return nodetoogroup;
     }
 
     /**
      * @param nodetoogroup the nodetoogroup to set
      */
-    public void setNodetoogroup(HashMap<Ellipse,Entry> nodetoogroup) {
+    public void setNodetoogroup(HashMap<Ellipse,TreeItem<Entry>> nodetoogroup) {
         this.nodetoogroup = nodetoogroup;
     }
     
