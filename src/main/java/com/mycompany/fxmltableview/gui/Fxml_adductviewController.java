@@ -43,6 +43,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -72,7 +73,7 @@ public class Fxml_adductviewController implements Initializable {
     ChartGenerator chartGenerator;
     boolean showProp;
     private Session session;
-
+    private DropShadow hover = new DropShadow();
     private HashMap<RawDataFile, List<XYChart.Series>> filetoseries;
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
 
@@ -85,7 +86,9 @@ public class Fxml_adductviewController implements Initializable {
         chartGenerator = new ChartGenerator(this, null);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
-
+        hover.setColor(Color.LIME);
+        hover.setSpread(1);
+        hover.setRadius(2);
     }
 
     //method that generates the graphs
@@ -320,7 +323,7 @@ public class Fxml_adductviewController implements Initializable {
 
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
-                                node.setCursor(Cursor.HAND);
+                               
                                 ((Path) node).setStroke(Color.RED);
                                 System.out.println("Line colored Red");
                             }
@@ -339,7 +342,7 @@ public class Fxml_adductviewController implements Initializable {
                             } else {
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
-                                node.setCursor(Cursor.HAND);
+                                
                                 ((Path) node).setStroke(completeList.get(i).getColor());
                                 System.out.println("Line colored normal");
                             }
@@ -361,38 +364,59 @@ public class Fxml_adductviewController implements Initializable {
         if (series.getNode() != null) {
             Node node = series.getNode();
 
-//        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
-//
-//            @Override
-//            public void handle(MouseEvent arg0) {
-//                RawDataFile file = adductcontroller.getSeriestofile().get(series);
-//                List<XYChart.Series> list = adductcontroller.getFiletoseries().get(file);
-//                
-//                for (int i = 0; i<list.size(); i++) {
-//                    //if series is masschart
-//                    if (list.get(i).getNode() == null) {
-//                        for (int j = 0; j<list.get(i).getData().size(); j++) {
-//                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
-//                        //node.setEffect(hover);
-//                        ((Rectangle)node).setFill(Color.RED);
-//                        
-//                    } }else {
-//                    
-//                    Node node = list.get(i).getNode();
-//                    //node.setEffect(hover);
-//                node.setCursor(Cursor.HAND);
-//                ((Path) node).setStroke(Color.RED);
-//                }}
-//            }
-//        });
-//        node.setOnMouseExited(new EventHandler<MouseEvent>() {
-//
-//            @Override
-//            public void handle(MouseEvent arg0) {
-//                node.setEffect(null);
-//                node.setCursor(Cursor.DEFAULT);
-//            }
-//        });
+
+        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent arg0) {
+                RawDataFile file = getSeriestofile().get(series);
+                List<XYChart.Series> list = getFiletoseries().get(file);
+                
+                for (int i = 0; i<list.size(); i++) {
+                    //if series is masschart
+                    if (list.get(i).getNode() == null) {
+                        for (int j = 0; j<list.get(i).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
+                        node.setEffect(hover);
+                        node.toFront();
+                        //((Rectangle)node).setFill(Color.RED);
+                        
+                    } }else {
+                    
+                    Node node = list.get(i).getNode();
+                    node.setEffect(hover);
+                    node.toFront();
+                node.setCursor(Cursor.HAND);
+                //((Path) node).setStroke(Color.RED);
+                }}
+            }
+        });
+
+        node.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent arg0) {
+                RawDataFile file = getSeriestofile().get(series);
+                List<XYChart.Series> list = getFiletoseries().get(file);
+                
+                for (int i = 0; i<list.size(); i++) {
+                    //if series is masschart
+                    if (list.get(i).getNode() == null) {
+                        for (int j = 0; j<list.get(i).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
+                        node.setEffect(null);
+                        //((Rectangle)node).setFill(Color.RED);
+                        
+                    } }else {
+                    
+                    Node node = list.get(i).getNode();
+                    node.setEffect(null);
+                node.setCursor(Cursor.DEFAULT);
+                //((Path) node).setStroke(Color.RED);
+                }}
+            }
+        });
+
             node.setOnMouseReleased(new EventHandler<MouseEvent>() {
 
                 @Override

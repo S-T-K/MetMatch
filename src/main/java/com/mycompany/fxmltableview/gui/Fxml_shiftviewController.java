@@ -40,6 +40,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -47,6 +48,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.util.converter.NumberStringConverter;
@@ -75,7 +77,8 @@ public class Fxml_shiftviewController implements Initializable {
     ObservableList<Entry> olist;
     private HashMap<RawDataFile, List<XYChart.Series>> filetoseries;
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
-
+    private HashMap<Ellipse,Entry> nodetoogroup;
+private DropShadow hover = new DropShadow();
     /**
      * Initializes the controller class.
      */
@@ -83,7 +86,9 @@ public class Fxml_shiftviewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         //add ChartGenerator
       chartGenerator = new ChartGenerator(null,this);
-      
+      hover.setColor(Color.LIME);
+        hover.setSpread(1);
+        hover.setRadius(2);
       
     }    
     
@@ -91,14 +96,15 @@ public class Fxml_shiftviewController implements Initializable {
     public void print(ObservableList<Entry> list) {
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
+        setNodetoogroup((HashMap<Ellipse,Entry>) new HashMap());
         
     olist = list;   
        //get selected Entry
        
           
     
-           LineChart<Number,Number> linechart1 = chartGenerator.generateShiftChart(olist);
-           box.getChildren().add(linechart1);
+           ScatterChart<Number,Number> scatterchart = chartGenerator.generateScatterShiftChart(olist);
+           box.getChildren().add(scatterchart);
            
        //add listener to every color property, to show changes instantly
         for (int i = 0; i < filetoseries.size(); i++) {
@@ -166,9 +172,14 @@ public class Fxml_shiftviewController implements Initializable {
         
         
         
-        LineChart<Number,Number> linechart1 = chartGenerator.generateShiftChart(olist);
+        ScatterChart<Number,Number> scatterchart = chartGenerator.generateScatterShiftChart(olist);
         box.getChildren().remove(box.getChildren().size()-1);
-        box.getChildren().add(linechart1);
+        box.getChildren().add(scatterchart);
+        
+        Set<XYChart.Series> set = seriestofile.keySet();
+        for(XYChart.Series series:set) {
+            applyMouseEvents(series);
+        }
     }
 
     /**
@@ -201,22 +212,24 @@ public class Fxml_shiftviewController implements Initializable {
                     if (selectedList.contains(completeList.get(i))) {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
                         for (int j = 0; j < list.size(); j++) {
-                         
+                            for(int k =0; k<list.get(j).getData().size(); k++) {
 
-                                Node node = list.get(j).getNode();
+                                Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
                                 //node.setEffect(hover);
-                                node.setCursor(Cursor.HAND);
-                                ((Path) node).setStroke(Color.RED);
-                            
+                                
+                                ((Ellipse) node).setFill(Color.RED);
+                            }
                         }
                     } else {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
                         for (int j = 0; j < list.size(); j++) {
+for(int k =0; k<list.get(j).getData().size(); k++) {
 
-                                Node node = list.get(j).getNode();
+                                Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
                                 //node.setEffect(hover);
-                                node.setCursor(Cursor.HAND);
-                                ((Path) node).setStroke(completeList.get(i).getColor());
+                                
+                                ((Ellipse) node).setFill(completeList.get(i).getColor());
+                            }
                             
                         }
 
@@ -264,42 +277,68 @@ public class Fxml_shiftviewController implements Initializable {
     }
         
     private void applyMouseEvents(final XYChart.Series series) {
-if (series.getNode()!=null) {
-        Node node = series.getNode();
 
-//        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
-//
-//            @Override
-//            public void handle(MouseEvent arg0) {
-//                RawDataFile file = adductcontroller.getSeriestofile().get(series);
-//                List<XYChart.Series> list = adductcontroller.getFiletoseries().get(file);
-//                
-//                for (int i = 0; i<list.size(); i++) {
-//                    //if series is masschart
-//                    if (list.get(i).getNode() == null) {
-//                        for (int j = 0; j<list.get(i).getData().size(); j++) {
-//                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
-//                        //node.setEffect(hover);
-//                        ((Rectangle)node).setFill(Color.RED);
-//                        
-//                    } }else {
-//                    
-//                    Node node = list.get(i).getNode();
-//                    //node.setEffect(hover);
-//                node.setCursor(Cursor.HAND);
-//                ((Path) node).setStroke(Color.RED);
-//                }}
-//            }
-//        });
+        for (int i = 0; i< series.getData().size(); i++) {
+        
+        Node node = ((XYChart.Data) series.getData().get(i)).getNode();
 
-//        node.setOnMouseExited(new EventHandler<MouseEvent>() {
-//
-//            @Override
-//            public void handle(MouseEvent arg0) {
-//                node.setEffect(null);
-//                node.setCursor(Cursor.DEFAULT);
-//            }
-//        });
+        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent arg0) {
+                RawDataFile file = getSeriestofile().get(series);
+                List<XYChart.Series> list = getFiletoseries().get(file);
+                
+                for (int i = 0; i<list.size(); i++) {
+                    //if series is masschart
+                    if (list.get(i).getNode() == null) {
+                        for (int j = 0; j<list.get(i).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
+                        ((Ellipse)node).setFill(Color.LIME);
+                        node.toFront();
+                        
+                        //((Rectangle)node).setFill(Color.RED);
+                        
+                    } }else {
+                    
+                    Node node = list.get(i).getNode();
+                    node.setEffect(hover);
+                    node.toFront();
+                node.setCursor(Cursor.HAND);
+                //((Path) node).setStroke(Color.RED);
+                }}
+            }
+        });
+
+        node.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent arg0) {
+                RawDataFile file = getSeriestofile().get(series);
+                List<XYChart.Series> list = getFiletoseries().get(file);
+                
+                for (int i = 0; i<list.size(); i++) {
+                    //if series is masschart
+                    if (list.get(i).getNode() == null) {
+                        for (int j = 0; j<list.get(i).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
+                        if (file.isselected()){
+                        ((Ellipse)node).setFill(Color.RED);
+                        } else {
+                            ((Ellipse)node).setFill(file.getColor());
+                        }
+                        
+                        //((Rectangle)node).setFill(Color.RED);
+                        
+                    } }else {
+                    
+                    Node node = list.get(i).getNode();
+                    node.setEffect(null);
+                node.setCursor(Cursor.DEFAULT);
+                //((Path) node).setStroke(Color.RED);
+                }}
+            }
+        });
 
         node.setOnMouseReleased(new EventHandler<MouseEvent>() {
 
@@ -338,6 +377,20 @@ if (series.getNode()!=null) {
             }
         });
     }
+    }
+
+    /**
+     * @return the nodetoogroup
+     */
+    public HashMap<Ellipse,Entry> getNodetoogroup() {
+        return nodetoogroup;
+    }
+
+    /**
+     * @param nodetoogroup the nodetoogroup to set
+     */
+    public void setNodetoogroup(HashMap<Ellipse,Entry> nodetoogroup) {
+        this.nodetoogroup = nodetoogroup;
     }
     
     
