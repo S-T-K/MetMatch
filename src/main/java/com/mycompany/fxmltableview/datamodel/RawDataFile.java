@@ -306,10 +306,10 @@ System.out.println("Complete Extraction: " + (end-start));
     }
 
     public boolean isselected() {
-        if (session.getSelectedFiles()!=null){
-        if (session.getSelectedFiles().contains(this)) {
+       
+        if (dataset.getController().getBatchFileView().getSelectionModel().getSelectedItems().contains(this)) {
             return true;
-        }}
+        }
         return false;
     }
     

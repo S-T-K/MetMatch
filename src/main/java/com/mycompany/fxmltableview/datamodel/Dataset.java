@@ -5,6 +5,7 @@
  */
 package com.mycompany.fxmltableview.datamodel;
 
+import com.mycompany.fxmltableview.gui.BatchController;
 import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
 import java.util.List;
@@ -42,6 +43,7 @@ public class Dataset {
     private SimpleDoubleProperty penalty;
     
     private Property<Boolean> active;
+    private BatchController controller;
     
 
     
@@ -153,5 +155,19 @@ public class Dataset {
     
     public Property<Boolean> activeProperty() {
 	return active;
+    }
+
+    /**
+     * @return the controller
+     */
+    public BatchController getController() {
+        return controller;
+    }
+
+    /**
+     * @param controller the controller to set
+     */
+    public void setController(BatchController controller) {
+        this.controller = controller;
     }
 }

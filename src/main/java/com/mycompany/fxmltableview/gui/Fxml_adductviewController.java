@@ -253,7 +253,7 @@ public class Fxml_adductviewController implements Initializable {
     }
 
     public void setShowProp() {
-        close();
+        nextprev();
         showProp = !showProp;
         print();
 
@@ -325,8 +325,7 @@ public class Fxml_adductviewController implements Initializable {
             @Override
             public void run() {
            
-                List<RawDataFile> completeList = mainController.referenceFileView.getItems();
-                List<RawDataFile> selectedList = mainController.referenceFileView.getSelectionModel().getSelectedItems();
+                List<RawDataFile> completeList = mainController.session.getAllFiles();
 
                 for (int i = 0; i < completeList.size(); i++) {
                     if (completeList.get(i).isselected()) {
@@ -380,9 +379,13 @@ public class Fxml_adductviewController implements Initializable {
             }
 
         };
+        for (int i = 0; i<mainController.session.getListofDatasets().size(); i++) {
+            BatchController controller = mainController.getDatasettocontroller().get(mainController.session.getListofDatasets().get(i));
+            controller.getBatchFileView().getSelectionModel().getSelectedItems().addListener(listener);
+            listlisteners.put(listener, controller.getBatchFileView().getSelectionModel().getSelectedItems());
+        }
         
-        mainController.referenceFileView.getSelectionModel().getSelectedItems().addListener(listener);
-listlisteners.put(listener, mainController.referenceFileView.getSelectionModel().getSelectedItems());
+
     }
 
     private void applyMouseEvents(final XYChart.Series series) {
@@ -390,6 +393,7 @@ listlisteners.put(listener, mainController.referenceFileView.getSelectionModel()
             Node node = series.getNode();
 
 
+            //hover effect
         node.setOnMouseEntered(new EventHandler<MouseEvent>() {
 
             @Override
@@ -417,6 +421,7 @@ listlisteners.put(listener, mainController.referenceFileView.getSelectionModel()
             }
         });
 
+        //hover effect
         node.setOnMouseExited(new EventHandler<MouseEvent>() {
 
             @Override
@@ -442,6 +447,7 @@ listlisteners.put(listener, mainController.referenceFileView.getSelectionModel()
             }
         });
 
+        //select file when clicked
             node.setOnMouseReleased(new EventHandler<MouseEvent>() {
 
                 @Override
@@ -452,23 +458,25 @@ listlisteners.put(listener, mainController.referenceFileView.getSelectionModel()
                             public void run() {
                                 RawDataFile file = getSeriestofile().get(series);
                                 List<XYChart.Series> list = getFiletoseries().get(file);
-                                if (getMainController().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
-                                    ObservableList<RawDataFile> selist = getMainController().referenceFileView.getSelectionModel().getSelectedItems();
+                                BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
+                                if (getMainController().session.getSelectedFiles().contains(file)) {
+                                    
+                                    ObservableList<RawDataFile> selist = controller.getBatchFileView().getSelectionModel().getSelectedItems();
 
                                     List<RawDataFile> newlist = new ArrayList<RawDataFile>();
                                     for (RawDataFile sel : selist) {
                                         newlist.add(sel);
                                     }
-                                    getMainController().referenceFileView.getSelectionModel().clearSelection();
+                                    controller.getBatchFileView().getSelectionModel().clearSelection();
                                     newlist.remove(file);
                                     for (RawDataFile sel : newlist) {
-                                        getMainController().referenceFileView.getSelectionModel().select(sel);
+                                        controller.getBatchFileView().getSelectionModel().select(sel);
                                     }
 
                                 } else {
-                                    getMainController().referenceFileView.getSelectionModel().select(file);
+                                    controller.getBatchFileView().getSelectionModel().select(file);
                                 }
-                                getMainController().changedFile();
+                                controller.changedFile();
                             }
                         });
 

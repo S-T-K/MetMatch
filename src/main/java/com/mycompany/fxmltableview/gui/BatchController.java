@@ -1,6 +1,7 @@
 package com.mycompany.fxmltableview.gui;
 
 import com.mycompany.fxmltableview.datamodel.Batch;
+import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Slice;
@@ -41,6 +42,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SelectionMode;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -77,7 +80,7 @@ public class BatchController implements Initializable {
     MenuBar batchMenu;
     
     @FXML
-    TableView<RawDataFile> batchFileView;
+    private TableView<RawDataFile> batchFileView;
     
     @FXML
     TableColumn<RawDataFile, String> fileColumn;
@@ -99,11 +102,14 @@ public class BatchController implements Initializable {
     
  @FXML
     MenuItem deleteFile;
+ 
+ @FXML
+        TitledPane BatchPane;
   
   
     //current session, storing all information
     Session session;
-    Batch batch;
+    Dataset batch;
     ProgressBar progressbar;
     TitledPane pane;
     FXMLTableViewController TVcontroller;
@@ -115,7 +121,7 @@ public class BatchController implements Initializable {
 
     
     //constructor, has reference to the session
-    public BatchController(Session session, Batch batch, ProgressBar bar, ObservableList<Entry> data, TitledPane tps, FXMLTableViewController tvController) {
+    public BatchController(Session session, Dataset batch, ProgressBar bar, ObservableList<Entry> data, TitledPane tps, FXMLTableViewController tvController) {
         this.session = session;
         this.batch= batch;
         this.progressbar= bar;
@@ -187,7 +193,7 @@ public class BatchController implements Initializable {
             public void handle(Event t) {
                 for (int i = 0; i<batch.getListofFiles().size(); i++) {
                     batch.getListofFiles().get(i).setWidth((Double.parseDouble(batsetwidth.getText())));
-                    batchFileView.refresh();
+                    getBatchFileView().refresh();
                     
                 }
                          
@@ -195,8 +201,9 @@ public class BatchController implements Initializable {
         });
 
         paneName.textProperty().bindBidirectional(batch.getNameProperty());
-        pane.textProperty().bind(batch.getNameProperty());
+        BatchPane.textProperty().bind(batch.getNameProperty());
         
+        getBatchFileView().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     
@@ -230,12 +237,12 @@ public class BatchController implements Initializable {
 
                         batch.addFile(true, file, session);                    
                         progress.set(progress.get() + test);
-                        batchFileView.refresh();
+                        getBatchFileView().refresh();
                         System.out.println(progress.get());
                         double end = System.currentTimeMillis();
                         System.out.println(end - start);
                         //refresh files
-                        batchFileView.setItems(batch.getListofFiles());
+                        getBatchFileView().setItems(batch.getListofFiles());
 
                     }
 
@@ -265,19 +272,19 @@ public void newwindowcalculate() throws IOException, InterruptedException {
     
     public void deleteFile() {
         ArrayList<RawDataFile> list = new ArrayList();
-       for (int i = 0; i< batchFileView.getSelectionModel().getSelectedItems().size(); i++) {
-            list.add(batchFileView.getSelectionModel().getSelectedItems().get(i));
+       for (int i = 0; i< getBatchFileView().getSelectionModel().getSelectedItems().size(); i++) {
+            list.add(getBatchFileView().getSelectionModel().getSelectedItems().get(i));
         }
         
         for (int i = 0; i< list.size(); i++) {
             list.get(i).deleteFile();
             
         }
-        batchFileView.getSelectionModel().clearSelection();
+        getBatchFileView().getSelectionModel().clearSelection();
     }
     
     public void checkforFile() {
-        ObservableList<RawDataFile> list = batchFileView.getSelectionModel().getSelectedItems();
+        ObservableList<RawDataFile> list = getBatchFileView().getSelectionModel().getSelectedItems();
         if (list.size()<1) {
             deleteFile.setDisable(true);
             deleteFile.setVisible(false);
@@ -291,25 +298,30 @@ public void newwindowcalculate() throws IOException, InterruptedException {
     public void changedFile() {        
           Task task = new Task<Void>() {
             @Override
+            //TODO
             //sets Score to the max over all selected Files
             public Void call() throws InterruptedException {
-               session.setSelectedFiles(batchFileView.getSelectionModel().getSelectedItems());
+               List<RawDataFile> completeList = session.getAllFiles();
                for (int i =0; i<TVcontroller.getMasterListofOGroups().size(); i++) {
                    double maxScore = 0;
-                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
-                       RawDataFile file = session.getSelectedFiles().get(f);
+                   for (int f = 0; f<completeList.size(); f++) {
+                       if(completeList.get(f).isselected()) {
+                       RawDataFile file = completeList.get(f);
                        if (TVcontroller.getMasterListofOGroups().get(i).getScore(file)>maxScore) {
                            maxScore = TVcontroller.getMasterListofOGroups().get(i).getScore(file);
-                       }
+                       }}
                    TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
+                   
+                   
                    }
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                        maxScore = 0;
-                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
-                       RawDataFile file = session.getSelectedFiles().get(f);
+                   for (int f = 0; f<completeList.size(); f++) {
+                       if(completeList.get(f).isselected()) {
+                       RawDataFile file = completeList.get(f);
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
                            maxScore = TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
-                       }
+                       }}
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
                    }
                    }
@@ -332,8 +344,22 @@ public void newwindowcalculate() throws IOException, InterruptedException {
            
         }
         session.getListofDatasets().remove(batch);
-        batchFileView.getItems().clear();
+        getBatchFileView().getItems().clear();
         TVcontroller.getAccordion().getPanes().remove(pane);
          System.out.println("Deleted Batch");
+    }
+
+    /**
+     * @return the batchFileView
+     */
+    public TableView<RawDataFile> getBatchFileView() {
+        return batchFileView;
+    }
+
+    /**
+     * @param batchFileView the batchFileView to set
+     */
+    public void setBatchFileView(TableView<RawDataFile> batchFileView) {
+        this.batchFileView = batchFileView;
     }
 }

@@ -5,6 +5,7 @@ import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry.orderbyRT;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
+import com.mycompany.fxmltableview.datamodel.Reference;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
@@ -105,46 +107,13 @@ public class FXMLTableViewController implements Initializable {
     Button referenceButton;
 
     @FXML
-    TitledPane ReferencePane;
-
-    @FXML
     private Accordion accordion;
 
     @FXML
     Button addBatchButton;
 
     @FXML
-    MenuBar referenceMenu;
-
-    @FXML
-    TableView<RawDataFile> referenceFileView;
-
-    @FXML
-    TableColumn<RawDataFile, String> fileColumn;
-
-    @FXML
-    TableColumn widthColumn, shiftColumn;
-
-    @FXML
-    TableColumn<RawDataFile, Color> colorColumn;
-    
-    @FXML 
-    TableColumn<RawDataFile, Boolean> activeColumn;
-
-    @FXML
-    TextField refdefwidth, refsetwidth, paneName, refsetpen;
-
-    @FXML
-    ColorPicker refdefcol, refsetcol;
-
-    @FXML
     ProgressBar progressbar;
-    
-    @FXML
-    MenuItem deleteFile;
-    
-    @FXML
-    ContextMenu fileContextMenu;
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
     private ObservableList<Entry> MasterListofOGroups;
@@ -153,6 +122,7 @@ public class FXMLTableViewController implements Initializable {
     Session session;
     FXGraphics2D test;
     HashMap<TitledPane,Dataset> panelink;
+    private HashMap<Dataset,BatchController> datasettocontroller;
    
 
     //number of current batches, as an index
@@ -168,55 +138,6 @@ public class FXMLTableViewController implements Initializable {
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
        
-
-        fileColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, String>("name"));
-        colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
-        colorColumn.setCellFactory(ColorTableCell::new);
-        
-        activeColumn.setCellValueFactory(new PropertyValueFactory("active"));
-       
-        activeColumn.setCellFactory(new Callback<TableColumn<RawDataFile, Boolean>, TableCell<RawDataFile, Boolean>>() {
-
- 
-
-            public TableCell<RawDataFile, Boolean> call(TableColumn<RawDataFile, Boolean> p) {
-
-                return new CheckBoxTableCell<RawDataFile, Boolean>();
-
-            }
-
-        });
-
-
-        //enables edit functionality for width cell
-        widthColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        widthColumn.setOnEditCommit(
-                new EventHandler<CellEditEvent<RawDataFile, Number>>() {
-            @Override
-            public void handle(CellEditEvent<RawDataFile, Number> t) {
-                ((RawDataFile) t.getTableView().getItems().get(
-                        t.getTablePosition().getRow())).setWidth((t.getNewValue().doubleValue()));
-            }
-        }
-        );
-
-        widthColumn.setCellFactory(TextFieldTableCell.<RawDataFile, Number>forTableColumn(new NumberStringConverter()));
-
-        //make referencePane expanded
-        getAccordion().setExpandedPane(ReferencePane);
-
-        //disable not needed elements
-        addBatchButton.setDisable(true);
-        referenceMenu.setDisable(true);
-        referenceMenu.setVisible(false);
-        referenceFileView.setDisable(true);
-        referenceFileView.setVisible(false);
-        accordion.setVisible(false);
-        
-        //enable FileView functionality
-        referenceFileView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-       
-
 
         //highlight the Button, can't be done the normal way
         Platform.runLater(new Runnable() {
@@ -234,55 +155,11 @@ public class FXMLTableViewController implements Initializable {
         session.setMZTolerance(10); //ppm
         
         panelink = new HashMap<>();
-        panelink.put(ReferencePane, session.getReference());
+        setDatasettocontroller(new HashMap<>());
+       
 
         //set batchcount to 0,
         batchcount = 0;
-
-        //bind default values
-        refdefwidth.textProperty().bindBidirectional(session.getReference().getWidthProperty(), new NumberStringConverter());
-        refdefcol.valueProperty().bindBidirectional(session.getReference().getColorProperty());
-        refsetpen.textProperty().bindBidirectional(session.getReference().getPenaltyProperty(), new NumberStringConverter());
-
-        //add functionality to set the color for all files
-        refsetcol.setOnAction(new EventHandler() {
-            public void handle(Event t) {
-                for (int i = 0; i < session.getReference().getListofFiles().size(); i++) {
-                    session.getReference().getListofFiles().get(i).setColor(refsetcol.getValue());
-
-                }
-
-            }
-        });
-
-        //add functionality to set the width for all files
-        refsetwidth.setOnAction(new EventHandler() {
-            public void handle(Event t) {
-                for (int i = 0; i < session.getReference().getListofFiles().size(); i++) {
-                    session.getReference().getListofFiles().get(i).setWidth((Double.parseDouble(refsetwidth.getText())));
-                    referenceFileView.refresh();
-
-                }
-
-            }
-        });
-        
-//        //add functionality to change the active dataset
-//        getAccordion().expandedPaneProperty().addListener(new 
-//            ChangeListener<TitledPane>() {
-//                public void changed(ObservableValue<? extends TitledPane> ov,
-//                    TitledPane old_val, TitledPane new_val) {
-//                        Dataset dataset;
-//                        if(new_val!=null){
-//                        dataset = panelink.get(new_val);
-//                        session.setCurrentdataset(dataset);}
-//                    
-//              }
-//        });
-        
-
-        paneName.textProperty().bindBidirectional(session.getReference().getNameProperty());
-        ReferencePane.textProperty().bind(session.getReference().getNameProperty());
 
         
     }
@@ -324,16 +201,34 @@ public class FXMLTableViewController implements Initializable {
         getMetTable().setShowRoot(false);
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
-        referenceMenu.setDisable(false);
-        referenceMenu.setVisible(true);
-        referenceFileView.setDisable(false);
-        referenceFileView.setVisible(true);
         addBatchButton.setDisable(false);
         accordion.setVisible(true);
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(rtColumn);
         
-        
+          try {
+            TitledPane tps = new TitledPane();
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
+            //loader.setRoot(tps);
+            Reference reference = new Reference();
+            reference.setName("Reference");
+            session.addDataset(reference);
+            batchcount++;
+            panelink.put(tps, reference);
+            loader.setController(new BatchController(session, reference, progressbar, getMasterListofOGroups(), tps, this));
+            getDatasettocontroller().put(reference, loader.getController());
+            reference.setController(loader.getController());
+            tps = loader.load();
+            tps.setExpanded(true);
+            getAccordion().getPanes().add(tps);
+            getAccordion().setExpandedPane(tps);
+          
+           
+            
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         //add double click functionality to the TreeTable
         getMetTable().setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -376,60 +271,7 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
-    // File Chooser for mzXML files
-    public void openReferencemzxmlChooser() throws FileNotFoundException {
-
-        //Property to link with progressbar
-        DoubleProperty progress = new SimpleDoubleProperty(0.0);
-        progressbar.progressProperty().bind(progress);
-
-        FileChooser fileChooser = new FileChooser();
-
-        //Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("mzXML files (*.mzxml)", "*.mzxml");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        //Show open file dialog
-        List<File> filelist = fileChooser.showOpenMultipleDialog(null);
-
-        // create a new task
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() {
-                double test = 1 / (double) filelist.size();
-               
-                if (filelist != null) {
-                    
-                    for (File file : filelist) {
-                        
-                        double start = System.currentTimeMillis();
-
-
-                        session.getReference().addFile(true, file, session);                    
-                        progress.set(progress.get() + test);
-                        referenceFileView.refresh();
-                        System.out.println(progress.get());
-                        double end = System.currentTimeMillis();
-                        System.out.println(end - start);
-                        //refresh files
-                        referenceFileView.setItems(session.getReference().getListofFiles());
-                        
-                    }
-
-                    referenceButton.setVisible(false);
-                    addBatchButton.setDisable(false);
-
-                }
-                return null;
-            }
-
-        };
-
-        //new thread that executes task
-        new Thread(task).start();
-
-        
-    }
+    
 
     //add a new batch
     public void addBatch() {
@@ -445,6 +287,8 @@ public class FXMLTableViewController implements Initializable {
             batchcount++;
             panelink.put(tps, batch);
             loader.setController(new BatchController(session, batch, progressbar, getMasterListofOGroups(), tps, this));
+            getDatasettocontroller().put(batch, loader.getController());
+            batch.setController(loader.getController());
             tps = loader.load();
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
@@ -479,6 +323,7 @@ public class FXMLTableViewController implements Initializable {
               stage.setScene(myScene);
               Fxml_shiftviewController controller = loader.<Fxml_shiftviewController>getController();
               controller.setSupercontroller(this);
+              controller.setSession(session);
 
               //print graphs
               controller.print(getMasterListofOGroups());
@@ -655,70 +500,6 @@ public class FXMLTableViewController implements Initializable {
         return max;
     }
     
-    
-    public void deleteFile() {
-        ArrayList<RawDataFile> list = new ArrayList();
-       for (int i = 0; i< referenceFileView.getSelectionModel().getSelectedItems().size(); i++) {
-            list.add(referenceFileView.getSelectionModel().getSelectedItems().get(i));
-        }
-        
-        for (int i = 0; i< list.size(); i++) {
-            list.get(i).deleteFile();
-            
-        }
-        referenceFileView.getSelectionModel().clearSelection();
-    }
-    
-    public void checkforFile() {
-        ObservableList<RawDataFile> list = referenceFileView.getSelectionModel().getSelectedItems();
-        if (list.size()<1) {
-            deleteFile.setDisable(true);
-            deleteFile.setVisible(false);
-        } else {
-            deleteFile.setDisable(false);
-            deleteFile.setVisible(true);
-        }
-        
-    }
-    
-    public void changedFile() {        
-          Task task = new Task<Void>() {
-            @Override
-            //sets Score to the max over all selected Files
-            public Void call() throws InterruptedException {
-               session.setSelectedFiles(referenceFileView.getSelectionModel().getSelectedItems());
-               for (int i =0; i<getMasterListofOGroups().size(); i++) {
-                   double maxScore = 0;
-                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
-                       RawDataFile file = session.getSelectedFiles().get(f);
-                       if (getMasterListofOGroups().get(i).getScore(file)>maxScore) {
-                           maxScore = getMasterListofOGroups().get(i).getScore(file);
-                       }
-                        getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
-                   }
-                   for (int j = 0; j<getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
-                       maxScore = 0;
-                   for (int f = 0; f<session.getSelectedFiles().size(); f++) {
-                       RawDataFile file = session.getSelectedFiles().get(f);
-                       if ( getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
-                           maxScore = getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
-                       }
-                            getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
-                   }
-                   }
-                   
-                   
-               }
-              
-                return null;
-            }
-
-        };   
-         
-         new Thread(task).start();
-         getMetTable().refresh();
-         }
-
     /**
      * @return the metTable
      */
@@ -763,5 +544,21 @@ public class FXMLTableViewController implements Initializable {
     public void setAccordion(Accordion accordion) {
         this.accordion = accordion;
     }
+
+    /**
+     * @return the datasettocontroller
+     */
+    public HashMap<Dataset,BatchController> getDatasettocontroller() {
+        return datasettocontroller;
+    }
+
+    /**
+     * @param datasettocontroller the datasettocontroller to set
+     */
+    public void setDatasettocontroller(HashMap<Dataset,BatchController> datasettocontroller) {
+        this.datasettocontroller = datasettocontroller;
+    }
     
+       
+ 
 }

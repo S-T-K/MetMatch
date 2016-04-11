@@ -39,7 +39,8 @@ public class Session {
     private int resolution;
     private float baseline;
    
-    private ObservableList<RawDataFile> selectedFiles;
+    
+    private int numberofFiles;
     private Rengine engine;
     private double SliceMZTolerance;
     
@@ -52,6 +53,8 @@ public class Session {
         SliceMZTolerance = 2.5;
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
+        
+  
     }
 
     /**
@@ -159,7 +162,7 @@ public class Session {
     
     public void addDataset(Dataset batch) {
         this.getListofDatasets().add(batch);
-        
+        this.numberofFiles+=batch.getListofFiles().size();
     }
 
     /**
@@ -255,19 +258,6 @@ public class Session {
         this.SliceMZTolerance = SliceMZTolerance;
     }
 
-    /**
-     * @return the selectedFiles
-     */
-    public ObservableList<RawDataFile> getSelectedFiles() {
-        return selectedFiles;
-    }
-
-    /**
-     * @param selectedFiles the selectedFiles to set
-     */
-    public void setSelectedFiles(ObservableList<RawDataFile> selectedFiles) {
-        this.selectedFiles = selectedFiles;
-    }
 
     /**
      * @return the listofBatches
@@ -282,4 +272,43 @@ public class Session {
     public void setListofDatasets (List<Dataset> listofBatches) {
         this.listofDatasets = listofBatches;
     }
+
+ 
+
+    /**
+     * @return the numberofFiles
+     */
+    public int getNumberofFiles() {
+        return numberofFiles;
+    }
+
+    /**
+     * @param numberofFiles the numberofFiles to set
+     */
+    public void setNumberofFiles(int numberofFiles) {
+        this.numberofFiles = numberofFiles;
+    }
+    
+    public List<RawDataFile> getAllFiles() {
+        List<RawDataFile> list = new ArrayList<>();
+        for (int i = 0; i<listofDatasets.size(); i++) {
+            for (int j = 0; j< listofDatasets.get(i).getListofFiles().size(); j++) {
+                list.add(listofDatasets.get(i).getListofFiles().get(j));
+            }
+        }
+        return list;
+    }
+    
+    public List<RawDataFile> getSelectedFiles() {
+        List<RawDataFile> list = new ArrayList<>();
+        for (int i = 0; i<listofDatasets.size(); i++) {
+            for (int j = 0; j< listofDatasets.get(i).getListofFiles().size(); j++) {
+                if (listofDatasets.get(i).getListofFiles().get(j).isselected()) {
+                list.add(listofDatasets.get(i).getListofFiles().get(j));}
+            }
+        }
+        return list;
+    }
+    
+    
 }

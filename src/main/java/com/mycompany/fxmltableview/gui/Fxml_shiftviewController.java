@@ -9,6 +9,7 @@ package com.mycompany.fxmltableview.gui;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
+import com.mycompany.fxmltableview.logic.Session;
 import java.io.IOException;
 
 import java.net.URL;
@@ -83,7 +84,7 @@ public class Fxml_shiftviewController implements Initializable {
     //Keep references to Properties and Listeners to be able to delete them
     private HashMap<ChangeListener, Property> listeners;
     private HashMap<ListChangeListener, ObservableList> listlisteners;
-    
+    private Session session;
     ChartGenerator chartGenerator;
     private FXMLTableViewController supercontroller;
     ObservableList<Entry> olist;
@@ -225,11 +226,11 @@ private DropShadow hover = new DropShadow();
             @Override
             public void run() {
           
-   List<RawDataFile> completeList = supercontroller.referenceFileView.getItems();
-                List<RawDataFile> selectedList = supercontroller.referenceFileView.getSelectionModel().getSelectedItems();
+   List<RawDataFile> completeList = supercontroller.session.getAllFiles();
+       
 
                 for (int i = 0; i < completeList.size(); i++) {
-                    if (selectedList.contains(completeList.get(i))) {
+                    if (completeList.get(i).isselected()) {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
                         for (int j = 0; j < list.size(); j++) {
                             for(int k =0; k<list.get(j).getData().size(); k++) {
@@ -264,8 +265,11 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
 
 };
         
-        supercontroller.referenceFileView.getSelectionModel().getSelectedItems().addListener(listener);
-        listlisteners.put(listener, supercontroller.referenceFileView.getSelectionModel().getSelectedItems());
+        for (int i = 0; i<supercontroller.session.getListofDatasets().size(); i++) {
+            BatchController controller = supercontroller.getDatasettocontroller().get(supercontroller.session.getListofDatasets().get(i));
+            controller.getBatchFileView().getSelectionModel().getSelectedItems().addListener(listener);
+            listlisteners.put(listener, controller.getBatchFileView().getSelectionModel().getSelectedItems());
+        }
 
     }
        
@@ -379,9 +383,9 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
 
 //only select file of interest
 RawDataFile file = getSeriestofile().get(series);
-getSupercontroller().referenceFileView.getSelectionModel().clearSelection();
-getSupercontroller().referenceFileView.getSelectionModel().select(file);
-getSupercontroller().changedFile();
+getSupercontroller().getDatasettocontroller().get(file.getDataset()).getBatchFileView().getSelectionModel().clearSelection();
+getSupercontroller().getDatasettocontroller().get(file.getDataset()).getBatchFileView().getSelectionModel().select(file);
+getSupercontroller().getDatasettocontroller().get(file.getDataset()).changedFile();
                             
                         //create new window
                         Stage stage = new Stage();
@@ -414,25 +418,25 @@ getSupercontroller().changedFile();
             public void run() {
                 RawDataFile file = getSeriestofile().get(series);
                 List<XYChart.Series> list = getFiletoseries().get(file);
-                
-                
-                if (getSupercontroller().referenceFileView.getSelectionModel().getSelectedItems().contains(file)) {
-                    ObservableList<RawDataFile> selist = getSupercontroller().referenceFileView.getSelectionModel().getSelectedItems();
-                   
-                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
-                    for(RawDataFile sel : selist) {
-                        newlist.add(sel);
-                    }
-                    getSupercontroller().referenceFileView.getSelectionModel().clearSelection();
-                    newlist.remove(file);
-                    for(RawDataFile sel : newlist) {
-                        getSupercontroller().referenceFileView.getSelectionModel().select(sel);
-                    }
-                                       
-                    
-                } else {
-                 getSupercontroller().referenceFileView.getSelectionModel().select(file);}
-                getSupercontroller().changedFile();
+                 BatchController controller = supercontroller.getDatasettocontroller().get(file.getDataset());
+                  if (supercontroller.session.getSelectedFiles().contains(file)) {
+                                    
+                                    ObservableList<RawDataFile> selist = controller.getBatchFileView().getSelectionModel().getSelectedItems();
+
+                                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
+                                    for (RawDataFile sel : selist) {
+                                        newlist.add(sel);
+                                    }
+                                    controller.getBatchFileView().getSelectionModel().clearSelection();
+                                    newlist.remove(file);
+                                    for (RawDataFile sel : newlist) {
+                                        controller.getBatchFileView().getSelectionModel().select(sel);
+                                    }
+
+                                } else {
+                                    controller.getBatchFileView().getSelectionModel().select(file);
+                                }
+                                controller.changedFile();
 
             }
         });
@@ -475,4 +479,15 @@ getSupercontroller().changedFile();
         System.gc();
     }
     
+    public Session getSession() {
+        return session;
+    }
+
+    /**
+     * @param session the session to set
+     */
+    public void setSession(Session session) {
+        this.session = session;
+        this.chartGenerator.setSession(session);
+    }
 }
