@@ -372,6 +372,8 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
                     
                     if(mouseEvent.getClickCount() == 2){
                         supercontroller.getMetTable().getSelectionModel().select(nodetoogroup.get(node));
+                        //scroll to selected Ogroup
+                        supercontroller.getMetTable().scrollTo(supercontroller.getMetTable().getRow(nodetoogroup.get(node))-5);
                         
                         try {
 
@@ -379,6 +381,7 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
 RawDataFile file = getSeriestofile().get(series);
 getSupercontroller().referenceFileView.getSelectionModel().clearSelection();
 getSupercontroller().referenceFileView.getSelectionModel().select(file);
+getSupercontroller().changedFile();
                             
                         //create new window
                         Stage stage = new Stage();
@@ -392,6 +395,9 @@ getSupercontroller().referenceFileView.getSelectionModel().select(file);
 
                         //add MasterListofOGroups to new controller
                         controller.metTable = supercontroller.getMetTable();
+                        
+                        
+                        
 
                         //print graphs
                         controller.print();
@@ -426,7 +432,7 @@ getSupercontroller().referenceFileView.getSelectionModel().select(file);
                     
                 } else {
                  getSupercontroller().referenceFileView.getSelectionModel().select(file);}
-                
+                getSupercontroller().changedFile();
 
             }
         });

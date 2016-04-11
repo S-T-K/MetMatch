@@ -41,7 +41,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -71,6 +73,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -286,6 +290,7 @@ public class FXMLTableViewController implements Initializable {
         paneName.textProperty().bindBidirectional(session.getReference().getNameProperty());
         ReferencePane.textProperty().bind(session.getReference().getNameProperty());
 
+        
     }
 
     //Open File Chooser for Data Matrix
@@ -319,6 +324,8 @@ public class FXMLTableViewController implements Initializable {
             }
 
         }
+        
+      
         getMetTable().setRoot(superroot);
         getMetTable().setShowRoot(false);
         referenceButton.setDisable(true);
@@ -330,6 +337,8 @@ public class FXMLTableViewController implements Initializable {
         referenceFileView.setDisable(false);
         referenceFileView.setVisible(true);
         addBatchButton.setDisable(false);
+        getMetTable().getSortOrder().clear();
+        getMetTable().getSortOrder().add(rtColumn);
         
 
         //add double click functionality to the TreeTable

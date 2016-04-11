@@ -464,7 +464,7 @@ listlisteners.put(listener, mainController.referenceFileView.getSelectionModel()
                                 } else {
                                     getMainController().referenceFileView.getSelectionModel().select(file);
                                 }
-
+                                getMainController().changedFile();
                             }
                         });
 
