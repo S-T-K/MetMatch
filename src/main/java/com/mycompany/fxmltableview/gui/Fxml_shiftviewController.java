@@ -15,12 +15,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -78,6 +80,10 @@ public class Fxml_shiftviewController implements Initializable {
     @FXML 
     Button button;
     
+    //Keep references to Properties and Listeners to be able to delete them
+    private HashMap<ChangeListener, Property> listeners;
+    private HashMap<ListChangeListener, ObservableList> listlisteners;
+    
     ChartGenerator chartGenerator;
     private FXMLTableViewController supercontroller;
     ObservableList<Entry> olist;
@@ -95,6 +101,8 @@ private DropShadow hover = new DropShadow();
       hover.setColor(Color.LIME);
         hover.setSpread(1);
         hover.setRadius(2);
+        listeners = new HashMap<ChangeListener, Property>();
+        listlisteners = new HashMap<ListChangeListener, ObservableList>();
       
     }    
     
@@ -116,7 +124,7 @@ private DropShadow hover = new DropShadow();
         for (int i = 0; i < filetoseries.size(); i++) {
             Set<RawDataFile> files = filetoseries.keySet();
             for (RawDataFile file : files) {
-                file.getColorProperty().addListener(new ChangeListener<Color>() {
+                ChangeListener<Color> listener = new ChangeListener<Color>() {
                     @Override
                     public void changed(ObservableValue<? extends Color> ov,
                             Color old_val, Color new_val) {
@@ -130,10 +138,12 @@ private DropShadow hover = new DropShadow();
                             }
                     }
                     }
-                });
+                };
                 
+                file.getColorProperty().addListener(listener);
+                listeners.put(listener, file.getColorProperty());
                 
-                 file.getWidthProperty().addListener(new ChangeListener() {
+               ChangeListener listener2 = new ChangeListener() {
                    @Override
                    public void changed(ObservableValue o, Object oldVal, Object newVal) {
                        System.out.println("Change");
@@ -148,7 +158,10 @@ private DropShadow hover = new DropShadow();
                             }
                     
                     }
-                });
+                };
+                
+                 file.getWidthProperty().addListener(listener2);
+                 listeners.put(listener2, file.getWidthProperty());
 
             }
 
@@ -201,9 +214,10 @@ private DropShadow hover = new DropShadow();
     public void setSupercontroller(FXMLTableViewController supercontroller) {
         this.supercontroller = supercontroller;
         refsetpen.textProperty().bindBidirectional(supercontroller.session.getCurrentdataset().getPenaltyProperty(), new NumberStringConverter());
-        
+     
                 //Colors selected files in Shiftview, reacts to selection
-        supercontroller.referenceFileView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<RawDataFile>() {
+                
+        ListChangeListener<RawDataFile> listener = new ListChangeListener<RawDataFile>() {
 
     @Override
     public void onChanged(ListChangeListener.Change<? extends RawDataFile> change) {
@@ -248,8 +262,10 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
                 
     }
 
-});
-                
+};
+        
+        supercontroller.referenceFileView.getSelectionModel().getSelectedItems().addListener(listener);
+        listlisteners.put(listener, supercontroller.referenceFileView.getSelectionModel().getSelectedItems());
 
     }
        
@@ -301,6 +317,7 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
                         for (int j = 0; j<list.get(i).getData().size(); j++) {
                         Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
                         ((Ellipse)node).setFill(Color.LIME);
+                        node.setOpacity(1);
                         node.toFront();
                         
                         //((Rectangle)node).setFill(Color.RED);
@@ -328,6 +345,7 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
                     if (list.get(i).getNode() == null) {
                         for (int j = 0; j<list.get(i).getData().size(); j++) {
                         Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
+                        node.setOpacity(nodetoogroup.get(node).getValue().getScore(file));
                         if (file.isselected()){
                         ((Ellipse)node).setFill(Color.RED);
                         } else {
@@ -357,7 +375,11 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
                         
                         try {
 
-
+//only select file of interest
+RawDataFile file = getSeriestofile().get(series);
+getSupercontroller().referenceFileView.getSelectionModel().clearSelection();
+getSupercontroller().referenceFileView.getSelectionModel().select(file);
+                            
                         //create new window
                         Stage stage = new Stage();
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_adductview.fxml"));
@@ -430,5 +452,21 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
         this.nodetoogroup = nodetoogroup;
     }
     
+    
+    public void close() {
+        //delete all nodes
+        for(Ellipse el:nodetoogroup.keySet()) {
+            el = null;
+        }
+        
+        //delete all listeners
+        for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
+            lis.getValue().removeListener(lis.getKey());
+        }
+        for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
+            lis.getValue().removeListener(lis.getKey());
+        }
+        
+    }
     
 }

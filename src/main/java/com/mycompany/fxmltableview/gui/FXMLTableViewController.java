@@ -73,6 +73,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 import org.jfree.fx.FXGraphics2D;
@@ -356,6 +357,11 @@ public class FXMLTableViewController implements Initializable {
                         //print graphs
                         controller.print();
                         stage.show();
+                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+      public void handle(WindowEvent we) {
+          controller.close();
+      }
+  }); 
 
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -474,6 +480,12 @@ public class FXMLTableViewController implements Initializable {
               controller.print(getMasterListofOGroups());
               System.out.println("PRINT");
               stage.show();
+              
+              stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+      public void handle(WindowEvent we) {
+          controller.close();
+      }
+  }); 
       
        
    }

@@ -17,10 +17,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -49,6 +51,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 
@@ -76,6 +79,8 @@ public class Fxml_adductviewController implements Initializable {
     private DropShadow hover = new DropShadow();
     private HashMap<RawDataFile, List<XYChart.Series>> filetoseries;
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
+    private HashMap<ChangeListener, Property> listeners;
+    private HashMap<ListChangeListener, ObservableList> listlisteners;
 
     /**
      * Initializes the controller class.
@@ -89,6 +94,9 @@ public class Fxml_adductviewController implements Initializable {
         hover.setColor(Color.LIME);
         hover.setSpread(1);
         hover.setRadius(2);
+        listeners = new HashMap<ChangeListener, Property>();
+        listlisteners = new HashMap<ListChangeListener, ObservableList>();
+        
     }
 
     //method that generates the graphs
@@ -150,7 +158,7 @@ public class Fxml_adductviewController implements Initializable {
         for (int i = 0; i < filetoseries.size(); i++) {
             Set<RawDataFile> files = filetoseries.keySet();
             for (RawDataFile file : files) {
-                file.getColorProperty().addListener(new ChangeListener<Color>() {
+                ChangeListener<Color> listener = new ChangeListener<Color>() {
                     @Override
                     public void changed(ObservableValue<? extends Color> ov,
                             Color old_val, Color new_val) {
@@ -173,9 +181,12 @@ public class Fxml_adductviewController implements Initializable {
                             }
                         }
                     }
-                });
+                };
+                
+                file.getColorProperty().addListener(listener);
+                listeners.put(listener, file.getColorProperty());
 
-                file.getWidthProperty().addListener(new ChangeListener() {
+                ChangeListener listener2 = new ChangeListener() {
                     @Override
                     public void changed(ObservableValue o, Object oldVal, Object newVal) {
                         System.out.println("Change");
@@ -199,7 +210,10 @@ public class Fxml_adductviewController implements Initializable {
                         }
 
                     }
-                });
+                };
+                
+                file.getWidthProperty().addListener(listener2);
+                listeners.put(listener2, file.getWidthProperty());
 
             }
 
@@ -214,6 +228,7 @@ public class Fxml_adductviewController implements Initializable {
 
     //select next metabolite, changes Selection in Main GUI
     public void next() {
+        nextprev();
         if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
             metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
         }
@@ -224,6 +239,7 @@ public class Fxml_adductviewController implements Initializable {
 
     //select previous metablite, changes Selection in Main GUI
     public void previous() {
+        nextprev();
         if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
             metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
         }
@@ -233,6 +249,7 @@ public class Fxml_adductviewController implements Initializable {
     }
 
     public void setShowProp() {
+        close();
         showProp = !showProp;
         print();
 
@@ -295,7 +312,7 @@ public class Fxml_adductviewController implements Initializable {
         this.mainController = mainController;
 
         //Colors selected files in Adductview, reacts to selection
-        mainController.referenceFileView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<RawDataFile>() {
+        ListChangeListener listener = new ListChangeListener<RawDataFile>() {
 
             @Override
             public void onChanged(ListChangeListener.Change<? extends RawDataFile> change) {
@@ -358,8 +375,10 @@ public class Fxml_adductviewController implements Initializable {
         });
             }
 
-        });
-
+        };
+        
+        mainController.referenceFileView.getSelectionModel().getSelectedItems().addListener(listener);
+listlisteners.put(listener, mainController.referenceFileView.getSelectionModel().getSelectedItems());
     }
 
     private void applyMouseEvents(final XYChart.Series series) {
@@ -453,6 +472,35 @@ public class Fxml_adductviewController implements Initializable {
                 }
             });
         }
+    }
+    
+    public void close() {
+        //delete all nodes
+        for(XYChart.Series ser : seriestofile.keySet()) {
+            ser = null;
+        }
+        
+        //delete all listeners
+        for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
+            lis.getValue().removeListener(lis.getKey());
+        }
+        for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
+            lis.getValue().removeListener(lis.getKey());
+        }
+        
+    }
+    
+     public void nextprev() {
+        //delete all nodes
+        for(XYChart.Series ser : seriestofile.keySet()) {
+            ser = null;
+        }
+        
+        //delete all listeners
+        for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
+            lis.getValue().removeListener(lis.getKey());
+        }
+        
     }
 
 }
