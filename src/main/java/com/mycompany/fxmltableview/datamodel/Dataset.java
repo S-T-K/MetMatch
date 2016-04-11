@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,6 +41,8 @@ public class Dataset {
     //penalty for path calculation
     private SimpleDoubleProperty penalty;
     
+    private Property<Boolean> active;
+    
 
     
     
@@ -51,6 +54,7 @@ public class Dataset {
         this.Width = new SimpleDoubleProperty(1.5);
         this.color = new SimpleObjectProperty(Color.BLACK);
         this.penalty = new SimpleDoubleProperty(0.5);
+        active = new SimpleBooleanProperty(true);
         
     }
     
@@ -137,5 +141,17 @@ public class Dataset {
      */
     public void setPenalty(double penalty) {
         this.penalty = new SimpleDoubleProperty(penalty);
+    }
+    
+    public final Boolean getActive() {
+	return active.getValue();
+    }
+
+    public final void setActive(Boolean bool) {
+	this.active.setValue(bool);
+    }
+    
+    public Property<Boolean> activeProperty() {
+	return active;
     }
 }

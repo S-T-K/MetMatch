@@ -88,8 +88,10 @@ public class ChartGenerator {
 
         //double startouter = System.currentTimeMillis();
         // for all slices (= for all files)
-        for (int f = 0; f < adduct.getSession().getCurrentdataset().getListofFiles().size(); f++) {
-            RawDataFile currentfile = adduct.getSession().getCurrentdataset().getListofFiles().get(f);
+        for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
                 XYChart.Series newSeries = new XYChart.Series();
@@ -130,7 +132,7 @@ public class ChartGenerator {
 
 
             }
-        }
+        }}}
 
         //don't draw symbols
         linechart.setCreateSymbols(false);
@@ -163,8 +165,10 @@ public class ChartGenerator {
 
         // for all slices (= for all files)
         //double startouter = System.currentTimeMillis();
-        for (int f = 0; f < adduct.getSession().getCurrentdataset().getListofFiles().size(); f++) {
-            RawDataFile currentfile = adduct.getSession().getCurrentdataset().getListofFiles().get(f);
+         for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
 
@@ -223,7 +227,7 @@ public class ChartGenerator {
 
                 }
             }
-        }
+        }}}
         double lower = adduct.getMinRT();
         double upper = adduct.getMaxRT();
         xAxis.setAutoRanging(false);
@@ -252,8 +256,10 @@ public class ChartGenerator {
 
         // for all slices (= for all files)
         //double startouter = System.currentTimeMillis();
-        for (int f = 0; f < adduct.getSession().getCurrentdataset().getListofFiles().size(); f++) {
-            RawDataFile currentfile = adduct.getSession().getCurrentdataset().getListofFiles().get(f);
+         for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
 
@@ -291,7 +297,7 @@ public class ChartGenerator {
                 linechart.setMaxSize(300, 200);
 
             }
-        }
+        }}}
 
         //double endouter = System.currentTimeMillis();
         //System.out.println("Outer loop norm: " + (endouter-startouter));
@@ -324,8 +330,10 @@ public class ChartGenerator {
 
         // for all slices (= for all files)
         //double startouter = System.currentTimeMillis();
-        for (int f = 0; f < adduct.getSession().getCurrentdataset().getListofFiles().size(); f++) {
-            RawDataFile currentfile = adduct.getSession().getCurrentdataset().getListofFiles().get(f);
+         for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
 
@@ -377,7 +385,7 @@ public class ChartGenerator {
 
                 //set Range
             }
-        }
+        }}}
         //double endouter = System.currentTimeMillis();
         //System.out.println("Outer loop mass: " + (endouter-startouter));
         double lower = adduct.getMinRT();
@@ -404,8 +412,10 @@ public class ChartGenerator {
     public double PropArray(Entry adduct, LineChart<Number, Number> linechart) {
 
         double maxProp = 1;
-        for (int f = 0; f < adduct.getSession().getCurrentdataset().getListofFiles().size(); f++) {
-            RawDataFile currentfile = adduct.getSession().getCurrentdataset().getListofFiles().get(f);
+         for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
 
                 if (adduct.getOGroupObject().getOGroupPropArray(currentfile) == null) {
@@ -459,7 +469,7 @@ public class ChartGenerator {
                 }
 
             }
-        }
+        }}}
         return maxProp;
     }
 
@@ -473,9 +483,10 @@ public class ChartGenerator {
 
         double upper = 0;
         double lower = 0;
-
-        for (int f = 0; f < list.get(0).getSession().getCurrentdataset().getListofFiles().size(); f++) {
-            RawDataFile currentfile = list.get(0).getSession().getCurrentdataset().getListofFiles().get(f);
+ for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = list.get(0).getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
                 XYChart.Series newSeries = new XYChart.Series();
                 
@@ -511,10 +522,10 @@ public class ChartGenerator {
                 
                 ((Path) newSeries.getNode()).setStrokeWidth(currentfile.getWidth());
 
-
-                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getCurrentdataset().getListofFiles().size() + " drawn");
+//TODO: calulate number of active files
+                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size() + " drawn");
             }
-        }
+        }}}
         linechart.setCreateSymbols(false);
         linechart.setMaxSize(2000, 500);
         linechart.setLegendVisible(false);
@@ -567,9 +578,11 @@ public class ChartGenerator {
 
         double upper = 0;
         double lower = 0;
-
-        for (int f = 0; f < list.get(0).getSession().getCurrentdataset().getListofFiles().size(); f++) {
-            RawDataFile currentfile = list.get(0).getSession().getCurrentdataset().getListofFiles().get(f);
+        
+ for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = list.get(0).getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
                 XYChart.Series newSeries = new XYChart.Series();
                 
@@ -624,10 +637,10 @@ public class ChartGenerator {
               
                 
 
-
-                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getCurrentdataset().getListofFiles().size() + " drawn");
+//TODO: number
+                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size() + " drawn");
             }
-        }
+        }}}
 
         scatterchart.setMaxSize(2000, 500);
         scatterchart.setLegendVisible(false);

@@ -33,12 +33,12 @@ public class Session {
    
     private List<Entry> listofOGroups;
     private Reference reference;
-    private List<Batch> listofBatches;
+    private List<Dataset> listofDatasets;
     private float RTTolerance;
     private float MZTolerance;
     private int resolution;
     private float baseline;
-    private Dataset currentdataset;
+   
     private ObservableList<RawDataFile> selectedFiles;
     private Rengine engine;
     private double SliceMZTolerance;
@@ -46,11 +46,10 @@ public class Session {
     
     public Session() {
         this.reference= new Reference();
-        this.listofBatches = new ArrayList<>();
+        this.listofDatasets = new ArrayList<>();
         this.resolution = 30;
         this.baseline = 1000;
         SliceMZTolerance = 2.5;
-        this.currentdataset=reference;
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
     }
@@ -158,8 +157,8 @@ public class Session {
     }
     
     
-    public void addBatch(Batch batch) {
-        this.getListofBatches().add(batch);
+    public void addDataset(Dataset batch) {
+        this.getListofDatasets().add(batch);
         
     }
 
@@ -226,19 +225,7 @@ public class Session {
         this.baseline = baseline;
     }
 
-    /**
-     * @return the currentdataset
-     */
-    public Dataset getCurrentdataset() {
-        return currentdataset;
-    }
-
-    /**
-     * @param currentdataset the currentdataset to set
-     */
-    public void setCurrentdataset(Dataset currentdataset) {
-        this.currentdataset = currentdataset;
-    }
+  
 
     /**
      * @return the engine
@@ -285,14 +272,14 @@ public class Session {
     /**
      * @return the listofBatches
      */
-    public List<Batch> getListofBatches() {
-        return listofBatches;
+    public List<Dataset> getListofDatasets() {
+        return listofDatasets;
     }
 
     /**
      * @param listofBatches the listofBatches to set
      */
-    public void setListofBatches(List<Batch> listofBatches) {
-        this.listofBatches = listofBatches;
+    public void setListofDatasets (List<Dataset> listofBatches) {
+        this.listofDatasets = listofBatches;
     }
 }

@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
@@ -40,6 +41,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableRow;
@@ -50,6 +52,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -60,6 +63,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 import org.jfree.fx.FXGraphics2D;
 
@@ -80,6 +84,9 @@ public class BatchController implements Initializable {
     
     @FXML
     TableColumn widthColumn;
+    
+     @FXML 
+    TableColumn<RawDataFile, Boolean> activeColumn;
     
     @FXML
     TableColumn<RawDataFile, Color> colorColumn;
@@ -129,6 +136,19 @@ public class BatchController implements Initializable {
         colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
         colorColumn.setCellFactory(ColorTableCell::new);
         
+        activeColumn.setCellValueFactory(new PropertyValueFactory("active"));
+       
+        activeColumn.setCellFactory(new Callback<TableColumn<RawDataFile, Boolean>, TableCell<RawDataFile, Boolean>>() {
+
+ 
+
+            public TableCell<RawDataFile, Boolean> call(TableColumn<RawDataFile, Boolean> p) {
+
+                return new CheckBoxTableCell<RawDataFile, Boolean>();
+
+            }
+
+        });
         
         //enables edit functionality for width cell
         widthColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -244,7 +264,11 @@ public void newwindowcalculate() throws IOException, InterruptedException {
 
     
     public void deleteFile() {
-        ObservableList<RawDataFile> list = batchFileView.getSelectionModel().getSelectedItems();
+        ArrayList<RawDataFile> list = new ArrayList();
+       for (int i = 0; i< batchFileView.getSelectionModel().getSelectedItems().size(); i++) {
+            list.add(batchFileView.getSelectionModel().getSelectedItems().get(i));
+        }
+        
         for (int i = 0; i< list.size(); i++) {
             list.get(i).deleteFile();
             
@@ -307,7 +331,7 @@ public void newwindowcalculate() throws IOException, InterruptedException {
             batch.getListofFiles().get(i).deleteFile();
            
         }
-        session.getListofBatches().remove(batch);
+        session.getListofDatasets().remove(batch);
         batchFileView.getItems().clear();
         TVcontroller.getAccordion().getPanes().remove(pane);
          System.out.println("Deleted Batch");

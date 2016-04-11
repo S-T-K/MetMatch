@@ -105,12 +105,6 @@ public class FXMLTableViewController implements Initializable {
     Button referenceButton;
 
     @FXML
-    Label DataMatrixLabel;
-
-    @FXML
-    Label DataMatrixPathLabel;
-
-    @FXML
     TitledPane ReferencePane;
 
     @FXML
@@ -217,7 +211,7 @@ public class FXMLTableViewController implements Initializable {
         referenceMenu.setVisible(false);
         referenceFileView.setDisable(true);
         referenceFileView.setVisible(false);
-        
+        accordion.setVisible(false);
         
         //enable FileView functionality
         referenceFileView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -273,18 +267,18 @@ public class FXMLTableViewController implements Initializable {
             }
         });
         
-        //add functionality to change the active dataset
-        getAccordion().expandedPaneProperty().addListener(new 
-            ChangeListener<TitledPane>() {
-                public void changed(ObservableValue<? extends TitledPane> ov,
-                    TitledPane old_val, TitledPane new_val) {
-                        Dataset dataset;
-                        if(new_val!=null){
-                        dataset = panelink.get(new_val);
-                        session.setCurrentdataset(dataset);}
-                    
-              }
-        });
+//        //add functionality to change the active dataset
+//        getAccordion().expandedPaneProperty().addListener(new 
+//            ChangeListener<TitledPane>() {
+//                public void changed(ObservableValue<? extends TitledPane> ov,
+//                    TitledPane old_val, TitledPane new_val) {
+//                        Dataset dataset;
+//                        if(new_val!=null){
+//                        dataset = panelink.get(new_val);
+//                        session.setCurrentdataset(dataset);}
+//                    
+//              }
+//        });
         
 
         paneName.textProperty().bindBidirectional(session.getReference().getNameProperty());
@@ -330,15 +324,15 @@ public class FXMLTableViewController implements Initializable {
         getMetTable().setShowRoot(false);
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
-        DataMatrixLabel.setText("Data Matrix:");
-        DataMatrixPathLabel.setText(file.getName());
         referenceMenu.setDisable(false);
         referenceMenu.setVisible(true);
         referenceFileView.setDisable(false);
         referenceFileView.setVisible(true);
         addBatchButton.setDisable(false);
+        accordion.setVisible(true);
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(rtColumn);
+        
         
 
         //add double click functionality to the TreeTable
@@ -441,20 +435,21 @@ public class FXMLTableViewController implements Initializable {
     public void addBatch() {
 
         try {
-            AnchorPane test = new AnchorPane();
-            TitledPane tps = new TitledPane("", test);
+            TitledPane tps = new TitledPane();
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
+            //loader.setRoot(tps);
+            Batch batch = new Batch(batchcount);
+            batch.setName("Batch Nr. " + (batchcount + 1));
+            session.addDataset(batch);
+            batchcount++;
+            panelink.put(tps, batch);
+            loader.setController(new BatchController(session, batch, progressbar, getMasterListofOGroups(), tps, this));
+            tps = loader.load();
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
-            Batch batch = new Batch(batchcount);
             getAccordion().setExpandedPane(tps);
-            batch.setName("Batch Nr. " + (batchcount + 1));
-            session.addBatch(batch);
-            batchcount++;
-            loader.setController(new BatchController(session, batch, progressbar, getMasterListofOGroups(), tps, this));
-            loader.setRoot(test);
-            test = (AnchorPane) loader.load();
-            panelink.put(tps, batch);
+            
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -510,9 +505,10 @@ public class FXMLTableViewController implements Initializable {
             @Override
             public Void call() throws IOException {
                 
-                
-                    for (int f = 0; f<session.getCurrentdataset().getListofFiles().size(); f++) {
-                        RawDataFile currentfile = session.getCurrentdataset().getListofFiles().get(f);
+                for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+                    for (int f = 0; f<session.getListofDatasets().get(d).getListofFiles().size(); f++) {
+                        RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
                          if(currentfile.getActive().booleanValue()) {
                     
                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
@@ -561,7 +557,7 @@ public class FXMLTableViewController implements Initializable {
                 }
                 //TODO: Penalty for change in j
                 //fill rest of weights matrix
-                double penalty = session.getCurrentdataset().getPenalty();
+                double penalty = session.getListofDatasets().get(0).getPenalty();
                 for (int i = 1; i<getMasterListofOGroups().size(); i++) {
                     for (int j =0; j<session.getResolution(); j++) {
                         double max = 0;
@@ -626,9 +622,10 @@ public class FXMLTableViewController implements Initializable {
                       
 
                   }
-                progress.set(progress.get() +1.0d/(session.getCurrentdataset().getListofFiles().size()));
+                //TODO number of active files
+                progress.set(progress.get() +1.0d/(session.getListofDatasets().get(d).getListofFiles().size()));
                 System.out.println("Calculation: " + progress.get() + "%");
-              }}
+              }}}}
 
               
               latch.countDown();

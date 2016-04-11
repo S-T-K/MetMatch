@@ -213,7 +213,7 @@ private DropShadow hover = new DropShadow();
      */
     public void setSupercontroller(FXMLTableViewController supercontroller) {
         this.supercontroller = supercontroller;
-        refsetpen.textProperty().bindBidirectional(supercontroller.session.getCurrentdataset().getPenaltyProperty(), new NumberStringConverter());
+        refsetpen.textProperty().bindBidirectional(supercontroller.session.getListofDatasets().get(0).getPenaltyProperty(), new NumberStringConverter());
      
                 //Colors selected files in Shiftview, reacts to selection
                 
@@ -472,7 +472,7 @@ getSupercontroller().changedFile();
         for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
             lis.getValue().removeListener(lis.getKey());
         }
-        
+        System.gc();
     }
     
 }

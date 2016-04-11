@@ -47,9 +47,6 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="497.0" prefWidth="241.0">
                                             <children>
-                                                <Label fx:id="DataMatrixLabel" layoutX="9.6" layoutY="36.0" prefHeight="18.0" prefWidth="75.0" AnchorPane.leftAnchor="-8.0" />
-                                                <Label fx:id="DataMatrixPathLabel" layoutX="101.6" layoutY="36.0" prefHeight="18.0" prefWidth="90.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="-10.0" />
-                                                <Button fx:id="referenceButton" layoutX="29.0" layoutY="12.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="29.399999999999977" />
                                                 <MenuBar fx:id="referenceMenu" layoutX="1.0" prefHeight="25.0" prefWidth="243.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
                                                     <menus>
                                                         <Menu mnemonicParsing="false" text="Files">
@@ -117,7 +114,7 @@
                                                         </Menu>
                                                     </menus>
                                                 </MenuBar>
-                                                <TableView fx:id="referenceFileView" editable="true" layoutY="57.0" onMouseClicked="#changedFile" prefHeight="200.0" prefWidth="243.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0">
+                                                <TableView fx:id="referenceFileView" editable="true" onMouseClicked="#changedFile" prefHeight="419.0" prefWidth="252.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="15.0">
                                                     <columns>
                                           <TableColumn fx:id="activeColumn" maxWidth="35.0" minWidth="0.0" prefWidth="0.0" text="Active">
                                              <cellValueFactory>
@@ -163,6 +160,7 @@
                             </panes>
                         </Accordion>
                         <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch" textOverrun="WORD_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                              <Button fx:id="referenceButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">

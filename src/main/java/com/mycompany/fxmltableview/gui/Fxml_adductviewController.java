@@ -93,7 +93,7 @@ public class Fxml_adductviewController implements Initializable {
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         hover.setColor(Color.LIME);
         hover.setSpread(1);
-        hover.setRadius(2);
+        hover.setRadius(1.8);
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
         
@@ -101,6 +101,7 @@ public class Fxml_adductviewController implements Initializable {
 
     //method that generates the graphs
     public void print() {
+        double start = System.currentTimeMillis();
         //new Maps, old Series are gone
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
@@ -224,6 +225,9 @@ public class Fxml_adductviewController implements Initializable {
             applyMouseEvents(series);
         }
 
+         double end = System.currentTimeMillis();
+         
+        System.out.println("Drawing time: " + (end-start) );
     }
 
     //select next metabolite, changes Selection in Main GUI
@@ -487,7 +491,7 @@ listlisteners.put(listener, mainController.referenceFileView.getSelectionModel()
         for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
             lis.getValue().removeListener(lis.getKey());
         }
-        
+        System.gc();
     }
     
      public void nextprev() {
@@ -500,7 +504,7 @@ listlisteners.put(listener, mainController.referenceFileView.getSelectionModel()
         for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
             lis.getValue().removeListener(lis.getKey());
         }
-        
+        System.gc();
     }
 
 }
