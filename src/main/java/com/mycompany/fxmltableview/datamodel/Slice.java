@@ -349,7 +349,7 @@ public class Slice {
         //engine.end();
         
 }
-        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
     
     

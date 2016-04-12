@@ -136,8 +136,8 @@ public class Entry {
         double [] propArray = new double[getSession().getResolution()];
 
         Slice currentSlice = listofSlices.get(file);
-            //currentSlice.generateWaveletProp();
-            currentSlice.generateGaussProp();
+            currentSlice.generateWaveletProp();
+            //currentSlice.generateGaussProp();
             for (int j = 0; j < getSession().getResolution(); j++) {
                 if (currentSlice.getPropArray()[j]+propArray[j]>1){
                     if (currentSlice.getPropArray()[j]>propArray[j]) {

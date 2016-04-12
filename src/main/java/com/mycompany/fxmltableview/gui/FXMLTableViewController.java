@@ -365,16 +365,36 @@ public class FXMLTableViewController implements Initializable {
 
                         getMasterListofOGroups().get(i).generateOGroupPropArray(currentfile);
                     double[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArray(currentfile);
+                    //TODO: calculate Range as function of time
+                    //int range = 0;
                     for (int j =0; j<session.getResolution(); j++) {
-                        matrix[i][j] = PropArray[j];
-                        
+//                        //calculation of range
+//                        
+//                        //edge cases, reduces ifs
+//                        if (j<range||j>(session.getResolution()-range-1)) { 
+//                        for (int k = (j-range); k<=j+range; k++) {
+//                            if (k>=0&&k<session.getResolution()) {
+//                            if (matrix [i][j]<PropArray[k]) {
+//                                matrix [i][j] = PropArray[k];
+//                            }
+//                        } }
+//                            
+//                            
+//                        } else {
+//                        //normal cases
+//                        for (int k = (j-range); k<=j+range; k++) {
+//                            if (matrix [i][j]<PropArray[k]) {
+//                                matrix [i][j] = PropArray[k];
+//                            }
+//                        }
+//                        }  
+matrix [i][j] = PropArray[j];
                     }
                     
-                   
                 }
                 
                 
-                //Test artificial shift
+//                //Test artificial shift
 //                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
 //                for (int i = 0; i< MasterListofOGroups.size(); i++) {
 //                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
