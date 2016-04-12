@@ -37,6 +37,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -106,6 +107,10 @@ public class BatchController implements Initializable {
  @FXML
         TitledPane BatchPane;
   
+    @FXML
+    private CheckBox batact;
+ 
+  
   
     //current session, storing all information
     Session session;
@@ -141,6 +146,8 @@ public class BatchController implements Initializable {
         fileColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, String>("name"));
         colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
         colorColumn.setCellFactory(ColorTableCell::new);
+        
+        
         
         activeColumn.setCellValueFactory(new PropertyValueFactory("active"));
        
@@ -361,5 +368,19 @@ public void newwindowcalculate() throws IOException, InterruptedException {
      */
     public void setBatchFileView(TableView<RawDataFile> batchFileView) {
         this.batchFileView = batchFileView;
+    }
+
+    /**
+     * @return the batact
+     */
+    public CheckBox getBatact() {
+        return batact;
+    }
+
+    /**
+     * @param batact the batact to set
+     */
+    public void setBatact(CheckBox batact) {
+        this.batact = batact;
     }
 }

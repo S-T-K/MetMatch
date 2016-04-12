@@ -114,6 +114,7 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     ProgressBar progressbar;
+   
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
     private ObservableList<Entry> MasterListofOGroups;
@@ -275,7 +276,7 @@ public class FXMLTableViewController implements Initializable {
 
     //add a new batch
     public void addBatch() {
-
+        
         try {
             TitledPane tps = new TitledPane();
             

@@ -82,7 +82,12 @@ public class RawDataFile {
               for (int i = 0; i< session.getSelectedFiles().size(); i++) {
                   session.getSelectedFiles().get(i).setActive(newValue);
               }
+              
+              //TODO: check for all actives
+              dataset.getController().getBatact().setSelected(true);
             }
+            
+            
 
         }); 
         

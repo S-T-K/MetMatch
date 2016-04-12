@@ -7,6 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+
 <TitledPane fx:id="BatchPane" expanded="true" prefHeight="516.0" prefWidth="243.0" text="Reference" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="497.0" prefWidth="241.0">
@@ -117,4 +118,11 @@
          </children>
       </AnchorPane>
    </content>
+   <graphic>
+      <HBox prefHeight="17.0" prefWidth="18.0">
+         <children>
+            <CheckBox fx:id="batact" minWidth="10.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="16.0" />
+         </children>
+      </HBox>
+   </graphic>
 </TitledPane>
