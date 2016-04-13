@@ -83,8 +83,14 @@ public class RawDataFile {
                   session.getSelectedFiles().get(i).setActive(newValue);
               }
               
-              //TODO: check for all actives
-              dataset.getController().getBatact().setSelected(true);
+              
+              boolean active = false;
+              for (int i = 0; i< dataset.getListofFiles().size(); i++) {
+                  if (dataset.getListofFiles().get(i).getActive().booleanValue()) {
+                      active = true;
+                  }
+              }
+              dataset.getController().getBatact().setSelected(active);
             }
             
             

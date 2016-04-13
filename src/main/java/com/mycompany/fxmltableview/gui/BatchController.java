@@ -34,7 +34,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -65,6 +67,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -147,6 +151,23 @@ public class BatchController implements Initializable {
         colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
         colorColumn.setCellFactory(ColorTableCell::new);
         
+        //listener for dataset active checkbox
+        ChangeListener listener = new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        
+                        //TODO: This Listener and the File active listener are interfering 
+                        for (int j = 0; j<3; j++) {
+                     for (int i = 0; i<batch.getListofFiles().size(); i++) {
+                         batch.getListofFiles().get(i).setActive(newValue.booleanValue());
+                         
+                     }
+
+                    }}
+                };
+        
+        batact.setSelected(true);
+        batact.selectedProperty().addListener(listener);
         
         
         activeColumn.setCellValueFactory(new PropertyValueFactory("active"));
@@ -305,7 +326,7 @@ public void newwindowcalculate() throws IOException, InterruptedException {
     public void changedFile() {        
           Task task = new Task<Void>() {
             @Override
-            //TODO
+            
             //sets Score to the max over all selected Files
             public Void call() throws InterruptedException {
                List<RawDataFile> completeList = session.getAllFiles();
