@@ -176,6 +176,8 @@ public class FXMLTableViewController implements Initializable {
         PeakPick.setItems(FXCollections.observableArrayList(
     "Naïve", "MassSpecWavelet")
 );
+        
+        PeakPick.getSelectionModel().select(0);
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 session.setPeackPick(PeakPick.getItems().get(newVal.intValue()).toString());
@@ -252,6 +254,7 @@ public class FXMLTableViewController implements Initializable {
         Res.setVisible(false);
         Base.setVisible(false);
         PeakPick.setVisible(false);
+        session.calculateIntPeakRTTol();
         
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(rtColumn);
@@ -508,7 +511,7 @@ matrix [i][j] = PropArray[j];
                 //TODO: calculate range as function of time
                 for (int i = getMasterListofOGroups().size()-2; i>-1; i--){
                     max = 0;
-                    int range = 0;
+                   
                     int j = maxint;
                     if((j-1)>0 && weights[i][j-1]> max) {
                         max = weights[i][j-1];

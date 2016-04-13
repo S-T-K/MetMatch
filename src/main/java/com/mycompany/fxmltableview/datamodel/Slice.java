@@ -48,6 +48,10 @@ public class Slice {
     private float minIntensity;
     private float maxIntensity;
     private List<Peak> listofPeaks;
+    private Integer fittedpeak;
+    
+    private double scorepeakfound = 0;
+    private double scorepeakclose = 1;
    
     private Entry adduct;
     private Dataset dataset;
@@ -64,6 +68,7 @@ public class Slice {
         this.dataset = file.getDataset();
         this.adduct = adduct;
         this.name = (this+"intList.ser");
+        this.fittedpeak = null;
         
     }
     
@@ -366,7 +371,7 @@ public class Slice {
         addGaussCorrelation(0.4);
         
         }
-        //generatePeakArray();
+        generatePeakArray();
         //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
  
@@ -432,22 +437,30 @@ public class Slice {
      CurveSmooth csm = new CurveSmooth(PropArray);
      double[][] maxima = csm.getMaximaUnsmoothed();
      
+     for (int i = 0; i<PropArray.length; i++ ) {
+         PropArray[i] = 0;
+     }
+     
+     for (int i = 0; i<maxima[0].length; i++) {
+         PropArray[(int)maxima[0][i]] = 1;
+         
+     }
      
      
      
      //delete array except for region around maxima
-     int current = 0;
-     for (int i = 0; i<maxima[0].length; i++) {
-         while (current < PropArray.length && current<maxima[0][i]) {
-             PropArray[current] = 0;
-             current++;
-         }
-         current = current+2;
-     }
-     while (current<PropArray.length) {
-         PropArray[current] = 0;
-             current++;
-     }
+//     int current = 0;
+//     for (int i = 0; i<maxima[0].length; i++) {
+//         while (current < PropArray.length && current<maxima[0][i]) {
+//             PropArray[current] = 0;
+//             current++;
+//         }
+//         current = current+2;
+//     }
+//     while (current<PropArray.length) {
+//         PropArray[current] = 0;
+//             current++;
+//     }
  }
 
     /**
@@ -1010,5 +1023,44 @@ public class Slice {
      */
     public void setMZArray(double[] MZArray) {
         this.MZArray = MZArray;
+    }
+    
+    public void setFittedPeak(int shift) {
+        //TODO: range as function of RTTolerance
+        if (adduct.getOGroup()==22) {
+            int ffoo = 0;
+        }
+        
+        
+        //first step is to find the peak
+        //get maximum range
+        int min = adduct.getSession().getIntPeakRTTol();
+        for (int i = 0; i<listofPeaks.size(); i++) {
+            //if smaller than maximum range or already found peak, set peak
+            if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
+                min = Math.abs(listofPeaks.get(i).getIndex()-shift);
+                fittedpeak = i;
+                scorepeakfound = 1;
+                //test to see if found or not
+             
+            }
+        }
+        
+        //calc score for close peaks, if within range, small score
+        int range = 5;
+        min = adduct.getSession().getIntPeakRTTol()+range;
+        for (int i = 0; i<listofPeaks.size(); i++) {
+            if (fittedpeak==null||i!=fittedpeak) {
+                if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
+                    min = Math.abs(listofPeaks.get(i).getIndex()-shift);
+                    scorepeakclose = 1.0/(double)(adduct.getSession().getIntPeakRTTol()+range+1)*min;
+                }
+            }
+        }
+        
+        //System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
+        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  scorepeakfound);
+        
+        
     }
 }

@@ -40,6 +40,8 @@ public class Session {
     private SimpleDoubleProperty MZTolerance;
     private SimpleIntegerProperty resolution;
     private SimpleDoubleProperty baseline;
+    private SimpleDoubleProperty PeakRTTolerance;
+    private int IntPeakRTTol;
     private String PeackPick;
    
     
@@ -51,11 +53,12 @@ public class Session {
     public Session() {
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
-        this.resolution = new SimpleIntegerProperty(30);
+        this.resolution = new SimpleIntegerProperty(100);
         this.baseline = new SimpleDoubleProperty(1000);
         SliceMZTolerance = new SimpleDoubleProperty (2.5);
         RTTolerance = new SimpleDoubleProperty(1.5);
         MZTolerance = new SimpleDoubleProperty(10);
+        PeakRTTolerance = new SimpleDoubleProperty(0.1);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         
@@ -348,5 +351,39 @@ public class Session {
     public void setPeackPick(String PeackPick) {
         this.PeackPick = PeackPick;
         System.out.println(PeackPick);
+    }
+
+    /**
+     * @return the PeakRTTolerance
+     */
+    public SimpleDoubleProperty getPeakRTTolerance() {
+        return PeakRTTolerance;
+    }
+
+    /**
+     * @param PeakRTTolerance the PeakRTTolerance to set
+     */
+    public void setPeakRTTolerance(SimpleDoubleProperty PeakRTTolerance) {
+        this.PeakRTTolerance = PeakRTTolerance;
+    }
+
+    /**
+     * @return the IntPeakRTTol
+     */
+    public int getIntPeakRTTol() {
+        return IntPeakRTTol;
+    }
+
+    /**
+     * @param IntPeakRTTol the IntPeakRTTol to set
+     */
+    public void setIntPeakRTTol(int IntPeakRTTol) {
+        this.IntPeakRTTol = IntPeakRTTol;
+    }
+    
+    public void calculateIntPeakRTTol() {
+        double delta = (RTTolerance.doubleValue()*2)/resolution.doubleValue();
+        IntPeakRTTol = (int) (PeakRTTolerance.doubleValue()/delta);
+        System.out.println("IntPeakRTTol: " + IntPeakRTTol);
     }
 }
