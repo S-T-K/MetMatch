@@ -18,6 +18,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.rosuda.JRI.Rengine;
@@ -34,23 +36,26 @@ public class Session {
     private List<Entry> listofOGroups;
     private Reference reference;
     private List<Dataset> listofDatasets;
-    private float RTTolerance;
-    private float MZTolerance;
-    private int resolution;
-    private float baseline;
+    private SimpleDoubleProperty RTTolerance;
+    private SimpleDoubleProperty MZTolerance;
+    private SimpleIntegerProperty resolution;
+    private SimpleDoubleProperty baseline;
+    private String PeackPick;
    
     
     private int numberofFiles;
     private Rengine engine;
-    private double SliceMZTolerance;
+    private SimpleDoubleProperty SliceMZTolerance;
     
     
     public Session() {
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
-        this.resolution = 30;
-        this.baseline = 1000;
-        SliceMZTolerance = 2.5;
+        this.resolution = new SimpleIntegerProperty(30);
+        this.baseline = new SimpleDoubleProperty(1000);
+        SliceMZTolerance = new SimpleDoubleProperty (2.5);
+        RTTolerance = new SimpleDoubleProperty(1.5);
+        MZTolerance = new SimpleDoubleProperty(10);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         
@@ -176,56 +181,56 @@ public class Session {
      * @return the RTTolerance
      */
     public float getRTTolerance() {
-        return RTTolerance;
+        return RTTolerance.floatValue();
     }
 
     /**
      * @param RTTolerance the RTTolerance to set
      */
     public void setRTTolerance(float RTTolerance) {
-        this.RTTolerance = RTTolerance;
+        this.RTTolerance = new SimpleDoubleProperty(RTTolerance);
     }
 
     /**
      * @return the MZTolerance
      */
     public float getMZTolerance() {
-        return MZTolerance;
+        return MZTolerance.floatValue();
     }
 
     /**
      * @param MZTolerance the MZTolerance to set
      */
     public void setMZTolerance(float MZTolerance) {
-        this.MZTolerance = MZTolerance;
+        this.MZTolerance = new SimpleDoubleProperty(MZTolerance);
     }
 
     /**
      * @return the resolution
      */
     public int getResolution() {
-        return resolution;
+        return resolution.get();
     }
 
     /**
      * @param resolution the resolution to set
      */
     public void setResolution(int resolution) {
-        this.resolution = resolution;
+        this.resolution = new SimpleIntegerProperty(resolution);
     }
 
     /**
      * @return the baseline
      */
     public float getBaseline() {
-        return baseline;
+        return baseline.floatValue();
     }
 
     /**
      * @param baseline the baseline to set
      */
     public void setBaseline(float baseline) {
-        this.baseline = baseline;
+        this.baseline = new SimpleDoubleProperty(baseline);
     }
 
   
@@ -248,14 +253,14 @@ public class Session {
      * @return the SliceMZTolerance
      */
     public double getSliceMZTolerance() {
-        return SliceMZTolerance;
+        return SliceMZTolerance.doubleValue();
     }
 
     /**
      * @param SliceMZTolerance the SliceMZTolerance to set
      */
     public void setSliceMZTolerance(double SliceMZTolerance) {
-        this.SliceMZTolerance = SliceMZTolerance;
+        this.SliceMZTolerance = new SimpleDoubleProperty(SliceMZTolerance);
     }
 
 
@@ -310,5 +315,38 @@ public class Session {
         return list;
     }
     
+    public SimpleDoubleProperty getRTTolProp() {
+        return RTTolerance;
+    }
     
+    public SimpleDoubleProperty getMZTolProp() {
+        return MZTolerance;
+    }
+    
+    public SimpleDoubleProperty getBaseProp() {
+        return baseline;
+    }
+    
+    public SimpleIntegerProperty getResProp() {
+        return resolution;
+    }
+    
+    public SimpleDoubleProperty getSliceMZTolProp() {
+        return SliceMZTolerance;
+    }
+
+    /**
+     * @return the PeackPick
+     */
+    public String getPeackPick() {
+        return PeackPick;
+    }
+
+    /**
+     * @param PeackPick the PeackPick to set
+     */
+    public void setPeackPick(String PeackPick) {
+        this.PeackPick = PeackPick;
+        System.out.println(PeackPick);
+    }
 }

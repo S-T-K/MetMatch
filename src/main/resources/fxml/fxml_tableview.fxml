@@ -43,7 +43,25 @@
                     <children>
                         <Accordion fx:id="accordion" prefHeight="517.0" prefWidth="243.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                         <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch" textOverrun="WORD_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                              <Button fx:id="referenceButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0" />
+                              <Button fx:id="referenceButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="400.0" />
+                  <Rectangle fx:id="box1" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="9.0" layoutY="25.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="25.0" />
+                  <Label fx:id="label1" layoutX="9.0" layoutY="3.0" prefHeight="31.0" prefWidth="117.0" text="Parsing Parameters" />
+                  <Label fx:id="label2" layoutX="16.0" layoutY="34.0" text="RT Tolerance: " />
+                  <Label fx:id="label3" layoutX="16.0" layoutY="64.0" text="M/Z Tolerance: " />
+                  <TextField fx:id="RTTol" layoutX="144.0" layoutY="30.0" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="MZTol" layoutX="144.0" layoutY="60.0" prefHeight="25.0" prefWidth="80.0" />
+                  <Label fx:id="label4" layoutX="9.0" layoutY="105.0" prefHeight="17.0" prefWidth="117.0" text="Slice Parameters" />
+                  <Rectangle fx:id="box2" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="19.0" layoutY="35.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="120.0" />
+                  <Label fx:id="label5" layoutX="16.0" layoutY="130.0" text="M/Z Tolerance:" />
+                  <Label fx:id="label6" layoutX="16.0" layoutY="159.0" text="Resolution:" />
+                  <TextField fx:id="SliceMZTol" layoutX="144.0" layoutY="126.0" prefHeight="25.0" prefWidth="80.0" />
+                  <TextField fx:id="Res" layoutX="144.0" layoutY="155.0" prefHeight="25.0" prefWidth="80.0" />
+                  <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="29.0" layoutY="45.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="220.0" />
+                  <Label fx:id="label7" layoutX="9.0" layoutY="198.0" prefHeight="31.0" prefWidth="117.0" text="Peak Picking: " />
+                  <Label fx:id="label8" layoutX="16.0" layoutY="229.0" text="Baseline:" />
+                  <TextField fx:id="Base" layoutX="144.0" layoutY="225.0" prefHeight="25.0" prefWidth="80.0" />
+                  <Label fx:id="label9" layoutX="16.0" layoutY="259.0" text="Peak Picking:" />
+                  <ChoiceBox fx:id="PeakPick" layoutX="92.0" layoutY="255.0" prefHeight="25.0" prefWidth="135.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">

@@ -48,6 +48,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -114,6 +115,18 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     ProgressBar progressbar;
+    
+    @FXML
+    TextField RTTol, MZTol, SliceMZTol, Res, Base;
+    
+    @FXML
+    Label label1, label2, label3, label4, label5, label6, label7, label8, label9;
+    
+    @FXML
+    Rectangle box1, box2, box3;
+    
+    @FXML
+    ChoiceBox PeakPick;
    
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
@@ -133,6 +146,8 @@ public class FXMLTableViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
+        
+        
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
@@ -151,9 +166,24 @@ public class FXMLTableViewController implements Initializable {
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
-        session.setResolution(100);
-        session.setRTTolerance(1.5f);
-        session.setMZTolerance(10); //ppm
+        
+        //Parameters
+        RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
+        MZTol.textProperty().bindBidirectional(session.getMZTolProp(), new NumberStringConverter());
+        SliceMZTol.textProperty().bindBidirectional(session.getSliceMZTolProp(), new NumberStringConverter());
+        Res.textProperty().bindBidirectional(session.getResProp(), new NumberStringConverter());
+        Base.textProperty().bindBidirectional(session.getBaseProp(), new NumberStringConverter());
+        PeakPick.setItems(FXCollections.observableArrayList(
+    "Naïve", "MassSpecWavelet")
+);
+        PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue ov, Number value, Number newVal) {
+                session.setPeackPick(PeakPick.getItems().get(newVal.intValue()).toString());
+            }
+            
+            
+            
+        });
         
         panelink = new HashMap<>();
         setDatasettocontroller(new HashMap<>());
@@ -204,6 +234,25 @@ public class FXMLTableViewController implements Initializable {
         referenceButton.setVisible(false);
         addBatchButton.setDisable(false);
         accordion.setVisible(true);
+        label1.setVisible(false);
+        label2.setVisible(false);
+        label3.setVisible(false);
+        label4.setVisible(false);
+        label5.setVisible(false);
+        label6.setVisible(false);
+        label7.setVisible(false);
+        label8.setVisible(false);
+        label9.setVisible(false);
+        box1.setVisible(false);
+        box2.setVisible(false);
+        box3.setVisible(false);
+        RTTol.setVisible(false);
+        MZTol.setVisible(false);
+        SliceMZTol.setVisible(false);
+        Res.setVisible(false);
+        Base.setVisible(false);
+        PeakPick.setVisible(false);
+        
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(rtColumn);
         

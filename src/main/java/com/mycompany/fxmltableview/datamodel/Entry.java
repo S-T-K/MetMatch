@@ -136,8 +136,17 @@ public class Entry {
         double [] propArray = new double[getSession().getResolution()];
 
         Slice currentSlice = listofSlices.get(file);
+        
+        if (session.getPeackPick().equals("Naïve")) {
+            currentSlice.generateGaussProp();
+            
+        } else if (session.getPeackPick().equals("MassSpecWavelet")) {
             currentSlice.generateWaveletProp();
-            //currentSlice.generateGaussProp();
+            
+        } else {
+            System.out.println("Error");
+        }
+           
             for (int j = 0; j < getSession().getResolution(); j++) {
                 if (currentSlice.getPropArray()[j]+propArray[j]>1){
                     if (currentSlice.getPropArray()[j]>propArray[j]) {
