@@ -9,6 +9,8 @@ import com.mycompany.fxmltableview.datamodel.Reference;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
+import com.univocity.parsers.tsv.TsvWriter;
+import com.univocity.parsers.tsv.TsvWriterSettings;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,9 +18,12 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +101,7 @@ public class FXMLTableViewController implements Initializable {
     TreeTableColumn nameColumn;
 
     @FXML
-    TreeTableColumn scoreColumn;
+    TreeTableColumn scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn;
 
     @FXML
     TreeTableColumn rtColumn;
@@ -151,6 +156,8 @@ public class FXMLTableViewController implements Initializable {
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
+        scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakfound"));
+        scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakclose"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
        
@@ -633,9 +640,14 @@ matrix [i][j] = PropArray[j];
     }
     
       
-    public void generateOutput() {
+    public void generateOutput() throws FileNotFoundException, UnsupportedEncodingException {
+        
+        //sort by OGroup
+        getMetTable().getSortOrder().clear();
+        getMetTable().getSortOrder().add(nameColumn);
+        
+        
         for (int i = 0; i<session.getListofDatasets().size(); i++) {
-            
             for (int j = 0; j<session.getListofDatasets().get(i).getListofFiles().size(); j++) {
                 RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
                 System.out.println("File: " + file.getName());
@@ -649,6 +661,68 @@ matrix [i][j] = PropArray[j];
             
         }
         
+        //parse Input Matrix again
+        TsvParserSettings settings = new TsvParserSettings();
+        settings.getFormat().setLineSeparator("\n");
+
+        TsvParser parser = new TsvParser(settings);
+        FileReader reader = new FileReader(session.getReferenceTsv());
+        List<String[]> allRows = parser.parseAll(reader);
+        
+        //get Headers
+        List<String> headers = Arrays.asList(allRows.get(0));
+        headers= new ArrayList<>(headers);
+        
+        
+        //List for convenience
+        List<List<String>> rows = new ArrayList<>();
+        for (int i = 0; i<allRows.size(); i++) {
+            rows.add(new ArrayList<>(Arrays.asList(allRows.get(i))));
+        }
+        
+        
+        
+        
+        
+        
+        PrintWriter printwriter = new PrintWriter("the-file-name.txt", "UTF-8");
+        TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
+        
+        
+        
+        for (int i = 0; i<session.getListofDatasets().size(); i++) {
+            for (int j = 0; j<session.getListofDatasets().get(i).getListofFiles().size(); j++) {
+                RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
+                headers.add(14, file.getName().substring(0, file.getName().length()-6)+ "_Test_Area");
+                int currentline = 1;
+                for (int o = 0; o<session.getListofOGroups().size(); o++) {
+                    for (int s = 0; s<session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
+                        if (session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea() == null) {
+                            rows.get(currentline).add(14,"");
+                            currentline++;
+                        } else {
+                        rows.get(currentline).add(14,Double.toString(session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea()));
+                        currentline++;
+                    }}
+                }
+                
+            }
+            
+        }
+        
+        //back to arrays...
+        for (int i = 1; i<rows.size(); i++) {
+            String[] row = new String[rows.get(i).size()];
+            row = rows.get(i).toArray(row);
+            allRows.set(i, row);
+        }
+        
+        writer.writeHeaders(headers);
+        for (int i = 1; i< rows.size(); i++) {
+            writer.writeRow(rows.get(i).toArray());
+        }
+        
+        writer.close();
     }
  
 }

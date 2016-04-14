@@ -1121,13 +1121,14 @@ public class Slice {
         
         //first step is to find the peak
         //get maximum range
+        if (listofPeaks != null) {
         int min = adduct.getSession().getIntPeakRTTol();
         for (int i = 0; i<listofPeaks.size(); i++) {
             //if smaller than maximum range or already found peak, set peak
             if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
                 min = Math.abs(listofPeaks.get(i).getIndex()-shift);
                 fittedpeak = i;
-                scorepeakfound = 1;
+                    setScorepeakfound(1);
                 //test to see if found or not
              
             }
@@ -1140,23 +1141,51 @@ public class Slice {
             if (fittedpeak==null||i!=fittedpeak) {
                 if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
                     min = Math.abs(listofPeaks.get(i).getIndex()-shift);
-                    scorepeakclose = 1.0/(double)(adduct.getSession().getIntPeakRTTol()+range+1)*min;
+                        setScorepeakclose(1.0/(double)(adduct.getSession().getIntPeakRTTol()+range+1)*min);
                 }
             }
         }
         
-        //System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
-        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  scorepeakfound);
-        
+//        System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
+//        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  getScorepeakfound());
+        }
         
     }
     
     //return the area of the fitted peak, or -1 if no fitted peak
-    public double getfittedArea() {
+    public Double getfittedArea() {
         if (fittedpeak == null) {
-            return (-1);
+            return (null);
         } else {
             return listofPeaks.get(fittedpeak).getArea();
         }  
+    }
+
+    /**
+     * @return the scorepeakfound
+     */
+    public double getScorepeakfound() {
+        return scorepeakfound;
+    }
+
+    /**
+     * @param scorepeakfound the scorepeakfound to set
+     */
+    public void setScorepeakfound(double scorepeakfound) {
+        this.scorepeakfound = scorepeakfound;
+    }
+
+    /**
+     * @return the scorepeakclose
+     */
+    public double getScorepeakclose() {
+        return scorepeakclose;
+    }
+
+    /**
+     * @param scorepeakclose the scorepeakclose to set
+     */
+    public void setScorepeakclose(double scorepeakclose) {
+        this.scorepeakclose = scorepeakclose;
     }
 }

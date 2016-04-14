@@ -36,6 +36,8 @@ public class Entry {
     
     private SimpleDoubleProperty RT;
     private SimpleDoubleProperty Score;
+    private SimpleDoubleProperty Scorepeakfound;
+    private SimpleDoubleProperty Scorepeakclose;
     private IntegerProperty Num;
     private DoubleProperty MZ;
     private IntegerProperty Xn;
@@ -76,6 +78,8 @@ public class Entry {
         this.Ion = new SimpleStringProperty(Ion);
         this.M = new SimpleDoubleProperty(M);
         this.Score = new SimpleDoubleProperty(0);
+        this.Scorepeakclose = new SimpleDoubleProperty(0);
+        this.Scorepeakfound = new SimpleDoubleProperty(0);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
         this.AdductPropArray = new HashMap<RawDataFile, double[]>();
         this.Scores = new HashMap<RawDataFile, Double>();
@@ -91,6 +95,8 @@ public class Entry {
         this.RT = new SimpleDoubleProperty(0);
         this.OGroup = new SimpleIntegerProperty(OGroup);
         this.Score = new SimpleDoubleProperty(0);
+        this.Scorepeakclose = new SimpleDoubleProperty(0);
+        this.Scorepeakfound = new SimpleDoubleProperty(0);
         this.session = session;
         this.OGroupObject=null;
         this.OGroupPropArray = new HashMap<RawDataFile, double[]>();
@@ -239,8 +245,40 @@ public class Entry {
     /**
      * @param Score the Score to set
      */
-    public void setScore(SimpleDoubleProperty Score) {
-        this.Score = Score;
+    public void setScore(SimpleDoubleProperty score) {
+        this.Score = score;
+    }
+    /**
+     * @return the Score
+     */
+    public double getScorepeakfound() {
+        return Scorepeakfound.get();
+    }
+
+    public SimpleDoubleProperty ScorepeakfoundProperty() {
+        return Scorepeakfound;
+    }
+    /**
+     * @param Score the Score to set
+     */
+    public void setScorepeakfound(SimpleDoubleProperty score) {
+        this.Scorepeakfound = score;
+    }
+    /**
+     * @return the Score
+     */
+    public double getScorepeakclose() {
+        return Scorepeakclose.get();
+    }
+
+    public SimpleDoubleProperty ScorepeakcloseProperty() {
+        return Scorepeakclose;
+    }
+    /**
+     * @param Score the Score to set
+     */
+    public void setScorepeakclose(SimpleDoubleProperty score) {
+        this.Scorepeakclose = score;
     }
         /**
      * @return the Num

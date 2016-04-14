@@ -85,9 +85,15 @@
                                 </TreeTableColumn>
                                 <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="...">
                                 </TreeTableColumn>
-                                <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
+                                <TreeTableColumn fx:id="scorepeakfoundColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="PeakFound">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="Scorepeakfound" />
+                                    </cellValueFactory>
                                 </TreeTableColumn>
-                                <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="...">
+                                <TreeTableColumn fx:id="scorepeakcloseColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="PeakClose">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="Scorepeakclose" />
+                                    </cellValueFactory>
                                 </TreeTableColumn>
                                 <TreeTableColumn fx:id="scoreColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="Score">
                                     <cellValueFactory>

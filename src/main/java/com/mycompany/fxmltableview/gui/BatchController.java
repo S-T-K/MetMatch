@@ -332,26 +332,51 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                List<RawDataFile> completeList = session.getAllFiles();
                for (int i =0; i<TVcontroller.getMasterListofOGroups().size(); i++) {
                    double maxScore = 0;
+                   double maxScorepeakclose = 0;
+                   double maxScorepeakfound = 0;
                    for (int f = 0; f<completeList.size(); f++) {
                        if(completeList.get(f).isselected()) {
                        RawDataFile file = completeList.get(f);
                        if (TVcontroller.getMasterListofOGroups().get(i).getScore(file)>maxScore) {
                            maxScore = TVcontroller.getMasterListofOGroups().get(i).getScore(file);
-                       }}
-                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
-                   
-                   
+                       }
+//                       if (TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakfound()>maxScorepeakfound) {
+//                           maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakfound();
+//                       }
+//                       
+//                       if (TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakclose()>maxScorepeakclose) {
+//                       maxScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakclose();
+//                       }
+                       }
                    }
+                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
+                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleDoubleProperty(maxScorepeakclose));
+                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
+                   
+                   
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                        maxScore = 0;
+                       maxScorepeakclose = 0;
+                       maxScorepeakfound = 0;
                    for (int f = 0; f<completeList.size(); f++) {
                        if(completeList.get(f).isselected()) {
                        RawDataFile file = completeList.get(f);
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
                            maxScore = TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
-                       }}
-                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
+                       }
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound()>maxScorepeakfound) {
+                           maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound();
+                       }
+                       
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()>maxScorepeakclose) {
+                       maxScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose();
+                       }
+                       }
                    }
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleDoubleProperty(maxScorepeakclose));
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
+                   System.out.println("Test");
                    }
                    
                    
