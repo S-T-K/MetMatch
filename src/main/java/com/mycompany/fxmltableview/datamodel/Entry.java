@@ -284,7 +284,10 @@ public class Entry {
      * @return the Num
      */
     public int getNum() {
-        return Num.get();
+        if (Num == null) {
+            return 0;
+        } else {
+        return Num.get();}
     }
 
     /**

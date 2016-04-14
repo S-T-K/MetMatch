@@ -50,6 +50,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
@@ -131,11 +132,18 @@ public class Fxml_adductviewController implements Initializable {
             Entry adduct = OGroupItem.getChildren().get(i).getValue();
 
             //Label showing the MZ
-            Label label = new Label(Double.toString(adduct.getMZ()));
-            label.setRotate(270);
+            VBox box = new VBox();
+            String MZ = Double.toString(adduct.getMZ());
+            MZ = MZ.substring(0,MZ.indexOf(".")+5);
+            Label label = new Label("MZ: " + MZ);
+            box.getChildren().add(label);
+            Label label2 = new Label("Ion: " + adduct.getIon());
+            box.getChildren().add(label2);
+            Label label3 = new Label("Xn: " + Double.toString(adduct.getXn()));
+            box.getChildren().add(label3);
 
             //generate graphs
-            gridPane.addRow(i, label);
+            gridPane.addRow(i, box);
             LineChart<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
             gridPane.addColumn(1, linechart1);
             if (showProp) {

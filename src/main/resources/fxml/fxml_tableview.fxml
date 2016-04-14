@@ -73,6 +73,11 @@
                                         <PropertyValueFactory property="OGroup" />
                                     </cellValueFactory>
                                 </TreeTableColumn>
+                        <TreeTableColumn fx:id="numColumn" maxWidth="50.0" minWidth="0.0" prefWidth="0.0" text="Num">
+                           <cellValueFactory>
+                              <PropertyValueFactory property="Num" />
+                           </cellValueFactory>
+                        </TreeTableColumn>
                                 <TreeTableColumn fx:id="rtColumn" maxWidth="400.0" minWidth="50.0" prefWidth="77.0" text="RT">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="RT" />

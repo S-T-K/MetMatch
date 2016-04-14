@@ -101,7 +101,7 @@ public class FXMLTableViewController implements Initializable {
     TreeTableColumn nameColumn;
 
     @FXML
-    TreeTableColumn scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn;
+    TreeTableColumn numColumn, scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn;
 
     @FXML
     TreeTableColumn rtColumn;
@@ -158,6 +158,7 @@ public class FXMLTableViewController implements Initializable {
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
         scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakfound"));
         scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakclose"));
+        numColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("Num"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
        
@@ -264,7 +265,9 @@ public class FXMLTableViewController implements Initializable {
         session.calculateIntPeakRTTol();
         
         getMetTable().getSortOrder().clear();
+        getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
+        
         
           try {
             TitledPane tps = new TitledPane();
@@ -642,9 +645,11 @@ matrix [i][j] = PropArray[j];
       
     public void generateOutput() throws FileNotFoundException, UnsupportedEncodingException {
         
-        //sort by OGroup
+        //sort by OGroup and Num, to get order of Input
         getMetTable().getSortOrder().clear();
-        getMetTable().getSortOrder().add(nameColumn);
+        getMetTable().getSortOrder().add(numColumn);
+         getMetTable().getSortOrder().add(nameColumn);
+        
         
         
         for (int i = 0; i<session.getListofDatasets().size(); i++) {
@@ -723,6 +728,11 @@ matrix [i][j] = PropArray[j];
         }
         
         writer.close();
+        
+        getMetTable().getSortOrder().clear();
+        getMetTable().getSortOrder().add(mzColumn);
+        getMetTable().getSortOrder().add(rtColumn);
+        
     }
  
 }
