@@ -632,6 +632,23 @@ matrix [i][j] = PropArray[j];
         this.datasettocontroller = datasettocontroller;
     }
     
-       
+      
+    public void generateOutput() {
+        for (int i = 0; i<session.getListofDatasets().size(); i++) {
+            
+            for (int j = 0; j<session.getListofDatasets().get(i).getListofFiles().size(); j++) {
+                RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
+                System.out.println("File: " + file.getName());
+                for (int o = 0; o<session.getListofOGroups().size(); o++) {
+                    for (int s = 0; s<session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
+                        System.out.println("OGroup: " + session.getListofOGroups().get(o).getOGroup() + "  Number: " + session.getListofOGroups().get(o).getListofAdducts().get(s).getNum() + "   Area: " + session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea());
+                    }
+                }
+                
+            }
+            
+        }
+        
+    }
  
 }

@@ -473,12 +473,12 @@ public class Entry {
     public void setFittedShift(RawDataFile file, int shift) {
         this.getFittedShift().put(file, shift);
         
-//        for (int i = 0; i<listofAdducts.size(); i++) {
-//        for (Map.Entry<RawDataFile, Slice> entry : listofAdducts.get(i).getListofSlices().entrySet())  {
-//            entry.getValue().setFittedPeak(shift);
-//            
-//        }
-//    }
+        for (int i = 0; i<listofAdducts.size(); i++) {
+        for (Map.Entry<RawDataFile, Slice> entry : listofAdducts.get(i).getListofSlices().entrySet())  {
+            entry.getValue().setFittedPeak(shift);
+            
+        }
+    }
     }
 
     /**

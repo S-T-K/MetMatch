@@ -440,6 +440,8 @@ public class Slice {
 //         }
 //         
 //     }
+
+
      CurveSmooth csm = new CurveSmooth(PropArray);
      PropArray = csm.movingAverage(3);
      PropArray = csm.movingAverage(3);
@@ -464,11 +466,76 @@ public class Slice {
          }
      }
      
-//     for (int i = 0; i<minima[0].length; i++) {
-//         PropArray[(int)minima[0][i]] = 0.3;
-//         
-//     }
-//     
+     for (int i = 0; i<minima[0].length; i++) {
+         PropArray[(int)minima[0][i]] = 0.3;
+         
+     }
+     
+     //now we have an Array with Marks at Max and Min
+     setListofPeaks(new ArrayList<>());
+     int start = 0; 
+    int index = 0;
+    int end = 0;
+     for (int i = 0; i< PropArray.length; i++) {
+         //search for non 0 entry
+        while (PropArray[i]==0) {
+            i++;
+            if (i == (PropArray.length-1)) {
+                break;
+            }
+        }
+        //if Min, mark start
+        if (PropArray[i]==0.3) {
+            PropArray[i]=0;
+            start = i;
+            //if Max, mark index and look for end
+        } else if (PropArray[i]==1) {
+            index = i;
+            i++;
+            //if end of Array
+            if (i==(PropArray.length-1)) {
+            end = i;
+            addPeak(new Peak(index,start,end, this));
+            }
+            //while not at end
+            while (i<PropArray.length-1 && PropArray[i]==0) {
+                i++;
+                //if end of Array
+                if (i==(PropArray.length-1)) {
+            end = i;
+            addPeak(new Peak(index,start,end, this)); 
+            }
+            }
+            //if end found, make peak
+            if (PropArray[i]==0.3) {
+            PropArray[i]=0;
+            end = i;
+            addPeak(new Peak(index,start,end, this));
+            //if another max, split
+            } else if (PropArray[i]==1) {
+                end = (index+i)/2;
+                addPeak(new Peak(index,start,end, this));
+                start = end;
+                i--;
+            } else if (PropArray[i]==0){
+                //do nothing
+            } else {
+                System.out.println("Unexpected value in PropArray");
+            }
+            
+        } else if (PropArray[i]==0){
+            //do nothing
+        } else {
+            System.out.println("Unexpected value in PropArray");
+        }
+        
+      
+        
+         
+     }
+     
+     
+     
      
      //delete array except for region around maxima
 //     int current = 0;
@@ -1049,9 +1116,7 @@ public class Slice {
     
     public void setFittedPeak(int shift) {
         //TODO: range as function of RTTolerance
-        if (adduct.getOGroup()==22) {
-            int ffoo = 0;
-        }
+        fittedpeak = null;
         
         
         //first step is to find the peak
@@ -1084,5 +1149,14 @@ public class Slice {
         System.out.println(adduct.getOGroup() + ":  Score peak found: " +  scorepeakfound);
         
         
+    }
+    
+    //return the area of the fitted peak, or -1 if no fitted peak
+    public double getfittedArea() {
+        if (fittedpeak == null) {
+            return (-1);
+        } else {
+            return listofPeaks.get(fittedpeak).getArea();
+        }  
     }
 }
