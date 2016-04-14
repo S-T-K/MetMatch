@@ -13,6 +13,8 @@ package com.mycompany.fxmltableview.datamodel;
  */
 public class Peak {
     private int index;
+    private int start;
+    private int end;
     private double scale;
     private double SNR;
     private double area;
@@ -28,6 +30,14 @@ public class Peak {
         
     }
 
+    public Peak(int index, int start, int end, Slice slice) {
+        this.index = index;
+        this.start = start;
+        this.end = end;
+        this.slice = slice;
+        
+    }
+    
     /**
      * @return the index
      */

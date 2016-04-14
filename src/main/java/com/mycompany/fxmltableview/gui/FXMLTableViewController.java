@@ -177,7 +177,7 @@ public class FXMLTableViewController implements Initializable {
     "Naïve", "MassSpecWavelet")
 );
         
-        PeakPick.getSelectionModel().select(0);
+
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 session.setPeackPick(PeakPick.getItems().get(newVal.intValue()).toString());
@@ -186,7 +186,7 @@ public class FXMLTableViewController implements Initializable {
             
             
         });
-        
+        PeakPick.getSelectionModel().select(0);
         panelink = new HashMap<>();
         setDatasettocontroller(new HashMap<>());
        

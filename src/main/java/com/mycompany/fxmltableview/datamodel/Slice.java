@@ -434,19 +434,41 @@ public class Slice {
  //generates Array filled with Peak probabilites
  //TODO: negative Maxima
  public void generatePeakArray() {
+//     for (int i = 0; i<PropArray.length; i++) {
+//         if (PropArray[i]<0.2) {
+//             PropArray[i] = 0;
+//         }
+//         
+//     }
      CurveSmooth csm = new CurveSmooth(PropArray);
-     double[][] maxima = csm.getMaximaUnsmoothed();
+     PropArray = csm.movingAverage(3);
+     PropArray = csm.movingAverage(3);
+     PropArray = csm.movingAverage(3);
+     double[][] maxima = csm.getMaximaMovingAverage();
+     double[][] minima = csm.getMinimaMovingAverage();
+     
+     for (int i = 0; i<maxima[0].length; i++) {
+         if (PropArray[(int)maxima[0][i]]<0.2) {
+             maxima[0][i] = -1;
+         }
+     }
+     
      
      for (int i = 0; i<PropArray.length; i++ ) {
          PropArray[i] = 0;
      }
      
      for (int i = 0; i<maxima[0].length; i++) {
+         if (maxima[0][i]>0) {
          PropArray[(int)maxima[0][i]] = 1;
-         
+         }
      }
      
-     
+//     for (int i = 0; i<minima[0].length; i++) {
+//         PropArray[(int)minima[0][i]] = 0.3;
+//         
+//     }
+//     
      
      //delete array except for region around maxima
 //     int current = 0;
