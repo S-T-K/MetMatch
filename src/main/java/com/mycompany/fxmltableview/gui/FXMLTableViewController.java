@@ -116,7 +116,7 @@ public class FXMLTableViewController implements Initializable {
     private Accordion accordion;
 
     @FXML
-    Button addBatchButton;
+    Button addBatchButton, paramButton;
 
     @FXML
     ProgressBar progressbar;
@@ -132,6 +132,9 @@ public class FXMLTableViewController implements Initializable {
     
     @FXML
     ChoiceBox PeakPick;
+    
+    @FXML
+    MenuItem paramMenu;
    
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
@@ -220,7 +223,7 @@ public class FXMLTableViewController implements Initializable {
         setMasterListofOGroups(session.parseReferenceTsv());
         
         //generate additional adducts
-        generateAdducts();
+        //generateAdducts();
 
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
@@ -245,25 +248,16 @@ public class FXMLTableViewController implements Initializable {
         referenceButton.setDisable(true);
         referenceButton.setVisible(false);
         addBatchButton.setDisable(false);
+        addBatchButton.setVisible(true);
         accordion.setVisible(true);
-        label1.setVisible(false);
-        label2.setVisible(false);
-        label3.setVisible(false);
-        label4.setVisible(false);
-        label5.setVisible(false);
-        label6.setVisible(false);
-        label7.setVisible(false);
-        label8.setVisible(false);
-        label9.setVisible(false);
-        box1.setVisible(false);
-        box2.setVisible(false);
-        box3.setVisible(false);
-        RTTol.setVisible(false);
-        MZTol.setVisible(false);
-        SliceMZTol.setVisible(false);
-        Res.setVisible(false);
-        Base.setVisible(false);
-        PeakPick.setVisible(false);
+        setParameterPane(false);
+        RTTol.setDisable(true);
+        MZTol.setDisable(true);
+        SliceMZTol.setDisable(true);
+        Res.setDisable(true);
+        paramMenu.setDisable(false);
+         Base.setDisable(true);
+        PeakPick.setDisable(true);
         session.calculateIntPeakRTTol();
         
         getMetTable().getSortOrder().clear();
@@ -760,4 +754,42 @@ matrix [i][j] = PropArray[j];
       
   }  
  
+  public void showParameters() {
+      setParameterPane(true);
+      accordion.setVisible(false);
+      addBatchButton.setVisible(false);
+      
+  }
+  
+  public void hideParameters() {
+      setParameterPane(false);
+      accordion.setVisible(true);
+      addBatchButton.setVisible(true);
+      
+  }
+  
+  public void setParameterPane(boolean bool) {
+      label1.setVisible(bool);
+        label2.setVisible(bool);
+        label3.setVisible(bool);
+        label4.setVisible(bool);
+        label5.setVisible(bool);
+        label6.setVisible(bool);
+        label7.setVisible(bool);
+        label8.setVisible(bool);
+        label9.setVisible(bool);
+        box1.setVisible(bool);
+        box2.setVisible(bool);
+        box3.setVisible(bool);
+        RTTol.setVisible(bool);
+        MZTol.setVisible(bool);
+        SliceMZTol.setVisible(bool);
+        Res.setVisible(bool);
+        Base.setVisible(bool);
+        PeakPick.setVisible(bool);
+        paramButton.setVisible(bool);
+      
+  }
+  
+  
 }

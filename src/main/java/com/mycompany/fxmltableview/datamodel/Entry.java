@@ -155,15 +155,17 @@ public class Entry {
             System.out.println("Error");
         }
            
+        double [] sliceArray = currentSlice.getPropArray();
+                
             for (int j = 0; j < getSession().getResolution(); j++) {
-                if (currentSlice.getPropArray()[j]+propArray[j]>1){
-                    if (currentSlice.getPropArray()[j]>propArray[j]) {
-                        propArray[j]=propArray[j]*0.1+currentSlice.getPropArray()[j];
+                if (sliceArray[j]+propArray[j]>1){
+                    if (sliceArray[j]>propArray[j]) {
+                        propArray[j]=propArray[j]*0.1+sliceArray[j];
                     } else {
-                        propArray[j]=propArray[j]+currentSlice.getPropArray()[j]*0.1;
+                        propArray[j]=propArray[j]+sliceArray[j]*0.1;
                     }
                 } else {
-                propArray[j] += currentSlice.getPropArray()[j];}
+                propArray[j] += sliceArray[j];}
             }
             getAdductPropArray().put(file, propArray);
         

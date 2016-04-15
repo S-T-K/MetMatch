@@ -151,23 +151,9 @@ public class BatchController implements Initializable {
         colorColumn.setCellValueFactory(new PropertyValueFactory<RawDataFile, Color>("color"));
         colorColumn.setCellFactory(ColorTableCell::new);
         
-        //listener for dataset active checkbox
-        ChangeListener listener = new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        
-                        //TODO: This Listener and the File active listener are interfering 
-                        for (int j = 0; j<3; j++) {
-                     for (int i = 0; i<batch.getListofFiles().size(); i++) {
-                         batch.getListofFiles().get(i).setActive(newValue.booleanValue());
-                         
-                     }
-
-                    }}
-                };
+        
         
         batact.setSelected(true);
-        batact.selectedProperty().addListener(listener);
         
         
         activeColumn.setCellValueFactory(new PropertyValueFactory("active"));
@@ -447,5 +433,14 @@ public void newwindowcalculate() throws IOException, InterruptedException {
      */
     public void setBatact(CheckBox batact) {
         this.batact = batact;
+    }
+    
+    public void batactclick() {
+        boolean val = batact.selectedProperty().get();
+        for (int i = 0; i<batch.getListofFiles().size(); i++) {
+                         batch.getListofFiles().get(i).setActive(val);
+                         
+                     }
+        
     }
 }
