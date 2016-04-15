@@ -325,8 +325,8 @@ public class Slice {
 //caluclated with R MassSpecWavelet
     public void generateWaveletProp() {
         double startc = System.currentTimeMillis();
-        if (getPropArray() == null) {
-            setPropArray(new double[this.IntensityArray.length]);
+        if (PropArray == null) {
+            PropArray = (new double[this.IntensityArray.length]);
             setListofPeaks(new ArrayList<>());
         
             //baseline correct IntensityArray
@@ -371,7 +371,7 @@ public class Slice {
             for (int j = 0; j<ret[0].length; j++) {
                 //101 because of 100 zeros at start and R starts at 1
                 if (((int)ret[0][j]-101)<100) {
-                getPropArray()[(int)ret[0][j]-101]=1;
+                PropArray[(int)ret[0][j]-101]=1;
                 addPeak(new Peak(((int)ret[0][j]-101), ret[1][j], ret[2][j], ret[3][j], this));
             }}
             
@@ -391,8 +391,8 @@ public class Slice {
  public void generateGaussProp() {
      double startc = System.currentTimeMillis();
          //initialize Array holding probabilities
-        if (getPropArray()==null){ 
-        setPropArray(new double[this.IntensityArray.length]);
+        if (PropArray==null){ 
+        PropArray =(new double[this.IntensityArray.length]);
         
         addGaussCorrelation(0.6);
         addGaussCorrelation(0.5);
@@ -443,8 +443,8 @@ public class Slice {
                //and weaken weak signals
                if (corr > 0) {
                    double newcorr = (corr*corr)*asymptoticFunction(IntensityArray[i+peakint]-minIntensity);
-                   if ((getPropArray()[i+peakint]<newcorr)) {
-                       getPropArray()[i+peakint]= newcorr;}
+                   if ((PropArray[i+peakint]<newcorr)) {
+                       PropArray[i+peakint]= newcorr;}
                }
         
         }
@@ -580,19 +580,7 @@ public class Slice {
 //     }
  }
 
-    /**
-     * @return the PropArray
-     */
-    public double[] getPropArray() {
-        return PropArray;
-    }
-
-    /**
-     * @param PropArray the PropArray to set
-     */
-    public void setPropArray(double[] PropArray) {
-        this.PropArray = PropArray;
-    }
+    
     
     
     
@@ -1233,5 +1221,17 @@ public class Slice {
             return 1-((Math.abs((double)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(double)file.getSession().getIntPeakRTTol());
             
         }
+    }
+    
+    //returns list filled with indexes of peaks
+    public List<Integer> getPeakIndex() {
+        List<Integer> list = new ArrayList<>();
+        if (listofPeaks!=null) {
+            for (int i = 0; i<listofPeaks.size(); i++) {
+                list.add(listofPeaks.get(i).getIndex());
+            }
+        }
+        
+        return list;
     }
 }

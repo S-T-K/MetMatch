@@ -141,10 +141,10 @@ public class Entry {
     
     //generates PropArray of a dataset for an Adduct 
     public void generateAdductPropArray(RawDataFile file) {
-        double [] propArray = new double[getSession().getResolution()];
-
+//        double [] propArray = new double[getSession().getResolution()];
+//
         Slice currentSlice = listofSlices.get(file);
-        
+//        
         if (session.getPeackPick().equals("Naïve")) {
             currentSlice.generateGaussProp();
             
@@ -154,44 +154,44 @@ public class Entry {
         } else {
             System.out.println("Error");
         }
-           
-        double [] sliceArray = currentSlice.getPropArray();
-                
-            for (int j = 0; j < getSession().getResolution(); j++) {
-                if (sliceArray[j]+propArray[j]>1){
-                    if (sliceArray[j]>propArray[j]) {
-                        propArray[j]=propArray[j]*0.1+sliceArray[j];
-                    } else {
-                        propArray[j]=propArray[j]+sliceArray[j]*0.1;
-                    }
-                } else {
-                propArray[j] += sliceArray[j];}
-            }
-            getAdductPropArray().put(file, propArray);
-        
-        
-        
+//           
+//        double [] sliceArray = currentSlice.getPropArray();
+//                
+//            for (int j = 0; j < getSession().getResolution(); j++) {
+//                if (sliceArray[j]+propArray[j]>1){
+//                    if (sliceArray[j]>propArray[j]) {
+//                        propArray[j]=propArray[j]*0.1+sliceArray[j];
+//                    } else {
+//                        propArray[j]=propArray[j]+sliceArray[j]*0.1;
+//                    }
+//                } else {
+//                propArray[j] += sliceArray[j];}
+//            }
+//            getAdductPropArray().put(file, propArray);
+//        
+//        
+//        
     }
     
     //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?
     public void generateOGroupPropArray(RawDataFile file) {
         
-        double [] propArray = new double[getSession().getResolution()];
+        //double [] propArray = new double[getSession().getResolution()];
         for (int i = 0; i<listofAdducts.size(); i++) {
             listofAdducts.get(i).generateAdductPropArray(file);
-            for (int j = 0; j<session.getResolution(); j++) {
-                if(listofAdducts.get(i).getAdductPropArray(file)[j]+propArray[j]>1){
-                    if (listofAdducts.get(i).getAdductPropArray(file)[j]>propArray[j]) {
-                        propArray[j]=propArray[j]*0.1+listofAdducts.get(i).getAdductPropArray(file)[j];
-                    } else {
-                        propArray[j]=propArray[j]+listofAdducts.get(i).getAdductPropArray(file)[j]*0.1;
-                    }
-                } else {
-                propArray[j]+=listofAdducts.get(i).getAdductPropArray(file)[j];}
-            
-            
-        }
+//            for (int j = 0; j<session.getResolution(); j++) {
+//                if(listofAdducts.get(i).getAdductPropArray(file)[j]+propArray[j]>1){
+//                    if (listofAdducts.get(i).getAdductPropArray(file)[j]>propArray[j]) {
+//                        propArray[j]=propArray[j]*0.1+listofAdducts.get(i).getAdductPropArray(file)[j];
+//                    } else {
+//                        propArray[j]=propArray[j]+listofAdducts.get(i).getAdductPropArray(file)[j]*0.1;
+//                    }
+//                } else {
+//                propArray[j]+=listofAdducts.get(i).getAdductPropArray(file)[j];}
+//            
+//            
+//        }
         
         //normalize
 //        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
@@ -210,7 +210,7 @@ public class Entry {
 //        }
         
         }
-        getOGroupPropArray().put(file, propArray);
+        //getOGroupPropArray().put(file, propArray);
       
     }
 
@@ -538,7 +538,15 @@ public class Entry {
      * @return the AdductPropArray
      */
     public double[] getAdductPropArray(RawDataFile file) {
-        return getAdductPropArray().get(file);
+        double[] PropArray = new double[session.getResolution()];
+        List<Integer> list = new ArrayList<>();
+        list.addAll(listofSlices.get(file).getPeakIndex());
+        
+        for (int i = 0; i< list.size(); i++) {
+            PropArray[list.get(i)] = 1;
+        }
+        
+        return PropArray;
     }
 
     /**
@@ -552,7 +560,17 @@ public class Entry {
      * @return the OGroupPropArray
      */
     public double[] getOGroupPropArray(RawDataFile file) {
-        return getOGroupPropArray().get(file);
+        double[] PropArray = new double[session.getResolution()];
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i<listofAdducts.size(); i++) {
+        list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
+        }
+        
+        for (int i = 0; i< list.size(); i++) {
+            PropArray[list.get(i)] = 1;
+        }
+        
+        return PropArray;
     }
 
     /**
