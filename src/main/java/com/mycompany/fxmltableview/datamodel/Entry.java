@@ -615,7 +615,8 @@ public class Entry {
     public void setAdductfittedShift(HashMap<RawDataFile, Integer> AdductfittedShift) {
         this.AdductfittedShift = AdductfittedShift;
     }
-      
+
+    
     
     //Comparator to sort List of Entries
     public static class orderbyRT implements Comparator<Entry> {
@@ -663,6 +664,15 @@ public double getminScorepeakclose(RawDataFile file) {
     return min;
 }
 
-
+public double getmaxScoredistance(RawDataFile file) {
+       double max = 0; 
+       for (int i  = 0; i<listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).getListofSlices().get(file).getScoredistance()>max) {
+            max = listofAdducts.get(i).getListofSlices().get(file).getScoredistance();
+        }
+    }
+    return max;  
+}
+      
     
 }

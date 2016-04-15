@@ -1224,4 +1224,14 @@ public class Slice {
     public void setScorepeakclose(double scorepeakclose) {
         this.scorepeakclose = scorepeakclose;
     }
+
+    double getScoredistance() {
+        if (fittedpeak == null) {
+            return 0;
+        } else {
+            //System.out.println((Math.abs((double)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(double)file.getSession().getIntPeakRTTol());
+            return 1-((Math.abs((double)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(double)file.getSession().getIntPeakRTTol());
+            
+        }
+    }
 }

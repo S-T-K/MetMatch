@@ -112,7 +112,7 @@ private String OpacityMode;
         hover.setRadius(2);
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
-      shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close"));
+      shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close", "distance"));
       shiftOpacity.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 setOpacityMode(shiftOpacity.getItems().get(newVal.intValue()).toString());
@@ -127,7 +127,7 @@ private String OpacityMode;
             
             
         });
-        shiftOpacity.getSelectionModel().select(1);
+        shiftOpacity.getSelectionModel().select(0);
       
     }    
     
@@ -377,6 +377,8 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
                         node.setOpacity(nodetoogroup.get(node).getValue().getmaxScorepeakfound(file)+0.02);
                         } else if (OpacityMode.equals("Peak close")) {
                         node.setOpacity(nodetoogroup.get(node).getValue().getminScorepeakclose(file)+0.02);
+                        } else if (OpacityMode.equals("distance")) {
+                            node.setOpacity(nodetoogroup.get(node).getValue().getmaxScoredistance(file)+0.02);
                         }
                         if (file.isselected()){
                         ((Ellipse)node).setFill(Color.RED);
