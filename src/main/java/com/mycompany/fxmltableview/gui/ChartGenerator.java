@@ -50,6 +50,62 @@ import static java.lang.Math.abs;
 import javafx.scene.control.TreeItem;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -208,11 +264,11 @@ public class ChartGenerator {
                 //double endouter = System.currentTimeMillis();
                 //System.out.println("Outer loop norm: " + (endouter-startouter));
 //set Range
-                if (adduct.getOGroupObject().getFittedShift(currentfile) > 0) {
+                if (adduct.getAdductFittedShift(currentfile) > 0) {
                     XYChart.Series newSeries2 = new XYChart.Series();
                     double[] RTArray = adduct.getRTArray();
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(currentfile)], 0));
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(currentfile)], 1));
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 0));
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 1));
                     linechart.getData().add(newSeries2);
                     linechart.applyCss();
                     if (currentfile.isselected()) {
@@ -225,6 +281,24 @@ public class ChartGenerator {
                     adductcontroller.getSeriestofile().put(newSeries2, currentfile);
                     adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
 
+                } else {
+                    XYChart.Series newSeries2 = new XYChart.Series();
+                    double[] RTArray = adduct.getRTArray();
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 0));
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 1));
+                    linechart.getData().add(newSeries2);
+                    linechart.applyCss();
+                    if (currentfile.isselected()) {
+                    paintselectedLine(newSeries2.getNode());
+                }else {
+                ((Path) newSeries2.getNode()).setStroke(currentSlice.getFile().getColor()); 
+                }
+                    ((Path) newSeries2.getNode()).setStrokeWidth(currentfile.getWidth());
+                    ((Path) newSeries2.getNode()).getStrokeDashArray().setAll(1d,15d,1d,15d);
+                    adductcontroller.getSeriestofile().put(newSeries2, currentfile);
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
+
+                    
                 }
             }
         }}}
@@ -457,10 +531,10 @@ public class ChartGenerator {
                 ((Path) newSeries3.getNode()).setStroke(Color.RED);
                 ((Path) newSeries3.getNode()).setStrokeWidth(1.5);
 
-                if (adduct.getOGroupObject().getFittedShift(currentfile) > 0) {
+                if (adduct.getOGroupObject().getOGroupFittedShift(currentfile) > 0) {
                     XYChart.Series newSeries2 = new XYChart.Series();
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(currentfile)], 0));
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getFittedShift(currentfile)], maxProp));
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 0));
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], maxProp));
                     linechart.getData().add(newSeries2);
                     linechart.applyCss();
                     ((Path) newSeries2.getNode()).setStroke(currentfile.getColor());
@@ -503,7 +577,7 @@ public class ChartGenerator {
                 int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
 
                 for (int i = 0; i < list.size(); i++) {
-                    double shift = (list.get(i).getFittedShift(currentfile) - middleint) * shiftiter * 60;
+                    double shift = (list.get(i).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
                     XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
                     newSeries.getData().add(data);
                     if (shift > upper) {
@@ -599,13 +673,13 @@ public class ChartGenerator {
                 double shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
                 int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
 
-                double oshift = (list.get(0).getFittedShift(currentfile) - middleint) * shiftiter * 60;
+                double oshift = (list.get(0).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
                 double oRT = list.get(0).getRT();
                 double nshift;
                 double nRT;
                 
                 for (int i = 1; i < list.size()-1; i++) {
-                    double shift = (list.get(i).getFittedShift(currentfile) - middleint) * shiftiter * 60;
+                    double shift = (list.get(i).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
                     XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
                     
                     Ellipse cir = new Ellipse(1.5,4);
@@ -623,7 +697,13 @@ public class ChartGenerator {
                 cir.setFill(currentfile.getColor());
                 }
                     data.setNode(cir);
-                    data.getNode().setOpacity(list.get(i).getScore(currentfile)+0.02);
+                    if (shiftcontroller.getOpacityMode().equals("Peak found")) {
+                        data.getNode().setOpacity(list.get(i).getmaxScorepeakfound(currentfile)+0.02); 
+                    } else if (shiftcontroller.getOpacityMode().equals("Peak close")) {
+                        data.getNode().setOpacity(list.get(i).getminScorepeakclose(currentfile)+0.02); 
+                    }
+                    
+                    
                     
                     
                     newSeries.getData().add(data);

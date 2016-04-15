@@ -539,11 +539,11 @@ matrix [i][j] = PropArray[j];
                         getMasterListofOGroups().get(i).setFittedShift(currentfile, maxint);
                       
                       //set score for OPGroup
-                        getMasterListofOGroups().get(i).addScore(currentfile,(getMasterListofOGroups().get(i).getOGroupPropArray(currentfile)[getMasterListofOGroups().get(i).getFittedShift(currentfile)]));
+                        getMasterListofOGroups().get(i).addScore(currentfile,(getMasterListofOGroups().get(i).getOGroupPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
                       
                       //set score for every addact
                       for (int a = 0; a<getMasterListofOGroups().get(i).getListofAdducts().size(); a++) {
-                            getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile,(getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getFittedShift(currentfile)]));
+                            getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile,(getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
                       }
                       
                         getMetTable().refresh();
@@ -734,5 +734,7 @@ matrix [i][j] = PropArray[j];
         getMetTable().getSortOrder().add(rtColumn);
         
     }
+    
+    
  
 }

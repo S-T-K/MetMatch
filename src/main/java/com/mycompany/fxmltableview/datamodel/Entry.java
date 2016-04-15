@@ -56,7 +56,8 @@ public class Entry {
     //for peak probability
     private HashMap<RawDataFile, double[]> AdductPropArray;
     private HashMap<RawDataFile, double[]> OGroupPropArray;
-    private HashMap<RawDataFile, Integer> fittedShift;
+    private HashMap<RawDataFile, Integer> OGroupfittedShift;
+    private HashMap<RawDataFile, Integer> AdductfittedShift;
     
     //maxIntensity of all Slices
     private float maxIntensity;
@@ -86,6 +87,7 @@ public class Entry {
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
+        AdductfittedShift = new HashMap<>();
     }
     
    
@@ -100,7 +102,7 @@ public class Entry {
         this.session = session;
         this.OGroupObject=null;
         this.OGroupPropArray = new HashMap<RawDataFile, double[]>();
-        fittedShift = new HashMap<>();
+        OGroupfittedShift = new HashMap<>();
         this.Scores = new HashMap<RawDataFile, Double>();
 
     }
@@ -498,24 +500,35 @@ public class Entry {
     }
 
     /**
-     * @return the fittedShift
+     * @return the OGroupfittedShift
      */
-    public int getFittedShift(RawDataFile file) {
-        if (getFittedShift().containsKey(file)){
-        return getFittedShift().get(file);}
+    public int getOGroupFittedShift(RawDataFile file) {
+        if (Entry.this.getOGroupFittedShift().containsKey(file)){
+        return Entry.this.getOGroupFittedShift().get(file);}
+        else {
+            return 0;
+        }
+    }
+    
+    /**
+     * @return the OGroupfittedShift
+     */
+    public int getAdductFittedShift(RawDataFile file) {
+        if (Entry.this.getAdductfittedShift().containsKey(file)){
+        return Entry.this.getAdductfittedShift().get(file);}
         else {
             return 0;
         }
     }
 
     /**
-     * @param fittedShift the fittedShift to set
+     * @param fittedShift the OGroupfittedShift to set
      */
     public void setFittedShift(RawDataFile file, int shift) {
-        this.getFittedShift().put(file, shift);
+        this.getOGroupFittedShift().put(file, shift);
         
         for (int i = 0; i<listofAdducts.size(); i++) {
-        listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shift);
+        listofAdducts.get(i).getAdductfittedShift().put(file,listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shift));
     }
     }
 
@@ -576,17 +589,31 @@ public class Entry {
     }
 
     /**
-     * @return the fittedShift
+     * @return the OGroupfittedShift
      */
-    public HashMap<RawDataFile, Integer> getFittedShift() {
-        return fittedShift;
+    public HashMap<RawDataFile, Integer> getOGroupFittedShift() {
+        return OGroupfittedShift;
     }
 
     /**
-     * @param fittedShift the fittedShift to set
+     * @param fittedShift the OGroupfittedShift to set
      */
-    public void setFittedShift(HashMap<RawDataFile, Integer> fittedShift) {
-        this.fittedShift = fittedShift;             
+    public void setOGroupFittedShift(HashMap<RawDataFile, Integer> fittedShift) {
+        this.OGroupfittedShift = fittedShift;             
+    }
+
+    /**
+     * @return the AdductfittedShift
+     */
+    public HashMap<RawDataFile, Integer> getAdductfittedShift() {
+        return AdductfittedShift;
+    }
+
+    /**
+     * @param AdductfittedShift the AdductfittedShift to set
+     */
+    public void setAdductfittedShift(HashMap<RawDataFile, Integer> AdductfittedShift) {
+        this.AdductfittedShift = AdductfittedShift;
     }
       
     
@@ -614,5 +641,28 @@ public double getScore(RawDataFile file) {
     return getScores().get(file);
 }
     
+//for Shiftview, returns max over all Adducts in OGroup
+public double getmaxScorepeakfound(RawDataFile file) {
+    double max = 0;
+    for (int i  = 0; i<listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).getListofSlices().get(file).getScorepeakfound()>max) {
+            max = listofAdducts.get(i).getListofSlices().get(file).getScorepeakfound();
+        }
+    }
+    return max;
+}
+
+//for Shiftview, returns min over all Adducts in OGroup
+public double getminScorepeakclose(RawDataFile file) {
+    double min = 1;
+    for (int i  = 0; i<listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).getListofSlices().get(file).getScorepeakclose()<min) {
+            min = listofAdducts.get(i).getListofSlices().get(file).getScorepeakclose();
+        }
+    }
+    return min;
+}
+
+
     
 }

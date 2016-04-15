@@ -27,6 +27,34 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.rosuda.JRI.Rengine;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -1114,7 +1142,7 @@ public class Slice {
         this.MZArray = MZArray;
     }
     
-    public void setFittedPeak(int shift) {
+    public Integer setFittedPeak(int shift) {
         //TODO: range as function of RTTolerance
         fittedpeak = null;
         
@@ -1146,10 +1174,18 @@ public class Slice {
             }
         }
         
+        
+        
 //        System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
 //        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  getScorepeakfound());
         }
         
+        if (fittedpeak == null) {
+            return 0;
+            
+        } else {
+            return listofPeaks.get(fittedpeak).getIndex();
+        }
     }
     
     //return the area of the fitted peak, or -1 if no fitted peak

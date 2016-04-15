@@ -31,16 +31,7 @@
             </ContextMenu>
          </contextMenu>
       </ScrollPane>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="32.0" stroke="#0000002a" strokeType="INSIDE" width="1020.0">
-         <fill>
-            <LinearGradient endX="1.0" endY="1.0" startX="1.0">
-               <stops>
-                  <Stop color="TRANSPARENT" />
-                  <Stop color="#d7d7d7" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </fill>
-      </Rectangle>
+      <ToolBar prefHeight="33.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Button fx:id="previousButton" layoutX="2.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#previous" text="&lt;" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0" />
       <Button fx:id="nextButton" layoutX="574.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#next" text="&gt;" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
       <Button layoutX="72.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />

@@ -26,10 +26,13 @@ import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -43,6 +46,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -81,6 +85,9 @@ public class Fxml_shiftviewController implements Initializable {
     @FXML 
     Button button;
     
+    @FXML
+    ChoiceBox shiftOpacity;
+    
     //Keep references to Properties and Listeners to be able to delete them
     private HashMap<ChangeListener, Property> listeners;
     private HashMap<ListChangeListener, ObservableList> listlisteners;
@@ -92,6 +99,7 @@ public class Fxml_shiftviewController implements Initializable {
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
     private HashMap<Ellipse,TreeItem<Entry>> nodetoogroup;
 private DropShadow hover = new DropShadow();
+private String OpacityMode;
     /**
      * Initializes the controller class.
      */
@@ -104,6 +112,22 @@ private DropShadow hover = new DropShadow();
         hover.setRadius(2);
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
+      shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close"));
+      shiftOpacity.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue ov, Number value, Number newVal) {
+                setOpacityMode(shiftOpacity.getItems().get(newVal.intValue()).toString());
+                //Fire Event to change Opacity immediately
+                if (filetoseries!=null){
+                    for (RawDataFile file : filetoseries.keySet()) {
+                        Node node = ((XYChart.Data)filetoseries.get(file).get(0).getData().get(0)).getNode();
+                        Event.fireEvent((EventTarget) node, new MouseEvent(MouseEvent.MOUSE_EXITED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true, true, true, true, true, true, true, null));
+                    } 
+             }}
+            
+            
+            
+        });
+        shiftOpacity.getSelectionModel().select(1);
       
     }    
     
@@ -349,7 +373,11 @@ for(int k =0; k<list.get(j).getData().size(); k++) {
                     if (list.get(i).getNode() == null) {
                         for (int j = 0; j<list.get(i).getData().size(); j++) {
                         Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
-                        node.setOpacity(nodetoogroup.get(node).getValue().getScore(file));
+                        if (OpacityMode.equals("Peak found")) {
+                        node.setOpacity(nodetoogroup.get(node).getValue().getmaxScorepeakfound(file)+0.02);
+                        } else if (OpacityMode.equals("Peak close")) {
+                        node.setOpacity(nodetoogroup.get(node).getValue().getminScorepeakclose(file)+0.02);
+                        }
                         if (file.isselected()){
                         ((Ellipse)node).setFill(Color.RED);
                         } else {
@@ -489,5 +517,19 @@ getSupercontroller().getDatasettocontroller().get(file.getDataset()).changedFile
     public void setSession(Session session) {
         this.session = session;
         this.chartGenerator.setSession(session);
+    }
+
+    /**
+     * @return the OpacityMode
+     */
+    public String getOpacityMode() {
+        return OpacityMode;
+    }
+
+    /**
+     * @param OpacityMode the OpacityMode to set
+     */
+    public void setOpacityMode(String OpacityMode) {
+        this.OpacityMode = OpacityMode;
     }
 }
