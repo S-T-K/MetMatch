@@ -298,12 +298,12 @@ System.out.println("Complete Extraction: " + (end-start));
         List<Entry> list = session.getListofOGroups();
         for (int i = 0; i<list.size(); i++) {
             list.get(i).getScores().remove(this);
-            list.get(i).getOGroupPropArray().remove(this);
+            //list.get(i).getOGroupPropArray().remove(this);
             list.get(i).getOGroupFittedShift().remove(this);
             for (int j =0; j<list.get(i).getListofAdducts().size(); j++) {
                 list.get(i).getListofAdducts().get(j).getListofSlices().remove(this);
                 list.get(i).getListofAdducts().get(j).getScores().remove(this);
-                list.get(i).getListofAdducts().get(j).getAdductPropArray().remove(this);
+                //list.get(i).getListofAdducts().get(j).getAdductPropArray().remove(this);
                 
             }
         }

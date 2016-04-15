@@ -54,8 +54,6 @@ public class Entry {
     
     
     //for peak probability
-    private HashMap<RawDataFile, double[]> AdductPropArray;
-    private HashMap<RawDataFile, double[]> OGroupPropArray;
     private HashMap<RawDataFile, Integer> OGroupfittedShift;
     private HashMap<RawDataFile, Integer> AdductfittedShift;
     
@@ -82,7 +80,7 @@ public class Entry {
         this.Scorepeakclose = new SimpleDoubleProperty(0);
         this.Scorepeakfound = new SimpleDoubleProperty(0);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
-        this.AdductPropArray = new HashMap<RawDataFile, double[]>();
+
         this.Scores = new HashMap<RawDataFile, Double>();
         this.session=session;
         this.OGroupObject=ogroup;
@@ -101,7 +99,7 @@ public class Entry {
         this.Scorepeakfound = new SimpleDoubleProperty(0);
         this.session = session;
         this.OGroupObject=null;
-        this.OGroupPropArray = new HashMap<RawDataFile, double[]>();
+
         OGroupfittedShift = new HashMap<>();
         this.Scores = new HashMap<RawDataFile, Double>();
 
@@ -549,13 +547,7 @@ public class Entry {
         return PropArray;
     }
 
-    /**
-     * @param AdductPropArray the AdductPropArray to set
-     */
-    public void setAdductPropArray(HashMap<RawDataFile, double[]> AdductPropArray) {
-        this.AdductPropArray = AdductPropArray;
-    }
-
+   
     /**
      * @return the OGroupPropArray
      */
@@ -573,12 +565,7 @@ public class Entry {
         return PropArray;
     }
 
-    /**
-     * @param OGroupPropArray the OGroupPropArray to set
-     */
-    public void setOGroupPropArray(HashMap<RawDataFile, double[]> OGroupPropArray) {
-        this.OGroupPropArray = OGroupPropArray;
-    }
+    
 
     /**
      * @return the Scores
@@ -594,19 +581,7 @@ public class Entry {
         this.Scores = Scores;
     }
 
-    /**
-     * @return the AdductPropArray
-     */
-    public HashMap<RawDataFile, double[]> getAdductPropArray() {
-        return AdductPropArray;
-    }
-
-    /**
-     * @return the OGroupPropArray
-     */
-    public HashMap<RawDataFile, double[]> getOGroupPropArray() {
-        return OGroupPropArray;
-    }
+   
 
     /**
      * @return the OGroupfittedShift

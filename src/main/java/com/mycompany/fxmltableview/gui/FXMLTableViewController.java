@@ -256,8 +256,7 @@ public class FXMLTableViewController implements Initializable {
         SliceMZTol.setDisable(true);
         Res.setDisable(true);
         paramMenu.setDisable(false);
-         Base.setDisable(true);
-        PeakPick.setDisable(true);
+        
         session.calculateIntPeakRTTol();
         
         getMetTable().getSortOrder().clear();

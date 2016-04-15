@@ -382,6 +382,7 @@ public class Slice {
         //engine.end();
         
 }
+        PropArray = null;
         System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
     
@@ -400,6 +401,7 @@ public class Slice {
         
         }
         generatePeakArray();
+        PropArray = null;
         //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
  
