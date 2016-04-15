@@ -331,33 +331,35 @@ public void newwindowcalculate() throws IOException, InterruptedException {
             public Void call() throws InterruptedException {
                List<RawDataFile> completeList = session.getAllFiles();
                for (int i =0; i<TVcontroller.getMasterListofOGroups().size(); i++) {
-                   double maxScore = 0;
-                   double maxScorepeakclose = 0;
-                   double maxScorepeakfound = 0;
-                   for (int f = 0; f<completeList.size(); f++) {
-                       if(completeList.get(f).isselected()) {
-                       RawDataFile file = completeList.get(f);
-                       if (TVcontroller.getMasterListofOGroups().get(i).getScore(file)>maxScore) {
-                           maxScore = TVcontroller.getMasterListofOGroups().get(i).getScore(file);
-                       }
-//                       if (TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakfound()>maxScorepeakfound) {
-//                           maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakfound();
+//                   double maxScore = 0;
+//                   double maxScorepeakclose = 0;
+//                   double maxScorepeakfound = 0;
+//                   for (int f = 0; f<completeList.size(); f++) {
+//                       if(completeList.get(f).isselected()) {
+//                       RawDataFile file = completeList.get(f);
+//                       if (TVcontroller.getMasterListofOGroups().get(i).getScore(file)>maxScore) {
+//                           maxScore = TVcontroller.getMasterListofOGroups().get(i).getScore(file);
 //                       }
-//                       
-//                       if (TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakclose()>maxScorepeakclose) {
-//                       maxScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakclose();
+////                       if (TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakfound()>maxScorepeakfound) {
+////                           maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakfound();
+////                       }
+////                       
+////                       if (TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakclose()>maxScorepeakclose) {
+////                       maxScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofSlices().get(file).getScorepeakclose();
+////                       }
 //                       }
-                       }
-                   }
-                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
-                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleDoubleProperty(maxScorepeakclose));
-                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
-                   
+//                   }
+//                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
+//                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleDoubleProperty(maxScorepeakclose));
+//                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
+                   double omaxScore = 0;
+                       double ominScorepeakclose = 1;
+                       double omaxScorepeakfound = 0;
                    
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
-                       maxScore = 0;
-                       maxScorepeakclose = 0;
-                       maxScorepeakfound = 0;
+                       double maxScore = 0;
+                       double minScorepeakclose = 0;
+                       double maxScorepeakfound = 0;
                    for (int f = 0; f<completeList.size(); f++) {
                        if(completeList.get(f).isselected()) {
                        RawDataFile file = completeList.get(f);
@@ -368,16 +370,33 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                            maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound();
                        }
                        
-                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()>maxScorepeakclose) {
-                       maxScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose();
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()>minScorepeakclose) {
+                       minScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose();
                        }
                        }
                    }
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
-                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleDoubleProperty(maxScorepeakclose));
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleDoubleProperty(minScorepeakclose));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
                    System.out.println("Test");
+                   
+                   if (maxScore>omaxScore) {
+                       omaxScore = maxScore;
                    }
+                   if(minScorepeakclose<ominScorepeakclose) {
+                       ominScorepeakclose=minScorepeakclose;
+                   }
+                   if (maxScorepeakfound>omaxScorepeakfound) {
+                       omaxScorepeakfound=maxScorepeakfound;
+                   }
+                   
+                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(omaxScore));
+                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleDoubleProperty(ominScorepeakclose));
+                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleDoubleProperty(omaxScorepeakfound));
+                   
+                   }
+                   
+                   
                    
                    
                }

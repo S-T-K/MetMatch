@@ -515,10 +515,7 @@ public class Entry {
         this.getFittedShift().put(file, shift);
         
         for (int i = 0; i<listofAdducts.size(); i++) {
-        for (Map.Entry<RawDataFile, Slice> entry : listofAdducts.get(i).getListofSlices().entrySet())  {
-            entry.getValue().setFittedPeak(shift);
-            
-        }
+        listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shift);
     }
     }
 

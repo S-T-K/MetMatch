@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.chart.*?>
 <?import java.lang.*?>
@@ -10,7 +12,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_adductviewController">
    <children>
-      <ScrollPane fx:id="scrollPane" prefHeight="400.0" prefViewportHeight="400.0" prefViewportWidth="600.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fx:id="scrollPane" layoutY="32.0" prefHeight="368.0" prefViewportHeight="400.0" prefViewportWidth="600.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
          <content>
             <GridPane fx:id="gridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <columnConstraints>
@@ -29,7 +31,20 @@
             </ContextMenu>
          </contextMenu>
       </ScrollPane>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="32.0" stroke="#0000002a" strokeType="INSIDE" width="1020.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0" startX="1.0">
+               <stops>
+                  <Stop color="TRANSPARENT" />
+                  <Stop color="#d7d7d7" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
       <Button fx:id="previousButton" layoutX="2.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#previous" text="&lt;" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0" />
       <Button fx:id="nextButton" layoutX="574.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#next" text="&gt;" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+      <Button layoutX="72.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
+      <Button layoutX="103.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
+      <Button layoutX="134.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
    </children>
 </AnchorPane>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.chart.*?>
 <?import java.lang.*?>
@@ -10,6 +12,16 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_shiftviewController">
    <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="33.0" stroke="#0000002a" strokeType="INSIDE" width="1030.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0" startX="1.0">
+               <stops>
+                  <Stop color="TRANSPARENT" />
+                  <Stop color="#d7d7d7" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
       <VBox fx:id="box" prefHeight="311.0" prefWidth="802.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="button" mnemonicParsing="false" onAction="#recalculate" prefHeight="33.0" prefWidth="126.0" text="Recalculate">
