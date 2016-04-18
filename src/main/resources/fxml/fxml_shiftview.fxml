@@ -21,7 +21,7 @@
                </graphic>
             </Button>
             <ChoiceBox fx:id="shiftOpacity" prefHeight="28.0" prefWidth="126.0" />
-            <ToggleButton maxWidth="28.0" minWidth="28.0" mnemonicParsing="false" onAction="#togglePenaltySelection" prefHeight="28.0" prefWidth="28.0">
+            <ToggleButton fx:id="togglePenaltySelectionButton" maxWidth="28.0" minWidth="28.0" mnemonicParsing="false" onAction="#togglePenaltySelection" prefHeight="28.0" prefWidth="28.0">
                <graphic>
                   <ImageView fx:id="PenSelectionImage" blendMode="MULTIPLY" fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                      <image>

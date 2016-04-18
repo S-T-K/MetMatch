@@ -403,4 +403,50 @@ public class Session {
         this.peakPickchanged = peakPickchanged;
         System.out.println("Peak pick changed: " + peakPickchanged);
     }
+    
+    public void addPenalty(double startX, double startY, double endX, double endY) {
+        List<RawDataFile> list = getSelectedFiles();
+        double[] PenArray;
+        
+        //make sure start is smaller than end
+        if (startX>endX) {
+            double temp = startX;
+            startX = endX;
+            endX = temp;
+        }
+        
+        if (startY>endY) {
+            double temp = startY;
+            startY = endY;
+            endY = temp;
+        }
+        
+        
+        //calculate Shift interval
+        int middle = (int)((double)resolution.getValue()-1)/2;
+        double interval = RTTolerance.doubleValue()*2/resolution.getValue()*60;
+        int start = (int) (startY/interval)+middle;
+        int end = (int) (endY/interval)+middle;
+        
+        
+        
+        for (int i = 0; i<listofOGroups.size(); i++) {
+            if (listofOGroups.get(i).getRT()>=startX && listofOGroups.get(i).getRT()<=endX){
+                for (int j = 0; j< list.size(); j++) {
+                    if (listofOGroups.get(i).getPenArray().containsKey(list.get(j))) {
+                        PenArray = listofOGroups.get(i).getPenArray().get(list.get(j));
+                    } else {
+                        PenArray = new double[resolution.getValue()];
+                    }
+                    for (int k = start; k<=end; k++) {
+                        if(k>0 && k<PenArray.length) {
+                        PenArray[k]+=-100;
+                    }}
+                    listofOGroups.get(i).getPenArray().put(list.get(j), PenArray);
+                }
+                
+            }
+        }
+        
+    }
 }

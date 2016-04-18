@@ -52,6 +52,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.effect.DropShadow;
@@ -96,6 +97,9 @@ public class Fxml_shiftviewController implements Initializable {
     @FXML
     ImageView PenSelectionImage;
 
+    @FXML
+    ToggleButton togglePenaltySelectionButton;
+            
     private boolean penSelection = false;
     private Rectangle select;
     ObjectProperty<Point2D> anchor;
@@ -226,6 +230,11 @@ public class Fxml_shiftviewController implements Initializable {
     }
 
     public void recalculate() throws IOException, InterruptedException {
+        
+        if (penSelection) {
+            togglePenaltySelectionButton.fire();
+        }
+        
         CountDownLatch latch = new CountDownLatch(1);
         Task task = new Task<Void>() {
             @Override
@@ -237,9 +246,10 @@ public class Fxml_shiftviewController implements Initializable {
         };
         new Thread(task).start();
         latch.await();
-
-        ScatterChart<Number, Number> scatterchart = chartGenerator.generateScatterShiftChart(olist);
-        box.getChildren().remove(box.getChildren().size() - 1);
+        
+        box.getChildren().remove(scatterchart);
+        scatterchart = chartGenerator.generateScatterShiftChart(olist);
+        
         box.getChildren().add(scatterchart);
 
         Set<XYChart.Series> set = seriestofile.keySet();
@@ -615,12 +625,13 @@ startY = scatterchart.getYAxis().getValueForDisplay(event.getY()).doubleValue();
                 endX = scatterchart.getXAxis().getValueForDisplay(event.getX()).doubleValue(); 
                 endY = scatterchart.getYAxis().getValueForDisplay(event.getY()).doubleValue();
                 System.out.println(endX + "   " + endY);
+                session.addPenalty(startX, startY, endX, endY);
                 }
             });
 
             //disable Handlers
         } else {
-            Node chartBackground = scatterchart.lookup(".chart-plot-background");
+            Node chartBackground = box.getParent();
             chartBackground.setOnMousePressed(null);
             chartBackground.setOnMouseDragged(null);
             chartBackground.setOnMouseReleased(null);

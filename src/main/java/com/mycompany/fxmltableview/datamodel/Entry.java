@@ -580,6 +580,7 @@ public class Entry {
         list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
         }
         
+        
         for (int i = 0; i< list.size(); i++) {
             PropArray[list.get(i)] = 1;
             //change values within tolerance
@@ -597,6 +598,13 @@ public class Entry {
             }
         }
         
+        if (getPenArray().containsKey(file)) {
+            double[] PenArr = getPenArray().get(file);
+            for (int i = 0; i<PenArr.length; i++) {
+                PropArray[i]+=PenArr[i];
+            }
+            
+        }
         return PropArray;
     }
 
@@ -644,6 +652,20 @@ public class Entry {
      */
     public void setAdductfittedShift(HashMap<RawDataFile, Integer> AdductfittedShift) {
         this.AdductfittedShift = AdductfittedShift;
+    }
+
+    /**
+     * @return the PenArray
+     */
+    public HashMap<RawDataFile, double[]> getPenArray() {
+        return PenArray;
+    }
+
+    /**
+     * @param PenArray the PenArray to set
+     */
+    public void setPenArray(HashMap<RawDataFile, double[]> PenArray) {
+        this.PenArray = PenArray;
     }
 
     
