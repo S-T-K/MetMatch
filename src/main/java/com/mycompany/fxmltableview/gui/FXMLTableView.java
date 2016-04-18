@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import static javafx.application.Application.launch;
 import javafx.scene.layout.Pane;
 import static javafx.application.Application.launch;
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 public class FXMLTableView extends Application {
@@ -30,7 +32,14 @@ public class FXMLTableView extends Application {
         //get reference to controller
         FXMLTableViewController controller = loader.<FXMLTableViewController>getController();
        
-        
+        //on close
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+     
+                            
+                            public void handle(WindowEvent we) {
+          controller.close();
+      }
+  }); 
         
         
         

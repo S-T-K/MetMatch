@@ -550,6 +550,7 @@ public class Entry {
    
     /**
      * @return the OGroupPropArray
+     * with only 1 and 0
      */
     public double[] getOGroupPropArray(RawDataFile file) {
         double[] PropArray = new double[session.getResolution()];
@@ -560,6 +561,34 @@ public class Entry {
         
         for (int i = 0; i< list.size(); i++) {
             PropArray[list.get(i)] = 1;
+        }
+        
+        return PropArray;
+    }
+    
+    //returns a "smooth" PropArray
+    public double[] getOGroupPropArraySmooth(RawDataFile file) {
+        double[] PropArray = new double[session.getResolution()];
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i<listofAdducts.size(); i++) {
+        list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
+        }
+        
+        for (int i = 0; i< list.size(); i++) {
+            PropArray[list.get(i)] = 1;
+            //change values within tolerance
+            for (int j = 1; j<=session.getIntPeakRTTol(); j++) {
+                //calculate the value
+                double value = 1*((double)session.getIntPeakRTTol()-j)/(double)session.getIntPeakRTTol();
+                
+                //check for borders and insert new value of old value is smaller
+                if((list.get(i)-j)>0&&PropArray[list.get(i)-j]<value) {
+                    PropArray[list.get(i)-j]=value;
+                }
+                if ((list.get(i)+j)<PropArray.length&&PropArray[list.get(i)+j]<value) {
+                    PropArray[list.get(i)+j]=value;
+                }
+            }
         }
         
         return PropArray;

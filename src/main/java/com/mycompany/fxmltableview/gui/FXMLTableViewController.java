@@ -314,7 +314,9 @@ public class FXMLTableViewController implements Initializable {
                         controller.print();
                         stage.show();
                         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-      public void handle(WindowEvent we) {
+     
+                            
+                            public void handle(WindowEvent we) {
           controller.close();
       }
   }); 
@@ -787,6 +789,12 @@ matrix [i][j] = PropArray[j];
         Base.setVisible(bool);
         PeakPick.setVisible(bool);
         paramButton.setVisible(bool);
+      
+  }
+  
+  //when closing the window, end all running processes, such as Rengine
+  public void close() {
+      session.getEngine().end();
       
   }
   

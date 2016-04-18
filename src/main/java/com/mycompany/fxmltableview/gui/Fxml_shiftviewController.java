@@ -263,6 +263,7 @@ private String OpacityMode;
                                 //node.setEffect(hover);
                                 
                                 ((Ellipse) node).setFill(Color.RED);
+                                node.toFront();
                             }
                         }
                     } else {
