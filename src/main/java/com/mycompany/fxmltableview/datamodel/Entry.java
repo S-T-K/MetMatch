@@ -58,7 +58,7 @@ public class Entry {
     private HashMap<RawDataFile, Integer> AdductfittedShift;
     
     //for penalties and bonuses in certain regions
-    private double[] PenArray;
+    private HashMap<RawDataFile, double[]> PenArray;
     
     //maxIntensity of all Slices
     private float maxIntensity;
@@ -106,7 +106,7 @@ public class Entry {
         OGroupfittedShift = new HashMap<>();
         this.Scores = new HashMap<RawDataFile, Double>();
         
-        PenArray = new double[session.getResolution()];
+        PenArray = new HashMap<RawDataFile, double[]>();
 
     }
     

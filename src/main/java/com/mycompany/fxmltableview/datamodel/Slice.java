@@ -46,7 +46,6 @@ public class Slice {
     private List<Float> intensityList = new ArrayList<Float>();
     private List<Float> massList = new ArrayList<Float>();
     private PolynomialSplineFunction intensityFunction;
-    private PolynomialSplineFunction mzFunction;
     private float minIntensity;
     private float maxIntensity;
     private List<Peak> listofPeaks;
@@ -290,7 +289,6 @@ public class Slice {
        LinearInterpolator interpolator = new LinearInterpolator();
        
        this.intensityFunction = interpolator.interpolate(RT, Intensity);
-     this.mzFunction = interpolator.interpolate(RT, MZ);
     }
     
     
@@ -807,7 +805,6 @@ public class Slice {
     this.intensityList = null;
     this.intensityFunction = null;
     this.massList = null;
-    this.mzFunction = null;
     this.retentionTimeList = null;
      
     }
