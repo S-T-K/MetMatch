@@ -27,33 +27,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.rosuda.JRI.Rengine;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
+
 import static java.lang.Math.abs;
 
 /**
@@ -78,7 +52,6 @@ public class Slice {
     private List<Peak> listofPeaks;
     private Integer fittedpeak;
     
-    private double scorepeakfound = 0;
     private double scorepeakclose = 1;
    
     private Entry adduct;
@@ -323,7 +296,7 @@ public class Slice {
     
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
-    public void generateWaveletProp() {
+    public void WaveletPeakPicking() {
         double startc = System.currentTimeMillis();
         if (PropArray == null) {
             PropArray = (new double[this.IntensityArray.length]);
@@ -389,7 +362,7 @@ public class Slice {
     
     
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
- public void generateGaussProp() {
+ public void NaivePeakPicking() {
      double startc = System.currentTimeMillis();
          //initialize Array holding probabilities
         if (PropArray==null){ 
@@ -791,15 +764,43 @@ public class Slice {
       
      
       
-      //fill Arrays
+      //fill Intensity Array
       for (int i = 0; i< resolution; i++) {
            try { getIntensityArray()[i]=getIntensityFunction().value(getRTArray()[i]);
-            getMZArray()[i] = mzFunction.value(getRTArray()[i]); }
+            }
            catch (OutOfRangeException e) {
                getIntensityArray()[i] = 0;
-               getMZArray()[i] = 0;
+               
            }
       }
+      
+      //fill MZArray
+      //get half of delta
+      double RTdeltah = (adduct.getOGroupObject().getRTArray()[1]-adduct.getOGroupObject().getRTArray()[0])/2;
+      int RT = 0;
+      int values = 0;
+      //for all M/Z values
+      for (int i = 0; i<massList.size(); i++) {
+          //if M/Z is greater than 0
+          if (massList.get(i)>0) {
+              //while not correct bin
+              while(retentionTimeList.get(i)>adduct.getOGroupObject().getRTArray()[RT]+RTdeltah) {
+                  if (values>0) {
+                      MZArray[RT]=MZArray[RT]/values;
+                  }
+                  RT++;
+                  values = 0;
+              }
+              MZArray[RT]+=massList.get(i);
+              values++;  
+          }
+
+      }
+      
+      if (values>0) {
+                      MZArray[RT]=MZArray[RT]/values;
+                  }
+   
     
      
      //delete originals
@@ -1146,7 +1147,7 @@ public class Slice {
             if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
                 min = Math.abs(listofPeaks.get(i).getIndex()-shift);
                 fittedpeak = i;
-                    setScorepeakfound(1);
+                    
                 //test to see if found or not
              
             }
@@ -1159,7 +1160,7 @@ public class Slice {
             if (fittedpeak==null||i!=fittedpeak) {
                 if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
                     min = Math.abs(listofPeaks.get(i).getIndex()-shift);
-                        setScorepeakclose(1.0/(double)(adduct.getSession().getIntPeakRTTol()+range+1)*min);
+                        setScorepeakclose((1.0/(double)(adduct.getSession().getIntPeakRTTol()+range+1))*min);
                 }
             }
         }
@@ -1191,15 +1192,15 @@ public class Slice {
      * @return the scorepeakfound
      */
     public double getScorepeakfound() {
-        return scorepeakfound;
+        if (fittedpeak!=null) {
+            return 1;
+        } else {
+            return 0;
+        }
+        
     }
 
-    /**
-     * @param scorepeakfound the scorepeakfound to set
-     */
-    public void setScorepeakfound(double scorepeakfound) {
-        this.scorepeakfound = scorepeakfound;
-    }
+    
 
     /**
      * @return the scorepeakclose

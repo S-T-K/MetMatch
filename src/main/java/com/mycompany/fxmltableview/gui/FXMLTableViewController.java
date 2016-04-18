@@ -120,22 +120,25 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     ProgressBar progressbar;
-    
+
     @FXML
     TextField RTTol, MZTol, SliceMZTol, Res, Base;
-    
+
     @FXML
     Label label1, label2, label3, label4, label5, label6, label7, label8, label9;
-    
+
     @FXML
     Rectangle box1, box2, box3;
-    
+
     @FXML
     ChoiceBox PeakPick;
-    
+
     @FXML
     MenuItem paramMenu;
-   
+
+    //Check for changed parameters
+    String oldPick;
+    String oldBase;
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
     private ObservableList<Entry> MasterListofOGroups;
@@ -143,9 +146,8 @@ public class FXMLTableViewController implements Initializable {
     //current session, storing all information
     Session session;
     FXGraphics2D test;
-    HashMap<TitledPane,Dataset> panelink;
-    private HashMap<Dataset,BatchController> datasettocontroller;
-   
+    HashMap<TitledPane, Dataset> panelink;
+    private HashMap<Dataset, BatchController> datasettocontroller;
 
     //number of current batches, as an index
     int batchcount;
@@ -153,9 +155,7 @@ public class FXMLTableViewController implements Initializable {
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
-        
-        
+
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
@@ -164,7 +164,6 @@ public class FXMLTableViewController implements Initializable {
         numColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("Num"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
-       
 
         //highlight the Button, can't be done the normal way
         Platform.runLater(new Runnable() {
@@ -177,7 +176,7 @@ public class FXMLTableViewController implements Initializable {
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
-        
+
         //Parameters
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
         MZTol.textProperty().bindBidirectional(session.getMZTolProp(), new NumberStringConverter());
@@ -185,27 +184,22 @@ public class FXMLTableViewController implements Initializable {
         Res.textProperty().bindBidirectional(session.getResProp(), new NumberStringConverter());
         Base.textProperty().bindBidirectional(session.getBaseProp(), new NumberStringConverter());
         PeakPick.setItems(FXCollections.observableArrayList(
-    "Naïve", "MassSpecWavelet")
-);
-        
+                "Naïve", "MassSpecWavelet")
+        );
 
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 session.setPeackPick(PeakPick.getItems().get(newVal.intValue()).toString());
             }
-            
-            
-            
+
         });
         PeakPick.getSelectionModel().select(0);
         panelink = new HashMap<>();
         setDatasettocontroller(new HashMap<>());
-       
 
         //set batchcount to 0,
         batchcount = 0;
 
-        
     }
 
     //Open File Chooser for Data Matrix
@@ -221,10 +215,9 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         setMasterListofOGroups(session.parseReferenceTsv());
-        
+
         //generate additional adducts
         //generateAdducts();
-
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
 
@@ -241,8 +234,7 @@ public class FXMLTableViewController implements Initializable {
             }
 
         }
-        
-      
+
         getMetTable().setRoot(superroot);
         getMetTable().setShowRoot(false);
         referenceButton.setDisable(true);
@@ -256,17 +248,16 @@ public class FXMLTableViewController implements Initializable {
         SliceMZTol.setDisable(true);
         Res.setDisable(true);
         paramMenu.setDisable(false);
-        
+
         session.calculateIntPeakRTTol();
-        
+
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
-        
-        
-          try {
+
+        try {
             TitledPane tps = new TitledPane();
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             //loader.setRoot(tps);
             Reference reference = new Reference();
@@ -281,9 +272,7 @@ public class FXMLTableViewController implements Initializable {
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
-          
-           
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -295,7 +284,6 @@ public class FXMLTableViewController implements Initializable {
                 if (event.getClickCount() == 2) {
 
                     try {
-
 
                         //create new window
                         Stage stage = new Stage();
@@ -314,12 +302,11 @@ public class FXMLTableViewController implements Initializable {
                         controller.print();
                         stage.show();
                         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-     
-                            
+
                             public void handle(WindowEvent we) {
-          controller.close();
-      }
-  }); 
+                                controller.close();
+                            }
+                        });
 
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -331,14 +318,12 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
-    
-
     //add a new batch
     public void addBatch() {
-        
+
         try {
             TitledPane tps = new TitledPane();
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             //loader.setRoot(tps);
             Batch batch = new Batch(batchcount);
@@ -353,81 +338,76 @@ public class FXMLTableViewController implements Initializable {
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
- //calculates Shift and opens a new window
-   public void newwindowcalculate() throws IOException, InterruptedException {
-       CountDownLatch latch = new CountDownLatch(1);
+    //calculates Shift and opens a new window
+    public void newwindowcalculate() throws IOException, InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
                 calculate(latch);
-                
-                
+
                 return null;
             }
         };
-       new Thread(task).start();
-       latch.await();
-        
-        //open new window
-              Stage stage = new Stage();
-              FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_shiftview.fxml"));
-              Pane myPane = (Pane) loader.load();
-              Scene myScene = new Scene(myPane);
-              stage.setScene(myScene);
-              Fxml_shiftviewController controller = loader.<Fxml_shiftviewController>getController();
-              controller.setSupercontroller(this);
-              controller.setSession(session);
+        new Thread(task).start();
+        latch.await();
 
-              //print graphs
-              controller.print(getMasterListofOGroups());
-              System.out.println("PRINT");
-              stage.show();
-              
-              stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-      public void handle(WindowEvent we) {
-          controller.close();
-      }
-  }); 
-      
-       
-   }
-    
-    
+        //open new window
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_shiftview.fxml"));
+        Pane myPane = (Pane) loader.load();
+        Scene myScene = new Scene(myPane);
+        stage.setScene(myScene);
+        Fxml_shiftviewController controller = loader.<Fxml_shiftviewController>getController();
+        controller.setSupercontroller(this);
+        controller.setSession(session);
+
+        //print graphs
+        controller.print(getMasterListofOGroups());
+        System.out.println("PRINT");
+        stage.show();
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                controller.close();
+            }
+        });
+
+    }
+
     //does the Shift calculation
-  public void calculate(CountDownLatch latch) throws IOException, InterruptedException {
-      
-      DoubleProperty progress = new SimpleDoubleProperty(0.0);
-                progressbar.progressProperty().bind(progress);
-      
-      Task task = new Task<Void>() {
+    public void calculate(CountDownLatch latch) throws IOException, InterruptedException {
+
+        DoubleProperty progress = new SimpleDoubleProperty(0.0);
+        progressbar.progressProperty().bind(progress);
+
+        Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException {
-                
-                for (int d = 0; d<session.getListofDatasets().size(); d++) {
-                    if (session.getListofDatasets().get(d).getActive()) {
-                    for (int f = 0; f<session.getListofDatasets().get(d).getListofFiles().size(); f++) {
-                        RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
-                         if(currentfile.getActive().booleanValue()) {
-                    
-                Collections.sort(getMasterListofOGroups(), new orderbyRT());
-                double[][] matrix = new double[getMasterListofOGroups().size()][session.getResolution()];
-                
-        
-                for (int i = 0; i<getMasterListofOGroups().size(); i++) {
-                   
 
-                        getMasterListofOGroups().get(i).generateOGroupPropArray(currentfile);
-                    double[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArray(currentfile);
-                    //TODO: calculate Range as function of time
-                    //int range = 0;
-                    for (int j =0; j<session.getResolution(); j++) {
+                for (int d = 0; d < session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+                        for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
+                            RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
+                            if (currentfile.getActive().booleanValue()) {
+
+                                Collections.sort(getMasterListofOGroups(), new orderbyRT());
+                                double[][] matrix = new double[getMasterListofOGroups().size()][session.getResolution()];
+
+                                for (int i = 0; i < getMasterListofOGroups().size(); i++) {
+
+                                    getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
+                                    double[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
+                                    //TODO: calculate Range as function of time
+                                    //int range = 0;
+                                    for (int j = 0; j < session.getResolution(); j++) {
 //                        //calculation of range
 //                        
 //                        //edge cases, reduces ifs
@@ -448,13 +428,12 @@ public class FXMLTableViewController implements Initializable {
 //                            }
 //                        }
 //                        }  
-matrix [i][j] = PropArray[j];
-                    }
-                    
-                }
-                
-                
-//                //Test artificial shift
+                                        matrix[i][j] = PropArray[j];
+                                    }
+
+                                }
+
+                                //Test artificial shift
 //                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
 //                for (int i = 0; i< MasterListofOGroups.size(); i++) {
 //                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
@@ -468,124 +447,117 @@ matrix [i][j] = PropArray[j];
 //                }
 //               
 //                matrix = matrix2;
-                
-                
-                
-                
-                
-                //calculate weight matrix
-                double[][] weights = new double[getMasterListofOGroups().size()][session.getResolution()];
-                //fill first row
-                for (int j =0; j<session.getResolution(); j++) {
-                    weights[0][j] = matrix[0][j];
-                    
-                }
-                //TODO: Penalty for change in j
-                //fill rest of weights matrix
-                double penalty = session.getListofDatasets().get(0).getPenalty();
-                for (int i = 1; i<getMasterListofOGroups().size(); i++) {
-                    for (int j =0; j<session.getResolution(); j++) {
-                        double max = 0;
-                        if(weights[i-1][j]>max){
-                            max=weights[i-1][j]+matrix[i][j];}
-                        if((j-1)>0 && weights[i-1][j-1]+matrix[i][j]-penalty>max){
-                            max = weights[i-1][j-1]+matrix[i][j]-penalty;}
-                        if ((j+1)<session.getResolution() && weights[i-1][j+1]+matrix[i][j]-penalty>max){
-                            max = weights[i-1][j+1]+matrix[i][j]-penalty;
+                                //calculate weight matrix
+                                double[][] weights = new double[getMasterListofOGroups().size()][session.getResolution()];
+                                //fill first row
+                                for (int j = 0; j < session.getResolution(); j++) {
+                                    weights[0][j] = matrix[0][j];
+
+                                }
+                                //TODO: Penalty for change in j
+                                //fill rest of weights matrix
+                                double penalty = session.getListofDatasets().get(0).getPenalty();
+                                for (int i = 1; i < getMasterListofOGroups().size(); i++) {
+                                    for (int j = 0; j < session.getResolution(); j++) {
+                                        double max = 0;
+                                        if (weights[i - 1][j] > max) {
+                                            max = weights[i - 1][j] + matrix[i][j];
+                                        }
+                                        if ((j - 1) > 0 && weights[i - 1][j - 1] + matrix[i][j] - penalty > max) {
+                                            max = weights[i - 1][j - 1] + matrix[i][j] - penalty;
+                                        }
+                                        if ((j + 1) < session.getResolution() && weights[i - 1][j + 1] + matrix[i][j] - penalty > max) {
+                                            max = weights[i - 1][j + 1] + matrix[i][j] - penalty;
+                                        }
+                                        weights[i][j] = max;
+
+                                    }
+
+                                }
+                                //get max in last row
+                                double max = 0;
+                                int maxint = 0;
+                                for (int j = 0; j < session.getResolution(); j++) {
+                                    if (weights[getMasterListofOGroups().size() - 1][j] > max) {
+                                        maxint = j;
+                                        max = weights[getMasterListofOGroups().size() - 1][j];
+                                    }
+                                }
+
+                                getMasterListofOGroups().get(getMasterListofOGroups().size() - 1).setFittedShift(currentfile, maxint);
+
+                                //TODO: calculate range as function of time
+                                for (int i = getMasterListofOGroups().size() - 2; i > -1; i--) {
+                                    max = 0;
+
+                                    int j = maxint;
+                                    if ((j - 1) > 0 && weights[i][j - 1] > max) {
+                                        max = weights[i][j - 1];
+                                        maxint = j - 1;
+                                    }
+                                    if (weights[i][j] > max) {
+                                        max = weights[i][j];
+                                        maxint = j;
+                                    }
+                                    if ((j + 1) < session.getResolution() && weights[i][j + 1] > max) {
+                                        //max = weights[i][j+1];
+                                        maxint = j + 1;
+                                    }
+
+                                    getMasterListofOGroups().get(i).setFittedShift(currentfile, maxint);
+
+                                    //set score for OPGroup
+                                    getMasterListofOGroups().get(i).addScore(currentfile, (getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
+
+                                    //set score for every addact
+                                    for (int a = 0; a < getMasterListofOGroups().get(i).getListofAdducts().size(); a++) {
+                                        getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile, (getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
+                                    }
+
+                                    getMetTable().refresh();
+
+                                }
+                                //TODO number of active files
+                                progress.set(progress.get() + 1.0d / (session.getListofDatasets().get(d).getListofFiles().size()));
+                                System.out.println("Calculation: " + progress.get() + "%");
+                            }
                         }
-                        weights[i][j] = max;
-                        
-                        
-                        
-                    }
-  
-                }
-                //get max in last row
-                double max = 0;
-                int maxint = 0;
-                for (int j =0; j<session.getResolution(); j++) {
-                    if (weights[getMasterListofOGroups().size()-1][j]> max) {
-                        maxint = j;
-                        max = weights[getMasterListofOGroups().size()-1][j];
                     }
                 }
-                
-                    getMasterListofOGroups().get(getMasterListofOGroups().size()-1).setFittedShift(currentfile,maxint);
-                
-                
-             
-                
-                //TODO: calculate range as function of time
-                for (int i = getMasterListofOGroups().size()-2; i>-1; i--){
-                    max = 0;
-                   
-                    int j = maxint;
-                    if((j-1)>0 && weights[i][j-1]> max) {
-                        max = weights[i][j-1];
-                        maxint = j-1;
-                    }
-                    if(weights[i][j]> max) {
-                        max = weights[i][j];
-                        maxint = j;
-                    }
-                      if ((j + 1) < session.getResolution() && weights[i][j+1] > max) {
-                          //max = weights[i][j+1];
-                          maxint = j + 1;
-                      }
-                      
-                        getMasterListofOGroups().get(i).setFittedShift(currentfile, maxint);
-                      
-                      //set score for OPGroup
-                        getMasterListofOGroups().get(i).addScore(currentfile,(getMasterListofOGroups().get(i).getOGroupPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
-                      
-                      //set score for every addact
-                      for (int a = 0; a<getMasterListofOGroups().get(i).getListofAdducts().size(); a++) {
-                            getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile,(getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
-                      }
-                      
-                        getMetTable().refresh();
-                      
 
-                  }
-                //TODO number of active files
-                progress.set(progress.get() +1.0d/(session.getListofDatasets().get(d).getListofFiles().size()));
-                System.out.println("Calculation: " + progress.get() + "%");
-              }}}}
-
-              
-              latch.countDown();
-              return null;
-          }
-            
+                //don't recalculate unless something changes
+                session.setPeakPickchanged(false);
+                latch.countDown();
+                return null;
+            }
 
         };
 
         //new thread that executes task
         new Thread(task).start();
-        
-  }
-    
+
+    }
+
     public double getmaxofrange(double[][] weights, int row, int col, int range) {
         double max = 0;
-        
-        for ( int i =(col-range); i<=(col+range); i++ ) {
-            if (i<session.getResolution() && i>= 0 && weights[row][i]>max) {
+
+        for (int i = (col - range); i <= (col + range); i++) {
+            if (i < session.getResolution() && i >= 0 && weights[row][i] > max) {
                 max += weights[row][i];
             }
-            
+
         }
-        
-        
-        
+
         return max;
     }
-    
+
     /**
      * @return the metTable
      */
     public TreeTableView<Entry> getMetTable() {
         return metTable;
     }
+
     public FXMLTableViewController getController() {
         return this;
     }
@@ -628,41 +600,38 @@ matrix [i][j] = PropArray[j];
     /**
      * @return the datasettocontroller
      */
-    public HashMap<Dataset,BatchController> getDatasettocontroller() {
+    public HashMap<Dataset, BatchController> getDatasettocontroller() {
         return datasettocontroller;
     }
 
     /**
      * @param datasettocontroller the datasettocontroller to set
      */
-    public void setDatasettocontroller(HashMap<Dataset,BatchController> datasettocontroller) {
+    public void setDatasettocontroller(HashMap<Dataset, BatchController> datasettocontroller) {
         this.datasettocontroller = datasettocontroller;
     }
-    
-      
+
     public void generateOutput() throws FileNotFoundException, UnsupportedEncodingException {
-        
+
         //sort by OGroup and Num, to get order of Input
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(numColumn);
-         getMetTable().getSortOrder().add(nameColumn);
-        
-        
-        
-        for (int i = 0; i<session.getListofDatasets().size(); i++) {
-            for (int j = 0; j<session.getListofDatasets().get(i).getListofFiles().size(); j++) {
+        getMetTable().getSortOrder().add(nameColumn);
+
+        for (int i = 0; i < session.getListofDatasets().size(); i++) {
+            for (int j = 0; j < session.getListofDatasets().get(i).getListofFiles().size(); j++) {
                 RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
                 System.out.println("File: " + file.getName());
-                for (int o = 0; o<session.getListofOGroups().size(); o++) {
-                    for (int s = 0; s<session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
+                for (int o = 0; o < session.getListofOGroups().size(); o++) {
+                    for (int s = 0; s < session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
                         System.out.println("OGroup: " + session.getListofOGroups().get(o).getOGroup() + "  Number: " + session.getListofOGroups().get(o).getListofAdducts().get(s).getNum() + "   Area: " + session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea());
                     }
                 }
-                
+
             }
-            
+
         }
-        
+
         //parse Input Matrix again
         TsvParserSettings settings = new TsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
@@ -670,107 +639,110 @@ matrix [i][j] = PropArray[j];
         TsvParser parser = new TsvParser(settings);
         FileReader reader = new FileReader(session.getReferenceTsv());
         List<String[]> allRows = parser.parseAll(reader);
-        
+
         //get Headers
         List<String> headers = Arrays.asList(allRows.get(0));
-        headers= new ArrayList<>(headers);
-        
-        
+        headers = new ArrayList<>(headers);
+
         //List for convenience
         List<List<String>> rows = new ArrayList<>();
-        for (int i = 0; i<allRows.size(); i++) {
+        for (int i = 0; i < allRows.size(); i++) {
             rows.add(new ArrayList<>(Arrays.asList(allRows.get(i))));
         }
-        
-        
-        
-        
-        
-        
+
         PrintWriter printwriter = new PrintWriter("the-file-name.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
-        
-        
-        
-        for (int i = 0; i<session.getListofDatasets().size(); i++) {
-            for (int j = 0; j<session.getListofDatasets().get(i).getListofFiles().size(); j++) {
+
+        for (int i = 0; i < session.getListofDatasets().size(); i++) {
+            for (int j = 0; j < session.getListofDatasets().get(i).getListofFiles().size(); j++) {
                 RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
-                headers.add(14, file.getName().substring(0, file.getName().length()-6)+ "_Test_Area");
+                headers.add(14, file.getName().substring(0, file.getName().length() - 6) + "_Test_Area");
                 int currentline = 1;
-                for (int o = 0; o<session.getListofOGroups().size(); o++) {
-                    for (int s = 0; s<session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
+                for (int o = 0; o < session.getListofOGroups().size(); o++) {
+                    for (int s = 0; s < session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
                         if (session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea() == null) {
-                            rows.get(currentline).add(14,"");
+                            rows.get(currentline).add(14, "");
                             currentline++;
                         } else {
-                        rows.get(currentline).add(14,Double.toString(session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea()));
-                        currentline++;
-                    }}
+                            rows.get(currentline).add(14, Double.toString(session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea()));
+                            currentline++;
+                        }
+                    }
                 }
-                
+
             }
-            
+
         }
-        
+
         //back to arrays...
-        for (int i = 1; i<rows.size(); i++) {
+        for (int i = 1; i < rows.size(); i++) {
             String[] row = new String[rows.get(i).size()];
             row = rows.get(i).toArray(row);
             allRows.set(i, row);
         }
-        
+
         writer.writeHeaders(headers);
-        for (int i = 1; i< rows.size(); i++) {
+        for (int i = 1; i < rows.size(); i++) {
             writer.writeRow(rows.get(i).toArray());
         }
-        
+
         writer.close();
-        
+
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
-        
+
     }
-    
-  public void generateAdducts() {
-      
-      //get highest num of Adduct
-     int max = 0;
-      for (int i = 0; i<MasterListofOGroups.size(); i++) {
-          for (int j = 0; j< MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
-              if (MasterListofOGroups.get(i).getListofAdducts().get(j).getNum()>max) {
-                  max = MasterListofOGroups.get(i).getListofAdducts().get(j).getNum();
-              }
-          }
-      }
-      max++;
-       for (int i = 0; i<MasterListofOGroups.size(); i++) {
-           int size = MasterListofOGroups.get(i).getListofAdducts().size();
-          for (int j = 0; j< size; j++) {
-              MasterListofOGroups.get(i).addAdduct(new Entry(max, MasterListofOGroups.get(i).getListofAdducts().get(j).getMZ()+1.0, MasterListofOGroups.get(i).getListofAdducts().get(j).getRT(), MasterListofOGroups.get(i).getListofAdducts().get(j).getXn(), MasterListofOGroups.get(i).getListofAdducts().get(j).getOGroup(), "Test Adduct", MasterListofOGroups.get(i).getListofAdducts().get(j).getM(),session, MasterListofOGroups.get(i)));
-              max++;
-              
-          }
-       }
-      
-  }  
- 
-  public void showParameters() {
-      setParameterPane(true);
-      accordion.setVisible(false);
-      addBatchButton.setVisible(false);
-      
-  }
-  
-  public void hideParameters() {
-      setParameterPane(false);
-      accordion.setVisible(true);
-      addBatchButton.setVisible(true);
-      
-  }
-  
-  public void setParameterPane(boolean bool) {
-      label1.setVisible(bool);
+
+    public void generateAdducts() {
+
+        //get highest num of Adduct
+        int max = 0;
+        for (int i = 0; i < MasterListofOGroups.size(); i++) {
+            for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                if (MasterListofOGroups.get(i).getListofAdducts().get(j).getNum() > max) {
+                    max = MasterListofOGroups.get(i).getListofAdducts().get(j).getNum();
+                }
+            }
+        }
+        max++;
+        for (int i = 0; i < MasterListofOGroups.size(); i++) {
+            int size = MasterListofOGroups.get(i).getListofAdducts().size();
+            for (int j = 0; j < size; j++) {
+                MasterListofOGroups.get(i).addAdduct(new Entry(max, MasterListofOGroups.get(i).getListofAdducts().get(j).getMZ() + 1.0, MasterListofOGroups.get(i).getListofAdducts().get(j).getRT(), MasterListofOGroups.get(i).getListofAdducts().get(j).getXn(), MasterListofOGroups.get(i).getListofAdducts().get(j).getOGroup(), "Test Adduct", MasterListofOGroups.get(i).getListofAdducts().get(j).getM(), session, MasterListofOGroups.get(i)));
+                max++;
+
+            }
+        }
+
+    }
+
+    public void showParameters() {
+        setParameterPane(true);
+        accordion.setVisible(false);
+        addBatchButton.setVisible(false);
+        oldPick = PeakPick.getSelectionModel().getSelectedItem().toString();
+        oldBase = Base.getText();
+
+    }
+
+    public void hideParameters() {
+        setParameterPane(false);
+        accordion.setVisible(true);
+        addBatchButton.setVisible(true);
+
+        //indicate change
+        if (!oldPick.equals(PeakPick.getSelectionModel().getSelectedItem().toString())) {
+            session.setPeakPickchanged(true);
+        }
+        if (!oldBase.equals(Base.getText())) {
+            session.setPeakPickchanged(true);
+        }
+
+    }
+
+    public void setParameterPane(boolean bool) {
+        label1.setVisible(bool);
         label2.setVisible(bool);
         label3.setVisible(bool);
         label4.setVisible(bool);
@@ -789,14 +761,13 @@ matrix [i][j] = PropArray[j];
         Base.setVisible(bool);
         PeakPick.setVisible(bool);
         paramButton.setVisible(bool);
-      
-  }
-  
-  //when closing the window, end all running processes, such as Rengine
-  public void close() {
-      session.getEngine().end();
-      
-  }
-  
-  
+
+    }
+
+    //when closing the window, end all running processes, such as Rengine
+    public void close() {
+        session.getEngine().end();
+
+    }
+
 }

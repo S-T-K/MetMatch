@@ -262,6 +262,7 @@ public class BatchController implements Initializable {
 
 
                 }
+                session.setPeakPickchanged(true);
                 return null;
             }
 
@@ -344,7 +345,7 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                    
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                        double maxScore = 0;
-                       double minScorepeakclose = 0;
+                       double minScorepeakclose = 1;
                        double maxScorepeakfound = 0;
                    for (int f = 0; f<completeList.size(); f++) {
                        if(completeList.get(f).isselected()) {
@@ -356,7 +357,7 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                            maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound();
                        }
                        
-                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()>minScorepeakclose) {
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()<minScorepeakclose) {
                        minScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose();
                        }
                        }
@@ -364,7 +365,7 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleDoubleProperty(minScorepeakclose));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
-                   System.out.println("Test");
+                   
                    
                    if (maxScore>omaxScore) {
                        omaxScore = maxScore;

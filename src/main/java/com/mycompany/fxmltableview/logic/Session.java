@@ -49,6 +49,8 @@ public class Session {
     private Rengine engine;
     private SimpleDoubleProperty SliceMZTolerance;
     
+    private boolean peakPickchanged;
+    
     
     public Session() {
         this.reference= new Reference();
@@ -61,7 +63,7 @@ public class Session {
         PeakRTTolerance = new SimpleDoubleProperty(0.12);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
-        
+        peakPickchanged = true;
   
     }
 
@@ -385,5 +387,20 @@ public class Session {
         double delta = (RTTolerance.doubleValue()*2)/resolution.doubleValue();
         IntPeakRTTol = (int) (PeakRTTolerance.doubleValue()/delta);
         System.out.println("IntPeakRTTol: " + IntPeakRTTol);
+    }
+
+    /**
+     * @return the peakPickchanged
+     */
+    public boolean isPeakPickchanged() {
+        return peakPickchanged;
+    }
+
+    /**
+     * @param peakPickchanged the peakPickchanged to set
+     */
+    public void setPeakPickchanged(boolean peakPickchanged) {
+        this.peakPickchanged = peakPickchanged;
+        System.out.println("Peak pick changed: " + peakPickchanged);
     }
 }

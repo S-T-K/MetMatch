@@ -57,6 +57,9 @@ public class Entry {
     private HashMap<RawDataFile, Integer> OGroupfittedShift;
     private HashMap<RawDataFile, Integer> AdductfittedShift;
     
+    //for penalties and bonuses in certain regions
+    private double[] PenArray;
+    
     //maxIntensity of all Slices
     private float maxIntensity;
 
@@ -102,6 +105,8 @@ public class Entry {
 
         OGroupfittedShift = new HashMap<>();
         this.Scores = new HashMap<RawDataFile, Double>();
+        
+        PenArray = new double[session.getResolution()];
 
     }
     
@@ -138,16 +143,16 @@ public class Entry {
     }
     
     //generates PropArray of a dataset for an Adduct 
-    public void generateAdductPropArray(RawDataFile file) {
+    public void peakpickAdduct(RawDataFile file) {
 //        double [] propArray = new double[getSession().getResolution()];
 //
         Slice currentSlice = listofSlices.get(file);
 //        
         if (session.getPeackPick().equals("Naïve")) {
-            currentSlice.generateGaussProp();
+            currentSlice.NaivePeakPicking();
             
         } else if (session.getPeackPick().equals("MassSpecWavelet")) {
-            currentSlice.generateWaveletProp();
+            currentSlice.WaveletPeakPicking();
             
         } else {
             System.out.println("Error");
@@ -173,11 +178,12 @@ public class Entry {
     
     //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?
-    public void generateOGroupPropArray(RawDataFile file) {
+    public void peakpickOGroup(RawDataFile file) {
         
         //double [] propArray = new double[getSession().getResolution()];
+        if (session.isPeakPickchanged()) {
         for (int i = 0; i<listofAdducts.size(); i++) {
-            listofAdducts.get(i).generateAdductPropArray(file);
+            listofAdducts.get(i).peakpickAdduct(file);
 //            for (int j = 0; j<session.getResolution(); j++) {
 //                if(listofAdducts.get(i).getAdductPropArray(file)[j]+propArray[j]>1){
 //                    if (listofAdducts.get(i).getAdductPropArray(file)[j]>propArray[j]) {
@@ -209,7 +215,7 @@ public class Entry {
         
         }
         //getOGroupPropArray().put(file, propArray);
-      
+        }
     }
 
     /**
