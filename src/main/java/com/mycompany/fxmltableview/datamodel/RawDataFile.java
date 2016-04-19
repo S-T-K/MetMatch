@@ -45,6 +45,7 @@ public class RawDataFile {
     private List<Slice> listofSlices;
     private StringProperty name;
     private Session session;
+    private double scanspersecond;
     
     private Property<Boolean> active;
     private final Property<Color> color;
@@ -112,6 +113,10 @@ public class RawDataFile {
     public void parseFile() {
         DomParser dpe = new DomParser(file.toString());
         this.listofScans = dpe.ParseFile();
+        //calculate scans/second for area calculation
+        scanspersecond = 1.0/(listofScans.get(1).getRetentionTime()-listofScans.get(0).getRetentionTime());
+        
+        
         dpe=null;
     }
 
@@ -330,5 +335,19 @@ System.out.println("Complete Extraction: " + (end-start));
     
     public DoubleProperty getWidthProperty() {
         return Width;
+    }
+
+    /**
+     * @return the scanspersecond
+     */
+    public double getScanspersecond() {
+        return scanspersecond;
+    }
+
+    /**
+     * @param scanspersecond the scanspersecond to set
+     */
+    public void setScanspersecond(double scanspersecond) {
+        this.scanspersecond = scanspersecond;
     }
 }

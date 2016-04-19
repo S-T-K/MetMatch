@@ -618,14 +618,26 @@ public class FXMLTableViewController implements Initializable {
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(numColumn);
         getMetTable().getSortOrder().add(nameColumn);
+        getMetTable().sort();
+        
+        //generate sorted List
+       List<Entry> list = new ArrayList<Entry>();
+        TreeItem<Entry> root = getMetTable().getRoot();
+        
+        for (int i  = 0; i<root.getChildren().size(); i++) {
+            list.add(root.getChildren().get(i).getValue());
+        }
+        
+       
+        
 
         for (int i = 0; i < session.getListofDatasets().size(); i++) {
             for (int j = 0; j < session.getListofDatasets().get(i).getListofFiles().size(); j++) {
                 RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
                 System.out.println("File: " + file.getName());
-                for (int o = 0; o < session.getListofOGroups().size(); o++) {
-                    for (int s = 0; s < session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
-                        System.out.println("OGroup: " + session.getListofOGroups().get(o).getOGroup() + "  Number: " + session.getListofOGroups().get(o).getListofAdducts().get(s).getNum() + "   Area: " + session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea());
+                for (int o = 0; o < list.size(); o++) {
+                    for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
+                        System.out.println("OGroup: " + list.get(o).getOGroup() + "  Number: " + list.get(o).getListofAdducts().get(s).getNum() + "   Area: " + list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea());
                     }
                 }
 
@@ -659,13 +671,13 @@ public class FXMLTableViewController implements Initializable {
                 RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
                 headers.add(14, file.getName().substring(0, file.getName().length() - 6) + "_Test_Area");
                 int currentline = 1;
-                for (int o = 0; o < session.getListofOGroups().size(); o++) {
-                    for (int s = 0; s < session.getListofOGroups().get(o).getListofAdducts().size(); s++) {
-                        if (session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea() == null) {
+                for (int o = 0; o < list.size(); o++) {
+                    for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
+                        if (list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea() == null) {
                             rows.get(currentline).add(14, "");
                             currentline++;
                         } else {
-                            rows.get(currentline).add(14, Double.toString(session.getListofOGroups().get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea()));
+                            rows.get(currentline).add(14, Double.toString(list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea()));
                             currentline++;
                         }
                     }

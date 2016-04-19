@@ -1234,4 +1234,12 @@ public class Slice {
         
         return list;
     }
+    
+    public int getfittedPeakStart() {
+        return listofPeaks.get(fittedpeak).getStart();
+    }
+    
+    public int getfittedPeakEnd() {
+        return listofPeaks.get(fittedpeak).getEnd();
+    }
 }

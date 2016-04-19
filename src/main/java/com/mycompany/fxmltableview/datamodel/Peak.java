@@ -27,6 +27,8 @@ public class Peak {
         this.SNR = SNR;
         this.area = area;
         this.slice = slice;
+        this.start = (int) (index-1.5*scale);
+        this.end = (int) (index+1.5*scale);
         
     }
 
@@ -114,24 +116,51 @@ public class Peak {
         //max distance from middle to end in minutes
         //TODO: as parameter
         int maxdist = 15;
-        if (index-start>15) {
-            start = index-15;
+        if (index-getStart()>15) {
+            setStart(index-15);
         }
-        if (end-index>15) {
-            end = index+15;
+        if (getEnd()-index>15) {
+            setEnd(index+15);
         }
         
     }
     
     public void calculateArea() {
         area = 0;
-        //TODO: Unit of a time step? Area?
-        int unitofstep = 1;
         
-       for (int i = start; i<end; i++) {
-           area+=(slice.getIntensityArray()[i]+ slice.getIntensityArray()[i+1])*unitofstep/2;
+        
+       for (int i = getStart(); i<=getEnd(); i++) {
+           area+=slice.getIntensityArray()[i];
        }
         
+    }
+
+    /**
+     * @return the start
+     */
+    public int getStart() {
+        return start;
+    }
+
+    /**
+     * @param start the start to set
+     */
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    /**
+     * @return the end
+     */
+    public int getEnd() {
+        return end;
+    }
+
+    /**
+     * @param end the end to set
+     */
+    public void setEnd(int end) {
+        this.end = end;
     }
     
 }

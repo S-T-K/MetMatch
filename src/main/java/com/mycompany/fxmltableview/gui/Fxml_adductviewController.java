@@ -176,7 +176,7 @@ public class Fxml_adductviewController implements Initializable {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(adduct);
                                 addColumn(2, linechart2);
                             } else {
-                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
+                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithPeak(adduct);
                                 addColumn(2, linechart2);
                             }}
                             
