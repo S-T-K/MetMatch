@@ -518,6 +518,7 @@ public class FXMLTableViewController implements Initializable {
 
                                 }
                                 //TODO number of active files
+                                
                                 progress.set(progress.get() + 1.0d / (session.getListofDatasets().get(d).getListofFiles().size()));
                                 System.out.println("Calculation: " + progress.get() + "%");
                             }

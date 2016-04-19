@@ -37,6 +37,9 @@
       <Button layoutX="72.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
       <Button layoutX="103.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
       <Button layoutX="134.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
-      <ProgressBar fx:id="progress" layoutX="-208.0" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" progress="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0" />
+      <ToggleButton fx:id="MZToggle" layoutX="910.0" layoutY="2.0" mnemonicParsing="false" onAction="#print" text="M/Z Chart" />
+      <ToggleButton fx:id="NEICToggle" layoutX="835.0" layoutY="2.0" mnemonicParsing="false" onAction="#print" text="Norm. EIC" />
+      <ToggleButton fx:id="EICToggle" layoutX="797.0" layoutY="2.0" mnemonicParsing="false" onAction="#print" text="EIC" />
+      <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
    </children>
 </AnchorPane>

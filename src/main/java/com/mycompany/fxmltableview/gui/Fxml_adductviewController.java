@@ -47,6 +47,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.effect.DropShadow;
@@ -78,6 +79,9 @@ public class Fxml_adductviewController implements Initializable {
     
     @FXML
     ProgressBar progress;
+    
+    @FXML
+    ToggleButton EICToggle, NEICToggle, MZToggle;
 
     TreeTableView<Entry> metTable;
     private FXMLTableViewController mainController;
@@ -105,6 +109,9 @@ public class Fxml_adductviewController implements Initializable {
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
         progress.setOpacity(0.15);
+        EICToggle.selectedProperty().setValue(true);
+        NEICToggle.selectedProperty().setValue(true);
+        MZToggle.selectedProperty().setValue(true);
         
     }
 
@@ -160,18 +167,24 @@ public class Fxml_adductviewController implements Initializable {
                     //generate graphs
                     
                             addRow(i, box);
+                            if(EICToggle.selectedProperty().get()) {
                             LineChart<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
-                            addColumn(1, linechart1);
+                            addColumn(1, linechart1);}
+                            
+                            if(NEICToggle.selectedProperty().get()) {
                             if (showProp) {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(adduct);
                                 addColumn(2, linechart2);
                             } else {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
                                 addColumn(2, linechart2);
-                            }
+                            }}
                             
+                            
+                            if (MZToggle.selectedProperty().get()) {
                             ScatterChart<Number, Number> scatterchart = chartGenerator.generateMassChart(adduct);
                             addColumn(3, scatterchart);
+                            }
                             
                             System.out.println("generated charts " + (i + 1) + " of " + entry.getListofAdducts().size());
                            updateProgress(i+1,entry.getListofAdducts().size());
