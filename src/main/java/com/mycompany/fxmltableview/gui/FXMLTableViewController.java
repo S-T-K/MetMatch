@@ -709,7 +709,8 @@ public class FXMLTableViewController implements Initializable {
         for (int i = 0; i < MasterListofOGroups.size(); i++) {
             int size = MasterListofOGroups.get(i).getListofAdducts().size();
             for (int j = 0; j < size; j++) {
-                MasterListofOGroups.get(i).addAdduct(new Entry(max, MasterListofOGroups.get(i).getListofAdducts().get(j).getMZ() + 1.0, MasterListofOGroups.get(i).getListofAdducts().get(j).getRT(), MasterListofOGroups.get(i).getListofAdducts().get(j).getXn(), MasterListofOGroups.get(i).getListofAdducts().get(j).getOGroup(), "Test Adduct", MasterListofOGroups.get(i).getListofAdducts().get(j).getM(), session, MasterListofOGroups.get(i)));
+                //currently: -H   +NH4
+                MasterListofOGroups.get(i).addAdduct(new Entry(max, MasterListofOGroups.get(i).getListofAdducts().get(j).getMZ() + 17.026547, MasterListofOGroups.get(i).getListofAdducts().get(j).getRT(), MasterListofOGroups.get(i).getListofAdducts().get(j).getXn(), MasterListofOGroups.get(i).getListofAdducts().get(j).getOGroup(), "Test Adduct", MasterListofOGroups.get(i).getListofAdducts().get(j).getM(), session, MasterListofOGroups.get(i)));
                 max++;
 
             }

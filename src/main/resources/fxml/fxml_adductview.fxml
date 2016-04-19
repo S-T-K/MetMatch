@@ -37,5 +37,6 @@
       <Button layoutX="72.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
       <Button layoutX="103.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
       <Button layoutX="134.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Button" />
+      <ProgressBar fx:id="progress" layoutX="-208.0" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" progress="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0" />
    </children>
 </AnchorPane>

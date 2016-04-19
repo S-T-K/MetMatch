@@ -12,6 +12,7 @@ import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.logic.Session;
 import com.sun.webkit.ContextMenuItem;
 import java.awt.Checkbox;
+import java.io.IOException;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +43,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
@@ -71,6 +75,9 @@ public class Fxml_adductviewController implements Initializable {
 
     @FXML
     ScrollPane scrollPane;
+    
+    @FXML
+    ProgressBar progress;
 
     TreeTableView<Entry> metTable;
     private FXMLTableViewController mainController;
@@ -97,6 +104,7 @@ public class Fxml_adductviewController implements Initializable {
         hover.setRadius(1.8);
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
+        progress.setOpacity(0.15);
         
     }
 
@@ -125,113 +133,131 @@ public class Fxml_adductviewController implements Initializable {
         //delete previous graphs
         gridPane.getChildren().clear();
         scrollPane.setVvalue(((double) adductnumber) / (entry.getListofAdducts().size() - 1));
+        progress.setVisible(true);
+        
 
-        //for every Adduct/Fragment
-        for (int i = 0; i < entry.getListofAdducts().size(); i++) {
-
-            Entry adduct = OGroupItem.getChildren().get(i).getValue();
-
-            //Label showing the MZ
-            VBox box = new VBox();
-            String MZ = Double.toString(adduct.getMZ());
-            MZ = MZ.substring(0,MZ.indexOf(".")+5);
-            Label label = new Label("MZ: " + MZ);
-            box.getChildren().add(label);
-            Label label2 = new Label("Ion: " + adduct.getIon());
-            box.getChildren().add(label2);
-            Label label3 = new Label("Xn: " + Double.toString(adduct.getXn()));
-            box.getChildren().add(label3);
-
-            //generate graphs
-            gridPane.addRow(i, box);
-            LineChart<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
-            gridPane.addColumn(1, linechart1);
-            if (showProp) {
-                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(adduct);
-                gridPane.addColumn(2, linechart2);
-            } else {
-                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
-                gridPane.addColumn(2, linechart2);
-            }
-
-            ScatterChart<Number, Number> scatterchart = chartGenerator.generateMassChart(adduct);
-            gridPane.addColumn(3, scatterchart);
-
-            System.out.println("generated charts " + (i + 1) + " of " + entry.getListofAdducts().size());
-        }
-
-        System.out.println(scrollPane.getVmax());
-        System.out.println(scrollPane.getVmin());
-
-        //add listener to every color property, to show changes instantly
-        for (int i = 0; i < filetoseries.size(); i++) {
-            Set<RawDataFile> files = filetoseries.keySet();
-            for (RawDataFile file : files) {
-                ChangeListener<Color> listener = new ChangeListener<Color>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Color> ov,
-                            Color old_val, Color new_val) {
-                        if (!file.isselected()) {
-                            List<XYChart.Series> list = filetoseries.get(file);
-
-                            for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i).getNode() == null) {
-                                    for (int k = 0; k < list.get(i).getData().size(); k++) {
-                                        Node node = ((XYChart.Data) list.get(i).getData().get(k)).getNode();
-
-                                        ((Rectangle) node).setFill(new_val);
-
-                                    }
-                                } else {
-
-                                    Node node = list.get(i).getNode();
-                                    ((Path) node).setStroke(new_val);
-                                }
-                            }
-                        }
-                    }
-                };
+        Task task;
+        task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
+                //for every Adduct/Fragment
                 
-                file.getColorProperty().addListener(listener);
-                listeners.put(listener, file.getColorProperty());
-
-                ChangeListener listener2 = new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                        System.out.println("Change");
-                        List<XYChart.Series> list = filetoseries.get(file);
-
-                        for (int i = 0; i < list.size(); i++) {
-                            if (list.get(i).getNode() == null) {
-                                for (int k = 0; k < list.get(i).getData().size(); k++) {
-                                    Node node = ((XYChart.Data) list.get(i).getData().get(k)).getNode();
-
-                                    ((Rectangle) node).setHeight(file.getWidth() + 1.5);
-                                    ((Rectangle) node).setWidth(file.getWidth() + 1.5);
-
-                                }
+                for (int i = 0; i < entry.getListofAdducts().size(); i++) {
+                   
+                    Entry adduct = OGroupItem.getChildren().get(i).getValue();
+                    
+                    //Label showing the MZ
+                    VBox box = new VBox();
+                    String MZ = Double.toString(adduct.getMZ());
+                    MZ = MZ.substring(0,MZ.indexOf(".")+5);
+                    Label label = new Label("MZ: " + MZ);
+                    box.getChildren().add(label);
+                    Label label2 = new Label("Ion: " + adduct.getIon());
+                    box.getChildren().add(label2);
+                    Label label3 = new Label("Xn: " + Double.toString(adduct.getXn()));
+                    box.getChildren().add(label3);
+                    
+                    //generate graphs
+                    
+                            addRow(i, box);
+                            LineChart<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
+                            addColumn(1, linechart1);
+                            if (showProp) {
+                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(adduct);
+                                addColumn(2, linechart2);
                             } else {
-
-                                Node node = list.get(i).getNode();
-                                ((Path) node).setStrokeWidth(file.getWidth());
-
+                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
+                                addColumn(2, linechart2);
                             }
+                            
+                            ScatterChart<Number, Number> scatterchart = chartGenerator.generateMassChart(adduct);
+                            addColumn(3, scatterchart);
+                            
+                            System.out.println("generated charts " + (i + 1) + " of " + entry.getListofAdducts().size());
+                           updateProgress(i+1,entry.getListofAdducts().size());
                         }
-
-                    }
-                };
+                   
+                 
+                System.out.println(scrollPane.getVmax());
+                System.out.println(scrollPane.getVmin());
                 
-                file.getWidthProperty().addListener(listener2);
-                listeners.put(listener2, file.getWidthProperty());
-
+                //add listener to every color property, to show changes instantly
+                for (int i = 0; i < filetoseries.size(); i++) {
+                    Set<RawDataFile> files = filetoseries.keySet();
+                    for (RawDataFile file : files) {
+                        ChangeListener<Color> listener = new ChangeListener<Color>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Color> ov,
+                                    Color old_val, Color new_val) {
+                                if (!file.isselected()) {
+                                    List<XYChart.Series> list = filetoseries.get(file);
+                                    
+                                    for (int i = 0; i < list.size(); i++) {
+                                        if (list.get(i).getNode() == null) {
+                                            for (int k = 0; k < list.get(i).getData().size(); k++) {
+                                                Node node = ((XYChart.Data) list.get(i).getData().get(k)).getNode();
+                                                
+                                                ((Rectangle) node).setFill(new_val);
+                                                
+                                            }
+                                        } else {
+                                            
+                                            Node node = list.get(i).getNode();
+                                            ((Path) node).setStroke(new_val);
+                                        }
+                                    }
+                                }
+                            }
+                        };
+                        
+                        file.getColorProperty().addListener(listener);
+                        listeners.put(listener, file.getColorProperty());
+                        
+                        ChangeListener listener2 = new ChangeListener() {
+                            @Override
+                            public void changed(ObservableValue o, Object oldVal, Object newVal) {
+                                System.out.println("Change");
+                                List<XYChart.Series> list = filetoseries.get(file);
+                                
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getNode() == null) {
+                                        for (int k = 0; k < list.get(i).getData().size(); k++) {
+                                            Node node = ((XYChart.Data) list.get(i).getData().get(k)).getNode();
+                                            
+                                            ((Rectangle) node).setHeight(file.getWidth() + 1.5);
+                                            ((Rectangle) node).setWidth(file.getWidth() + 1.5);
+                                            
+                                        }
+                                    } else {
+                                        
+                                        Node node = list.get(i).getNode();
+                                        ((Path) node).setStrokeWidth(file.getWidth());
+                                        
+                                    }
+                                }
+                                
+                            }
+                        };
+                        
+                        file.getWidthProperty().addListener(listener2);
+                        listeners.put(listener2, file.getWidthProperty());
+                        
+                    }
+               
+                }
+                
+                Set<XYChart.Series> set = seriestofile.keySet();
+                for (XYChart.Series series : set) {
+                    applyMouseEvents(series);
+                }
+                
+                progress.setVisible(false);
+                return null;
             }
-
-        }
-
-        Set<XYChart.Series> set = seriestofile.keySet();
-        for (XYChart.Series series : set) {
-            applyMouseEvents(series);
-        }
+        };
+        progress.progressProperty().bind(task.progressProperty());
+        new Thread(task).start();
+        
 
          double end = System.currentTimeMillis();
          
@@ -523,4 +549,22 @@ public class Fxml_adductviewController implements Initializable {
         System.gc();
     }
 
+     
+     public void addRow (int i, VBox box ) {
+         Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            gridPane.addRow(i, box);
+                        }});
+         
+     }
+     
+     public void addColumn (int i, XYChart<Number,Number> chart ) {
+          Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            gridPane.addColumn(i, chart);
+                        }});
+         
+     }
 }
