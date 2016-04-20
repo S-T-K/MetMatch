@@ -63,7 +63,7 @@ public class Session {
         SliceMZTolerance = new SimpleDoubleProperty (2.5);
         RTTolerance = new SimpleDoubleProperty(1.5);
         MZTolerance = new SimpleDoubleProperty(10);
-        PeakRTTolerance = new SimpleDoubleProperty(0.12);
+        PeakRTTolerance = new SimpleDoubleProperty(0.15);
         maxPeakLength = new SimpleDoubleProperty(0.9);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");

@@ -122,13 +122,13 @@ public class FXMLTableViewController implements Initializable {
     ProgressBar progressbar;
 
     @FXML
-    TextField RTTol, MZTol, SliceMZTol, Res, Base;
+    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift;
 
     @FXML
-    Label label1, label2, label3, label4, label5, label6, label7, label8, label9;
+    Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
 
     @FXML
-    Rectangle box1, box2, box3;
+    Rectangle box1, box2, box3, box4;
 
     @FXML
     ChoiceBox PeakPick;
@@ -139,6 +139,7 @@ public class FXMLTableViewController implements Initializable {
     //Check for changed parameters
     String oldPick;
     String oldBase;
+    String oldRT;
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
     private ObservableList<Entry> MasterListofOGroups;
@@ -179,6 +180,7 @@ public class FXMLTableViewController implements Initializable {
 
         //Parameters
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
+        RTTolShift.textProperty().bindBidirectional(session.getPeakRTTolerance(), new NumberStringConverter());
         MZTol.textProperty().bindBidirectional(session.getMZTolProp(), new NumberStringConverter());
         SliceMZTol.textProperty().bindBidirectional(session.getSliceMZTolProp(), new NumberStringConverter());
         Res.textProperty().bindBidirectional(session.getResProp(), new NumberStringConverter());
@@ -738,6 +740,7 @@ public class FXMLTableViewController implements Initializable {
         addBatchButton.setVisible(false);
         oldPick = PeakPick.getSelectionModel().getSelectedItem().toString();
         oldBase = Base.getText();
+        oldRT = RTTolShift.getText();
 
     }
 
@@ -745,12 +748,17 @@ public class FXMLTableViewController implements Initializable {
         setParameterPane(false);
         accordion.setVisible(true);
         addBatchButton.setVisible(true);
+        session.prepare();
 
         //indicate change
         if (!oldPick.equals(PeakPick.getSelectionModel().getSelectedItem().toString())) {
             session.setPeakPickchanged(true);
         }
         if (!oldBase.equals(Base.getText())) {
+            session.setPeakPickchanged(true);
+        }
+        
+        if (!oldRT.equals(RTTolShift.getText())) {
             session.setPeakPickchanged(true);
         }
 
@@ -766,10 +774,14 @@ public class FXMLTableViewController implements Initializable {
         label7.setVisible(bool);
         label8.setVisible(bool);
         label9.setVisible(bool);
+        label10.setVisible(bool);
+        label11.setVisible(bool);
         box1.setVisible(bool);
         box2.setVisible(bool);
         box3.setVisible(bool);
+        box4.setVisible(bool);
         RTTol.setVisible(bool);
+        RTTolShift.setVisible(bool);
         MZTol.setVisible(bool);
         SliceMZTol.setVisible(bool);
         Res.setVisible(bool);
