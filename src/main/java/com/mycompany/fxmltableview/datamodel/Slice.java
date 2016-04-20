@@ -180,6 +180,9 @@ public class Slice {
                  end = middle-1;
              }
              middle = lower + (end - lower)/2;
+             if(middle==0) {
+                     foundMinRT = true;
+                 }
          }
              //System.out.println("RT search done");
              //middle is the lowest RT
@@ -254,10 +257,11 @@ public class Slice {
              }
 
                  current++;
-                 if (current < listofScans.size()){
+                 if (current == listofScans.size()){
+                 break;
+                 }
                  currentScan = listofScans.get(current);
                   //System.out.println("next Scan");
-                 }
              }
 
 
