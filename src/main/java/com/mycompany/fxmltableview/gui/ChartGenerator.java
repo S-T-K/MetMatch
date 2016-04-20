@@ -25,6 +25,7 @@ import javafx.scene.Cursor;
 import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 import javafx.scene.control.TreeItem;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.shape.Ellipse;
 
 /**
@@ -480,6 +481,7 @@ public class ChartGenerator {
                     //rect is the node of the plot
                     Rectangle rect1 = new Rectangle(width, width);
                     
+                    
                     if (currentfile.isselected()) {
                     paintselectedScatter(rect1);
                 }else {
@@ -700,6 +702,48 @@ public class ChartGenerator {
 
         double upper = 0;
         double lower = 0;
+        double shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
+        int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
+        
+        XYChart.Series backSeries = new XYChart.Series();
+        
+        
+        List<RawDataFile> sellist =  session.getSelectedFiles();
+        List<XYChart.Data> points = new ArrayList<XYChart.Data>();
+        //draw background
+        for (int i = 0;i<list.size(); i=i+3) {
+            for (int j = 0; j< session.getResolution(); j++) {
+                boolean penalty = false;
+               for (int s = 0; s<sellist.size(); s++) {
+                   if (sellist.get(s).getActive()) {
+                       if (list.get(i).getPenArray()!=null){
+                           if (list.get(i).getPenArray().containsKey(sellist.get(s))) {
+                       if (list.get(i).getPenArray().get(sellist.get(s))[j]<0) {
+                           penalty = true;
+                           break;
+                           
+                       }
+                       }
+                       }
+                   }
+               }
+                if (penalty) {
+                    XYChart.Data data = new XYChart.Data(list.get(i).getRT(), (j-middleint)*60*shiftiter);
+                    Rectangle rect = new Rectangle(5,5);
+                    rect.setFill(Color.PINK);
+                    data.setNode(rect);
+                    points.add(data);
+                }
+               
+            }
+        }
+        backSeries.getData().addAll(points);
+        scatterchart.getData().add(backSeries);
+            
+            
+            
+        
+        
         
  for (int d = 0; d<session.getListofDatasets().size(); d++) {
                     if (session.getListofDatasets().get(d).getActive()) {
@@ -718,8 +762,8 @@ public class ChartGenerator {
                         }
                 
                 
-                double shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
-                int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
+                
+                
 
                 double oshift = (list.get(0).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
                 double oRT = list.get(0).getRT();
@@ -731,6 +775,7 @@ public class ChartGenerator {
                     XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
                     
                     Ellipse cir = new Ellipse(1.5,4);
+                    
                     TreeItem<Entry> item = null;
                     for (int e = 0; e<shiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().size(); e++) {
                         if (shiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().get(e).getValue().equals(list.get(i)))  {
