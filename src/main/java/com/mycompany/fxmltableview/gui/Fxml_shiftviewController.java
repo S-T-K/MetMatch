@@ -99,6 +99,9 @@ public class Fxml_shiftviewController implements Initializable {
 
     @FXML
     ToggleButton togglePenaltySelectionButton;
+    
+    @FXML
+    ChoiceBox vistype;
             
     private boolean penSelection = false;
     private Rectangle select;
@@ -148,6 +151,7 @@ public class Fxml_shiftviewController implements Initializable {
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
         shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close", "distance"));
+        vistype.setItems(FXCollections.observableArrayList("Peaks", "Shift"));
         shiftOpacity.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 setOpacityMode(shiftOpacity.getItems().get(newVal.intValue()).toString());
@@ -162,6 +166,13 @@ public class Fxml_shiftviewController implements Initializable {
 
         });
         shiftOpacity.getSelectionModel().select(0);
+        vistype.getSelectionModel().select(1);
+        vistype.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue ov, Number value, Number newVal) {
+                visTypeChanged();
+            }
+
+        });
 
     }
 
@@ -174,7 +185,13 @@ public class Fxml_shiftviewController implements Initializable {
         olist = list;
         //get selected Entry
 
-        scatterchart = chartGenerator.generateScatterShiftChart(olist);
+        if (vistype.getSelectionModel().isSelected(0)) { 
+        scatterchart = chartGenerator.generateScatterPeakChart(olist); }
+        else if (vistype.getSelectionModel().isSelected(1)) {
+             scatterchart = chartGenerator.generateScatterShiftChart(olist); 
+        }
+        
+        
         box.getChildren().add(scatterchart);
 
         //add listener to every color property, to show changes instantly
@@ -222,11 +239,14 @@ public class Fxml_shiftviewController implements Initializable {
             }
 
         }
+        //TODO choicebox
+        if (vistype.getSelectionModel().isSelected(1)) {
+        
         Set<XYChart.Series> set = seriestofile.keySet();
         for (XYChart.Series series : set) {
             applyMouseEvents(series);
         }
-
+        }
     }
 
     public void recalculate() throws IOException, InterruptedException {
@@ -248,7 +268,12 @@ public class Fxml_shiftviewController implements Initializable {
         latch.await();
         
         box.getChildren().remove(scatterchart);
-        scatterchart = chartGenerator.generateScatterShiftChart(olist);
+        
+        if (vistype.getSelectionModel().isSelected(0)) { 
+        scatterchart = chartGenerator.generateScatterPeakChart(olist); }
+        else if (vistype.getSelectionModel().isSelected(1)) {
+             scatterchart = chartGenerator.generateScatterShiftChart(olist); 
+        }
         
         box.getChildren().add(scatterchart);
 
@@ -643,4 +668,24 @@ startY = scatterchart.getYAxis().getValueForDisplay(event.getY()).doubleValue();
 
     }
 
+    
+    public void visTypeChanged() {
+        if (scatterchart!=null) {
+        box.getChildren().remove(scatterchart); }
+        
+        print(olist);
+        
+        if (vistype.getSelectionModel().getSelectedIndex()==0) {
+            button.setVisible(false);
+            shiftOpacity.setVisible(false);
+            togglePenaltySelectionButton.setVisible(false);
+        }else {
+            button.setVisible(true);
+            shiftOpacity.setVisible(true);
+            togglePenaltySelectionButton.setVisible(true);
+        }
+        
+        
+        System.out.println("Change!");
+    }
 }
