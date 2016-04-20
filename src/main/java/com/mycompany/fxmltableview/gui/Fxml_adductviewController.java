@@ -93,6 +93,8 @@ public class Fxml_adductviewController implements Initializable {
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
     private HashMap<ChangeListener, Property> listeners;
     private HashMap<ListChangeListener, ObservableList> listlisteners;
+    
+    private double scroll;
 
     /**
      * Initializes the controller class.
@@ -122,7 +124,12 @@ public class Fxml_adductviewController implements Initializable {
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
 
-        //get selected Entry
+        
+        
+
+        
+                
+                //get selected Entry
         int adductnumber = 0;
         Entry entry;
         TreeItem<Entry> OGroupItem;
@@ -139,10 +146,13 @@ public class Fxml_adductviewController implements Initializable {
 
         //delete previous graphs
         gridPane.getChildren().clear();
-        scrollPane.setVvalue(((double) adductnumber) / (entry.getListofAdducts().size() - 1));
-        progress.setVisible(true);
         
-
+        progress.setVisible(true);
+        setScroll(((double) adductnumber) / (entry.getListofAdducts().size() - 1));
+        
+        
+                
+        
         Task task;
         task = new Task<Void>() {
             @Override
@@ -191,8 +201,7 @@ public class Fxml_adductviewController implements Initializable {
                         }
                    
                  
-                System.out.println(scrollPane.getVmax());
-                System.out.println(scrollPane.getVmin());
+                
                 
                 //add listener to every color property, to show changes instantly
                 for (int i = 0; i < filetoseries.size(); i++) {
@@ -265,6 +274,11 @@ public class Fxml_adductviewController implements Initializable {
                 }
                 
                 progress.setVisible(false);
+               Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            scroll();
+                        }});
                 return null;
             }
         };
@@ -578,6 +592,22 @@ public class Fxml_adductviewController implements Initializable {
                         public void run() {
                             gridPane.addColumn(i, chart);
                         }});
+         
+     }
+     
+     public void setScroll(double scroll) {
+         this.scroll=scroll; 
+     }
+     
+     public void scroll() {
+         Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollPane.setVvalue(scroll);
+                            System.out.println("Set to " + scroll);
+                        }});
+                            
+                       
          
      }
 }

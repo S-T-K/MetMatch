@@ -324,7 +324,7 @@ public class ChartGenerator {
                 ((Path) newSeries3.getNode()).setStroke(currentSlice.getFile().getColor()); 
                 }
                     ((Path) newSeries3.getNode()).setStrokeWidth(currentfile.getWidth());
-                    ((Path) newSeries3.getNode()).getStrokeDashArray().setAll(4d, 4d, 4d, 4d, 4d);
+                    ((Path) newSeries3.getNode()).getStrokeDashArray().setAll(0.5d, 6d, 0.5d, 6d);
                     adductcontroller.getSeriestofile().put(newSeries3, currentfile);
                     adductcontroller.getFiletoseries().get(currentfile).add(newSeries3);
 

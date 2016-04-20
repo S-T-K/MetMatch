@@ -249,7 +249,8 @@ public class FXMLTableViewController implements Initializable {
         Res.setDisable(true);
         paramMenu.setDisable(false);
 
-        session.calculateIntPeakRTTol();
+       
+        session.prepare();
 
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);

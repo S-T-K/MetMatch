@@ -29,6 +29,7 @@ public class Peak {
         this.slice = slice;
         this.start = (int) (index-1.5*scale);
         this.end = (int) (index+1.5*scale);
+        calculateArea();
         
     }
 
@@ -115,13 +116,30 @@ public class Peak {
     public void trimPeak() {
         //max distance from middle to end in minutes
         //TODO: as parameter
-        int maxdist = 15;
-        if (index-getStart()>15) {
-            setStart(index-15);
+        int maxdist = slice.getFile().getSession().getMaxPeakLengthint();
+        double[] intensity = slice.getIntensityArray();
+        if (index-getStart()>maxdist) {
+            setStart(index-maxdist);
+            
+            //look for minima in EIC
+            while (intensity[start+1]<intensity[start]&&start<index) {
+                start++;
+            }
+            
         }
-        if (getEnd()-index>15) {
-            setEnd(index+15);
+        if (getEnd()-index>maxdist) {
+            setEnd(index+maxdist);
+            
+            //look for minima in EIC
+            while (intensity[end-1]<intensity[end]&&end>index) {
+                end--;
+            }
         }
+        
+        
+        
+        
+       
         
     }
     

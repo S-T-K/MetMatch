@@ -43,6 +43,9 @@ public class Session {
     private SimpleDoubleProperty PeakRTTolerance;
     private int IntPeakRTTol;
     private String PeackPick;
+    private SimpleDoubleProperty maxPeakLength;
+    //max points from middle to end of peak
+    private int maxPeakLengthint;
    
     
     private int numberofFiles;
@@ -61,6 +64,7 @@ public class Session {
         RTTolerance = new SimpleDoubleProperty(1.5);
         MZTolerance = new SimpleDoubleProperty(10);
         PeakRTTolerance = new SimpleDoubleProperty(0.12);
+        maxPeakLength = new SimpleDoubleProperty(0.9);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
@@ -336,6 +340,10 @@ public class Session {
         return resolution;
     }
     
+    public SimpleDoubleProperty getMaxPeakLengthProp() {
+        return maxPeakLength;
+    }
+    
     public SimpleDoubleProperty getSliceMZTolProp() {
         return SliceMZTolerance;
     }
@@ -383,11 +391,6 @@ public class Session {
         this.IntPeakRTTol = IntPeakRTTol;
     }
     
-    public void calculateIntPeakRTTol() {
-        double delta = (RTTolerance.doubleValue()*2)/resolution.doubleValue();
-        IntPeakRTTol = (int) (PeakRTTolerance.doubleValue()/delta);
-        System.out.println("IntPeakRTTol: " + IntPeakRTTol);
-    }
 
     /**
      * @return the peakPickchanged
@@ -447,6 +450,37 @@ public class Session {
                 
             }
         }
+        
+    }
+
+    /**
+     * @return the maxPeakLength
+     */
+    public SimpleDoubleProperty getMaxPeakLength() {
+        return maxPeakLength;
+    }
+
+    /**
+     * @param maxPeakLength the maxPeakLength to set
+     */
+    public void setMaxPeakLength(SimpleDoubleProperty maxPeakLength) {
+        this.maxPeakLength = maxPeakLength;
+    }
+
+    /**
+     * @return the maxPeakLengthint
+     */
+    public int getMaxPeakLengthint() {
+        return maxPeakLengthint;
+    }
+    
+    //final steps when Parameters are fixed
+    public void prepare() {
+        maxPeakLengthint = (int)(maxPeakLength.doubleValue()/(RTTolerance.doubleValue()*2/resolution.doubleValue()))/2;
+        
+        double delta = (RTTolerance.doubleValue()*2)/resolution.doubleValue();
+        IntPeakRTTol = (int) (PeakRTTolerance.doubleValue()/delta);
+        System.out.println("IntPeakRTTol: " + IntPeakRTTol);
         
     }
 }
