@@ -93,7 +93,10 @@
                                         <PropertyValueFactory property="MZ" />
                                     </cellValueFactory>
                                 </TreeTableColumn>
-                                <TreeTableColumn maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="...">
+                                <TreeTableColumn fx:id="scorecertaintyColumn" maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="Certainty">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="Scorecertainty" />
+                                    </cellValueFactory>
                                 </TreeTableColumn>
                                 <TreeTableColumn fx:id="scorepeakfoundColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="PeakFound">
                                     <cellValueFactory>

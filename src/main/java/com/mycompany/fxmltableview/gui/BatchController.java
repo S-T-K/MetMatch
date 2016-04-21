@@ -383,6 +383,17 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                    
                    }
                    
+                    for (int f = 0; f<completeList.size(); f++) {
+                        double omincertainty = 9999;
+                        if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().containsKey(completeList.get(f))) {
+                        if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f))<omincertainty) {
+                            omincertainty=TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f));
+                        }}
+                        TVcontroller.getMasterListofOGroups().get(i).setScorecertainty(new SimpleDoubleProperty(omincertainty));
+                        
+                        
+                    }
+                   
                    
                    
                    

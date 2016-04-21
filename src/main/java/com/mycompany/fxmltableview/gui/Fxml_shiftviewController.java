@@ -151,7 +151,7 @@ public class Fxml_shiftviewController implements Initializable {
         hover.setRadius(2);
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
-        shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close", "distance"));
+        shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close", "distance", "certainty"));
         shiftOpacity.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 setOpacityMode(shiftOpacity.getItems().get(newVal.intValue()).toString());
@@ -423,6 +423,8 @@ public class Fxml_shiftviewController implements Initializable {
                                     node.setOpacity(nodetoogroup.get(node).getValue().getminScorepeakclose(file) + 0.02);
                                 } else if (OpacityMode.equals("distance")) {
                                     node.setOpacity(nodetoogroup.get(node).getValue().getmaxScoredistance(file) + 0.02);
+                                } else if (OpacityMode.equals("certainty")) {
+                                    node.setOpacity(nodetoogroup.get(node).getValue().getCertainties().get(file));
                                 }
                                 if (file.isselected()) {
                                     ((Ellipse) node).setFill(Color.RED);

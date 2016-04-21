@@ -38,6 +38,7 @@ public class Entry {
     private SimpleDoubleProperty Score;
     private SimpleDoubleProperty Scorepeakfound;
     private SimpleDoubleProperty Scorepeakclose;
+    private SimpleDoubleProperty Scorecertainty;
     private IntegerProperty Num;
     private DoubleProperty MZ;
     private IntegerProperty Xn;
@@ -49,6 +50,7 @@ public class Entry {
     private HashMap<RawDataFile, Slice> listofSlices;   //stores all slices
     private Session session;
     private HashMap<RawDataFile, Double> Scores;
+    private HashMap<RawDataFile, Double> Certainties;
     
 
     
@@ -82,9 +84,11 @@ public class Entry {
         this.Score = new SimpleDoubleProperty(0);
         this.Scorepeakclose = new SimpleDoubleProperty(0);
         this.Scorepeakfound = new SimpleDoubleProperty(0);
+        this.Scorecertainty = new SimpleDoubleProperty(1.0);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
 
         this.Scores = new HashMap<RawDataFile, Double>();
+        
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
@@ -100,12 +104,13 @@ public class Entry {
         this.Score = new SimpleDoubleProperty(0);
         this.Scorepeakclose = new SimpleDoubleProperty(0);
         this.Scorepeakfound = new SimpleDoubleProperty(0);
+        this.Scorecertainty = new SimpleDoubleProperty(1.0);
         this.session = session;
         this.OGroupObject=null;
 
         OGroupfittedShift = new HashMap<>();
         this.Scores = new HashMap<RawDataFile, Double>();
-        
+        this.Certainties = new HashMap<RawDataFile, Double>();
         PenArray = new HashMap<RawDataFile, double[]>();
 
     }
@@ -271,6 +276,27 @@ public class Entry {
      */
     public void setScorepeakfound(SimpleDoubleProperty score) {
         this.Scorepeakfound = score;
+    }
+    
+    /**
+     * @return the Score
+     */
+    public double getScorecertainty() {
+        return Scorecertainty.get();
+    }
+
+    public SimpleDoubleProperty ScorecertaintyProperty() {
+        return Scorecertainty;
+    }
+    /**
+     * @param Score the Score to set
+     * set Score for all adducts
+     */
+    public void setScorecertainty(SimpleDoubleProperty score) {
+        this.Scorecertainty = score;
+        for (int i = 0; i<listofAdducts.size(); i++) {
+            listofAdducts.get(i).Scorecertainty= score;
+        }
     }
     /**
      * @return the Score
@@ -666,6 +692,20 @@ public class Entry {
      */
     public void setPenArray(HashMap<RawDataFile, double[]> PenArray) {
         this.PenArray = PenArray;
+    }
+
+    /**
+     * @return the Certainties
+     */
+    public HashMap<RawDataFile, Double> getCertainties() {
+        return Certainties;
+    }
+
+    /**
+     * @param Certainties the Certainties to set
+     */
+    public void setCertainties(HashMap<RawDataFile, Double> Certainties) {
+        this.Certainties = Certainties;
     }
 
     

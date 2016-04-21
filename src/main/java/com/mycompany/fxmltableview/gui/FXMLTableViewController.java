@@ -6,6 +6,7 @@ import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry.orderbyRT;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
+import com.mycompany.fxmltableview.logic.CertaintyCalculator;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
@@ -101,7 +102,7 @@ public class FXMLTableViewController implements Initializable {
     TreeTableColumn nameColumn;
 
     @FXML
-    TreeTableColumn numColumn, scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn;
+    TreeTableColumn numColumn, scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn, scorecertaintyColumn;
 
     @FXML
     TreeTableColumn rtColumn;
@@ -162,6 +163,7 @@ public class FXMLTableViewController implements Initializable {
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
         scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakfound"));
         scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakclose"));
+        scorecertaintyColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorecertainty"));
         numColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("Num"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
@@ -531,6 +533,8 @@ public class FXMLTableViewController implements Initializable {
 
                 //don't recalculate unless something changes
                 session.setPeakPickchanged(false);
+                CertaintyCalculator calc = new CertaintyCalculator(session);
+                calc.calculate();
                 latch.countDown();
                 return null;
             }
