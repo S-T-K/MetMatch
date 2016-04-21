@@ -101,7 +101,8 @@ public class Fxml_shiftviewController implements Initializable {
     ToggleButton togglePenaltySelectionButton;
     
     @FXML
-    ChoiceBox vistype;
+    AnchorPane anchorPane;
+    
             
     private boolean penSelection = false;
     private Rectangle select;
@@ -141,7 +142,7 @@ public class Fxml_shiftviewController implements Initializable {
         select.setFill(Color.RED);
         select.setOpacity(0.2);
         anchor = new SimpleObjectProperty<>();
-        ((AnchorPane) box.getParent()).getChildren().add(select);
+        anchorPane.getChildren().add(select);
 
         //add ChartGenerator
         chartGenerator = new ChartGenerator(null, this);
@@ -151,7 +152,6 @@ public class Fxml_shiftviewController implements Initializable {
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
         shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close", "distance"));
-        vistype.setItems(FXCollections.observableArrayList("Peaks", "Shift"));
         shiftOpacity.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 setOpacityMode(shiftOpacity.getItems().get(newVal.intValue()).toString());
@@ -166,14 +166,7 @@ public class Fxml_shiftviewController implements Initializable {
 
         });
         shiftOpacity.getSelectionModel().select(0);
-        vistype.getSelectionModel().select(1);
-        vistype.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue ov, Number value, Number newVal) {
-                visTypeChanged();
-            }
-
-        });
-
+       
     }
 
     //method that generates the graphs
@@ -185,11 +178,9 @@ public class Fxml_shiftviewController implements Initializable {
         olist = list;
         //get selected Entry
 
-        if (vistype.getSelectionModel().isSelected(0)) { 
-        scatterchart = chartGenerator.generateScatterPeakChart(olist); }
-        else if (vistype.getSelectionModel().isSelected(1)) {
+      
              scatterchart = chartGenerator.generateScatterShiftChart(olist); 
-        }
+        
         
         
         box.getChildren().add(scatterchart);
@@ -239,13 +230,12 @@ public class Fxml_shiftviewController implements Initializable {
             }
 
         }
-        //TODO choicebox
-        if (vistype.getSelectionModel().isSelected(1)) {
+
         
         Set<XYChart.Series> set = seriestofile.keySet();
         for (XYChart.Series series : set) {
             applyMouseEvents(series);
-        }
+        
         }
     }
 
@@ -269,11 +259,10 @@ public class Fxml_shiftviewController implements Initializable {
         
         box.getChildren().remove(scatterchart);
         
-        if (vistype.getSelectionModel().isSelected(0)) { 
-        scatterchart = chartGenerator.generateScatterPeakChart(olist); }
-        else if (vistype.getSelectionModel().isSelected(1)) {
-             scatterchart = chartGenerator.generateScatterShiftChart(olist); 
-        }
+        
+       scatterchart = chartGenerator.generateScatterShiftChart(olist); 
+       
+        
         
         box.getChildren().add(scatterchart);
 
@@ -668,24 +657,21 @@ startY = scatterchart.getYAxis().getValueForDisplay(event.getY()).doubleValue();
 
     }
 
-    
-    public void visTypeChanged() {
-        if (scatterchart!=null) {
-        box.getChildren().remove(scatterchart); }
+    public void showPeakView() throws IOException {
         
-        print(olist);
-        
-        if (vistype.getSelectionModel().getSelectedIndex()==0) {
-            button.setVisible(false);
-            shiftOpacity.setVisible(false);
-            togglePenaltySelectionButton.setVisible(false);
-        }else {
-            button.setVisible(true);
-            shiftOpacity.setVisible(true);
-            togglePenaltySelectionButton.setVisible(true);
-        }
+         Stage stage = new Stage();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_peakview.fxml"));
+                        Pane myPane = (Pane) loader.load();
+                        Scene myScene = new Scene(myPane);
+                        stage.setScene(myScene);
+                        Fxml_peakviewController controller = loader.<Fxml_peakviewController>getController();
+                        controller.setOlist(olist);
+                        controller.setSession(session);
+                        controller.print();
+                        stage.show();
         
         
-        System.out.println("Change!");
     }
+    
+   
 }

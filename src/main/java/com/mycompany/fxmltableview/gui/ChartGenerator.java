@@ -816,7 +816,7 @@ public class ChartGenerator {
             }
         }}}
 
-        scatterchart.setMaxSize(2000, 500);
+        scatterchart.setMaxSize(2000, 2000);
         scatterchart.setLegendVisible(false);
         yAxis.setAutoRanging(false);
         yAxis.setLowerBound(lower - 30);
@@ -824,6 +824,7 @@ public class ChartGenerator {
         return scatterchart;
     }
     
+    //Peak Chart for peak view (context menu in Shiftview)
     public ScatterChart generateScatterPeakChart(ObservableList<Entry> list) {
 
         NumberAxis xAxis = new NumberAxis();
@@ -832,8 +833,7 @@ public class ChartGenerator {
         yAxis.setLabel("Shift [seconds]");
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
 
-        double upper = 0;
-        double lower = 0;
+     
         double shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
         int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
           List<XYChart.Data> points = new ArrayList<XYChart.Data>();
@@ -841,44 +841,51 @@ public class ChartGenerator {
         
         
             
-        //draw peaks for selected
+   
         
         
         for (int i = 0; i< sellist.size(); i++) {
-            XYChart.Series peakSeries = new XYChart.Series();
-            points = new ArrayList<XYChart.Data>();
+            for (int k = 1; k < list.size()-1; k++) {
+            double shift = (list.get(k).getOGroupFittedShift(sellist.get(i)) - middleint) * shiftiter * 60;
+                   XYChart.Data data = new XYChart.Data(list.get(k).getRT(), shift);
+                    
+                    Ellipse cir = new Ellipse(1.5,4);
+                    cir.setFill(Color.ANTIQUEWHITE);
+                    data.setNode(cir);
+                    points.add(data);
+            }
+        }
+        
+        for (int i = 0; i< sellist.size(); i++) {
+           
             List<Slice> slices = sellist.get(i).getListofSlices();
             for (int j = 0; j< slices.size(); j++) {
                 for (int p = 0; p<slices.get(j).getListofPeaks().size(); p++) {
                     XYChart.Data data = new XYChart.Data(slices.get(j).getRT(), (slices.get(j).getListofPeaks().get(p).getIndex()-middleint)*60*shiftiter);
-                    Rectangle rect = new Rectangle(1,1);
+                    Rectangle rect = new Rectangle(2,2);
                     rect.setFill(Color.BLACK);
                     data.setNode(rect);
                     points.add(data);
                     
                 }
                 
+                   
+                    
             }
-            peakSeries.getData().addAll(points);
-            shiftcontroller.getSeriestofile().put(peakSeries, sellist.get(i));
-            if (shiftcontroller.getFiletoseries().containsKey(sellist.get(i))){
-                    shiftcontroller.getFiletoseries().get(sellist.get(i)).add(peakSeries);
-                } else {
-                ArrayList array = new ArrayList();
-                array.add(peakSeries);
-                shiftcontroller.getFiletoseries().put(sellist.get(i), array);
-                        }
-            scatterchart.getData().add(peakSeries);
+            
+
         }
-        
+        XYChart.Series peakSeries = new XYChart.Series();
+        peakSeries.getData().addAll(points);
+        scatterchart.getData().add(peakSeries);
         
         
 
-        scatterchart.setMaxSize(2000, 500);
+        scatterchart.setMaxSize(2000, 2000);
         scatterchart.setLegendVisible(false);
-        yAxis.setAutoRanging(false);
-        yAxis.setLowerBound(lower - 90);
-        yAxis.setUpperBound(upper + 90);
+//        yAxis.setAutoRanging(false);
+//        yAxis.setLowerBound(lower - 90);
+//        yAxis.setUpperBound(upper + 90);
         return scatterchart;
     }
     

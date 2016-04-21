@@ -11,11 +11,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_shiftviewController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_shiftviewController">
    <children>
+      <VBox fx:id="box" prefHeight="362.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0" />
       <ToolBar prefHeight="27.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-            <ChoiceBox fx:id="vistype" prefHeight="28.0" prefWidth="88.0" />
             <Button fx:id="button" mnemonicParsing="false" onAction="#recalculate" prefHeight="20.0" prefWidth="126.0" text="Recalculate">
                <graphic>
                   <TextField fx:id="refsetpen" minHeight="20.0" prefHeight="7.0" prefWidth="43.0" />
@@ -26,7 +26,7 @@
                <graphic>
                   <ImageView fx:id="PenSelectionImage" blendMode="MULTIPLY" fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../../../Desktop/Download.png" />
+                        <Image url="@../../../../PenSelectionImage.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -36,6 +36,10 @@
             </ToggleButton>
         </items>
       </ToolBar>
-      <VBox fx:id="box" layoutY="38.0" prefHeight="362.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0" />
+      <Button mnemonicParsing="false" onAction="#showPeakView" prefHeight="28.0" text="Peaks" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <tooltip>
+            <Tooltip text="Shows peaks for selected files in a new window" />
+         </tooltip>
+      </Button>
    </children>
 </AnchorPane>

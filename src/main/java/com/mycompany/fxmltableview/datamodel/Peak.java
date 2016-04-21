@@ -28,7 +28,13 @@ public class Peak {
         this.area = area;
         this.slice = slice;
         this.start = (int) (index-1.5*scale);
+        if (start<0) {
+            start = 0;
+        }
         this.end = (int) (index+1.5*scale);
+        if (end >=slice.getFile().getSession().getResolution()) {
+            end = slice.getFile().getSession().getResolution()-1;
+        }
         calculateArea();
         
     }
