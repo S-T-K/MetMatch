@@ -54,6 +54,9 @@ public class RawDataFile {
     //for M/Z cleaning
     private int[] mzbins;
     private DoubleProperty mzshift;
+    
+    private DoubleProperty pfound;
+    private DoubleProperty avgcertainty;
 
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file, Session session) {
@@ -65,6 +68,8 @@ public class RawDataFile {
         this.session = session;
         mzbins = new int[session.getResolution()];
         mzshift = new SimpleDoubleProperty();
+        pfound = new SimpleDoubleProperty();
+        avgcertainty = new SimpleDoubleProperty();
         active = new SimpleBooleanProperty(true);
         
         color.addListener(new ChangeListener<Color>() {
@@ -281,6 +286,34 @@ System.out.println("Complete Extraction: " + (end-start));
     public void setMzshift(DoubleProperty mzshift) {
         this.mzshift = mzshift;
     }
+    
+    /**
+     * @return the mzshift
+     */
+    public double getPfound() {
+        return pfound.get();
+    }
+
+    /**
+     * @param mzshift the mzshift to set
+     */
+    public void setPfound(DoubleProperty pfound) {
+        this.pfound = pfound;
+    }
+    
+    /**
+     * @return the mzshift
+     */
+    public double getAvgcertainty() {
+        return avgcertainty.get();
+    }
+
+    /**
+     * @param mzshift the mzshift to set
+     */
+    public void setAvgCertainty(DoubleProperty avg) {
+        this.avgcertainty = avg;
+    }
 
     /**
      * @return the session
@@ -349,5 +382,25 @@ System.out.println("Complete Extraction: " + (end-start));
      */
     public void setScanspersecond(double scanspersecond) {
         this.scanspersecond = scanspersecond;
+    }
+    
+    public void calculateScore() {
+        
+        List<Double> certainties = new ArrayList<>();
+        int found = 0;
+        for (int i = 0; i< session.getListofOGroups().size(); i++) {
+            certainties.add(session.getListofOGroups().get(i).getCertainties().get(this));
+            found += session.getListofOGroups().get(i).getPeakfound(this);
+        }
+        double sum = 0.0;
+    for (double cert : certainties) {
+        sum += cert;
+    }
+    avgcertainty=new SimpleDoubleProperty(sum/certainties.size());
+    pfound=new SimpleDoubleProperty((double)found/(double)session.getListofOGroups().size()*100);
+  
+    getDataset().getController().getBatchFileView().refresh();
+        
+        
     }
 }

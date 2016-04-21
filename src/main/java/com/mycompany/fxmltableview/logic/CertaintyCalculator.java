@@ -152,7 +152,10 @@ public class CertaintyCalculator {
                             
 
                         }
+currentfile.calculateScore();
 
+                        
+                        
                     }
 
                 }

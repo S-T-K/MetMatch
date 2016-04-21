@@ -862,7 +862,7 @@ public class ChartGenerator {
             for (int j = 0; j< slices.size(); j++) {
                 for (int p = 0; p<slices.get(j).getListofPeaks().size(); p++) {
                     XYChart.Data data = new XYChart.Data(slices.get(j).getRT(), (slices.get(j).getListofPeaks().get(p).getIndex()-middleint)*60*shiftiter);
-                    Rectangle rect = new Rectangle(2,2);
+                    Rectangle rect = new Rectangle(1,1);
                     rect.setFill(Color.BLACK);
                     data.setNode(rect);
                     points.add(data);

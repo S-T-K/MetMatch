@@ -766,5 +766,16 @@ public double getmaxScoredistance(RawDataFile file) {
     return max;  
 }
       
+
+public double getPeakfound(RawDataFile file) {
+    
+    for (int i = 0; i< listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).listofSlices.get(file).getScorepeakfound()==1)
+         return 1;
+        
+    }
+    
+    return 0;
+}
     
 }
