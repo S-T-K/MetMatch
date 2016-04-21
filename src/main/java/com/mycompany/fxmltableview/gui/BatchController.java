@@ -316,7 +316,7 @@ public void newwindowcalculate() throws IOException, InterruptedException {
             
             //sets Score to the max over all selected Files
             public Void call() throws InterruptedException {
-               List<RawDataFile> completeList = session.getAllFiles();
+               List<RawDataFile> completeList = session.getSelectedFiles();
                for (int i =0; i<TVcontroller.getMasterListofOGroups().size(); i++) {
 //                   double maxScore = 0;
 //                   double maxScorepeakclose = 0;
@@ -348,7 +348,6 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                        double minScorepeakclose = 1;
                        double maxScorepeakfound = 0;
                    for (int f = 0; f<completeList.size(); f++) {
-                       if(completeList.get(f).isselected()) {
                        RawDataFile file = completeList.get(f);
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
                            maxScore = TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
@@ -360,7 +359,7 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()<minScorepeakclose) {
                        minScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose();
                        }
-                       }
+                       
                    }
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleDoubleProperty(minScorepeakclose));

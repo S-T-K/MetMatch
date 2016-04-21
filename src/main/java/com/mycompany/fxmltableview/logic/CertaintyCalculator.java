@@ -62,7 +62,15 @@ public class CertaintyCalculator {
                             //add penalty to fittedpeaks
                             //subtracts p*cert*value from value in original matrix, linear penalty
                             for (int i = 0; i < session.getListofOGroups().size(); i++) {
-                                for (int t = session.getListofOGroups().get(i).getOGroupFittedShift(currentfile)-session.getIntPeakRTTol(); t<=session.getListofOGroups().get(i).getOGroupFittedShift(currentfile)+session.getIntPeakRTTol(); t++) {
+                                int start = session.getListofOGroups().get(i).getOGroupFittedShift(currentfile)-session.getIntPeakRTTol();
+                                int end = session.getListofOGroups().get(i).getOGroupFittedShift(currentfile)+session.getIntPeakRTTol();
+                                if (start<0) {
+                                    start = 0;
+                                }
+                                if (end>=session.getResolution()) {
+                                    end = session.getResolution()-1;
+                                }
+                                for (int t = start; t<=end; t++) {
                                     matrix[i][t] = matrix[i][t]*(1.0/(1.0-p*cert))*(1-(p+1)*cert) ;
                                 }
                             }
@@ -135,8 +143,8 @@ public class CertaintyCalculator {
                                         double fp = (p+1)*cert;
                                         double sp = 1-(dist*distpen);
                                         
-                                        if (session.getListofOGroups().get(i).getCertainties().get(currentfile)>fp) {
-                                           session.getListofOGroups().get(i).getCertainties().put(currentfile,fp);
+                                        if (session.getListofOGroups().get(i).getCertainties().get(currentfile)>fp*sp) {
+                                           session.getListofOGroups().get(i).getCertainties().put(currentfile,fp*sp);
                                         }
                                     }
                                         

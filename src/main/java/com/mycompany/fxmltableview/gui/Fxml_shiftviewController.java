@@ -270,6 +270,13 @@ public class Fxml_shiftviewController implements Initializable {
         for (XYChart.Series series : set) {
             applyMouseEvents(series);
         }
+        
+        if (filetoseries != null) {
+                    for (RawDataFile file : filetoseries.keySet()) {
+                        Node node = ((XYChart.Data) filetoseries.get(file).get(0).getData().get(0)).getNode();
+                        Event.fireEvent((EventTarget) node, new MouseEvent(MouseEvent.MOUSE_EXITED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true, true, true, true, true, true, true, null));
+                    }
+                }
     }
 
     /**
