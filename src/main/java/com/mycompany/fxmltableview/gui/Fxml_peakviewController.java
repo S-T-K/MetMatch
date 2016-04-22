@@ -7,12 +7,15 @@ package com.mycompany.fxmltableview.gui;
  */
 
 import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.logic.Session;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -27,6 +30,9 @@ public class Fxml_peakviewController implements Initializable {
     @FXML
     VBox box;
     
+    @FXML
+    Label info;
+    
     ChartGenerator chartGenerator;
     private ObservableList<Entry> olist;
     private Session session;
@@ -39,6 +45,7 @@ public class Fxml_peakviewController implements Initializable {
         chartGenerator = new ChartGenerator(null,null);
         box.setMaxHeight(2000);
         
+       
     }    
 
     /**
@@ -49,7 +56,7 @@ public class Fxml_peakviewController implements Initializable {
     }
     
     public void print() {
-        box.getChildren().add(chartGenerator.generateScatterPeakChart(olist));
+        box.getChildren().add(0,chartGenerator.generateScatterPeakChart(olist));
     }
 
     /**
@@ -58,6 +65,15 @@ public class Fxml_peakviewController implements Initializable {
     public void setSession(Session session) {
         this.session = session;
         chartGenerator.setSession(session);
+        List<RawDataFile> list = session.getSelectedFiles();
+        if (list.size()>0) {
+        String string = list.get(0).getName();
+        for (int i = 1; i< list.size(); i++) {
+            string = string.concat(", " + list.get(i).getName());
+        }
+        info.setText(string);
+        info.setMinHeight(20*list.size());
+        }
     }
     
 }

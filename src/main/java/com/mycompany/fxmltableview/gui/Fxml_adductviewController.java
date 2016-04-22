@@ -41,6 +41,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -81,7 +82,10 @@ public class Fxml_adductviewController implements Initializable {
     ProgressBar progress;
     
     @FXML
-    ToggleButton EICToggle, NEICToggle, MZToggle;
+    CheckMenuItem EICToggle, NEICToggle, MZToggle;
+    
+    @FXML
+    ToggleButton EICMode, PeakMode;
 
     TreeTableView<Entry> metTable;
     private FXMLTableViewController mainController;
@@ -114,6 +118,8 @@ public class Fxml_adductviewController implements Initializable {
         EICToggle.selectedProperty().setValue(true);
         NEICToggle.selectedProperty().setValue(true);
         MZToggle.selectedProperty().setValue(true);
+        EICMode.selectedProperty().set(true);
+        
         
     }
 
@@ -610,4 +616,43 @@ public class Fxml_adductviewController implements Initializable {
                        
          
      }
+     
+     //gets called when PeakMode is clicked
+     public void toggleEIC() {
+         if (PeakMode.selectedProperty().get()) {
+             EICMode.selectedProperty().set(false);
+             peakModeactivated();
+         } else {
+             EICMode.selectedProperty().set(true);
+             EICModeactivated();
+         }
+         
+         
+     }
+     
+     //gets called when EICMode is clicked
+     public void togglePeak() {
+         if (EICMode.selectedProperty().get()) {
+             PeakMode.selectedProperty().set(false);
+             EICModeactivated();
+         } else {
+             PeakMode.selectedProperty().set(true);
+             peakModeactivated();
+         }
+         
+     }
+     
+     
+     public void peakModeactivated() {
+         
+         System.out.println("Peak Mode acitvated");
+         
+     }
+     
+     public void EICModeactivated() {
+         
+         System.out.println("EIC Mode acitvated");
+     }
+     
+     
 }
