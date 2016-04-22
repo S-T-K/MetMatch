@@ -46,6 +46,11 @@
         </menus>
       </MenuBar>
       <ToggleButton fx:id="EICMode" layoutX="86.0" mnemonicParsing="false" onAction="#togglePeak" prefHeight="25.0" prefWidth="77.0" text="EIC Mode" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="2.0" />
+      <ToggleButton fx:id="addPeak" disable="true" layoutX="258.0" mnemonicParsing="false" onAction="#peakPickMode" prefHeight="25.0" prefWidth="25.0" text="+" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="2.0">
+         <tooltip>
+            <Tooltip text="Add peak manually" />
+         </tooltip>
+      </ToggleButton>
       <ToggleButton fx:id="PeakMode" layoutX="167.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleEIC" prefHeight="25.0" prefWidth="77.0" text="Peak Mode" AnchorPane.leftAnchor="167.0" AnchorPane.topAnchor="2.0" />
       <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
    </children>

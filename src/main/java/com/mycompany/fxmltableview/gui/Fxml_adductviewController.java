@@ -86,7 +86,7 @@ public class Fxml_adductviewController implements Initializable {
     CheckMenuItem EICToggle, NEICToggle, MZToggle;
     
     @FXML
-    ToggleButton EICMode, PeakMode;
+    ToggleButton EICMode, PeakMode, addPeak;
 
     TreeTableView<Entry> metTable;
     private FXMLTableViewController mainController;
@@ -800,19 +800,23 @@ public class Fxml_adductviewController implements Initializable {
      public void peakModeactivated() {
          for (XYChart chart:charts) {
            
+             
              ((NumberAxis)chart.getYAxis()).setUpperBound(1.2);
          }
          
-         
+         addPeak.setDisable(false);
          System.out.println("Peak Mode acitvated");
          
      }
      
      public void EICModeactivated() {
          for (XYChart chart:charts) {
-           
+           clearChartMouseEvents(chart);
              ((NumberAxis)chart.getYAxis()).setUpperBound(1.0);
          }
+         addPeak.selectedProperty().set(false);
+         peakPickMode();
+         addPeak.setDisable(true);
          System.out.println("EIC Mode acitvated");
      }
 
@@ -944,6 +948,16 @@ chart.setOnMouseReleased((MouseEvent event) -> {
         
     }
     
+    public void clearChartMouseEvents(XYChart chart) {
+        chart.setOnMousePressed(null);
+        
+chart.setOnMouseDragged(null);
+       
+chart.setOnMouseReleased(null);
+        
+        
+    }
+    
     public Entry charttoadduct(XYChart chart) {
         for (Map.Entry<Entry,List<XYChart<Number,Number>>> set :adducttochart.entrySet()){
             for (int i = 0; i<set.getValue().size(); i++) {
@@ -954,6 +968,23 @@ chart.setOnMouseReleased((MouseEvent event) -> {
         }
         System.out.println("Error: entry not found");
         return null;
+    }
+    
+    public void peakPickMode() {
+        if (addPeak.selectedProperty().get()) {
+        for (XYChart chart:charts) {
+           
+             addChartMouseEvents(chart);
+            
+         }
+        } else {
+            for (XYChart chart:charts) {
+           
+             clearChartMouseEvents(chart);
+            
+         }
+        }
+        
     }
     
 }
