@@ -29,6 +29,7 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.rosuda.JRI.Rengine;
 
 import static java.lang.Math.abs;
+import java.util.Collections;
 import javafx.scene.chart.XYChart;
 
 /**
@@ -1251,8 +1252,32 @@ public class Slice {
     public XYChart.Series manualPeak(int start, int end) {
         
         //Peak picking
+        //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
+        double delta = (IntensityArray[end]-IntensityArray[start])/(end-start);
+        double current = IntensityArray[start];
         
-        int index = (start+end)/2;
+        List<Double> intensity = new ArrayList<>();
+        for (int i = start; i<=end; i++) {
+            intensity.add(IntensityArray[i]-current);
+            current = current + delta;
+        }
+        double max = 0;
+        int maxint = -1;
+        for (int i = 0; i< intensity.size(); i++) {
+            if (intensity.get(i)>max) {
+                max = intensity.get(i);
+                maxint = i;
+            }
+        }
+        
+        //no max or max at edge
+        if (max<0 || maxint <1 || maxint > intensity.size()-2) {
+            return null;
+        }
+        
+        
+        
+        int index = maxint+start;
         if (listofPeaks == null) {
             setListofPeaks(new ArrayList<>());
         }

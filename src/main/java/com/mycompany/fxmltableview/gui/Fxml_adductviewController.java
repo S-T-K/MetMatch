@@ -918,11 +918,19 @@ chart.setOnMouseReleased((MouseEvent event) -> {
     
     double x1 = (double) ((XYChart.Data)line.getData().get(0)).getXValue();
     double x2 = (double) ((XYChart.Data)line.getData().get(1)).getXValue();
+    
+    if (x1>x2) {
+        double temp = x1;
+        x1 = x2;
+        x2 = temp;
+        
+    }
    
     Entry adduct = charttoadduct(chart);
     List<RawDataFile> list = session.getSelectedFiles();
     for (int i = 0; i<list.size(); i++) {
         XYChart.Series peakSeries = adduct.manualPeak(list.get(i), x1, x2);
+        if (peakSeries!=null){
         chart.getData().add(peakSeries);
         chart.applyCss();
                 if (list.get(i).isselected()) {
@@ -935,6 +943,7 @@ chart.setOnMouseReleased((MouseEvent event) -> {
         getSeriestofile().put(peakSeries, list.get(i));
         getFiletoseries().get(list.get(i)).add(peakSeries);
         applyPeakMouseEvents(peakSeries);
+        }
         
     }
    
