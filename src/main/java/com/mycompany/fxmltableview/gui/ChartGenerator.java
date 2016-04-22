@@ -6,6 +6,7 @@
 package com.mycompany.fxmltableview.gui;
 
 import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.Peak;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Slice;
 import com.mycompany.fxmltableview.logic.Session;
@@ -62,6 +63,17 @@ public class ChartGenerator {
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Intensity");
         LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+        
+        
+        if (adductcontroller.getAdducttochart().containsKey(adduct)) {
+            adductcontroller.getAdducttochart().get(adduct).add(linechart);
+        } else {
+            ArrayList list = new ArrayList();
+            list.add(linechart);
+            adductcontroller.getAdducttochart().put(adduct, list);
+        }
+        
+        
 
         //double startouter = System.currentTimeMillis();
         // for all slices (= for all files)
@@ -72,6 +84,7 @@ public class ChartGenerator {
             if (currentfile.getActive().booleanValue()) {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
                 XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, linechart);
                 
                 //add Series to HashMaps
                 adductcontroller.getSeriestofile().put(newSeries, currentfile);
@@ -114,7 +127,7 @@ public class ChartGenerator {
         //don't draw symbols
         linechart.setCreateSymbols(false);
         //set size of chart
-        linechart.setMaxSize(300, 200);
+        linechart.setMaxSize(450, 300);
 
         double lower = adduct.getMinRT();
         double upper = adduct.getMaxRT();
@@ -139,6 +152,14 @@ public class ChartGenerator {
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Intensity (normalized)");
         LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+        
+        if (adductcontroller.getAdducttochart().containsKey(adduct)) {
+            adductcontroller.getAdducttochart().get(adduct).add(linechart);
+        } else {
+            ArrayList list = new ArrayList();
+            list.add(linechart);
+            adductcontroller.getAdducttochart().put(adduct, list);
+        }
 
         // for all slices (= for all files)
         //double startouter = System.currentTimeMillis();
@@ -150,6 +171,7 @@ public class ChartGenerator {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
 
                 XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, linechart);
  
                 //add Series to HashMaps
                 adductcontroller.getSeriestofile().put(newSeries, currentfile);
@@ -180,48 +202,15 @@ public class ChartGenerator {
                 }
                 ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
                 linechart.setCreateSymbols(false);
-                linechart.setMaxSize(300, 200);
+                linechart.setMaxSize(450, 300);
 
                 //double endouter = System.currentTimeMillis();
                 //System.out.println("Outer loop norm: " + (endouter-startouter));
 //set Range
-                if (adduct.getAdductFittedShift(currentfile) > 0) {
-                    XYChart.Series newSeries2 = new XYChart.Series();
-                    double[] RTArray = adduct.getRTArray();
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 0));
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 1));
-                    linechart.getData().add(newSeries2);
-                    linechart.applyCss();
-                    if (currentfile.isselected()) {
-                    paintselectedLine(newSeries2.getNode());
-                }else {
-                ((Path) newSeries2.getNode()).setStroke(currentSlice.getFile().getColor()); 
-                }
-                    ((Path) newSeries2.getNode()).setStrokeWidth(currentfile.getWidth());
-                    ((Path) newSeries2.getNode()).getStrokeDashArray().setAll(4d, 4d, 4d, 4d, 4d);
-                    adductcontroller.getSeriestofile().put(newSeries2, currentfile);
-                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
-
-                } else {
-                    XYChart.Series newSeries2 = new XYChart.Series();
-                    double[] RTArray = adduct.getRTArray();
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 0));
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 1));
-                    linechart.getData().add(newSeries2);
-                    linechart.applyCss();
-                    if (currentfile.isselected()) {
-                    paintselectedLine(newSeries2.getNode());
-                }else {
-                ((Path) newSeries2.getNode()).setStroke(currentSlice.getFile().getColor()); 
-                }
-                    ((Path) newSeries2.getNode()).setStrokeWidth(currentfile.getWidth());
-                    ((Path) newSeries2.getNode()).getStrokeDashArray().setAll(1d,15d,1d,15d);
-                    adductcontroller.getSeriestofile().put(newSeries2, currentfile);
-                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
-
-                    
-                }
+             generateShiftmarker(adduct,currentfile,linechart);
+             generatePeakmarker(adduct, currentfile, linechart);
             }
+            
         }}}
         double lower = adduct.getMinRT();
         double upper = adduct.getMaxRT();
@@ -233,7 +222,7 @@ public class ChartGenerator {
         yAxis.setAutoRanging(false);
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(1);
-        linechart.setAnimated(false);
+        //linechart.setAnimated(false);
 //        linechart.setCache(true);
 //        linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
@@ -450,6 +439,14 @@ public class ChartGenerator {
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("ppm M/Z deviation");
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
+        
+        if (adductcontroller.getAdducttochart().containsKey(adduct)) {
+            adductcontroller.getAdducttochart().get(adduct).add(scatterchart);
+        } else {
+            ArrayList list = new ArrayList();
+            list.add(scatterchart);
+            adductcontroller.getAdducttochart().put(adduct, list);
+        }
 
         // for all slices (= for all files)
         //double startouter = System.currentTimeMillis();
@@ -461,6 +458,8 @@ public class ChartGenerator {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
 
                 XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, scatterchart);
+                
                 
                  //add Series to HashMaps
                 adductcontroller.getSeriestofile().put(newSeries, currentfile);
@@ -505,7 +504,7 @@ public class ChartGenerator {
                 //double endinner = System.currentTimeMillis();
 //System.out.println("Inner loop mass: " + (endinner-startinner));
                 scatterchart.getData().add(newSeries);
-                scatterchart.setMaxSize(300, 200);
+                scatterchart.setMaxSize(450, 300);
 
                 //set Range
             }
@@ -887,6 +886,91 @@ public class ChartGenerator {
 //        yAxis.setLowerBound(lower - 90);
 //        yAxis.setUpperBound(upper + 90);
         return scatterchart;
+    }
+    
+    void generateShiftmarker(Entry adduct, RawDataFile currentfile, LineChart linechart) {
+        
+          if (adduct.getAdductFittedShift(currentfile) > 0) {
+                    XYChart.Series newSeries2 = new XYChart.Series();
+                    adductcontroller.getSeriestochart().put(newSeries2, linechart);
+                    double[] RTArray = adduct.getRTArray();
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 0));
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 1));
+                    linechart.getData().add(newSeries2);
+                    linechart.applyCss();
+                    if (currentfile.isselected()) {
+                    paintselectedLine(newSeries2.getNode());
+                }else {
+                ((Path) newSeries2.getNode()).setStroke(currentfile.getColor()); 
+                }
+                    ((Path) newSeries2.getNode()).setStrokeWidth(currentfile.getWidth());
+                    ((Path) newSeries2.getNode()).getStrokeDashArray().setAll(4d, 4d, 4d, 4d, 4d);
+                    adductcontroller.getSeriestofile().put(newSeries2, currentfile);
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
+
+                } else {
+                    XYChart.Series newSeries2 = new XYChart.Series();
+                    adductcontroller.getSeriestochart().put(newSeries2, linechart);
+                    double[] RTArray = adduct.getRTArray();
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 0));
+                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 1));
+                    linechart.getData().add(newSeries2);
+                    linechart.applyCss();
+                    if (currentfile.isselected()) {
+                    paintselectedLine(newSeries2.getNode());
+                }else {
+                ((Path) newSeries2.getNode()).setStroke(currentfile.getColor()); 
+                }
+                    ((Path) newSeries2.getNode()).setStrokeWidth(currentfile.getWidth());
+                    ((Path) newSeries2.getNode()).getStrokeDashArray().setAll(1d,15d,1d,15d);
+                    adductcontroller.getSeriestofile().put(newSeries2, currentfile);
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
+
+                    
+                }
+          
+          
+        
+    }
+    
+    void generatePeakmarker(Entry adduct, RawDataFile currentfile, LineChart linechart) {
+        
+        List<Peak> list = adduct.getListofSlices().get(currentfile).getListofPeaks();
+        if (list!= null) {
+            for (int i = 0; i< list.size(); i++) {
+                XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, linechart);
+                double[] RTArray = adduct.getRTArray();
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.13));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.05));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.13));
+                linechart.getData().add(newSeries);
+                adductcontroller.getPeakseries().add(newSeries);
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
+                linechart.applyCss();
+                if (currentfile.isselected()) {
+                    paintselectedLine(newSeries.getNode());
+                }else {
+                ((Path) newSeries.getNode()).setStroke(currentfile.getColor()); 
+                }
+                ((Path) newSeries.getNode()).setStrokeWidth(currentfile.getWidth());
+                //((Path) newSeries.getNode()).getStrokeDashArray().setAll(0.5d, 4d);
+            } 
+             
+                   
+                    
+                    
+            
+        }
+       
+        
+        
+        
     }
     
 }

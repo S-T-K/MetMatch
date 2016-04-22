@@ -97,6 +97,11 @@ public class Fxml_adductviewController implements Initializable {
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
     private HashMap<ChangeListener, Property> listeners;
     private HashMap<ListChangeListener, ObservableList> listlisteners;
+    private HashMap<XYChart.Series, XYChart<Number,Number>> seriestochart;
+    private List<XYChart.Series> peakseries;
+    private HashMap<Entry,List<XYChart<Number,Number>>> adducttochart;
+    
+    
     
     private double scroll;
 
@@ -109,6 +114,9 @@ public class Fxml_adductviewController implements Initializable {
         chartGenerator = new ChartGenerator(this, null);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
+        seriestochart = new HashMap<XYChart.Series, XYChart<Number,Number>>();
+        peakseries = new ArrayList<XYChart.Series>();
+        adducttochart= new HashMap<Entry,List<XYChart<Number,Number>>>();
         hover.setColor(Color.LIME);
         hover.setSpread(1);
         hover.setRadius(1.8);
@@ -129,7 +137,9 @@ public class Fxml_adductviewController implements Initializable {
         //new Maps, old Series are gone
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
-
+        seriestochart = new HashMap<>();
+        peakseries = new ArrayList<>();
+        adducttochart= new HashMap<>();
         
         
 
@@ -192,7 +202,7 @@ public class Fxml_adductviewController implements Initializable {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(adduct);
                                 addColumn(2, linechart2);
                             } else {
-                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithPeak(adduct);
+                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
                                 addColumn(2, linechart2);
                             }}
                             
@@ -277,6 +287,16 @@ public class Fxml_adductviewController implements Initializable {
                 Set<XYChart.Series> set = seriestofile.keySet();
                 for (XYChart.Series series : set) {
                     applyMouseEvents(series);
+                }
+                
+                for (XYChart.Series series:peakseries) {
+                    applyPeakMouseEvents(series);
+                }
+                
+                if (EICMode.selectedProperty().get()) {
+                    EICModeactivated();
+                } else {
+                    peakModeactivated();
                 }
                 
                 progress.setVisible(false);
@@ -553,6 +573,130 @@ public class Fxml_adductviewController implements Initializable {
         }
     }
     
+        private void applyPeakMouseEvents(final XYChart.Series series) {
+        if (series.getNode() != null) {
+            Node node = series.getNode();
+
+
+            //hover effect
+        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent arg0) {
+                ((XYChart.Data)series.getData().get(0)).setYValue(0);
+                ((XYChart.Data)series.getData().get(3)).setYValue(0);
+                ((XYChart.Data)series.getData().get(6)).setYValue(0);
+                
+                RawDataFile file = getSeriestofile().get(series);
+                List<XYChart.Series> list = getFiletoseries().get(file);
+                
+                for (int i = 0; i<list.size(); i++) {
+                    //if series is masschart
+                    if (list.get(i).getNode() == null) {
+                        for (int j = 0; j<list.get(i).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
+                        node.setEffect(hover);
+                        node.toFront();
+                        //((Rectangle)node).setFill(Color.RED);
+                        
+                    } }else {
+                    
+                    Node node = list.get(i).getNode();
+                    node.setEffect(hover);
+                    node.toFront();
+                node.setCursor(Cursor.HAND);
+                //((Path) node).setStroke(Color.RED);
+                }}
+            }
+        });
+
+        //hover effect
+        node.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent arg0) {
+                
+                ((XYChart.Data)series.getData().get(0)).setYValue(1.13);
+                ((XYChart.Data)series.getData().get(3)).setYValue(1.05);
+                ((XYChart.Data)series.getData().get(6)).setYValue(1.13);
+                
+                
+                RawDataFile file = getSeriestofile().get(series);
+                List<XYChart.Series> list = getFiletoseries().get(file);
+                
+                for (int i = 0; i<list.size(); i++) {
+                    //if series is masschart
+                    if (list.get(i).getNode() == null) {
+                        for (int j = 0; j<list.get(i).getData().size(); j++) {
+                        Node node = (( XYChart.Data)list.get(i).getData().get(j)).getNode();
+                        node.setEffect(null);
+                        //((Rectangle)node).setFill(Color.RED);
+                        
+                    } }else {
+                    
+                    Node node = list.get(i).getNode();
+                    node.setEffect(null);
+                node.setCursor(Cursor.DEFAULT);
+                //((Path) node).setStroke(Color.RED);
+                }}
+            }
+        });
+
+        //select file when clicked
+            node.setOnMouseReleased(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                RawDataFile file = getSeriestofile().get(series);
+                                List<XYChart.Series> list = getFiletoseries().get(file);
+                                BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
+                                if (getMainController().session.getSelectedFiles().contains(file)) {
+                                    
+                                    ObservableList<RawDataFile> selist = controller.getBatchFileView().getSelectionModel().getSelectedItems();
+
+                                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
+                                    for (RawDataFile sel : selist) {
+                                        newlist.add(sel);
+                                    }
+                                    controller.getBatchFileView().getSelectionModel().clearSelection();
+                                    newlist.remove(file);
+                                    for (RawDataFile sel : newlist) {
+                                        controller.getBatchFileView().getSelectionModel().select(sel);
+                                    }
+
+                                } else {
+                                    controller.getBatchFileView().getSelectionModel().select(file);
+                                }
+                                controller.changedFile();
+                            }
+                        });
+
+                    }
+                }
+            });
+        }
+    }
+        
+    private void unapplyMouseEvents(final XYChart.Series series) {
+    if (series.getNode() != null) {
+            Node node = series.getNode();
+
+
+            //hover effect
+        node.setOnMouseEntered(null);
+
+        //hover effect
+        node.setOnMouseExited(null);
+
+        //select file when clicked
+            node.setOnMouseReleased(null);
+        }
+    }
+    
     public void close() {
         //delete all nodes
         for(XYChart.Series ser : seriestofile.keySet()) {
@@ -644,15 +788,72 @@ public class Fxml_adductviewController implements Initializable {
      
      
      public void peakModeactivated() {
+         for (XYChart.Series series:peakseries) {
+             
+             ((NumberAxis)seriestochart.get(series).getYAxis()).setUpperBound(1.2);
+         }
+         
          
          System.out.println("Peak Mode acitvated");
          
      }
      
      public void EICModeactivated() {
-         
+         for (XYChart.Series series:peakseries) {
+           
+             ((NumberAxis)seriestochart.get(series).getYAxis()).setUpperBound(1.0);
+         }
          System.out.println("EIC Mode acitvated");
      }
+
+    /**
+     * @return the seriestochart
+     */
+    public HashMap<XYChart.Series, XYChart<Number,Number>> getSeriestochart() {
+        return seriestochart;
+    }
+
+    /**
+     * @param seriestochart the seriestochart to set
+     */
+    public void setSeriestochart(HashMap<XYChart.Series, XYChart<Number,Number>> seriestochart) {
+        this.seriestochart = seriestochart;
+    }
+
+    /**
+     * @return the peakseries
+     */
+    public List<XYChart.Series> getPeakseries() {
+        return peakseries;
+    }
+
+    /**
+     * @param peakseries the peakseries to set
+     */
+    public void setPeakseries(List<XYChart.Series> peakseries) {
+        this.peakseries = peakseries;
+    }
+
+    /**
+     * @return the adducttochart
+     */
+    public HashMap<Entry,List<XYChart<Number,Number>>> getAdducttochart() {
+        return adducttochart;
+    }
+
+    /**
+     * @param adducttochart the adducttochart to set
+     */
+    public void setAdducttochart(HashMap<Entry,List<XYChart<Number,Number>>> adducttochart) {
+        this.adducttochart = adducttochart;
+    }
      
+    
+    public boolean isPeakMode() {
+        if (PeakMode.selectedProperty().get()) {
+            return true;
+        }
+        return false;
+    }
      
 }
