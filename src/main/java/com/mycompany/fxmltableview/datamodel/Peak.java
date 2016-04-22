@@ -19,6 +19,7 @@ public class Peak {
     private double SNR;
     private double area;
     private Slice slice;
+    private boolean manual;
     
     
     public Peak(int index, double scale, double SNR, double area, Slice slice) {
@@ -27,6 +28,7 @@ public class Peak {
         this.SNR = SNR;
         this.area = area;
         this.slice = slice;
+        this.manual = false;
         this.start = (int) (index-1.5*scale);
         if (start<0) {
             start = 0;
@@ -44,10 +46,23 @@ public class Peak {
         this.start = start;
         this.end = end;
         this.slice = slice;
+        this.manual = false;
         trimPeak();
         calculateArea();
         
     }
+    
+    public Peak(boolean manual, int index, int start, int end, Slice slice, int non) {
+        this.index = index;
+        this.start = start;
+        this.end = end;
+        this.slice = slice;
+        this.manual = manual;
+        trimPeak();
+        calculateArea();
+        
+    }
+    
     
     /**
      * @return the index

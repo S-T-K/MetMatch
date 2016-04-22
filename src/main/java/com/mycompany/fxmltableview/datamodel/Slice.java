@@ -29,6 +29,7 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.rosuda.JRI.Rengine;
 
 import static java.lang.Math.abs;
+import javafx.scene.chart.XYChart;
 
 /**
  *
@@ -1247,6 +1248,28 @@ public class Slice {
         return listofPeaks.get(fittedpeak).getEnd();
     }
     
-    
+    public XYChart.Series manualPeak(int start, int end) {
+        
+        //Peak picking
+        
+        int index = (start+end)/2;
+        if (listofPeaks == null) {
+            setListofPeaks(new ArrayList<>());
+        }
+        Peak newPeak = new Peak(true,index, start,end, this, 1);
+        listofPeaks.add(newPeak);
+        XYChart.Series newSeries = new XYChart.Series();
+        
+        double[] RTArray = adduct.getRTArray();
+        newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.13));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.13));
+        
+                return newSeries;
+    }
     
 }

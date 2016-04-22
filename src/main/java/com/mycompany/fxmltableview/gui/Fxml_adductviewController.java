@@ -101,6 +101,8 @@ public class Fxml_adductviewController implements Initializable {
     private HashMap<XYChart.Series, XYChart<Number,Number>> seriestochart;
     private List<XYChart.Series> peakseries;
     private HashMap<Entry,List<XYChart<Number,Number>>> adducttochart;
+    private Entry entry;
+    private List<XYChart> charts;
     
      XYChart.Series line;
     
@@ -117,6 +119,7 @@ public class Fxml_adductviewController implements Initializable {
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         seriestochart = new HashMap<XYChart.Series, XYChart<Number,Number>>();
         peakseries = new ArrayList<XYChart.Series>();
+         charts = new ArrayList<XYChart>();
         adducttochart= new HashMap<Entry,List<XYChart<Number,Number>>>();
         hover.setColor(Color.LIME);
         hover.setSpread(1);
@@ -148,7 +151,7 @@ public class Fxml_adductviewController implements Initializable {
                 
                 //get selected Entry
         int adductnumber = 0;
-        Entry entry;
+        
         TreeItem<Entry> OGroupItem;
         if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
             entry = metTable.getSelectionModel().getSelectedItem().getValue().getOGroupObject();
@@ -206,6 +209,7 @@ public class Fxml_adductviewController implements Initializable {
                             } else {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
                                 addColumn(2, linechart2);
+                                charts.add(linechart2);
                                 addChartMouseEvents(linechart2);
                             }}
                             
@@ -718,14 +722,17 @@ public class Fxml_adductviewController implements Initializable {
     
      public void nextprev() {
         //delete all nodes
-        for(XYChart.Series ser : seriestofile.keySet()) {
-            ser = null;
-        }
+        filetoseries.clear();
+        seriestofile.clear();
+        seriestochart.clear();
+        peakseries.clear();
+        adducttochart.clear();
         
         //delete all listeners
         for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
             lis.getValue().removeListener(lis.getKey());
         }
+        charts.clear();
         System.gc();
     }
 
@@ -791,9 +798,9 @@ public class Fxml_adductviewController implements Initializable {
      
      
      public void peakModeactivated() {
-         for (XYChart.Series series:peakseries) {
-             
-             ((NumberAxis)seriestochart.get(series).getYAxis()).setUpperBound(1.2);
+         for (XYChart chart:charts) {
+           
+             ((NumberAxis)chart.getYAxis()).setUpperBound(1.2);
          }
          
          
@@ -802,9 +809,9 @@ public class Fxml_adductviewController implements Initializable {
      }
      
      public void EICModeactivated() {
-         for (XYChart.Series series:peakseries) {
+         for (XYChart chart:charts) {
            
-             ((NumberAxis)seriestochart.get(series).getYAxis()).setUpperBound(1.0);
+             ((NumberAxis)chart.getYAxis()).setUpperBound(1.0);
          }
          System.out.println("EIC Mode acitvated");
      }
@@ -906,27 +913,27 @@ chart.setOnMouseReleased((MouseEvent event) -> {
     
     
     double x1 = (double) ((XYChart.Data)line.getData().get(0)).getXValue();
-    double y1 = (double) ((XYChart.Data)line.getData().get(0)).getYValue();
     double x2 = (double) ((XYChart.Data)line.getData().get(1)).getXValue();
-    double y2 = (double) ((XYChart.Data)line.getData().get(1)).getYValue();
-    
-    XYChart.Series newSeries = new XYChart.Series();
-    newSeries.getData().add(new XYChart.Data(x1,1.13));
-    newSeries.getData().add(new XYChart.Data(x1,1.19));
-    newSeries.getData().add(new XYChart.Data((x1+x2)/2,1.19));
-    newSeries.getData().add(new XYChart.Data((x1+x2)/2,1.05));
-    newSeries.getData().add(new XYChart.Data((x1+x2)/2,1.19));
-    newSeries.getData().add(new XYChart.Data(x2,1.19));
-    newSeries.getData().add(new XYChart.Data(x2,1.13));
-    
-    
-    chart.getData().add(newSeries);
-    
-    chart.applyCss();
-    
-    ((Path) newSeries.getNode()).setStroke(Color.GREEN);
-    ((Path) newSeries.getNode()).setStrokeWidth(2.0);
-    ((Path) newSeries.getNode()).setOpacity(1.0);
+   
+    Entry adduct = charttoadduct(chart);
+    List<RawDataFile> list = session.getSelectedFiles();
+    for (int i = 0; i<list.size(); i++) {
+        XYChart.Series peakSeries = adduct.manualPeak(list.get(i), x1, x2);
+        chart.getData().add(peakSeries);
+        chart.applyCss();
+                if (list.get(i).isselected()) {
+                    chartGenerator.paintselectedLine(peakSeries.getNode());
+                }else {
+                ((Path) peakSeries.getNode()).setStroke(list.get(i).getColor()); 
+                }
+                ((Path) peakSeries.getNode()).setStrokeWidth(list.get(i).getWidth());
+        getPeakseries().add(peakSeries);
+        getSeriestofile().put(peakSeries, list.get(i));
+        getFiletoseries().get(list.get(i)).add(peakSeries);
+        applyPeakMouseEvents(peakSeries);
+        
+    }
+   
     
     ((NumberAxis)chart.getYAxis()).setUpperBound(1.2);
     chart.getData().remove(line);
@@ -935,6 +942,18 @@ chart.setOnMouseReleased((MouseEvent event) -> {
 });
         
         
+    }
+    
+    public Entry charttoadduct(XYChart chart) {
+        for (Map.Entry<Entry,List<XYChart<Number,Number>>> set :adducttochart.entrySet()){
+            for (int i = 0; i<set.getValue().size(); i++) {
+                if (set.getValue().get(i).equals(chart)) {
+                    return set.getKey();
+                }
+            }
+        }
+        System.out.println("Error: entry not found");
+        return null;
     }
     
 }
