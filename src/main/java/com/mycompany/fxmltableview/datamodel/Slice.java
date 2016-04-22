@@ -1246,4 +1246,7 @@ public class Slice {
     public int getfittedPeakEnd() {
         return listofPeaks.get(fittedpeak).getEnd();
     }
+    
+    
+    
 }

@@ -222,7 +222,7 @@ public class ChartGenerator {
         yAxis.setAutoRanging(false);
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(1);
-        //linechart.setAnimated(false);
+        linechart.setAnimated(false);
 //        linechart.setCache(true);
 //        linechart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
@@ -942,11 +942,11 @@ public class ChartGenerator {
                 adductcontroller.getSeriestochart().put(newSeries, linechart);
                 double[] RTArray = adduct.getRTArray();
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.13));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.19));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.05));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.19));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.13));
                 linechart.getData().add(newSeries);
                 adductcontroller.getPeakseries().add(newSeries);

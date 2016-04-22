@@ -32,6 +32,7 @@ import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
@@ -101,7 +102,7 @@ public class Fxml_adductviewController implements Initializable {
     private List<XYChart.Series> peakseries;
     private HashMap<Entry,List<XYChart<Number,Number>>> adducttochart;
     
-    
+     XYChart.Series line;
     
     private double scroll;
 
@@ -195,7 +196,8 @@ public class Fxml_adductviewController implements Initializable {
                             addRow(i, box);
                             if(EICToggle.selectedProperty().get()) {
                             LineChart<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
-                            addColumn(1, linechart1);}
+                            addColumn(1, linechart1);
+                            }
                             
                             if(NEICToggle.selectedProperty().get()) {
                             if (showProp) {
@@ -204,6 +206,7 @@ public class Fxml_adductviewController implements Initializable {
                             } else {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
                                 addColumn(2, linechart2);
+                                addChartMouseEvents(linechart2);
                             }}
                             
                             
@@ -856,4 +859,82 @@ public class Fxml_adductviewController implements Initializable {
         return false;
     }
      
+    public void addChartMouseEvents(XYChart chart) {
+        chart.setOnMousePressed((MouseEvent event) -> {
+
+    Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
+    double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
+    double y = chart.getYAxis().sceneToLocal(mouseSceneCoords).getY();
+
+    System.out.println("" +
+        chart.getXAxis().getValueForDisplay(x) + ",  " +
+        chart.getYAxis().getValueForDisplay(y)
+    );
+   
+    line = new XYChart.Series();
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
+    chart.getData().add(line);
+    chart.applyCss();
+    
+    ((Path) line.getNode()).setStroke(Color.GREEN);
+    ((Path) line.getNode()).setStrokeWidth(2.0);
+    ((Path) line.getNode()).setOpacity(1.0);
+    
+});
+        
+chart.setOnMouseDragged((MouseEvent event) -> {
+
+    Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
+    double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
+    double y = chart.getYAxis().sceneToLocal(mouseSceneCoords).getY();
+
+    System.out.println("" +
+        chart.getXAxis().getValueForDisplay(x) + ",  " +
+        chart.getYAxis().getValueForDisplay(y)
+    );
+   
+    
+    ((XYChart.Data)line.getData().get(1)).setXValue(chart.getXAxis().getValueForDisplay(x));
+    ((XYChart.Data)line.getData().get(1)).setYValue(chart.getYAxis().getValueForDisplay(y));
+    
+    
+});
+       
+chart.setOnMouseReleased((MouseEvent event) -> {
+
+    
+    
+    double x1 = (double) ((XYChart.Data)line.getData().get(0)).getXValue();
+    double y1 = (double) ((XYChart.Data)line.getData().get(0)).getYValue();
+    double x2 = (double) ((XYChart.Data)line.getData().get(1)).getXValue();
+    double y2 = (double) ((XYChart.Data)line.getData().get(1)).getYValue();
+    
+    XYChart.Series newSeries = new XYChart.Series();
+    newSeries.getData().add(new XYChart.Data(x1,1.13));
+    newSeries.getData().add(new XYChart.Data(x1,1.19));
+    newSeries.getData().add(new XYChart.Data((x1+x2)/2,1.19));
+    newSeries.getData().add(new XYChart.Data((x1+x2)/2,1.05));
+    newSeries.getData().add(new XYChart.Data((x1+x2)/2,1.19));
+    newSeries.getData().add(new XYChart.Data(x2,1.19));
+    newSeries.getData().add(new XYChart.Data(x2,1.13));
+    
+    
+    chart.getData().add(newSeries);
+    
+    chart.applyCss();
+    
+    ((Path) newSeries.getNode()).setStroke(Color.GREEN);
+    ((Path) newSeries.getNode()).setStrokeWidth(2.0);
+    ((Path) newSeries.getNode()).setOpacity(1.0);
+    
+    ((NumberAxis)chart.getYAxis()).setUpperBound(1.2);
+    chart.getData().remove(line);
+    line = null;
+    
+});
+        
+        
+    }
+    
 }

@@ -777,5 +777,13 @@ public double getPeakfound(RawDataFile file) {
     
     return 0;
 }
+
+public XYChart.Series manualPeak(RawDataFile file, double start, double end) {
+    
+    
+    
+    
+}
+
     
 }
