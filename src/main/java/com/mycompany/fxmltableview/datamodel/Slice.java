@@ -1308,6 +1308,7 @@ public class Slice {
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));

@@ -24,10 +24,10 @@
             </GridPane>
          </content>
          <contextMenu>
-            <ContextMenu>
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#setShowProp" text="Show Peak Propability " />
-              </items>
+            <ContextMenu fx:id="contextMenu" onHidden="#unlock" onHiding="#unlock" onShowing="#lock" onShown="#lock">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#deletePeak" text="Delete peak" />
+               </items>
             </ContextMenu>
          </contextMenu>
       </ScrollPane>

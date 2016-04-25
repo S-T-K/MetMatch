@@ -8,7 +8,9 @@ package com.mycompany.fxmltableview.gui;
 import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry;
+import com.mycompany.fxmltableview.datamodel.Peak;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
+import com.mycompany.fxmltableview.datamodel.Slice;
 import com.mycompany.fxmltableview.logic.Session;
 import com.sun.webkit.ContextMenuItem;
 import java.awt.Checkbox;
@@ -87,6 +89,12 @@ public class Fxml_adductviewController implements Initializable {
     
     @FXML
     ToggleButton EICMode, PeakMode, addPeak;
+    
+    @FXML
+    ContextMenu contextMenu;
+    
+    
+           
 
     TreeTableView<Entry> metTable;
     private FXMLTableViewController mainController;
@@ -99,10 +107,15 @@ public class Fxml_adductviewController implements Initializable {
     private HashMap<ChangeListener, Property> listeners;
     private HashMap<ListChangeListener, ObservableList> listlisteners;
     private HashMap<XYChart.Series, XYChart<Number,Number>> seriestochart;
-    private List<XYChart.Series> peakseries;
+    private HashMap<XYChart.Series, Peak> seriestopeak;
     private HashMap<Entry,List<XYChart<Number,Number>>> adducttochart;
     private Entry entry;
     private List<XYChart> charts;
+    
+    private boolean locked = false;
+    private XYChart.Series selectedPeak;
+    private Slice selectedSlice;
+    private RawDataFile selectedFile;
     
      XYChart.Series line;
     
@@ -118,7 +131,7 @@ public class Fxml_adductviewController implements Initializable {
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         seriestochart = new HashMap<XYChart.Series, XYChart<Number,Number>>();
-        peakseries = new ArrayList<XYChart.Series>();
+        setSeriestopeak(new HashMap<XYChart.Series, Peak>());
          charts = new ArrayList<XYChart>();
         adducttochart= new HashMap<Entry,List<XYChart<Number,Number>>>();
         hover.setColor(Color.LIME);
@@ -131,6 +144,7 @@ public class Fxml_adductviewController implements Initializable {
         NEICToggle.selectedProperty().setValue(true);
         MZToggle.selectedProperty().setValue(true);
         EICMode.selectedProperty().set(true);
+        scrollPane.setContextMenu(null);
         
         
     }
@@ -142,7 +156,7 @@ public class Fxml_adductviewController implements Initializable {
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         seriestochart = new HashMap<>();
-        peakseries = new ArrayList<>();
+        setSeriestopeak(new HashMap<XYChart.Series, Peak>());
         adducttochart= new HashMap<>();
         
         
@@ -296,7 +310,7 @@ public class Fxml_adductviewController implements Initializable {
                     applyMouseEvents(series);
                 }
                 
-                for (XYChart.Series series:peakseries) {
+                for (XYChart.Series series:getSeriestopeak().keySet()) {
                     applyPeakMouseEvents(series);
                 }
                 
@@ -590,9 +604,15 @@ public class Fxml_adductviewController implements Initializable {
 
             @Override
             public void handle(MouseEvent arg0) {
+                if (!locked) {
                 ((XYChart.Data)series.getData().get(1)).setYValue(0);
-                ((XYChart.Data)series.getData().get(4)).setYValue(0);
-                ((XYChart.Data)series.getData().get(7)).setYValue(0);
+                ((XYChart.Data)series.getData().get(5)).setYValue(0);
+                ((XYChart.Data)series.getData().get(8)).setYValue(0);
+                
+                selectedPeak = series;
+                selectedSlice = charttoadduct(seriestochart.get(series)).getListofSlices().get(seriestofile.get(series));
+                selectedFile = seriestofile.get(series);
+                toggleContextMenu(true);
                 
                 RawDataFile file = getSeriestofile().get(series);
                 List<XYChart.Series> list = getFiletoseries().get(file);
@@ -614,7 +634,7 @@ public class Fxml_adductviewController implements Initializable {
                 node.setCursor(Cursor.HAND);
                 //((Path) node).setStroke(Color.RED);
                 }}
-            }
+            }}
         });
 
         //hover effect
@@ -622,11 +642,13 @@ public class Fxml_adductviewController implements Initializable {
 
             @Override
             public void handle(MouseEvent arg0) {
-                
+                if (!locked) {
                 ((XYChart.Data)series.getData().get(1)).setYValue(1.17);
-                ((XYChart.Data)series.getData().get(4)).setYValue(1.2);
-                ((XYChart.Data)series.getData().get(7)).setYValue(1.17);
+                ((XYChart.Data)series.getData().get(5)).setYValue(1.2);
+                ((XYChart.Data)series.getData().get(8)).setYValue(1.17);
                 
+          
+                toggleContextMenu(false);
                 
                 RawDataFile file = getSeriestofile().get(series);
                 List<XYChart.Series> list = getFiletoseries().get(file);
@@ -646,7 +668,7 @@ public class Fxml_adductviewController implements Initializable {
                 node.setCursor(Cursor.DEFAULT);
                 //((Path) node).setStroke(Color.RED);
                 }}
-            }
+            }}
         });
 
         //select file when clicked
@@ -725,7 +747,7 @@ public class Fxml_adductviewController implements Initializable {
         filetoseries.clear();
         seriestofile.clear();
         seriestochart.clear();
-        peakseries.clear();
+        getSeriestopeak().clear();
         adducttochart.clear();
         
         //delete all listeners
@@ -834,19 +856,7 @@ public class Fxml_adductviewController implements Initializable {
         this.seriestochart = seriestochart;
     }
 
-    /**
-     * @return the peakseries
-     */
-    public List<XYChart.Series> getPeakseries() {
-        return peakseries;
-    }
-
-    /**
-     * @param peakseries the peakseries to set
-     */
-    public void setPeakseries(List<XYChart.Series> peakseries) {
-        this.peakseries = peakseries;
-    }
+   
 
     /**
      * @return the adducttochart
@@ -934,8 +944,9 @@ chart.setOnMouseReleased((MouseEvent event) -> {
                 ((Path) peakSeries.getNode()).setStroke(list.get(i).getColor()); 
                 }
                 ((Path) peakSeries.getNode()).setStrokeWidth(list.get(i).getWidth());
-        getPeakseries().add(peakSeries);
+        getSeriestopeak().put(peakSeries,adduct.getListofSlices().get(list.get(i)).getListofPeaks().get(adduct.getListofSlices().get(list.get(i)).getListofPeaks().size()-1));
         getSeriestofile().put(peakSeries, list.get(i));
+        getSeriestochart().put(peakSeries, chart);
         getFiletoseries().get(list.get(i)).add(peakSeries);
         applyPeakMouseEvents(peakSeries);
         }
@@ -989,6 +1000,46 @@ chart.setOnMouseReleased(null);
          }
         }
         
+    }
+
+    /**
+     * @return the seriestopeak
+     */
+    public HashMap<XYChart.Series, Peak> getSeriestopeak() {
+        return seriestopeak;
+    }
+
+    /**
+     * @param seriestopeak the seriestopeak to set
+     */
+    public void setSeriestopeak(HashMap<XYChart.Series, Peak> seriestopeak) {
+        this.seriestopeak = seriestopeak;
+    }
+    
+    public void toggleContextMenu(boolean toggle) {
+        if (!toggle) {
+        scrollPane.setContextMenu(null);
+        } else {
+       scrollPane.setContextMenu(contextMenu);
+        }    
+    }
+    
+    public void deletePeak() {
+        selectedSlice.getListofPeaks().remove(seriestopeak.get(selectedPeak));
+        List<XYChart.Series> list = filetoseries.get(selectedFile);
+        list.remove(selectedPeak);
+        seriestofile.remove(selectedPeak);
+        seriestochart.get(selectedPeak).getData().remove(selectedPeak);
+        seriestochart.remove(selectedPeak);
+        seriestopeak.remove(selectedPeak);     
+    }
+    
+    public void lock() {
+        locked = true;
+    }
+    
+    public void unlock() {
+        locked = false;
     }
     
 }

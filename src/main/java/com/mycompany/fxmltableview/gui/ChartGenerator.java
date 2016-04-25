@@ -946,13 +946,14 @@ public class ChartGenerator {
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.05));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.2));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.05));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.2));
               
                 linechart.getData().add(newSeries);
-                adductcontroller.getPeakseries().add(newSeries);
+                adductcontroller.getSeriestopeak().put(newSeries, list.get(i));
                 adductcontroller.getSeriestofile().put(newSeries, currentfile);
                 adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
                 linechart.applyCss();
