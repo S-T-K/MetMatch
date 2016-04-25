@@ -590,9 +590,9 @@ public class Fxml_adductviewController implements Initializable {
 
             @Override
             public void handle(MouseEvent arg0) {
-                ((XYChart.Data)series.getData().get(0)).setYValue(0);
-                ((XYChart.Data)series.getData().get(3)).setYValue(0);
-                ((XYChart.Data)series.getData().get(6)).setYValue(0);
+                ((XYChart.Data)series.getData().get(1)).setYValue(0);
+                ((XYChart.Data)series.getData().get(4)).setYValue(0);
+                ((XYChart.Data)series.getData().get(7)).setYValue(0);
                 
                 RawDataFile file = getSeriestofile().get(series);
                 List<XYChart.Series> list = getFiletoseries().get(file);
@@ -623,9 +623,9 @@ public class Fxml_adductviewController implements Initializable {
             @Override
             public void handle(MouseEvent arg0) {
                 
-                ((XYChart.Data)series.getData().get(0)).setYValue(1.13);
-                ((XYChart.Data)series.getData().get(3)).setYValue(1.05);
-                ((XYChart.Data)series.getData().get(6)).setYValue(1.13);
+                ((XYChart.Data)series.getData().get(1)).setYValue(1.17);
+                ((XYChart.Data)series.getData().get(4)).setYValue(1.2);
+                ((XYChart.Data)series.getData().get(7)).setYValue(1.17);
                 
                 
                 RawDataFile file = getSeriestofile().get(series);

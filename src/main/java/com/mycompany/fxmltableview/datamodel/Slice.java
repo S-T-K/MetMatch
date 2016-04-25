@@ -304,7 +304,7 @@ public class Slice {
         double startc = System.currentTimeMillis();
         if (PropArray == null) {
             PropArray = (new double[this.IntensityArray.length]);
-            setListofPeaks(new ArrayList<>());
+            deleteAutoPeaks();
         
             //baseline correct IntensityArray
             double[] correctedIntArray = new double[IntensityArray.length];
@@ -479,7 +479,7 @@ public class Slice {
      }
      
      //now we have an Array with Marks at Max and Min
-     setListofPeaks(new ArrayList<>());
+     deleteAutoPeaks();
      int start = 0; 
     int index = 0;
     int end = 0;
@@ -1285,6 +1285,16 @@ public class Slice {
         
         
         int index = maxint+start;
+        
+        //don't add Peak if there is already a similar peak
+        if (listofPeaks != null) {
+            for (int i = 0; i<listofPeaks.size(); i++) {
+                if (Math.abs(listofPeaks.get(i).getIndex()-index)<adduct.getSession().getIntPeakRTTol()) {
+                    return null;
+                }
+            }
+        }
+        
         if (listofPeaks == null) {
             setListofPeaks(new ArrayList<>());
         }
@@ -1293,15 +1303,32 @@ public class Slice {
         XYChart.Series newSeries = new XYChart.Series();
         
         double[] RTArray = adduct.getRTArray();
-        newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.13));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.19));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.19));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.19));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.13));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.2));
+              
         
                 return newSeries;
+    }
+    
+    public void deleteAutoPeaks() {
+        if (listofPeaks!=null) {
+        for (int i= 0; i<listofPeaks.size(); i++) {
+           if (!listofPeaks.get(i).isManual()) {
+               listofPeaks.remove(i);
+               i--;
+           }
+            
+        }
+        } else {
+            setListofPeaks(new ArrayList<>());
+        }
     }
     
 }

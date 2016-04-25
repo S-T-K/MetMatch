@@ -201,5 +201,19 @@ public class Peak {
     public void setEnd(int end) {
         this.end = end;
     }
+
+    /**
+     * @return the manual
+     */
+    public boolean isManual() {
+        return manual;
+    }
+
+    /**
+     * @param manual the manual to set
+     */
+    public void setManual(boolean manual) {
+        this.manual = manual;
+    }
     
 }

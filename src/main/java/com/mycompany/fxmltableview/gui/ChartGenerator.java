@@ -941,13 +941,16 @@ public class ChartGenerator {
                 XYChart.Series newSeries = new XYChart.Series();
                 adductcontroller.getSeriestochart().put(newSeries, linechart);
                 double[] RTArray = adduct.getRTArray();
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.13));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.19));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.19));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getStart()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.05));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.19));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.19));
-                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.13));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getIndex()], 1.05));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[list.get(i).getEnd()], 1.2));
+              
                 linechart.getData().add(newSeries);
                 adductcontroller.getPeakseries().add(newSeries);
                 adductcontroller.getSeriestofile().put(newSeries, currentfile);
