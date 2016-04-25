@@ -794,7 +794,12 @@ public class Slice {
                   }
                   RT++;
                   values = 0;
+                  if (RT==100) {
+                      RT=99;
+                      break;
+                  }
               }
+               
               MZArray[RT]+=massList.get(i);
               values++;  
           }

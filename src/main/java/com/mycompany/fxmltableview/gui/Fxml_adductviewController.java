@@ -207,6 +207,8 @@ public class Fxml_adductviewController implements Initializable {
                     box.getChildren().add(label2);
                     Label label3 = new Label("Xn: " + Double.toString(adduct.getXn()));
                     box.getChildren().add(label3);
+                    Label label4 = new Label("Num: " + Double.toString(adduct.getNum()));
+                    box.getChildren().add(label4);
                     
                     //generate graphs
                     

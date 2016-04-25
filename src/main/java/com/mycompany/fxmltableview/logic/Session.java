@@ -54,6 +54,8 @@ public class Session {
     
     private boolean peakPickchanged;
     
+    private List<String> listofadductnames;
+    private List<Double> listofadductmasses;
     
     public Session() {
         this.reference= new Reference();
@@ -68,7 +70,21 @@ public class Session {
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
-  
+        
+        //TODO: change
+        listofadductnames= new ArrayList<String>();
+        listofadductnames.add("H");
+        listofadductnames.add("NH4");
+        listofadductnames.add("Na");
+        listofadductnames.add("CH3OH+H");
+        listofadductnames.add("K");
+        listofadductmasses= new ArrayList<Double>();
+        listofadductmasses.add(1.007276);
+        listofadductmasses.add(18.033823);
+        listofadductmasses.add(22.989218);
+        listofadductmasses.add(33.033489);
+        listofadductmasses.add(38.963158);
+        
     }
 
     /**
@@ -482,5 +498,33 @@ public class Session {
         IntPeakRTTol = (int) (PeakRTTolerance.doubleValue()/delta);
         System.out.println("IntPeakRTTol: " + IntPeakRTTol);
         
+    }
+
+    /**
+     * @return the listofadductnames
+     */
+    public List<String> getListofadductnames() {
+        return listofadductnames;
+    }
+
+    /**
+     * @param listofadductnames the listofadductnames to set
+     */
+    public void setListofadductnames(List<String> listofadductnames) {
+        this.listofadductnames = listofadductnames;
+    }
+
+    /**
+     * @return the listogadductmasses
+     */
+    public List<Double> getListofadductmasses() {
+        return listofadductmasses;
+    }
+
+    /**
+     * @param listogadductmasses the listogadductmasses to set
+     */
+    public void setListofadductmasses(List<Double> listogadductmasses) {
+        this.listofadductmasses = listogadductmasses;
     }
 }

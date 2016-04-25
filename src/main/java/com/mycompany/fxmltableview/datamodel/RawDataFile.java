@@ -132,7 +132,9 @@ public class RawDataFile {
 
 
         for (int i = 0; i < data.size(); i++) {
+            //System.out.println("started with OGroup " + i);
             for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
+                //System.out.println("started with Adduct " + j);
                 int Num = data.get(i).getListofAdducts().get(j).getNum();
                 float MZ = (float) data.get(i).getListofAdducts().get(j).getMZ();
                 float RT = (float) data.get(i).getListofAdducts().get(j).getOGroupRT();   //RT in Minutes
@@ -140,7 +142,7 @@ public class RawDataFile {
                 newSlice.binaryExtractSlicefromScans(listofScans);
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 getListofSlices().add(newSlice);
-                
+                //System.out.println("finished with Adduct " + j);
                 
             }
            
@@ -164,7 +166,6 @@ mzshift = new SimpleDoubleProperty(session.getMZTolerance()-maxint*step);
 for (int i =0; i< listofSlices.size(); i++) {
     listofSlices.get(i).clean();
     listofSlices.get(i).generateInterpolatedEIC();
-    
 }
         
         

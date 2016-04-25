@@ -221,7 +221,7 @@ public class FXMLTableViewController implements Initializable {
         setMasterListofOGroups(session.parseReferenceTsv());
 
         //generate additional adducts
-        //generateAdducts();
+        generateAdducts();
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
 
@@ -726,13 +726,39 @@ public class FXMLTableViewController implements Initializable {
             }
         }
         max++;
-        for (int i = 0; i < MasterListofOGroups.size(); i++) {
-            int size = MasterListofOGroups.get(i).getListofAdducts().size();
-            for (int j = 0; j < size; j++) {
-                //currently: -H   +NH4
-                MasterListofOGroups.get(i).addAdduct(new Entry(max, MasterListofOGroups.get(i).getListofAdducts().get(j).getMZ() + 17.026547, MasterListofOGroups.get(i).getListofAdducts().get(j).getRT(), MasterListofOGroups.get(i).getListofAdducts().get(j).getXn(), MasterListofOGroups.get(i).getListofAdducts().get(j).getOGroup(), "Test Adduct", MasterListofOGroups.get(i).getListofAdducts().get(j).getM(), session, MasterListofOGroups.get(i)));
+        
+        
+        for (int o = 0; o < MasterListofOGroups.size(); o++) {
+            int size = MasterListofOGroups.get(o).getListofAdducts().size();
+            for (int a = 0; a < size; a++) {
+            Entry adduct = MasterListofOGroups.get(o).getListofAdducts().get(a);
+            //for every adduct, check if ion specified
+            if (adduct.getIon()==null) {
+                //if not
+                for (int j = 0; j<session.getListofadductnames().size(); j++) {
+                    //subtract every possible adduct
+                    for (int k = 0; k<session.getListofadductnames().size(); k++) {
+                        //and add every possible adduct
+                        if (j!=k) {
+                            //don't add the same value
+                            Double mass = session.getListofadductmasses().get(j)-session.getListofadductmasses().get(k);
+                            String Ion = "[(" + adduct.getNum() + "-" + session.getListofadductnames().get(k) + ")+" + session.getListofadductnames().get(j) + "]+";
+                            MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o)));
                 max++;
-
+                        }
+                        
+                    }
+                    
+                }
+                
+            } else {
+                //if Ion is specified, only substract the specified value
+                
+                
+            }
+            
+            
+            
             }
         }
 
