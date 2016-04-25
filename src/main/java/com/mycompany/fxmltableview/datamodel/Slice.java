@@ -1263,15 +1263,22 @@ public class Slice {
         }
         double max = 0;
         int maxint = -1;
-        for (int i = 0; i< intensity.size(); i++) {
+        
+        //only look for max in the middle 70% region
+        int pstart = (int) (0.15*(intensity.size()-1));
+        int pend = (int) (0.85*(intensity.size()-1));
+        
+        for (int i = pstart; i<= pend; i++) {
             if (intensity.get(i)>max) {
                 max = intensity.get(i);
                 maxint = i;
             }
         }
         
+        
+        
         //no max or max at edge
-        if (max<0 || maxint <1 || maxint > intensity.size()-2) {
+        if (max<=0 || IntensityArray[start+maxint]<adduct.getSession().getBaseline()) {
             return null;
         }
         

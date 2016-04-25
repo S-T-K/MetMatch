@@ -919,12 +919,7 @@ chart.setOnMouseReleased((MouseEvent event) -> {
     double x1 = (double) ((XYChart.Data)line.getData().get(0)).getXValue();
     double x2 = (double) ((XYChart.Data)line.getData().get(1)).getXValue();
     
-    if (x1>x2) {
-        double temp = x1;
-        x1 = x2;
-        x2 = temp;
-        
-    }
+    
    
     Entry adduct = charttoadduct(chart);
     List<RawDataFile> list = session.getSelectedFiles();

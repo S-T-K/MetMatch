@@ -780,6 +780,14 @@ public double getPeakfound(RawDataFile file) {
 
 public XYChart.Series manualPeak(RawDataFile file, double start, double end) {
     
+    //switch if wrong direction
+    if (start>end) {
+        double temp = start;
+        start = end;
+        end = temp; 
+    }
+    
+    
     int i = 0;
     while (start>getRTArray()[i]) {
         i++;
