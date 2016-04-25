@@ -1137,6 +1137,8 @@ public class Slice {
     }
     
     public Integer setFittedPeak(int shift) {
+        
+       
         //TODO: range as function of RTTolerance
         fittedpeak = null;
         

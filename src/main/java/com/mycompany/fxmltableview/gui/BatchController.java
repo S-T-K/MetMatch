@@ -318,6 +318,8 @@ public void newwindowcalculate() throws IOException, InterruptedException {
             public Void call() throws InterruptedException {
                List<RawDataFile> completeList = session.getSelectedFiles();
                for (int i =0; i<TVcontroller.getMasterListofOGroups().size(); i++) {
+                   
+                   
 //                   double maxScore = 0;
 //                   double maxScorepeakclose = 0;
 //                   double maxScorepeakfound = 0;

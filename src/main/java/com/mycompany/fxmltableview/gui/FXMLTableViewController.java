@@ -492,7 +492,7 @@ public class FXMLTableViewController implements Initializable {
                                 getMasterListofOGroups().get(getMasterListofOGroups().size() - 1).setFittedShift(currentfile, maxint);
 
                                 //TODO: calculate range as function of time
-                                for (int i = getMasterListofOGroups().size() - 2; i > -1; i--) {
+                                for (int i = getMasterListofOGroups().size() - 1; i > -1; i--) {
                                     max = 0;
 
                                     int j = maxint;
