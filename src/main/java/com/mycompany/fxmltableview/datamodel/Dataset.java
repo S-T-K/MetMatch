@@ -9,10 +9,10 @@ import com.mycompany.fxmltableview.gui.BatchController;
 import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
 import java.util.List;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -37,10 +37,10 @@ public class Dataset {
     
     //Default values for new Files
     private Property<Color> color;
-    private DoubleProperty Width;
+    private FloatProperty Width;
     
     //penalty for path calculation
-    private SimpleDoubleProperty penalty;
+    private SimpleFloatProperty penalty;
     
     private Property<Boolean> active;
     private BatchController controller;
@@ -53,9 +53,9 @@ public class Dataset {
         
         this.listofFiles = FXCollections.observableArrayList();
         //default values for new Dataset
-        this.Width = new SimpleDoubleProperty(1.5);
+        this.Width = new SimpleFloatProperty(1.5f);
         this.color = new SimpleObjectProperty(Color.BLACK);
-        this.penalty = new SimpleDoubleProperty(0.5);
+        this.penalty = new SimpleFloatProperty(0.5f);
         active = new SimpleBooleanProperty(true);
         
     }
@@ -112,37 +112,37 @@ public class Dataset {
     /**
      * @return the width
      */
-    public double getWidth() {
+    public float getWidth() {
         return Width.get();
     }
 
     /**
      * @param width the width to set
      */
-    public void setWidth(DoubleProperty width) {
+    public void setWidth(FloatProperty width) {
         this.Width = width;
     }
     
-    public DoubleProperty getWidthProperty() {
+    public FloatProperty getWidthProperty() {
         return Width;
     }
 
-    public double getPenalty() {
+    public float getPenalty() {
         return this.penalty.get();
     }
     
     /**
      * @return the penalty
      */
-    public SimpleDoubleProperty getPenaltyProperty() {
+    public SimpleFloatProperty getPenaltyProperty() {
         return penalty;
     }
 
     /**
      * @param penalty the penalty to set
      */
-    public void setPenalty(double penalty) {
-        this.penalty = new SimpleDoubleProperty(penalty);
+    public void setPenalty(float penalty) {
+        this.penalty = new SimpleFloatProperty(penalty);
     }
     
     public final Boolean getActive() {

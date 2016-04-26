@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -119,7 +119,7 @@ public class Fxml_adductviewController implements Initializable {
     
      XYChart.Series line;
     
-    private double scroll;
+    private float scroll;
 
     /**
      * Initializes the controller class.
@@ -151,7 +151,7 @@ public class Fxml_adductviewController implements Initializable {
 
     //method that generates the graphs
     public void print() {
-        double start = System.currentTimeMillis();
+        float start = System.currentTimeMillis();
         //new Maps, old Series are gone
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
@@ -182,7 +182,7 @@ public class Fxml_adductviewController implements Initializable {
         gridPane.getChildren().clear();
         
         progress.setVisible(true);
-        setScroll(((double) adductnumber) / (entry.getListofAdducts().size() - 1));
+        setScroll(((float) adductnumber) / (entry.getListofAdducts().size() - 1));
         
         
                 
@@ -192,27 +192,42 @@ public class Fxml_adductviewController implements Initializable {
             @Override
             public Void call() throws IOException, InterruptedException {
                 //for every Adduct/Fragment
-                
+                int row=0;
                 for (int i = 0; i < entry.getListofAdducts().size(); i++) {
-                   
+                   boolean empty = true;
                     Entry adduct = OGroupItem.getChildren().get(i).getValue();
+                    
+                     for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
+            if (currentfile.getActive().booleanValue()) {
+                if(adduct.getListofSlices().containsKey(currentfile)) {
+                    empty = false;
+                }
+            }
+        }
+                    }
+                     }
+                     
+                     if (!empty) {
                     
                     //Label showing the MZ
                     VBox box = new VBox();
-                    String MZ = Double.toString(adduct.getMZ());
+                    String MZ = Float.toString(adduct.getMZ()).concat("00000000000");
                     MZ = MZ.substring(0,MZ.indexOf(".")+5);
                     Label label = new Label("MZ: " + MZ);
                     box.getChildren().add(label);
                     Label label2 = new Label("Ion: " + adduct.getIon());
                     box.getChildren().add(label2);
-                    Label label3 = new Label("Xn: " + Double.toString(adduct.getXn()));
+                    Label label3 = new Label("Xn: " + Float.toString(adduct.getXn()));
                     box.getChildren().add(label3);
-                    Label label4 = new Label("Num: " + Double.toString(adduct.getNum()));
+                    Label label4 = new Label("Num: " + Float.toString(adduct.getNum()));
                     box.getChildren().add(label4);
                     
                     //generate graphs
                     
-                            addRow(i, box);
+                            addRow(row, box);
                             if(EICToggle.selectedProperty().get()) {
                             LineChart<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
                             addColumn(1, linechart1);
@@ -237,8 +252,9 @@ public class Fxml_adductviewController implements Initializable {
                             
                             System.out.println("generated charts " + (i + 1) + " of " + entry.getListofAdducts().size());
                            updateProgress(i+1,entry.getListofAdducts().size());
+                           row++;
                         }
-                   
+                }
                  
                 
                 
@@ -335,7 +351,7 @@ public class Fxml_adductviewController implements Initializable {
         new Thread(task).start();
         
 
-         double end = System.currentTimeMillis();
+         float end = System.currentTimeMillis();
          
         System.out.println("Drawing time: " + (end-start) );
     }
@@ -779,7 +795,7 @@ public class Fxml_adductviewController implements Initializable {
          
      }
      
-     public void setScroll(double scroll) {
+     public void setScroll(float scroll) {
          this.scroll=scroll; 
      }
      
@@ -936,7 +952,7 @@ chart.setOnMouseReleased((MouseEvent event) -> {
     Entry adduct = charttoadduct(chart);
     List<RawDataFile> list = session.getSelectedFiles();
     for (int i = 0; i<list.size(); i++) {
-        XYChart.Series peakSeries = adduct.manualPeak(list.get(i), x1, x2);
+        XYChart.Series peakSeries = adduct.manualPeak(list.get(i), (float)x1, (float)x2);
         if (peakSeries!=null){
         chart.getData().add(peakSeries);
         chart.applyCss();

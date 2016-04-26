@@ -20,9 +20,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -178,7 +179,7 @@ public class BatchController implements Initializable {
         public void handle(CellEditEvent<RawDataFile, Number> t) {
             ((RawDataFile) t.getTableView().getItems().get(
                 t.getTablePosition().getRow())
-                ).setWidth((t.getNewValue().doubleValue()));
+                ).setWidth((t.getNewValue().floatValue()));
         }
     }
 );
@@ -206,7 +207,7 @@ public class BatchController implements Initializable {
         batsetwidth.setOnAction(new EventHandler() {
             public void handle(Event t) {
                 for (int i = 0; i<batch.getListofFiles().size(); i++) {
-                    batch.getListofFiles().get(i).setWidth((Double.parseDouble(batsetwidth.getText())));
+                    batch.getListofFiles().get(i).setWidth((Float.parseFloat(batsetwidth.getText())));
                     getBatchFileView().refresh();
                     
                 }
@@ -226,7 +227,7 @@ public class BatchController implements Initializable {
     public void openBatchmzxmlChooser() throws FileNotFoundException {
         
 //Property to link with progressbar
-        DoubleProperty progress = new SimpleDoubleProperty(0.0);
+        FloatProperty progress = new SimpleFloatProperty(0.0f);
         progressbar.progressProperty().bind(progress);
 
         FileChooser fileChooser = new FileChooser();
@@ -242,18 +243,18 @@ public class BatchController implements Initializable {
         Task task = new Task<Void>() {
             @Override
             public Void call() {
-                double test = 1 / (double) filelist.size();
+                float test = 1 / (float) filelist.size();
                
                 if (filelist != null) {
                     for (File file : filelist) {
-                        double start = System.currentTimeMillis();
+                        float start = System.currentTimeMillis();
 
 
                         batch.addFile(true, file, session);                    
                         progress.set(progress.get() + test);
                         getBatchFileView().refresh();
                         System.out.println(progress.get());
-                        double end = System.currentTimeMillis();
+                        float end = System.currentTimeMillis();
                         System.out.println(end - start);
                         //refresh files
                         getBatchFileView().setItems(batch.getListofFiles());
@@ -320,9 +321,9 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                for (int i =0; i<TVcontroller.getMasterListofOGroups().size(); i++) {
                    
                    
-//                   double maxScore = 0;
-//                   double maxScorepeakclose = 0;
-//                   double maxScorepeakfound = 0;
+//                   float maxScore = 0;
+//                   float maxScorepeakclose = 0;
+//                   float maxScorepeakfound = 0;
 //                   for (int f = 0; f<completeList.size(); f++) {
 //                       if(completeList.get(f).isselected()) {
 //                       RawDataFile file = completeList.get(f);
@@ -338,34 +339,35 @@ public void newwindowcalculate() throws IOException, InterruptedException {
 ////                       }
 //                       }
 //                   }
-//                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(maxScore));
-//                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleDoubleProperty(maxScorepeakclose));
-//                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
-                   double omaxScore = 0;
-                       double ominScorepeakclose = 1;
-                       double omaxScorepeakfound = 0;
+//                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleFloatProperty(maxScore));
+//                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleFloatProperty(maxScorepeakclose));
+//                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleFloatProperty(maxScorepeakfound));
+                   float omaxScore = 0;
+                       float ominScorepeakclose = 1;
+                       float omaxScorepeakfound = 0;
                    
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
-                       double maxScore = 0;
-                       double minScorepeakclose = 1;
-                       double maxScorepeakfound = 0;
+                       float maxScore = 0;
+                       float minScorepeakclose = 1;
+                       float maxScorepeakfound = 0;
                    for (int f = 0; f<completeList.size(); f++) {
                        RawDataFile file = completeList.get(f);
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
                            maxScore = TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
                        }
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().containsKey(file)) {
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound()>maxScorepeakfound) {
                            maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound();
-                       }
-                       
+                       }}
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().containsKey(file)) {
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()<minScorepeakclose) {
                        minScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose();
-                       }
+                       }}
                        
                    }
-                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleDoubleProperty(maxScore));
-                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleDoubleProperty(minScorepeakclose));
-                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakfound(new SimpleDoubleProperty(maxScorepeakfound));
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleFloatProperty(maxScore));
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleFloatProperty(minScorepeakclose));
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakfound(new SimpleFloatProperty(maxScorepeakfound));
                    
                    
                    if (maxScore>omaxScore) {
@@ -378,19 +380,19 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                        omaxScorepeakfound=maxScorepeakfound;
                    }
                    
-                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleDoubleProperty(omaxScore));
-                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleDoubleProperty(ominScorepeakclose));
-                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleDoubleProperty(omaxScorepeakfound));
+                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleFloatProperty(omaxScore));
+                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleFloatProperty(ominScorepeakclose));
+                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleFloatProperty(omaxScorepeakfound));
                    
                    }
                    
                     for (int f = 0; f<completeList.size(); f++) {
-                        double omincertainty = 9999;
+                        float omincertainty = 9999;
                         if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().containsKey(completeList.get(f))) {
                         if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f))<omincertainty) {
                             omincertainty=TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f));
                         }}
-                        TVcontroller.getMasterListofOGroups().get(i).setScorecertainty(new SimpleDoubleProperty(omincertainty));
+                        TVcontroller.getMasterListofOGroups().get(i).setScorecertainty(new SimpleFloatProperty(omincertainty));
                         
                         
                     }

@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -45,18 +45,18 @@ public class RawDataFile {
     private List<Slice> listofSlices;
     private StringProperty name;
     private Session session;
-    private double scanspersecond;
+    private float scanspersecond;
     
     private Property<Boolean> active;
     private final Property<Color> color;
-    private DoubleProperty Width;
+    private FloatProperty Width;
    
     //for M/Z cleaning
     private int[] mzbins;
-    private DoubleProperty mzshift;
+    private FloatProperty mzshift;
     
-    private DoubleProperty pfound;
-    private DoubleProperty avgcertainty;
+    private FloatProperty pfound;
+    private FloatProperty avgcertainty;
 
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file, Session session) {
@@ -64,12 +64,12 @@ public class RawDataFile {
         this.dataset=dataset;
         this.name = new SimpleStringProperty(file.getName());
         this.color= new SimpleObjectProperty(dataset.getColor());
-        this.Width = new SimpleDoubleProperty(dataset.getWidth());
+        this.Width = new SimpleFloatProperty(dataset.getWidth());
         this.session = session;
         mzbins = new int[session.getResolution()];
-        mzshift = new SimpleDoubleProperty();
-        pfound = new SimpleDoubleProperty();
-        avgcertainty = new SimpleDoubleProperty();
+        mzshift = new SimpleFloatProperty();
+        pfound = new SimpleFloatProperty();
+        avgcertainty = new SimpleFloatProperty();
         active = new SimpleBooleanProperty(true);
         
         color.addListener(new ChangeListener<Color>() {
@@ -103,11 +103,11 @@ public class RawDataFile {
 
         }); 
         
-//        Width.addListener(new ChangeListener<DoubleProperty>() {
+//        Width.addListener(new ChangeListener<FloatProperty>() {
 //            @Override
-//            public void changed(ObservableValue<? extends DoubleProperty> observable, Double oldValue, Double newValue) {
+//            public void changed(ObservableValue<? extends FloatProperty> observable, Float oldValue, Float newValue) {
 //              for (int i = 0; i< session.getSelectedFiles().size(); i++) {
-//                  session.getSelectedFiles().get(i).setWidth(new SimpleDoubleProperty(newValue));
+//                  session.getSelectedFiles().get(i).setWidth(new SimpleFloatProperty(newValue));
 //              }
 //            }
 //
@@ -118,8 +118,20 @@ public class RawDataFile {
     public void parseFile() {
         DomParser dpe = new DomParser(file.toString());
         this.listofScans = dpe.ParseFile();
+     
+        int RT = 0;
+        int points = 0;
+        for (int i = 0; i< listofScans.size(); i++) {
+        RT++;
+        points+=listofScans.get(i).getMassovercharge().length;
+            
+    }
+        
+        System.out.println("Number of scans: " + RT);
+        System.out.println("Number of points: " + points);
+        
         //calculate scans/second for area calculation
-        scanspersecond = 1.0/(listofScans.get(1).getRetentionTime()-listofScans.get(0).getRetentionTime());
+        scanspersecond = 1.0f/(listofScans.get(1).getRetentionTime()-listofScans.get(0).getRetentionTime());
         
         
         dpe=null;
@@ -130,7 +142,8 @@ public class RawDataFile {
         double start = System.currentTimeMillis();
         this.setListofSlices(new ArrayList<>());
 
-
+int number = 0;
+int slices = 0;
         for (int i = 0; i < data.size(); i++) {
             //System.out.println("started with OGroup " + i);
             for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
@@ -140,14 +153,23 @@ public class RawDataFile {
                 float RT = (float) data.get(i).getListofAdducts().get(j).getOGroupRT();   //RT in Minutes
                 Slice newSlice = new Slice(this, data.get(i).getListofAdducts().get(j)); 
                 newSlice.binaryExtractSlicefromScans(listofScans);
+                
+                
+                if(!newSlice.isEmpty()) {
+                    slices++;
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 getListofSlices().add(newSlice);
                 //System.out.println("finished with Adduct " + j);
+                } else {
+                    number++;
+                }
                 
             }
            
             
         }
+        System.out.println("empty slices: " + number);
+        System.out.println("nonempty slices: " + slices);
  //get max bin
  int maxint = 0;
  int max = 0;
@@ -159,15 +181,30 @@ public class RawDataFile {
  }
  
  //calculate "median" shift
-double step = session.getMZTolerance()/(mzbins.length)*2;
-mzshift = new SimpleDoubleProperty(session.getMZTolerance()-maxint*step);
+float step = session.getMZTolerance()/(mzbins.length)*2;
+mzshift = new SimpleFloatProperty(session.getMZTolerance()-maxint*step);
 
 //clean slices according to shift and tolerance
 for (int i =0; i< listofSlices.size(); i++) {
     listofSlices.get(i).clean();
     listofSlices.get(i).generateInterpolatedEIC();
 }
+
+List<Slice> newlist = new ArrayList<Slice>();
+for (int i =0; i< listofSlices.size(); i++) {
+    if (!listofSlices.get(i).isEmpty()) {
+        newlist.add(listofSlices.get(i));
+    }
+}
+listofSlices=newlist;
         
+
+for (int i = 0; i < data.size(); i++) {
+            //System.out.println("started with OGroup " + i);
+            for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
+                data.get(i).getListofAdducts().get(j).delteemptySlices();
+            }
+}
         
 this.listofScans=null; //get rid of Scans, they are not needed any more
 double end = System.currentTimeMillis();
@@ -216,14 +253,14 @@ System.out.println("Complete Extraction: " + (end-start));
     /**
      * @return the width
      */
-    public double getWidth() {
+    public float getWidth() {
         return Width.get();
     }
 
     /**
      * @param width the width to set
      */
-    public void setWidth(double width) {
+    public void setWidth(float width) {
         this.Width.set(width);
     }
 
@@ -277,42 +314,42 @@ System.out.println("Complete Extraction: " + (end-start));
     /**
      * @return the mzshift
      */
-    public double getMzshift() {
+    public float getMzshift() {
         return mzshift.get();
     }
 
     /**
      * @param mzshift the mzshift to set
      */
-    public void setMzshift(DoubleProperty mzshift) {
+    public void setMzshift(FloatProperty mzshift) {
         this.mzshift = mzshift;
     }
     
     /**
      * @return the mzshift
      */
-    public double getPfound() {
+    public float getPfound() {
         return pfound.get();
     }
 
     /**
      * @param mzshift the mzshift to set
      */
-    public void setPfound(DoubleProperty pfound) {
+    public void setPfound(FloatProperty pfound) {
         this.pfound = pfound;
     }
     
     /**
      * @return the mzshift
      */
-    public double getAvgcertainty() {
+    public float getAvgcertainty() {
         return avgcertainty.get();
     }
 
     /**
      * @param mzshift the mzshift to set
      */
-    public void setAvgCertainty(DoubleProperty avg) {
+    public void setAvgCertainty(FloatProperty avg) {
         this.avgcertainty = avg;
     }
 
@@ -342,6 +379,8 @@ System.out.println("Complete Extraction: " + (end-start));
             for (int j =0; j<list.get(i).getListofAdducts().size(); j++) {
                 list.get(i).getListofAdducts().get(j).getListofSlices().remove(this);
                 list.get(i).getListofAdducts().get(j).getScores().remove(this);
+                list.get(i).getListofAdducts().get(j).getCertainties().remove(this);
+                list.get(i).getListofAdducts().get(j).getPenArray().remove(this);
                 //list.get(i).getListofAdducts().get(j).getAdductPropArray().remove(this);
                 
             }
@@ -367,38 +406,38 @@ System.out.println("Complete Extraction: " + (end-start));
         return color;
     }
     
-    public DoubleProperty getWidthProperty() {
+    public FloatProperty getWidthProperty() {
         return Width;
     }
 
     /**
      * @return the scanspersecond
      */
-    public double getScanspersecond() {
+    public float getScanspersecond() {
         return scanspersecond;
     }
 
     /**
      * @param scanspersecond the scanspersecond to set
      */
-    public void setScanspersecond(double scanspersecond) {
+    public void setScanspersecond(float scanspersecond) {
         this.scanspersecond = scanspersecond;
     }
     
     public void calculateScore() {
         
-        List<Double> certainties = new ArrayList<>();
+        List<Float> certainties = new ArrayList<>();
         int found = 0;
         for (int i = 0; i< session.getListofOGroups().size(); i++) {
             certainties.add(session.getListofOGroups().get(i).getCertainties().get(this));
             found += session.getListofOGroups().get(i).getPeakfound(this);
         }
-        double sum = 0.0;
-    for (double cert : certainties) {
+        float sum = 0.0f;
+    for (float cert : certainties) {
         sum += cert;
     }
-    avgcertainty=new SimpleDoubleProperty(sum/certainties.size());
-    pfound=new SimpleDoubleProperty((double)found/(double)session.getListofOGroups().size()*100);
+    avgcertainty=new SimpleFloatProperty(sum/certainties.size());
+    pfound=new SimpleFloatProperty((float)found/(float)session.getListofOGroups().size()*100);
   
     getDataset().getController().getBatchFileView().refresh();
         

@@ -15,9 +15,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -34,60 +35,60 @@ import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
  */
 public class Entry {
     
-    private SimpleDoubleProperty RT;
-    private SimpleDoubleProperty Score;
-    private SimpleDoubleProperty Scorepeakfound;
-    private SimpleDoubleProperty Scorepeakclose;
-    private SimpleDoubleProperty Scorecertainty;
+    private SimpleFloatProperty RT;
+    private SimpleFloatProperty Score;
+    private SimpleFloatProperty Scorepeakfound;
+    private SimpleFloatProperty Scorepeakclose;
+    private SimpleFloatProperty Scorecertainty;
     private IntegerProperty Num;
-    private DoubleProperty MZ;
+    private SimpleFloatProperty MZ;
     private IntegerProperty Xn;
     private IntegerProperty OGroup;
     private StringProperty Ion;
-    private DoubleProperty M;
+    private SimpleFloatProperty M;
     private Entry OGroupObject;
     private List<Entry> listofAdducts;
     private HashMap<RawDataFile, Slice> listofSlices;   //stores all slices
     private Session session;
-    private HashMap<RawDataFile, Double> Scores;
-    private HashMap<RawDataFile, Double> Certainties;
+    private HashMap<RawDataFile, Float> Scores;
+    private HashMap<RawDataFile, Float> Certainties;
     
 
     
     
     //for peak probability
-    private HashMap<RawDataFile, Integer> OGroupfittedShift;
-    private HashMap<RawDataFile, Integer> AdductfittedShift;
+    private HashMap<RawDataFile, Short> OGroupfittedShift;
+    private HashMap<RawDataFile, Short> AdductfittedShift;
     
     //for penalties and bonuses in certain regions
-    private HashMap<RawDataFile, double[]> PenArray;
+    private HashMap<RawDataFile, short[]> PenArray;
     
     //maxIntensity of all Slices
     private float maxIntensity;
 
     //Interpolated Arrays
-    private double[] RTArray;
-    private double[] IntensityArray;
+    private float[] RTArray;
+    private float[] IntensityArray;
     
     public Entry() {
     }
 
     //constructor for Adduct
-    public Entry(int Num, double MZ, double RT, int Xn, int OGroup, String Ion, double M, Session session, Entry ogroup) {
+    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, Session session, Entry ogroup) {
         this.Num = new SimpleIntegerProperty(Num);
-        this.MZ = new SimpleDoubleProperty(MZ);
-        this.RT = new SimpleDoubleProperty(RT);
+        this.MZ = new SimpleFloatProperty((float) MZ);
+        this.RT = new SimpleFloatProperty((float) RT);
         this.Xn = new SimpleIntegerProperty(Xn);
         this.OGroup = new SimpleIntegerProperty(OGroup);
         this.Ion = new SimpleStringProperty(Ion);
-        this.M = new SimpleDoubleProperty(M);
-        this.Score = new SimpleDoubleProperty(0);
-        this.Scorepeakclose = new SimpleDoubleProperty(0);
-        this.Scorepeakfound = new SimpleDoubleProperty(0);
-        this.Scorecertainty = new SimpleDoubleProperty(1.0);
+        this.M = new SimpleFloatProperty((float) M);
+        this.Score = new SimpleFloatProperty(0);
+        this.Scorepeakclose = new SimpleFloatProperty(0);
+        this.Scorepeakfound = new SimpleFloatProperty(0);
+        this.Scorecertainty = new SimpleFloatProperty(1.0f);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
 
-        this.Scores = new HashMap<RawDataFile, Double>();
+        this.Scores = new HashMap<RawDataFile, Float>();
         
         this.session=session;
         this.OGroupObject=ogroup;
@@ -99,19 +100,19 @@ public class Entry {
     //constructor for OGroup/Metabolite
     public Entry(int OGroup, Session session) {
         this.listofAdducts= new ArrayList<>();
-        this.RT = new SimpleDoubleProperty(0);
+        this.RT = new SimpleFloatProperty(0);
         this.OGroup = new SimpleIntegerProperty(OGroup);
-        this.Score = new SimpleDoubleProperty(0);
-        this.Scorepeakclose = new SimpleDoubleProperty(0);
-        this.Scorepeakfound = new SimpleDoubleProperty(0);
-        this.Scorecertainty = new SimpleDoubleProperty(1.0);
+        this.Score = new SimpleFloatProperty(0);
+        this.Scorepeakclose = new SimpleFloatProperty(0);
+        this.Scorepeakfound = new SimpleFloatProperty(0);
+        this.Scorecertainty = new SimpleFloatProperty((float) 1.0);
         this.session = session;
         this.OGroupObject=null;
 
         OGroupfittedShift = new HashMap<>();
-        this.Scores = new HashMap<RawDataFile, Double>();
-        this.Certainties = new HashMap<RawDataFile, Double>();
-        PenArray = new HashMap<RawDataFile, double[]>();
+        this.Scores = new HashMap<RawDataFile, Float>();
+        this.Certainties = new HashMap<RawDataFile, Float>();
+        PenArray = new HashMap<RawDataFile, short[]>();
 
     }
     
@@ -124,18 +125,29 @@ public class Entry {
         
     }
     
+    public void delteemptySlices() {
+HashMap<RawDataFile, Slice> newlist = new HashMap<>();
+for (Map.Entry<RawDataFile, Slice> entry:listofSlices.entrySet()) {
+    if (!entry.getValue().isEmpty()) {
+        newlist.put(entry.getKey(), entry.getValue());
+    }
+}
+listofSlices=newlist;
+        
+    }
+    
     //add adduct to an OGroup
     public void addAdduct(Entry adduct) {
         this.getListofAdducts().add(adduct);
-        this.setRT(new SimpleDoubleProperty(((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size()));
+        this.setRT(new SimpleFloatProperty((float) (((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size())));
     }
     
     public void generateRTArray() {
         
         int resolution = getSession().getResolution();
-        double startRT = this.getMinRT();
-        double endRT = this.getMaxRT();
-        setRTArray(new double[resolution]);
+        float startRT = (float) this.getMinRT();
+        float endRT = (float) this.getMaxRT();
+        setRTArray(new float[resolution]);
         
      
       
@@ -149,8 +161,9 @@ public class Entry {
     
     //generates PropArray of a dataset for an Adduct 
     public void peakpickAdduct(RawDataFile file) {
-//        double [] propArray = new double[getSession().getResolution()];
+//        float [] propArray = new float[getSession().getResolution()];
 //
+if (listofSlices.containsKey(file)) {
         Slice currentSlice = listofSlices.get(file);
 //        
         if (session.getPeackPick().equals("Naïve")) {
@@ -163,7 +176,7 @@ public class Entry {
             System.out.println("Error");
         }
 //           
-//        double [] sliceArray = currentSlice.getPropArray();
+//        float [] sliceArray = currentSlice.getPropArray();
 //                
 //            for (int j = 0; j < getSession().getResolution(); j++) {
 //                if (sliceArray[j]+propArray[j]>1){
@@ -179,13 +192,13 @@ public class Entry {
 //        
 //        
 //        
-    }
+    }}
     
     //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?
     public void peakpickOGroup(RawDataFile file) {
         
-        //double [] propArray = new double[getSession().getResolution()];
+        //float [] propArray = new float[getSession().getResolution()];
         if (session.isPeakPickchanged()) {
         for (int i = 0; i<listofAdducts.size(); i++) {
             listofAdducts.get(i).peakpickAdduct(file);
@@ -204,7 +217,7 @@ public class Entry {
         
         //normalize
 //        List asList = Arrays.asList(ArrayUtils.toObject(PropArray));
-//        double max = (double) Collections.max(asList);
+//        float max = (float) Collections.max(asList);
 //        
 //        for (int i = 0; i<PropArray.length; i++) {
 //            PropArray[i] = PropArray[i]/max;
@@ -234,65 +247,65 @@ public class Entry {
     /**
      * @return the RT
      */
-    public double getRT() {
+    public float getRT() {
         return RT.get();
     }
 
     /**
      * @param RT the RT to set
      */
-    public void setRT(SimpleDoubleProperty RT) {
+    public void setRT(SimpleFloatProperty RT) {
         this.RT = RT;
     }
 
     /**
      * @return the Score
      */
-    public double getScore() {
+    public float getScore() {
         return Score.get();
     }
 
-    public SimpleDoubleProperty ScoreProperty() {
+    public SimpleFloatProperty ScoreProperty() {
         return Score;
     }
     /**
      * @param Score the Score to set
      */
-    public void setScore(SimpleDoubleProperty score) {
+    public void setScore(SimpleFloatProperty score) {
         this.Score = score;
     }
     /**
      * @return the Score
      */
-    public double getScorepeakfound() {
+    public float getScorepeakfound() {
         return Scorepeakfound.get();
     }
 
-    public SimpleDoubleProperty ScorepeakfoundProperty() {
+    public SimpleFloatProperty ScorepeakfoundProperty() {
         return Scorepeakfound;
     }
     /**
      * @param Score the Score to set
      */
-    public void setScorepeakfound(SimpleDoubleProperty score) {
+    public void setScorepeakfound(SimpleFloatProperty score) {
         this.Scorepeakfound = score;
     }
     
     /**
      * @return the Score
      */
-    public double getScorecertainty() {
+    public float getScorecertainty() {
         return Scorecertainty.get();
     }
 
-    public SimpleDoubleProperty ScorecertaintyProperty() {
+    public SimpleFloatProperty ScorecertaintyProperty() {
         return Scorecertainty;
     }
     /**
      * @param Score the Score to set
      * set Score for all adducts
      */
-    public void setScorecertainty(SimpleDoubleProperty score) {
+    public void setScorecertainty(SimpleFloatProperty score) {
         this.Scorecertainty = score;
         for (int i = 0; i<listofAdducts.size(); i++) {
             listofAdducts.get(i).Scorecertainty= score;
@@ -301,17 +314,17 @@ public class Entry {
     /**
      * @return the Score
      */
-    public double getScorepeakclose() {
+    public float getScorepeakclose() {
         return Scorepeakclose.get();
     }
 
-    public SimpleDoubleProperty ScorepeakcloseProperty() {
+    public SimpleFloatProperty ScorepeakcloseProperty() {
         return Scorepeakclose;
     }
     /**
      * @param Score the Score to set
      */
-    public void setScorepeakclose(SimpleDoubleProperty score) {
+    public void setScorepeakclose(SimpleFloatProperty score) {
         this.Scorepeakclose = score;
     }
         /**
@@ -334,7 +347,7 @@ public class Entry {
     /**
      * @return the MZ
      */
-    public double getMZ() {
+    public float getMZ() {
         if (this.MZ==null) {
             return 0;
         }
@@ -344,7 +357,7 @@ public class Entry {
     /**
      * @param MZ the MZ to set
      */
-    public void setMZ(SimpleDoubleProperty MZ) {
+    public void setMZ(SimpleFloatProperty MZ) {
         this.MZ = MZ;
     }
 
@@ -394,14 +407,14 @@ public class Entry {
     /**
      * @return the M
      */
-    public double getM() {
+    public float getM() {
         return M.get();
     }
 
     /**
      * @param M the M to set
      */
-    public void setM(SimpleDoubleProperty M) {
+    public void setM(SimpleFloatProperty M) {
         this.M = M;
     }
 
@@ -437,7 +450,7 @@ public class Entry {
     /**
      * @return the RTArray
      */
-    public double[] getRTArray() {
+    public float[] getRTArray() {
        if(OGroupObject!=null){
             return (OGroupObject.getRTArray());
         } else {
@@ -448,36 +461,36 @@ public class Entry {
     /**
      * @param RTArray the RTArray to set
      */
-    public void setRTArray(double[] RTArray) {
+    public void setRTArray(float[] RTArray) {
         this.RTArray = RTArray;
     }
 
     /**
      * @return the IntensityArray
      */
-    public double[] getIntensityArray() {
+    public float[] getIntensityArray() {
         return IntensityArray;
     }
 
     /**
      * @param IntensityArray the IntensityArray to set
      */
-    public void setIntensityArray(double[] IntensityArray) {
+    public void setIntensityArray(float[] IntensityArray) {
         this.IntensityArray = IntensityArray;
     }
 
     
-    public double median(double[] m) {
+    public float median(float[] m) {
     int middle = m.length/2;
     if (m.length%2 == 1) {
         return m[middle];
     } else {
-        return (m[middle-1] + m[middle]) / 2.0;
+        return (m[middle-1] + m[middle]) / 2.0f;
     }
 }
     
-    public double summ(double[] m) {
-        double sum =0;
+    public float summ(float[] m) {
+        float sum =0;
         for (int i =0; i<m.length; i++) {
             sum+=m[i];
             
@@ -485,7 +498,7 @@ public class Entry {
         return sum;
     }
     
-    public double getOGroupRT() {
+    public float getOGroupRT() {
         
         return this.OGroupObject.getRT();
     }
@@ -496,24 +509,24 @@ public class Entry {
     
 
     
-    public double getMinRT() {
+    public float getMinRT() {
         if(OGroupObject!=null){
             return (OGroupObject.getRT()-getSession().getRTTolerance());
         } else {
             return (getRT()-getSession().getRTTolerance());
         }
     }
-     public double getMaxRT() {
+     public float getMaxRT() {
         if(OGroupObject!=null){
             return (OGroupObject.getRT()+getSession().getRTTolerance());
         } else {
             return (getRT()+getSession().getRTTolerance());
         }
     }
-     public double getMinMZ() {
+     public float getMinMZ() {
         return (getMZ()*(1-(getSession().getMZTolerance()/1000000)));
     }
-      public double getMaxMZ() {
+      public float getMaxMZ() {
         return (getMZ()*(1+(getSession().getMZTolerance()/1000000)));
     }
 
@@ -556,22 +569,25 @@ public class Entry {
     /**
      * @param fittedShift the OGroupfittedShift to set
      */
-    public void setFittedShift(RawDataFile file, int shift) {
+    public void setFittedShift(RawDataFile file, short shift) {
         this.getOGroupFittedShift().put(file, shift);
         
         for (int i = 0; i<listofAdducts.size(); i++) {
+            if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
         listofAdducts.get(i).getAdductfittedShift().put(file,listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shift));
     }
+        }
     }
 
     /**
      * @return the AdductPropArray
      */
-    public double[] getAdductPropArray(RawDataFile file) {
-        double[] PropArray = new double[session.getResolution()];
-        List<Integer> list = new ArrayList<>();
+    public float[] getAdductPropArray(RawDataFile file) {
+        float[] PropArray = new float[session.getResolution()];
+        List<Short> list = new ArrayList<>();
+        if (listofSlices.containsKey(file)) {
         list.addAll(listofSlices.get(file).getPeakIndex());
-        
+        }
         for (int i = 0; i< list.size(); i++) {
             PropArray[list.get(i)] = 1;
         }
@@ -584,12 +600,13 @@ public class Entry {
      * @return the OGroupPropArray
      * with only 1 and 0
      */
-    public double[] getOGroupPropArray(RawDataFile file) {
-        double[] PropArray = new double[session.getResolution()];
-        List<Integer> list = new ArrayList<>();
+    public float[] getOGroupPropArray(RawDataFile file) {
+        float[] PropArray = new float[session.getResolution()];
+        List<Short> list = new ArrayList<>();
         for (int i = 0; i<listofAdducts.size(); i++) {
+            if (listofAdducts.get(i).listofSlices.containsKey(file)){
         list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
-        }
+        }}
         
         for (int i = 0; i< list.size(); i++) {
             PropArray[list.get(i)] = 1;
@@ -599,11 +616,13 @@ public class Entry {
     }
     
     //returns a "smooth" PropArray
-    public double[] getOGroupPropArraySmooth(RawDataFile file) {
-        double[] PropArray = new double[session.getResolution()];
-        List<Integer> list = new ArrayList<>();
+    public float[] getOGroupPropArraySmooth(RawDataFile file) {
+        float[] PropArray = new float[session.getResolution()];
+        List<Short> list = new ArrayList<>();
         for (int i = 0; i<listofAdducts.size(); i++) {
+            if (listofAdducts.get(i).listofSlices.containsKey(file)){
         list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
+        }
         }
         
         
@@ -612,7 +631,7 @@ public class Entry {
             //change values within tolerance
             for (int j = 1; j<=session.getIntPeakRTTol(); j++) {
                 //calculate the value
-                double value = 1*((double)session.getIntPeakRTTol()-j)/(double)session.getIntPeakRTTol();
+                float value = 1*((float)session.getIntPeakRTTol()-j)/(float)session.getIntPeakRTTol();
                 
                 //check for borders and insert new value of old value is smaller
                 if((list.get(i)-j)>0&&PropArray[list.get(i)-j]<value) {
@@ -625,7 +644,7 @@ public class Entry {
         }
         
         if (getPenArray().containsKey(file)) {
-            double[] PenArr = getPenArray().get(file);
+            short[] PenArr = getPenArray().get(file);
             for (int i = 0; i<PenArr.length; i++) {
                 PropArray[i]+=PenArr[i];
             }
@@ -639,14 +658,14 @@ public class Entry {
     /**
      * @return the Scores
      */
-    public HashMap<RawDataFile, Double> getScores() {
+    public HashMap<RawDataFile, Float> getScores() {
         return Scores;
     }
 
     /**
      * @param Scores the Scores to set
      */
-    public void setScores(HashMap<RawDataFile, Double> Scores) {
+    public void setScores(HashMap<RawDataFile, Float> Scores) {
         this.Scores = Scores;
     }
 
@@ -655,56 +674,56 @@ public class Entry {
     /**
      * @return the OGroupfittedShift
      */
-    public HashMap<RawDataFile, Integer> getOGroupFittedShift() {
+    public HashMap<RawDataFile, Short> getOGroupFittedShift() {
         return OGroupfittedShift;
     }
 
     /**
      * @param fittedShift the OGroupfittedShift to set
      */
-    public void setOGroupFittedShift(HashMap<RawDataFile, Integer> fittedShift) {
+    public void setOGroupFittedShift(HashMap<RawDataFile, Short> fittedShift) {
         this.OGroupfittedShift = fittedShift;             
     }
 
     /**
      * @return the AdductfittedShift
      */
-    public HashMap<RawDataFile, Integer> getAdductfittedShift() {
+    public HashMap<RawDataFile, Short> getAdductfittedShift() {
         return AdductfittedShift;
     }
 
     /**
      * @param AdductfittedShift the AdductfittedShift to set
      */
-    public void setAdductfittedShift(HashMap<RawDataFile, Integer> AdductfittedShift) {
+    public void setAdductfittedShift(HashMap<RawDataFile, Short> AdductfittedShift) {
         this.AdductfittedShift = AdductfittedShift;
     }
 
     /**
      * @return the PenArray
      */
-    public HashMap<RawDataFile, double[]> getPenArray() {
+    public HashMap<RawDataFile, short[]> getPenArray() {
         return PenArray;
     }
 
     /**
      * @param PenArray the PenArray to set
      */
-    public void setPenArray(HashMap<RawDataFile, double[]> PenArray) {
+    public void setPenArray(HashMap<RawDataFile, short[]> PenArray) {
         this.PenArray = PenArray;
     }
 
     /**
      * @return the Certainties
      */
-    public HashMap<RawDataFile, Double> getCertainties() {
+    public HashMap<RawDataFile, Float> getCertainties() {
         return Certainties;
     }
 
     /**
      * @param Certainties the Certainties to set
      */
-    public void setCertainties(HashMap<RawDataFile, Double> Certainties) {
+    public void setCertainties(HashMap<RawDataFile, Float> Certainties) {
         this.Certainties = Certainties;
     }
 
@@ -715,74 +734,79 @@ public class Entry {
 
         @Override
         public int compare(Entry o1, Entry o2) {
-            return Double.valueOf(o1.getRT()).compareTo(Double.valueOf(o2.getRT()));
+            return Float.valueOf(o1.getRT()).compareTo(Float.valueOf(o2.getRT()));
         }
     }
 
-public void addScore(RawDataFile file, double score) {
+public void addScore(RawDataFile file, float score) {
     this.getScores().put(file, score);
 }
 
 public void setScore(RawDataFile file) {
     if (getScores().containsKey(file)) {
-        setScore(new SimpleDoubleProperty(getScores().get(file)));
+        setScore(new SimpleFloatProperty(getScores().get(file)));
     }
     
 }
 
-public double getScore(RawDataFile file) {
+public float getScore(RawDataFile file) {
     return getScores().get(file);
 }
     
 //for Shiftview, returns max over all Adducts in OGroup
-public double getmaxScorepeakfound(RawDataFile file) {
-    double max = 0;
+public float getmaxScorepeakfound(RawDataFile file) {
+    float max = 0;
     for (int i  = 0; i<listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
+            if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
         if (listofAdducts.get(i).getListofSlices().get(file).getScorepeakfound()>max) {
             max = listofAdducts.get(i).getListofSlices().get(file).getScorepeakfound();
-        }
-    }
+        }}
+    }}
     return max;
 }
 
 //for Shiftview, returns min over all Adducts in OGroup
-public double getminScorepeakclose(RawDataFile file) {
-    double min = 1;
+public float getminScorepeakclose(RawDataFile file) {
+    float min = 1;
     for (int i  = 0; i<listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).getListofSlices().containsKey(file)){
         if (listofAdducts.get(i).getListofSlices().get(file).getScorepeakclose()<min) {
             min = listofAdducts.get(i).getListofSlices().get(file).getScorepeakclose();
-        }
+        }}
     }
     return min;
 }
 
-public double getmaxScoredistance(RawDataFile file) {
-       double max = 0; 
+public float getmaxScoredistance(RawDataFile file) {
+       float max = 0; 
        for (int i  = 0; i<listofAdducts.size(); i++) {
+           if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
         if (listofAdducts.get(i).getListofSlices().get(file).getScoredistance()>max) {
             max = listofAdducts.get(i).getListofSlices().get(file).getScoredistance();
-        }
+        }}
     }
     return max;  
 }
       
 
-public double getPeakfound(RawDataFile file) {
+public float getPeakfound(RawDataFile file) {
     
     for (int i = 0; i< listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).listofSlices.containsKey(file)) {
         if (listofAdducts.get(i).listofSlices.get(file).getScorepeakfound()==1)
          return 1;
         
-    }
+    }}
     
     return 0;
 }
 
-public XYChart.Series manualPeak(RawDataFile file, double start, double end) {
+public XYChart.Series manualPeak(RawDataFile file, float start, float end) {
     
     //switch if wrong direction
     if (start>end) {
-        double temp = start;
+        float temp = start;
         start = end;
         end = temp; 
     }
@@ -798,8 +822,11 @@ public XYChart.Series manualPeak(RawDataFile file, double start, double end) {
     }
     end = i;
     
-    
-    return this.listofSlices.get(file).manualPeak((int)start, (int)end);
+    if ((end!=start)&&listofSlices.containsKey(file)){
+    return this.listofSlices.get(file).manualPeak((short)start, (short)end);
+    } else {
+        return null;
+    }
 
 }
 

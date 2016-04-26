@@ -108,7 +108,7 @@ public class Fxml_shiftviewController implements Initializable {
     private Rectangle select;
     ObjectProperty<Point2D> anchor;
     private ScatterChart<Number, Number> scatterchart;
-    private double startX, startY, endX, endY;
+    private float startX, startY, endX, endY;
 
     //Keep references to Properties and Listeners to be able to delete them
     private HashMap<ChangeListener, Property> listeners;
@@ -628,8 +628,8 @@ public class Fxml_shiftviewController implements Initializable {
             chartBackground.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-startX = scatterchart.getXAxis().getValueForDisplay(event.getX()).doubleValue();
-startY = scatterchart.getYAxis().getValueForDisplay(event.getY()).doubleValue();
+startX = scatterchart.getXAxis().getValueForDisplay(event.getX()).floatValue();
+startY = scatterchart.getYAxis().getValueForDisplay(event.getY()).floatValue();
 
                     System.out.println(startX + "   " + startY);
                 }
@@ -645,8 +645,8 @@ startY = scatterchart.getYAxis().getValueForDisplay(event.getY()).doubleValue();
             chartBackground.setOnMouseReleased(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                endX = scatterchart.getXAxis().getValueForDisplay(event.getX()).doubleValue(); 
-                endY = scatterchart.getYAxis().getValueForDisplay(event.getY()).doubleValue();
+                endX = scatterchart.getXAxis().getValueForDisplay(event.getX()).floatValue(); 
+                endY = scatterchart.getYAxis().getValueForDisplay(event.getY()).floatValue();
                 System.out.println(endX + "   " + endY);
                 session.addPenalty(startX, startY, endX, endY);
                 }

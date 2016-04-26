@@ -51,20 +51,22 @@ public class Slice {
     private float minIntensity;
     private float maxIntensity;
     private List<Peak> listofPeaks;
-    private Integer fittedpeak;
+    private Short fittedpeak;
     
-    private double scorepeakclose = 1;
+    private float scorepeakclose = 1;
    
     private Entry adduct;
     private Dataset dataset;
     
     //processed information
-    private double[] MZArray;
-    private double[] IntensityArray;
+    private float[] MZArray;
+    private int[] IntensityArray;
     private double[] PropArray;
     
-    private double[] Bins;
+    private float[] Bins;
     
+    private boolean empty;
+   
     public Slice(RawDataFile file, Entry adduct) {
         this.file = file;
         this.dataset = file.getDataset();
@@ -77,7 +79,7 @@ public class Slice {
 
     
     public void extractSlicefromScans(List<Scan> listofScans) {
-        double start = System.currentTimeMillis();
+        float start = System.currentTimeMillis();
         generateBins();
          //for all Scans
          setMinIntensity(900000000);
@@ -134,7 +136,7 @@ public class Slice {
      //this.clean();
      //this.generateInterpolatedEIC();
      Bins = null;
-     double end = System.currentTimeMillis();
+     float end = System.currentTimeMillis();
      //System.out.println("Extraction: " + (end-start));
     }
     
@@ -144,10 +146,11 @@ public class Slice {
          //for all Scans
          setMinIntensity(900000000);
          setMaxIntensity(0);
-       double minMZ = getMinMZ();
-       double maxMZ = getMaxMZ();
-       double minRT = getMinRT();
-       double maxRT = getMaxRT();
+       float minMZ = getMinMZ();
+       float maxMZ = getMaxMZ();
+       float minRT = getMinRT();
+       float maxRT = getMaxRT();
+       int numberofsignals=0;
          
          //for all Scans
          int start = 0;
@@ -218,6 +221,7 @@ public class Slice {
                  //if MZ found
                  if (foundMZ) {
                      
+                     numberofsignals++;
                      start = middle;
                      end = middle+1;
                      
@@ -276,18 +280,23 @@ public class Slice {
      //this.clean();
      //this.generateInterpolatedEIC();
      
+     if (numberofsignals<5) {
+         this.empty = true;
+     } else {
+         this.empty = false;
+     }
+     
+     
     }
     
     
     //interpolates intensities
     public  void generateIntensityFunction() {
        double[] RT = new double[this.retentionTimeList.size()];
-       double[] MZ = new double[this.massList.size()];
        double[] Intensity = new double[this.retentionTimeList.size()];
        for (int i =0; i<RT.length; i++) {
            RT[i] = this.retentionTimeList.get(i);
            Intensity[i] = this.intensityList.get(i);
-           MZ[i]=this.massList.get(i);
        }
         
         
@@ -301,13 +310,13 @@ public class Slice {
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
     public void WaveletPeakPicking() {
-        double startc = System.currentTimeMillis();
+        float startc = System.currentTimeMillis();
         if (PropArray == null) {
             PropArray = (new double[this.IntensityArray.length]);
             deleteAutoPeaks();
         
             //baseline correct IntensityArray
-            double[] correctedIntArray = new double[IntensityArray.length];
+            float[] correctedIntArray = new float[IntensityArray.length];
             for ( int j = 0; j<IntensityArray.length; j++)  {
                 if (IntensityArray[j]>=adduct.getSession().getBaseline()) {
                     correctedIntArray[j]=IntensityArray[j]-adduct.getSession().getBaseline();
@@ -316,7 +325,7 @@ public class Slice {
             }
 
         
-        double start1 = System.currentTimeMillis();
+        float start1 = System.currentTimeMillis();
         // Create an R vector in the form of a string.
         String EIC = Arrays.toString(correctedIntArray);
         EIC = EIC.substring(1, EIC.length()-1);
@@ -337,19 +346,19 @@ public class Slice {
         
         //Retrieve values, see script for names
         //=OUTPUTS
-        double start3 = System.currentTimeMillis();
+        float start3 = System.currentTimeMillis();
         double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
         //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
         
         //Print output values, work with them...
         if (ret!=null) {
-            double start4 = System.currentTimeMillis();
+            float start4 = System.currentTimeMillis();
         
             for (int j = 0; j<ret[0].length; j++) {
                 //101 because of 100 zeros at start and R starts at 1
                 if (((int)ret[0][j]-101)<100) {
                 PropArray[(int)ret[0][j]-101]=1;
-                addPeak(new Peak(((int)ret[0][j]-101), ret[1][j], ret[2][j], ret[3][j], this));
+                addPeak(new Peak((short) ((short)ret[0][j]-101), (float)ret[1][j], (float)ret[2][j], (float)ret[3][j], this));
             }}
             
         
@@ -367,14 +376,14 @@ public class Slice {
     
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
  public void NaivePeakPicking() {
-     double startc = System.currentTimeMillis();
+     float startc = System.currentTimeMillis();
          //initialize Array holding probabilities
         if (PropArray==null){ 
         PropArray =(new double[this.IntensityArray.length]);
         
-        addGaussCorrelation(0.6);
-        addGaussCorrelation(0.5);
-        addGaussCorrelation(0.4);
+        addGaussCorrelation(0.6f);
+        addGaussCorrelation(0.5f);
+        addGaussCorrelation(0.4f);
         
         }
         generatePeakArray();
@@ -383,9 +392,9 @@ public class Slice {
     }
  
  //adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
- public void addGaussCorrelation(double length) {
+ public void addGaussCorrelation(float length) {
      
-      double valuesperminute = adduct.getSession().getResolution()/(adduct.getSession().getRTTolerance()*2);
+      float valuesperminute = adduct.getSession().getResolution()/(adduct.getSession().getRTTolerance()*2);
       int arraylength = (int) (valuesperminute*length);
         if (arraylength%2==0) {
                    arraylength++;
@@ -395,10 +404,10 @@ public class Slice {
         int peakint = Math.floorDiv(arraylength, 2);
         NormalDistribution normdist = new NormalDistribution();
         //edge of peak is at X std
-        double peakedge = 2;
-        double increment = peakedge/(peakint-1);
+        float peakedge = 2;
+        float increment = peakedge/(peakint-1);
         for (int i = 0; i<=peakint; i++) {
-            peakArray[i]=normdist.density(peakedge-i*increment);
+            peakArray[i]= normdist.density(peakedge-i*increment);
             peakArray[(arraylength-1)-i]=peakArray[i];
         }
                 
@@ -423,7 +432,7 @@ public class Slice {
                if (corr > 0) {
                    double newcorr = (corr*corr)*asymptoticFunction(IntensityArray[i+peakint]-minIntensity);
                    if ((PropArray[i+peakint]<newcorr)) {
-                       PropArray[i+peakint]= newcorr;}
+                       PropArray[i+peakint]= (float) newcorr;}
                }
         
         }
@@ -432,7 +441,7 @@ public class Slice {
  
  
  //returns value between 0 and 1, rapidly falling for values lower than the baseline
- public double asymptoticFunction(double intensity) {
+ public float asymptoticFunction(float intensity) {
      float baseline = adduct.getSession().getBaseline();
      
      return (intensity-baseline/(baseline*10))/(1+intensity-baseline/(baseline*10));
@@ -480,10 +489,10 @@ public class Slice {
      
      //now we have an Array with Marks at Max and Min
      deleteAutoPeaks();
-     int start = 0; 
-    int index = 0;
-    int end = 0;
-     for (int i = 0; i< PropArray.length; i++) {
+     short start = 0; 
+    short index = 0;
+    short end = 0;
+     for (short i = 0; i< PropArray.length; i++) {
          //search for non 0 entry
         while (PropArray[i]==0) {
             i++;
@@ -520,7 +529,7 @@ public class Slice {
             addPeak(new Peak(index,start,end, this));
             //if another max, split
             } else if (PropArray[i]==1) {
-                end = (index+i)/2;
+                end = (short) ((index+i)/2);
                 addPeak(new Peak(index,start,end, this));
                 start = end;
                 i--;
@@ -587,28 +596,28 @@ public class Slice {
     /**
      * @return the minRT
      */
-    public double getMinRT() {
+    public float getMinRT() {
         return adduct.getMinRT();
     }
 
     /**
      * @return the maxRT
      */
-    public double getMaxRT() {
+    public float getMaxRT() {
         return adduct.getMaxRT();
     }
 
     /**
      * @return the minMZ
      */
-    public double getMinMZ() {
+    public float getMinMZ() {
         return adduct.getMinMZ();
     }
 
     /**
      * @return the maxMZ
      */
-    public double getMaxMZ() {
+    public float getMaxMZ() {
         return adduct.getMaxMZ();
     }
 
@@ -639,10 +648,11 @@ public class Slice {
     List<Float> newIntList= new ArrayList<>();
     List<Float> newMZList= new ArrayList<>();
     
-    double shiftedMZ = adduct.getMZ()-adduct.getMZ()/1000000*file.getMzshift();
-    double maxMZ = shiftedMZ+shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
-    double minMZ = shiftedMZ-shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
+    float shiftedMZ = adduct.getMZ()-adduct.getMZ()/1000000*file.getMzshift();
+    float maxMZ = shiftedMZ+shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
+    float minMZ = shiftedMZ-shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
     
+    int numberofsignals = 0;
     
     for (int i =0; i<massList.size(); i++) {
         
@@ -650,6 +660,7 @@ public class Slice {
        
        float mz =0;
        if (massList.get(i)<=maxMZ&&massList.get(i)>=minMZ){
+           numberofsignals++;
        mz = massList.get(i); 
        intensity = intensityList.get(i);}
        while (i<retentionTimeList.size()-1 && abs(retentionTimeList.get(i)-retentionTimeList.get(i+1))<0.001) {
@@ -678,7 +689,9 @@ public class Slice {
         setIntensityList(newIntList);
         setMassList(newMZList);
         
-    
+    if (numberofsignals<5) {
+        this.empty=true;
+    }
 }
 
     
@@ -718,7 +731,7 @@ public class Slice {
     /**
      * @return the RT
      */
-    public double getRT() {
+    public float getRT() {
         return adduct.getRT();
     }
 
@@ -754,6 +767,9 @@ public class Slice {
 
     
     public void generateInterpolatedEIC() {
+        
+        if (!empty) {
+            
 
         
         int resolution = adduct.getSession().getResolution();
@@ -762,15 +778,15 @@ public class Slice {
         
        generateIntensityFunction();
         
-        setIntensityArray(new double[resolution]);
-        setMZArray(new double[resolution]);
+        setIntensityArray(new int[resolution]);
+        setMZArray(new float[resolution]);
        
       
      
       
       //fill Intensity Array
       for (int i = 0; i< resolution; i++) {
-           try { getIntensityArray()[i]=getIntensityFunction().value(getRTArray()[i]);
+           try { getIntensityArray()[i]=(int) getIntensityFunction().value(getRTArray()[i]);
             }
            catch (OutOfRangeException e) {
                getIntensityArray()[i] = 0;
@@ -780,7 +796,7 @@ public class Slice {
       
       //fill MZArray
       //get half of delta
-      double RTdeltah = (adduct.getOGroupObject().getRTArray()[1]-adduct.getOGroupObject().getRTArray()[0])/2;
+      float RTdeltah = (adduct.getOGroupObject().getRTArray()[1]-adduct.getOGroupObject().getRTArray()[0])/2;
       int RT = 0;
       int values = 0;
       //for all M/Z values
@@ -819,11 +835,12 @@ public class Slice {
     this.retentionTimeList = null;
      
     }
+    }
 
     /**
      * @return the RTArray
      */
-    public double[] getRTArray() {
+    public float[] getRTArray() {
         return adduct.getRTArray();
     }
 
@@ -832,14 +849,14 @@ public class Slice {
     /**
      * @return the IntensityArray
      */
-    public double[] getIntensityArray() {
+    public int[] getIntensityArray() {
         return IntensityArray;
     }
 
     /**
      * @param IntensityArray the IntensityArray to set
      */
-    public void setIntensityArray(double[] IntensityArray) {
+    public void setIntensityArray(int[] IntensityArray) {
         this.IntensityArray = IntensityArray;
     }
 
@@ -847,111 +864,111 @@ public class Slice {
 
    
     
-    public void generateRefPeak () {
-        double quality = 0;
-        
-        int resolution = this.getIntensityArray().length;
-        int middle = resolution/2;
-        double[] smooth = this.getIntensityArray().clone();
-        
-        
-        CurveSmooth csm = new CurveSmooth(smooth);
-       smooth = csm.savitzkyGolay(50);
-        
-        
-        
-        
-        //smooth = movingAverageSmooth(smooth);
-        
-        
-        
-        //look for highest point in the middle +-10%
-        double max = smooth[middle];
-        int peakint = middle;
-        for (int i = 0; i < resolution/10; i++) {
-            //look left and right
-            if (max < smooth[middle+i]) {
-                max = smooth[middle+i];
-                peakint = middle+i;
-            }
-            if (max < smooth[middle-i]) {
-                max = smooth[middle-i];
-                peakint = middle-i;
-            }
-        }
-  
-        //if peak found, check the range of the peak
-        int end = peakint;
-        int start = peakint;
-        
-            //look right while the slope is steep enough
-            double difend=0;
-            while (end < resolution - 2 && (smooth[end]-smooth[end+1]>=difend)) {
-                difend = (smooth[end]-smooth[end+1])*0.8;
-                if (difend < 0) {
-                    difend = 0;                   
-                }
-                end = end + 1;
-            }
-            
-            //look left while the slope is steep enough
-            double difstart = 0;
-            while (start > 1 && (smooth[start]-smooth[start-1]>=difstart)) {
-                difstart = (smooth[start]-smooth[start-1])*0.8;
-                if (difstart < 0) {
-                    difstart = 0;                   
-                }
-                start = start - 1;
-
-            }
-
-            
-            //calculate quality
-            //heigth quality
-            double height = 0;
-            if (this.getIntensityArray()[peakint] > 500000) {
-                height = 1;
-            } else if (this.getIntensityArray()[peakint] < 5000) {
-                height = 0;
-            } else {
-                height = Math.log10(this.getIntensityArray()[peakint]) / Math.log10(500000);
-            }
-
-            //width quality
-            double width = 0;
-            if (end - start < 5 || end-peakint<2 || peakint-start<2) {
-                width = 0;
-            } else if (this.getRTArray()[end] - this.getRTArray()[start] < 0.6) {
-                width = 1;
-            } else {
-                width = 0.6/(this.getRTArray()[end] - this.getRTArray()[start]);
-            }
-            
-            //heigth above baseline
-            double heightabove = 0;
-            double bheigth = (this.getIntensityArray()[start]+this.getIntensityArray()[end])/2;
-            if (bheigth/this.getIntensityArray()[peakint]<=0.2) {
-                heightabove = 1;
-            } else { 
-                heightabove = 1- (bheigth/this.getIntensityArray()[peakint]);
-            }
-                
-                
-                quality = height*width*heightabove;
-                
-                
-                
-                
-                
-                
-                
-                
-                
-        }
+//    public void generateRefPeak () {
+//        float quality = 0;
+//        
+//        int resolution = this.getIntensityArray().length;
+//        int middle = resolution/2;
+//        float[] smooth = this.getIntensityArray().clone();
+//        
+//        
+//        CurveSmooth csm = new CurveSmooth(smooth);
+//       smooth = csm.savitzkyGolay(50);
+//        
+//        
+//        
+//        
+//        //smooth = movingAverageSmooth(smooth);
+//        
+//        
+//        
+//        //look for highest point in the middle +-10%
+//        float max = smooth[middle];
+//        int peakint = middle;
+//        for (int i = 0; i < resolution/10; i++) {
+//            //look left and right
+//            if (max < smooth[middle+i]) {
+//                max = smooth[middle+i];
+//                peakint = middle+i;
+//            }
+//            if (max < smooth[middle-i]) {
+//                max = smooth[middle-i];
+//                peakint = middle-i;
+//            }
+//        }
+//  
+//        //if peak found, check the range of the peak
+//        int end = peakint;
+//        int start = peakint;
+//        
+//            //look right while the slope is steep enough
+//            float difend=0;
+//            while (end < resolution - 2 && (smooth[end]-smooth[end+1]>=difend)) {
+//                difend = (smooth[end]-smooth[end+1])*0.8;
+//                if (difend < 0) {
+//                    difend = 0;                   
+//                }
+//                end = end + 1;
+//            }
+//            
+//            //look left while the slope is steep enough
+//            float difstart = 0;
+//            while (start > 1 && (smooth[start]-smooth[start-1]>=difstart)) {
+//                difstart = (smooth[start]-smooth[start-1])*0.8;
+//                if (difstart < 0) {
+//                    difstart = 0;                   
+//                }
+//                start = start - 1;
+//
+//            }
+//
+//            
+//            //calculate quality
+//            //heigth quality
+//            float height = 0;
+//            if (this.getIntensityArray()[peakint] > 500000) {
+//                height = 1;
+//            } else if (this.getIntensityArray()[peakint] < 5000) {
+//                height = 0;
+//            } else {
+//                height = Math.log10(this.getIntensityArray()[peakint]) / Math.log10(500000);
+//            }
+//
+//            //width quality
+//            float width = 0;
+//            if (end - start < 5 || end-peakint<2 || peakint-start<2) {
+//                width = 0;
+//            } else if (this.getRTArray()[end] - this.getRTArray()[start] < 0.6) {
+//                width = 1;
+//            } else {
+//                width = 0.6/(this.getRTArray()[end] - this.getRTArray()[start]);
+//            }
+//            
+//            //heigth above baseline
+//            float heightabove = 0;
+//            float bheigth = (this.getIntensityArray()[start]+this.getIntensityArray()[end])/2;
+//            if (bheigth/this.getIntensityArray()[peakint]<=0.2) {
+//                heightabove = 1;
+//            } else { 
+//                heightabove = 1- (bheigth/this.getIntensityArray()[peakint]);
+//            }
+//                
+//                
+//                quality = height*width*heightabove;
+//                
+//                
+//                
+//                
+//                
+//                
+//                
+//                
+//                
+//        }
     
-     public double[] movingAverageSmooth(double[] smooth) {
+     public float[] movingAverageSmooth(float[] smooth) {
         int resolution = smooth.length;
-        double[] construction = new double[resolution];
+        float[] construction = new float[resolution];
         
         //smoothing
         //we want 5% windows around each point, minimum 1 point
@@ -976,9 +993,9 @@ public class Slice {
 
      
      public void generateBins() {
-         double step = this.adduct.getMaxMZ()-this.adduct.getMinMZ();
+         float step = this.adduct.getMaxMZ()-this.adduct.getMinMZ();
          step = step/file.getMzbins().length;
-         Bins = new double[file.getMzbins().length];
+         Bins = new float[file.getMzbins().length];
          
          //store upper limits for each bin
          Bins[0]=this.adduct.getMinMZ()+step;
@@ -1068,6 +1085,8 @@ public class Slice {
     }
     
     public void deleteSlice() {
+       
+        
         this.file= null;
         this.dataset = null;
         this.adduct = null;
@@ -1085,6 +1104,8 @@ public class Slice {
         if(this.intensityFunction!=null){
             this.intensityFunction=null;
         }
+        
+        
         
     }
     
@@ -1130,18 +1151,18 @@ public class Slice {
     /**
      * @return the MZArray
      */
-    public double[] getMZArray() {
+    public float[] getMZArray() {
         return MZArray;
     }
 
     /**
      * @param MZArray the MZArray to set
      */
-    public void setMZArray(double[] MZArray) {
+    public void setMZArray(float[] MZArray) {
         this.MZArray = MZArray;
     }
     
-    public Integer setFittedPeak(int shift) {
+    public Short setFittedPeak(int shift) {
         
        
         //TODO: range as function of RTTolerance
@@ -1152,7 +1173,7 @@ public class Slice {
         //get maximum range
         if (listofPeaks != null) {
         int min = adduct.getSession().getIntPeakRTTol();
-        for (int i = 0; i<listofPeaks.size(); i++) {
+        for (short i = 0; i<listofPeaks.size(); i++) {
             //if smaller than maximum range or already found peak, set peak
             if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
                 min = Math.abs(listofPeaks.get(i).getIndex()-shift);
@@ -1170,7 +1191,7 @@ public class Slice {
             if (fittedpeak==null||i!=fittedpeak) {
                 if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
                     min = Math.abs(listofPeaks.get(i).getIndex()-shift);
-                        setScorepeakclose((1.0/(double)(adduct.getSession().getIntPeakRTTol()+range+1))*min);
+                        setScorepeakclose((1.0f/(float)(adduct.getSession().getIntPeakRTTol()+range+1))*min);
                 }
             }
         }
@@ -1190,7 +1211,7 @@ public class Slice {
     }
     
     //return the area of the fitted peak, or -1 if no fitted peak
-    public Double getfittedArea() {
+    public Float getfittedArea() {
         if (fittedpeak == null) {
             return (null);
         } else {
@@ -1201,7 +1222,7 @@ public class Slice {
     /**
      * @return the scorepeakfound
      */
-    public double getScorepeakfound() {
+    public float getScorepeakfound() {
         if (fittedpeak!=null) {
             return 1;
         } else {
@@ -1215,30 +1236,30 @@ public class Slice {
     /**
      * @return the scorepeakclose
      */
-    public double getScorepeakclose() {
+    public float getScorepeakclose() {
         return scorepeakclose;
     }
 
     /**
      * @param scorepeakclose the scorepeakclose to set
      */
-    public void setScorepeakclose(double scorepeakclose) {
+    public void setScorepeakclose(float scorepeakclose) {
         this.scorepeakclose = scorepeakclose;
     }
 
-    double getScoredistance() {
+    float getScoredistance() {
         if (fittedpeak == null) {
             return 0;
         } else {
-            //System.out.println((Math.abs((double)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(double)file.getSession().getIntPeakRTTol());
-            return 1-((Math.abs((double)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(double)file.getSession().getIntPeakRTTol());
+            //System.out.println((Math.abs((float)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(float)file.getSession().getIntPeakRTTol());
+            return 1-((Math.abs((float)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(float)file.getSession().getIntPeakRTTol());
             
         }
     }
     
     //returns list filled with indexes of peaks
-    public List<Integer> getPeakIndex() {
-        List<Integer> list = new ArrayList<>();
+    public List<Short> getPeakIndex() {
+        List<Short> list = new ArrayList<>();
         if (listofPeaks!=null) {
             for (int i = 0; i<listofPeaks.size(); i++) {
                 list.add(listofPeaks.get(i).getIndex());
@@ -1256,19 +1277,19 @@ public class Slice {
         return listofPeaks.get(fittedpeak).getEnd();
     }
     
-    public XYChart.Series manualPeak(int start, int end) {
+    public XYChart.Series manualPeak(short start, short end) {
         
         //Peak picking
         //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
-        double delta = (IntensityArray[end]-IntensityArray[start])/(end-start);
-        double current = IntensityArray[start];
+        float delta = (IntensityArray[end]-IntensityArray[start])/(end-start);
+        float current = IntensityArray[start];
         
-        List<Double> intensity = new ArrayList<>();
+        List<Float> intensity = new ArrayList<>();
         for (int i = start; i<=end; i++) {
             intensity.add(IntensityArray[i]-current);
             current = current + delta;
         }
-        double max = 0;
+        float max = 0;
         int maxint = -1;
         
         //only look for max in the middle 70% region
@@ -1291,7 +1312,7 @@ public class Slice {
         
         
         
-        int index = maxint+start;
+        short index = (short) (maxint+start);
         
         //don't add Peak if there is already a similar peak
         if (listofPeaks != null) {
@@ -1309,7 +1330,7 @@ public class Slice {
         listofPeaks.add(newPeak);
         XYChart.Series newSeries = new XYChart.Series();
         
-        double[] RTArray = adduct.getRTArray();
+        float[] RTArray = adduct.getRTArray();
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.2));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
                 newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
@@ -1337,6 +1358,13 @@ public class Slice {
         } else {
             setListofPeaks(new ArrayList<>());
         }
+    }
+
+    /**
+     * @return the empty
+     */
+    public boolean isEmpty() {
+        return empty;
     }
     
 }

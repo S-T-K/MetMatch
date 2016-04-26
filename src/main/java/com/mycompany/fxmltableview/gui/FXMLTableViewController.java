@@ -34,9 +34,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -160,13 +160,13 @@ public class FXMLTableViewController implements Initializable {
 
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
-        scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Score"));
-        scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakfound"));
-        scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorepeakclose"));
-        scorecertaintyColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("Scorecertainty"));
+        scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Score"));
+        scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakfound"));
+        scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakclose"));
+        scorecertaintyColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorecertainty"));
         numColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("Num"));
-        rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("RT"));
-        mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Double>("MZ"));
+        rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("RT"));
+        mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("MZ"));
 
         //highlight the Button, can't be done the normal way
         Platform.runLater(new Runnable() {
@@ -282,7 +282,7 @@ public class FXMLTableViewController implements Initializable {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        //add double click functionality to the TreeTable
+        //add float click functionality to the TreeTable
         getMetTable().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -390,7 +390,7 @@ public class FXMLTableViewController implements Initializable {
     //does the Shift calculation
     public void calculate(CountDownLatch latch) throws IOException, InterruptedException {
 
-        DoubleProperty progress = new SimpleDoubleProperty(0.0);
+        FloatProperty progress = new SimpleFloatProperty(0.0f);
         progressbar.progressProperty().bind(progress);
 
         Task task = new Task<Void>() {
@@ -404,12 +404,12 @@ public class FXMLTableViewController implements Initializable {
                             if (currentfile.getActive().booleanValue()) {
 
                                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
-                                double[][] matrix = new double[getMasterListofOGroups().size()][session.getResolution()];
+                                float[][] matrix = new float[getMasterListofOGroups().size()][session.getResolution()];
 
                                 for (int i = 0; i < getMasterListofOGroups().size(); i++) {
 
                                     getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
-                                    double[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
+                                    float[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
                                     //TODO: calculate Range as function of time
                                     //int range = 0;
                                     for (int j = 0; j < session.getResolution(); j++) {
@@ -439,7 +439,7 @@ public class FXMLTableViewController implements Initializable {
                                 }
 
                                 //Test artificial shift
-//                double[][] matrix2 = new double[MasterListofOGroups.size()][session.getResolution()];
+//                float[][] matrix2 = new float[MasterListofOGroups.size()][session.getResolution()];
 //                for (int i = 0; i< MasterListofOGroups.size(); i++) {
 //                    int currentshift = (int) (Math.floor(10+(Math.sin(MasterListofOGroups.get(i).getRT())*10)));
 //                    for (int j = 0; j<currentshift; j++) {
@@ -453,7 +453,7 @@ public class FXMLTableViewController implements Initializable {
 //               
 //                matrix = matrix2;
                                 //calculate weight matrix
-                                double[][] weights = new double[getMasterListofOGroups().size()][session.getResolution()];
+                                float[][] weights = new float[getMasterListofOGroups().size()][session.getResolution()];
                                 //fill first row
                                 for (int j = 0; j < session.getResolution(); j++) {
                                     weights[0][j] = matrix[0][j];
@@ -461,10 +461,10 @@ public class FXMLTableViewController implements Initializable {
                                 }
                                 //TODO: Penalty for change in j
                                 //fill rest of weights matrix
-                                double penalty = session.getListofDatasets().get(0).getPenalty();
+                                float penalty = session.getListofDatasets().get(0).getPenalty();
                                 for (int i = 1; i < getMasterListofOGroups().size(); i++) {
                                     for (int j = 0; j < session.getResolution(); j++) {
-                                        double max = 0;
+                                        float max = 0;
                                         if (weights[i - 1][j] > max) {
                                             max = weights[i - 1][j] + matrix[i][j];
                                         }
@@ -480,7 +480,7 @@ public class FXMLTableViewController implements Initializable {
 
                                 }
                                 //get max in last row
-                                double max = 0;
+                                float max = 0;
                                 int maxint = 0;
                                 for (int j = 0; j < session.getResolution(); j++) {
                                     if (weights[getMasterListofOGroups().size() - 1][j] > max) {
@@ -489,7 +489,7 @@ public class FXMLTableViewController implements Initializable {
                                     }
                                 }
 
-                                getMasterListofOGroups().get(getMasterListofOGroups().size() - 1).setFittedShift(currentfile, maxint);
+                                getMasterListofOGroups().get(getMasterListofOGroups().size() - 1).setFittedShift(currentfile, (short) maxint);
 
                                 //TODO: calculate range as function of time
                                 for (int i = getMasterListofOGroups().size() - 1; i > -1; i--) {
@@ -509,7 +509,7 @@ public class FXMLTableViewController implements Initializable {
                                         maxint = j + 1;
                                     }
 
-                                    getMasterListofOGroups().get(i).setFittedShift(currentfile, maxint);
+                                    getMasterListofOGroups().get(i).setFittedShift(currentfile, (short) maxint);
 
                                     //set score for OPGroup
                                     getMasterListofOGroups().get(i).addScore(currentfile, (getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
@@ -524,7 +524,7 @@ public class FXMLTableViewController implements Initializable {
                                 }
                                 //TODO number of active files
                                 
-                                progress.set(progress.get() + 1.0d / (session.getListofDatasets().get(d).getListofFiles().size()));
+                                progress.set(progress.get() + 1.0f / (session.getListofDatasets().get(d).getListofFiles().size()));
                                 System.out.println("Calculation: " + progress.get() + "%");
                             }
                         }
@@ -546,8 +546,8 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
-    public double getmaxofrange(double[][] weights, int row, int col, int range) {
-        double max = 0;
+    public float getmaxofrange(float[][] weights, int row, int col, int range) {
+        float max = 0;
 
         for (int i = (col - range); i <= (col + range); i++) {
             if (i < session.getResolution() && i >= 0 && weights[row][i] > max) {
@@ -684,7 +684,7 @@ public class FXMLTableViewController implements Initializable {
                             rows.get(currentline).add(14, "");
                             currentline++;
                         } else {
-                            rows.get(currentline).add(14, Double.toString(list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea()));
+                            rows.get(currentline).add(14, Float.toString(list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea()));
                             currentline++;
                         }
                     }
@@ -741,7 +741,7 @@ public class FXMLTableViewController implements Initializable {
                         //and add every possible adduct
                         if (j!=k) {
                             //don't add the same value
-                            Double mass = session.getListofadductmasses().get(j)-session.getListofadductmasses().get(k);
+                            Float mass = session.getListofadductmasses().get(j)-session.getListofadductmasses().get(k);
                             String Ion = "[(" + adduct.getNum() + "-" + session.getListofadductnames().get(k) + ")+" + session.getListofadductnames().get(j) + "]+";
                             MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o)));
                 max++;

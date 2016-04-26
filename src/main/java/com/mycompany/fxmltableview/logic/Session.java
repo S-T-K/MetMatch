@@ -18,7 +18,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,37 +36,37 @@ public class Session {
     private List<Entry> listofOGroups;
     private Reference reference;
     private List<Dataset> listofDatasets;
-    private SimpleDoubleProperty RTTolerance;
-    private SimpleDoubleProperty MZTolerance;
+    private SimpleFloatProperty RTTolerance;
+    private SimpleFloatProperty MZTolerance;
     private SimpleIntegerProperty resolution;
-    private SimpleDoubleProperty baseline;
-    private SimpleDoubleProperty PeakRTTolerance;
+    private SimpleFloatProperty baseline;
+    private SimpleFloatProperty PeakRTTolerance;
     private int IntPeakRTTol;
     private String PeackPick;
-    private SimpleDoubleProperty maxPeakLength;
+    private SimpleFloatProperty maxPeakLength;
     //max points from middle to end of peak
-    private int maxPeakLengthint;
+    private short maxPeakLengthint;
    
     
     private int numberofFiles;
     private Rengine engine;
-    private SimpleDoubleProperty SliceMZTolerance;
+    private SimpleFloatProperty SliceMZTolerance;
     
     private boolean peakPickchanged;
     
     private List<String> listofadductnames;
-    private List<Double> listofadductmasses;
+    private List<Float> listofadductmasses;
     
     public Session() {
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
         this.resolution = new SimpleIntegerProperty(100);
-        this.baseline = new SimpleDoubleProperty(1000);
-        SliceMZTolerance = new SimpleDoubleProperty (2.5);
-        RTTolerance = new SimpleDoubleProperty(1.5);
-        MZTolerance = new SimpleDoubleProperty(10);
-        PeakRTTolerance = new SimpleDoubleProperty(0.15);
-        maxPeakLength = new SimpleDoubleProperty(0.9);
+        this.baseline = new SimpleFloatProperty(1000);
+        SliceMZTolerance = new SimpleFloatProperty (2.5f);
+        RTTolerance = new SimpleFloatProperty(1.5f);
+        MZTolerance = new SimpleFloatProperty(10);
+        PeakRTTolerance = new SimpleFloatProperty(0.15f);
+        maxPeakLength = new SimpleFloatProperty(0.9f);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
@@ -78,12 +78,12 @@ public class Session {
         listofadductnames.add("Na");
         listofadductnames.add("CH3OH+H");
         listofadductnames.add("K");
-        listofadductmasses= new ArrayList<Double>();
-        listofadductmasses.add(1.007276);
-        listofadductmasses.add(18.033823);
-        listofadductmasses.add(22.989218);
-        listofadductmasses.add(33.033489);
-        listofadductmasses.add(38.963158);
+        listofadductmasses= new ArrayList<Float>();
+        listofadductmasses.add(1.007276f);
+        listofadductmasses.add(18.033823f);
+        listofadductmasses.add(22.989218f);
+        listofadductmasses.add(33.033489f);
+        listofadductmasses.add(38.963158f);
         
     }
 
@@ -125,24 +125,24 @@ public class Session {
         int indexIon = headers.indexOf("Ion");
         int indexM = headers.indexOf("M");
         int Num;
-        double MZ;
-        double RT;
+        float MZ;
+        float RT;
         int Xn;
         int OGroup;
         String Ion;
-        double M;
+        float M;
         
         
         String lastOGroup = "-1";
         Entry ogroup = null;
         for (int i = 1; i < allRows.size(); i++) {
             Num = Integer.parseInt(allRows.get(i)[indexNum]);
-            MZ = Double.parseDouble(allRows.get(i)[indexMZ]);
-            RT = Double.parseDouble(allRows.get(i)[indexRT]);
+            MZ = Float.parseFloat(allRows.get(i)[indexMZ]);
+            RT = Float.parseFloat(allRows.get(i)[indexRT]);
             Xn = Integer.parseInt(allRows.get(i)[indexXn]);
             OGroup = Integer.parseInt(allRows.get(i)[indexOGroup]);
             Ion = allRows.get(i)[indexIon];
-            M = parseDoubleSafely(allRows.get(i)[indexM]);
+            M = parseFloatSafely(allRows.get(i)[indexM]);
             
             //if new Ogroup, make new Ogroup
             if (!(lastOGroup.equals(allRows.get(i)[indexOGroup]))) {
@@ -166,10 +166,10 @@ public class Session {
         
     }
     
-    public static double parseDoubleSafely(String str) {
-    double result = 0;
+    public static float parseFloatSafely(String str) {
+    float result = 0;
     try {
-        result = Double.parseDouble(str);
+        result = Float.parseFloat(str);
     } catch (NullPointerException | NumberFormatException npe) {
     }
     return result;
@@ -213,7 +213,7 @@ public class Session {
      * @param RTTolerance the RTTolerance to set
      */
     public void setRTTolerance(float RTTolerance) {
-        this.RTTolerance = new SimpleDoubleProperty(RTTolerance);
+        this.RTTolerance = new SimpleFloatProperty(RTTolerance);
     }
 
     /**
@@ -227,7 +227,7 @@ public class Session {
      * @param MZTolerance the MZTolerance to set
      */
     public void setMZTolerance(float MZTolerance) {
-        this.MZTolerance = new SimpleDoubleProperty(MZTolerance);
+        this.MZTolerance = new SimpleFloatProperty(MZTolerance);
     }
 
     /**
@@ -255,7 +255,7 @@ public class Session {
      * @param baseline the baseline to set
      */
     public void setBaseline(float baseline) {
-        this.baseline = new SimpleDoubleProperty(baseline);
+        this.baseline = new SimpleFloatProperty(baseline);
     }
 
   
@@ -277,15 +277,15 @@ public class Session {
     /**
      * @return the SliceMZTolerance
      */
-    public double getSliceMZTolerance() {
-        return SliceMZTolerance.doubleValue();
+    public float getSliceMZTolerance() {
+        return SliceMZTolerance.floatValue();
     }
 
     /**
      * @param SliceMZTolerance the SliceMZTolerance to set
      */
-    public void setSliceMZTolerance(double SliceMZTolerance) {
-        this.SliceMZTolerance = new SimpleDoubleProperty(SliceMZTolerance);
+    public void setSliceMZTolerance(float SliceMZTolerance) {
+        this.SliceMZTolerance = new SimpleFloatProperty(SliceMZTolerance);
     }
 
 
@@ -340,15 +340,15 @@ public class Session {
         return list;
     }
     
-    public SimpleDoubleProperty getRTTolProp() {
+    public SimpleFloatProperty getRTTolProp() {
         return RTTolerance;
     }
     
-    public SimpleDoubleProperty getMZTolProp() {
+    public SimpleFloatProperty getMZTolProp() {
         return MZTolerance;
     }
     
-    public SimpleDoubleProperty getBaseProp() {
+    public SimpleFloatProperty getBaseProp() {
         return baseline;
     }
     
@@ -356,11 +356,11 @@ public class Session {
         return resolution;
     }
     
-    public SimpleDoubleProperty getMaxPeakLengthProp() {
+    public SimpleFloatProperty getMaxPeakLengthProp() {
         return maxPeakLength;
     }
     
-    public SimpleDoubleProperty getSliceMZTolProp() {
+    public SimpleFloatProperty getSliceMZTolProp() {
         return SliceMZTolerance;
     }
 
@@ -382,14 +382,14 @@ public class Session {
     /**
      * @return the PeakRTTolerance
      */
-    public SimpleDoubleProperty getPeakRTTolerance() {
+    public SimpleFloatProperty getPeakRTTolerance() {
         return PeakRTTolerance;
     }
 
     /**
      * @param PeakRTTolerance the PeakRTTolerance to set
      */
-    public void setPeakRTTolerance(SimpleDoubleProperty PeakRTTolerance) {
+    public void setPeakRTTolerance(SimpleFloatProperty PeakRTTolerance) {
         this.PeakRTTolerance = PeakRTTolerance;
     }
 
@@ -423,27 +423,27 @@ public class Session {
         System.out.println("Peak pick changed: " + peakPickchanged);
     }
     
-    public void addPenalty(double startX, double startY, double endX, double endY) {
+    public void addPenalty(float startX, float startY, float endX, float endY) {
         List<RawDataFile> list = getSelectedFiles();
-        double[] PenArray;
+        short[] PenArray;
         
         //make sure start is smaller than end
         if (startX>endX) {
-            double temp = startX;
+            float temp = startX;
             startX = endX;
             endX = temp;
         }
         
         if (startY>endY) {
-            double temp = startY;
+            float temp = startY;
             startY = endY;
             endY = temp;
         }
         
         
         //calculate Shift interval
-        int middle = (int)((double)resolution.getValue()-1)/2;
-        double interval = RTTolerance.doubleValue()*2/resolution.getValue()*60;
+        int middle = (int)((float)resolution.getValue()-1)/2;
+        float interval = RTTolerance.floatValue()*2/resolution.getValue()*60;
         int start = (int) (startY/interval)+middle;
         int end = (int) (endY/interval)+middle;
         
@@ -455,7 +455,7 @@ public class Session {
                     if (listofOGroups.get(i).getPenArray().containsKey(list.get(j))) {
                         PenArray = listofOGroups.get(i).getPenArray().get(list.get(j));
                     } else {
-                        PenArray = new double[resolution.getValue()];
+                        PenArray = new short[resolution.getValue()];
                     }
                     for (int k = start; k<=end; k++) {
                         if(k>0 && k<PenArray.length) {
@@ -472,30 +472,30 @@ public class Session {
     /**
      * @return the maxPeakLength
      */
-    public SimpleDoubleProperty getMaxPeakLength() {
+    public SimpleFloatProperty getMaxPeakLength() {
         return maxPeakLength;
     }
 
     /**
      * @param maxPeakLength the maxPeakLength to set
      */
-    public void setMaxPeakLength(SimpleDoubleProperty maxPeakLength) {
+    public void setMaxPeakLength(SimpleFloatProperty maxPeakLength) {
         this.maxPeakLength = maxPeakLength;
     }
 
     /**
      * @return the maxPeakLengthint
      */
-    public int getMaxPeakLengthint() {
+    public short getMaxPeakLengthint() {
         return maxPeakLengthint;
     }
     
     //final steps when Parameters are fixed
     public void prepare() {
-        maxPeakLengthint = (int)(maxPeakLength.doubleValue()/(RTTolerance.doubleValue()*2/resolution.doubleValue()))/2;
+        maxPeakLengthint = (short) ((maxPeakLength.floatValue()/(RTTolerance.floatValue()*2/resolution.floatValue()))/2);
         
-        double delta = (RTTolerance.doubleValue()*2)/resolution.doubleValue();
-        IntPeakRTTol = (int) (PeakRTTolerance.doubleValue()/delta);
+        float delta = (RTTolerance.floatValue()*2)/resolution.floatValue();
+        IntPeakRTTol = (int) (PeakRTTolerance.floatValue()/delta);
         System.out.println("IntPeakRTTol: " + IntPeakRTTol);
         
     }
@@ -517,14 +517,14 @@ public class Session {
     /**
      * @return the listogadductmasses
      */
-    public List<Double> getListofadductmasses() {
+    public List<Float> getListofadductmasses() {
         return listofadductmasses;
     }
 
     /**
      * @param listogadductmasses the listogadductmasses to set
      */
-    public void setListofadductmasses(List<Double> listogadductmasses) {
+    public void setListofadductmasses(List<Float> listogadductmasses) {
         this.listofadductmasses = listogadductmasses;
     }
 }

@@ -26,13 +26,13 @@ public class CertaintyCalculator {
 
     public void calculate() {
         
-        double cert = 0.05; //value that get's subtracted from original/iteration (from theoretical 1)
+        float cert = 0.05f; //value that get's subtracted from original/iteration (from theoretical 1)
         //penalty for change in position
-        double distpen = 1.0/session.getResolution();
+        float distpen = 1.0f/session.getResolution();
         
         for (int i = 0; i < session.getListofOGroups().size(); i++) {
                             //delete old certainties
-                            session.getListofOGroups().get(i).setCertainties(new HashMap<RawDataFile,Double>());                
+                            session.getListofOGroups().get(i).setCertainties(new HashMap<RawDataFile,Float>());                
         }
         
         for (int d = 0; d < session.getListofDatasets().size(); d++) {
@@ -43,13 +43,13 @@ public class CertaintyCalculator {
 
                         //build original weight matrix
                         Collections.sort(session.getListofOGroups(), new Entry.orderbyRT());
-                        double[][] matrix = new double[session.getListofOGroups().size()][session.getResolution()];
+                        float[][] matrix = new float[session.getListofOGroups().size()][session.getResolution()];
 
                         for (int i = 0; i < session.getListofOGroups().size(); i++) {   
                             //add best possible certainty 
-                            session.getListofOGroups().get(i).getCertainties().put(currentfile, 1.0);
+                            session.getListofOGroups().get(i).getCertainties().put(currentfile, 1.0f);
                             
-                            double[] PropArray = session.getListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
+                            float[] PropArray = session.getListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
                             for (int j = 0; j < session.getResolution(); j++) {
                                 matrix[i][j] = PropArray[j];
                             }
@@ -71,24 +71,24 @@ public class CertaintyCalculator {
                                     end = session.getResolution()-1;
                                 }
                                 for (int t = start; t<=end; t++) {
-                                    matrix[i][t] = matrix[i][t]*(1.0/(1.0-p*cert))*(1-(p+1)*cert) ;
+                                    matrix[i][t] = matrix[i][t]*(1.0f/(1.0f-p*cert))*(1-(p+1)*cert) ;
                                 }
                             }
                             
                             
 
                             //build new weight matrix
-                            double[][] weights = new double[session.getListofOGroups().size()][session.getResolution()];
+                            float[][] weights = new float[session.getListofOGroups().size()][session.getResolution()];
                             //fill first row
                             for (int j = 0; j < session.getResolution(); j++) {
                                 weights[0][j] = matrix[0][j];
 
                             }
                             //fill rest of weights matrix
-                            double penalty = session.getListofDatasets().get(0).getPenalty();
+                            float penalty = session.getListofDatasets().get(0).getPenalty();
                             for (int i = 1; i < session.getListofOGroups().size(); i++) {
                                 for (int j = 0; j < session.getResolution(); j++) {
-                                    double max = 0;
+                                    float max = 0;
                                     if (weights[i - 1][j] > max) {
                                         max = weights[i - 1][j] + matrix[i][j];
                                     }
@@ -106,7 +106,7 @@ public class CertaintyCalculator {
                             
                             //calculate path
                             //get max in last row
-                                double max = 0;
+                                float max = 0;
                                 int maxint = 0;
                                 for (int j = 0; j < session.getResolution(); j++) {
                                     if (weights[session.getListofOGroups().size() - 1][j] > max) {
@@ -140,8 +140,8 @@ public class CertaintyCalculator {
                                         
                                         //first part is what fraction of the original value has been subtracted. High value = high certainty
                                         //second part is the distance from the original fittedshift, high distance = low certainty
-                                        double fp = (p+1)*cert;
-                                        double sp = 1-(dist*distpen);
+                                        float fp = (p+1)*cert;
+                                        float sp = 1-(dist*distpen);
                                         
                                         if (session.getListofOGroups().get(i).getCertainties().get(currentfile)>fp*sp) {
                                            session.getListofOGroups().get(i).getCertainties().put(currentfile,fp*sp);
