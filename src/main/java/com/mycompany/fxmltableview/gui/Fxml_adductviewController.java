@@ -456,6 +456,7 @@ public class Fxml_adductviewController implements Initializable {
                 for (int i = 0; i < completeList.size(); i++) {
                     if (completeList.get(i).isselected()) {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
+                        if (list!=null){
                         for (int j = 0; j < list.size(); j++) {
                             if (list.get(j).getNode() == null) {
                                 for (int k = 0; k < list.get(j).getData().size(); k++) {
@@ -475,9 +476,10 @@ public class Fxml_adductviewController implements Initializable {
                                 ((Path) node).setStroke(Color.RED);
                                 System.out.println("Line colored Red");
                             }
-                        }
+                        }}
                     } else {
                         List<XYChart.Series> list = filetoseries.get(completeList.get(i));
+                        if (list!=null){
                         for (int j = 0; j < list.size(); j++) {
                             if (list.get(j).getNode() == null) {
                                 for (int k = 0; k < list.get(j).getData().size(); k++) {
@@ -493,7 +495,7 @@ public class Fxml_adductviewController implements Initializable {
                                 
                                 ((Path) node).setStroke(completeList.get(i).getColor());
                                 System.out.println("Line colored normal");
-                            }
+                            }}
                         }
 
                     }

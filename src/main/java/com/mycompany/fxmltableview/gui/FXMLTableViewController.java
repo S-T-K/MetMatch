@@ -221,7 +221,7 @@ public class FXMLTableViewController implements Initializable {
         setMasterListofOGroups(session.parseReferenceTsv());
 
         //generate additional adducts
-        generateAdducts();
+        //generateAdducts();
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
 

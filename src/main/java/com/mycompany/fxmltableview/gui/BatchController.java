@@ -247,14 +247,14 @@ public class BatchController implements Initializable {
                
                 if (filelist != null) {
                     for (File file : filelist) {
-                        float start = System.currentTimeMillis();
+                        double start = System.currentTimeMillis();
 
 
                         batch.addFile(true, file, session);                    
                         progress.set(progress.get() + test);
                         getBatchFileView().refresh();
                         System.out.println(progress.get());
-                        float end = System.currentTimeMillis();
+                        double end = System.currentTimeMillis();
                         System.out.println(end - start);
                         //refresh files
                         getBatchFileView().setItems(batch.getListofFiles());
