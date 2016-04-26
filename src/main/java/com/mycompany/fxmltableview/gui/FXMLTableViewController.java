@@ -741,12 +741,22 @@ public class FXMLTableViewController implements Initializable {
                         //and add every possible adduct
                         if (j!=k) {
                             //don't add the same value
-                            Float mass = session.getListofadductmasses().get(j)-session.getListofadductmasses().get(k);
+                            Float mass = adduct.getMZ()+session.getListofadductmasses().get(j)-session.getListofadductmasses().get(k);
+                            Float ppm = mass/1000000*session.getMZTolerance();
+                            boolean duplicate=false;
+                            for (int c = 0; c<MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                if (Math.abs(mass-MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ())<ppm) {
+                                    duplicate = true;
+                                    System.out.println("Duplicate generated");
+                                    break;
+                                }
+                            }
+                            if (!duplicate) {
                             String Ion = "[(" + adduct.getNum() + "-" + session.getListofadductnames().get(k) + ")+" + session.getListofadductnames().get(j) + "]+";
                             MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o)));
                 max++;
                         }
-                        
+                        }
                     }
                     
                 }
