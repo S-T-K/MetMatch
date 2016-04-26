@@ -759,7 +759,6 @@ public class Fxml_adductviewController implements Initializable {
         for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
             lis.getValue().removeListener(lis.getKey());
         }
-        System.gc();
     }
     
      public void nextprev() {
@@ -775,7 +774,6 @@ public class Fxml_adductviewController implements Initializable {
             lis.getValue().removeListener(lis.getKey());
         }
         charts.clear();
-        System.gc();
     }
 
      

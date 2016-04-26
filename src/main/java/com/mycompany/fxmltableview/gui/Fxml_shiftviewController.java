@@ -556,7 +556,7 @@ public class Fxml_shiftviewController implements Initializable {
         for (Map.Entry<ListChangeListener, ObservableList> lis : listlisteners.entrySet()) {
             lis.getValue().removeListener(lis.getKey());
         }
-        System.gc();
+  
     }
 
     public Session getSession() {

@@ -689,7 +689,7 @@ public class Slice {
         setIntensityList(newIntList);
         setMassList(newMZList);
         
-    if (numberofsignals<5) {
+    if (numberofsignals<5||maxIntensity<adduct.getSession().getBaseline()) {
         this.empty=true;
     }
 }
@@ -810,8 +810,8 @@ public class Slice {
                   }
                   RT++;
                   values = 0;
-                  if (RT==100) {
-                      RT=99;
+                  if (RT==adduct.getSession().getResolution()) {
+                      RT=adduct.getSession().getResolution()-1;
                       break;
                   }
               }

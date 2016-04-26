@@ -188,6 +188,7 @@ mzshift = new SimpleFloatProperty(session.getMZTolerance()-maxint*step);
 for (int i =0; i< listofSlices.size(); i++) {
     listofSlices.get(i).clean();
     listofSlices.get(i).generateInterpolatedEIC();
+    
 }
 
 List<Slice> newlist = new ArrayList<Slice>();
@@ -391,7 +392,6 @@ System.out.println("Complete Extraction: " + (end-start));
             
         }
        System.out.println("Deleted File");
-        System.gc();
     }
 
     public boolean isselected() {
