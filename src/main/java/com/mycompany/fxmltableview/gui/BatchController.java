@@ -258,7 +258,7 @@ public class BatchController implements Initializable {
                         System.out.println(end - start);
                         //refresh files
                         getBatchFileView().setItems(batch.getListofFiles());
-
+//session.testdeletearray();
                     }
 
 

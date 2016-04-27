@@ -81,7 +81,7 @@ public class Slice {
     
     public void extractSlicefromScans(List<Scan> listofScans) {
         float start = System.currentTimeMillis();
-        generateBins();
+        
          //for all Scans
          setMinIntensity(900000000);
          setMaxIntensity(0);
@@ -136,13 +136,14 @@ public class Slice {
       
      //this.clean();
      //this.generateInterpolatedEIC();
-     Bins = null;
+    
      float end = System.currentTimeMillis();
      //System.out.println("Extraction: " + (end-start));
     }
     
     //not yet working...
     public void binaryExtractSlicefromScans(List<Scan> listofScans) {
+        
        generateBins();
          //for all Scans
          setMinIntensity(900000000);
@@ -276,7 +277,7 @@ public class Slice {
          }
          
     
-       
+       Bins=null;
       
      //this.clean();
      //this.generateInterpolatedEIC();
@@ -829,10 +830,10 @@ public class Slice {
    
     //use byteMZArray instead
     float step = adduct.getSession().getMZTolerance()/100*adduct.getMZ()/1000000f;
-    byteMZArray = new byte[MZArray.length];
+            setByteMZArray(new byte[MZArray.length]);
     
     for (int i = 0; i<MZArray.length; i++) {
-        byteMZArray[i] = (byte) ((MZArray[i]-adduct.getMZ())/step);
+                getByteMZArray()[i] = (byte) ((MZArray[i]-adduct.getMZ())/step);
     }
       
       
@@ -1169,7 +1170,7 @@ public class Slice {
      * @return the MZArray
      */
     public float getMZValue(int i) {
-        return byteMZArray[i]*adduct.getMZ()/1000000*adduct.getSession().getMZTolerance()/100+adduct.getMZ();
+        return getByteMZArray()[i]*adduct.getMZ()/1000000*adduct.getSession().getMZTolerance()/100+adduct.getMZ();
     }
 
     /**
@@ -1382,6 +1383,20 @@ public class Slice {
      */
     public boolean isEmpty() {
         return empty;
+    }
+
+    /**
+     * @return the byteMZArray
+     */
+    public byte[] getByteMZArray() {
+        return byteMZArray;
+    }
+
+    /**
+     * @param byteMZArray the byteMZArray to set
+     */
+    public void setByteMZArray(byte[] byteMZArray) {
+        this.byteMZArray = byteMZArray;
     }
     
 }

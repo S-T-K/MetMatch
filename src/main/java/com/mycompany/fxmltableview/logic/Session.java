@@ -10,6 +10,7 @@ import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
+import com.mycompany.fxmltableview.datamodel.Slice;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
@@ -526,5 +527,20 @@ public class Session {
      */
     public void setListofadductmasses(List<Float> listogadductmasses) {
         this.listofadductmasses = listogadductmasses;
+    }
+    
+    
+    public void testdeletearray() {
+        for (int i = 0; i<listofOGroups.size(); i++) {
+            for (int j = 0; j<listofOGroups.get(i).getListofAdducts().size(); j++) {
+                Entry adduct = listofOGroups.get(i).getListofAdducts().get(j);
+                for (Slice slice:adduct.getListofSlices().values()) {
+                    slice.setIntensityArray(null);
+                    slice.setByteMZArray(null);
+                 
+                }
+            }
+        }
+        
     }
 }
