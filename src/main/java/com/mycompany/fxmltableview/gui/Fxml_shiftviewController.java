@@ -307,6 +307,7 @@ public class Fxml_shiftviewController implements Initializable {
                         for (int i = 0; i < completeList.size(); i++) {
                             if (completeList.get(i).isselected()) {
                                 List<XYChart.Series> list = filetoseries.get(completeList.get(i));
+                                if (list!=null) {
                                 for (int j = 0; j < list.size(); j++) {
                                     for (int k = 0; k < list.get(j).getData().size(); k++) {
 
@@ -316,9 +317,10 @@ public class Fxml_shiftviewController implements Initializable {
                                         ((Ellipse) node).setFill(Color.RED);
                                         node.toFront();
                                     }
-                                }
+                                }}
                             } else {
                                 List<XYChart.Series> list = filetoseries.get(completeList.get(i));
+                                if (list!=null){
                                 for (int j = 0; j < list.size(); j++) {
                                     for (int k = 0; k < list.get(j).getData().size(); k++) {
 
@@ -330,7 +332,7 @@ public class Fxml_shiftviewController implements Initializable {
 
                                 }
 
-                            }
+                            }}
                         }
 
                     }
