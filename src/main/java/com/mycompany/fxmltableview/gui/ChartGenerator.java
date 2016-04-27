@@ -479,8 +479,8 @@ public class ChartGenerator {
                 float maxIntensity = Arrays.stream(currentSlice.getIntensityArray()).max().getAsInt();
                 float width = currentSlice.getFile().getWidth() + 1.5f;
 //float startinner = System.currentTimeMillis();
-                for (int j = 0; j < currentSlice.getMZArray().length; j++) {
-                    XYChart.Data data = new XYChart.Data(currentSlice.getRTArray()[j], getppm(adduct.getMZ(), currentSlice.getMZArray()[j]));
+                for (int j = 0; j < session.getResolution(); j++) {
+                    XYChart.Data data = new XYChart.Data(currentSlice.getRTArray()[j], getppm(adduct.getMZ(), currentSlice.getMZValue(j)));
 
                     //rect is the node of the plot
                     Rectangle rect1 = new Rectangle(width, width);
@@ -866,7 +866,7 @@ public class ChartGenerator {
             for (int j = 0; j< slices.size(); j++) {
                 for (int p = 0; p<slices.get(j).getListofPeaks().size(); p++) {
                     XYChart.Data data = new XYChart.Data(slices.get(j).getRT(), (slices.get(j).getListofPeaks().get(p).getIndex()-middleint)*60*shiftiter);
-                    Rectangle rect = new Rectangle(1,1);
+                    Rectangle rect = new Rectangle();
                     rect.setFill(Color.BLACK);
                     data.setNode(rect);
                     points.add(data);

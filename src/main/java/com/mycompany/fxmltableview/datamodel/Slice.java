@@ -60,6 +60,7 @@ public class Slice {
     
     //processed information
     private float[] MZArray;
+    private byte[] byteMZArray;
     private int[] IntensityArray;
     private double[] PropArray;
     
@@ -826,13 +827,22 @@ public class Slice {
                       MZArray[RT]=MZArray[RT]/values;
                   }
    
+    //use byteMZArray instead
+    float step = adduct.getSession().getMZTolerance()/100*adduct.getMZ()/1000000f;
+    byteMZArray = new byte[MZArray.length];
     
+    for (int i = 0; i<MZArray.length; i++) {
+        byteMZArray[i] = (byte) ((MZArray[i]-adduct.getMZ())/step);
+    }
+      
+      
      
      //delete originals
     this.intensityList = null;
     this.intensityFunction = null;
     this.massList = null;
     this.retentionTimeList = null;
+    this.MZArray=null;
      
     }
     }
@@ -1153,6 +1163,13 @@ public class Slice {
      */
     public float[] getMZArray() {
         return MZArray;
+    }
+    
+    /**
+     * @return the MZArray
+     */
+    public float getMZValue(int i) {
+        return byteMZArray[i]*adduct.getMZ()/1000000*adduct.getSession().getMZTolerance()/100+adduct.getMZ();
     }
 
     /**
