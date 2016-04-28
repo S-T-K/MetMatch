@@ -193,6 +193,7 @@ public class Fxml_adductviewController implements Initializable {
             public Void call() throws IOException, InterruptedException {
                 //for every Adduct/Fragment
                 int row=0;
+                session.getIothread().addOGroup(entry);
                 for (int i = 0; i < entry.getListofAdducts().size(); i++) {
                    boolean empty = true;
                     Entry adduct = OGroupItem.getChildren().get(i).getValue();

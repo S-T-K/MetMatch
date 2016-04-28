@@ -55,7 +55,7 @@ public class ChartGenerator {
        
     }
 
-    public LineChart generateEIC(Entry adduct) {
+    public LineChart generateEIC(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -84,6 +84,12 @@ public class ChartGenerator {
             if (currentfile.getActive().booleanValue()) {
                 if(adduct.getListofSlices().containsKey(currentfile)) {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
+                if (currentSlice.isStored()) {
+                    session.getIothread().addread(currentSlice);
+                    while (currentSlice.isStored()) {
+                        Thread.sleep(10);
+                    }
+                }
                 XYChart.Series newSeries = new XYChart.Series();
                 adductcontroller.getSeriestochart().put(newSeries, linechart);
                 

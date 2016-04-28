@@ -7,6 +7,7 @@ package com.mycompany.fxmltableview.datamodel;
 
 
 import flanagan.analysis.CurveSmooth;
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,9 +28,32 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.rosuda.JRI.Rengine;
+import java.io.FileOutputStream;
+
+import java.io.IOException;
+
+import java.nio.ByteBuffer;
+
+import java.nio.channels.FileChannel;
+
+import java.io.FileReader;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 
 import static java.lang.Math.abs;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
+import java.util.EnumSet;
 import javafx.scene.chart.XYChart;
 
 /**
@@ -38,9 +62,12 @@ import javafx.scene.chart.XYChart;
  */
 public class Slice {
     
-    
+    //flag
+    private boolean rw;
+    private boolean stored;
+   
     private RawDataFile file;
-    private String name;
+    //private String name;
     
     //TODO: one RTList/OGroup or calculation every time
     //TODO: maybe less precision for Intensity?
@@ -72,9 +99,9 @@ public class Slice {
         this.file = file;
         this.dataset = file.getDataset();
         this.adduct = adduct;
-        this.name = (this+"intList.ser");
+        //this.name = (this+"intList.ser");
         this.fittedpeak = null;
-        
+        rw=false;
     }
     
 
@@ -368,9 +395,10 @@ public class Slice {
         }
         //end Rengine, otherwise thread doesn't terminate
         //engine.end();
-        
+         EIC=null;
 }
         PropArray = null;
+       
         System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
     }
     
@@ -861,6 +889,9 @@ public class Slice {
      * @return the IntensityArray
      */
     public int[] getIntensityArray() {
+        if (stored) {
+           // adduct.getSession().getIo
+        }
         return IntensityArray;
     }
 
@@ -1120,44 +1151,44 @@ public class Slice {
         
     }
     
-    public void storeIntensityList() {
-        try
-      {
-         FileOutputStream fileOut =
-         new FileOutputStream(name);
-         ObjectOutputStream out = new ObjectOutputStream(fileOut);
-         out.writeObject(this.IntensityArray);
-         out.close();
-         fileOut.close();
-         System.out.printf("Serialized data is saved in " + name);
-      }catch(IOException i)
-      {
-          i.printStackTrace();
-      }
-        
-    }
-    
-    public void loadIntensityList() {
-        try
-      {
-         FileInputStream fileIn = new FileInputStream("/tmp/employee.ser");
-         ObjectInputStream in = new ObjectInputStream(fileIn);
-         this.intensityList = (List<Float>) in.readObject();
-         in.close();
-         fileIn.close();
-      }catch(IOException i)
-      {
-         i.printStackTrace();
-         return;
-      }catch(ClassNotFoundException c)
-      {
-         System.out.println("List class not found");
-         c.printStackTrace();
-         return;
-      }
-      System.out.println("Deserialized List...");
-        
-    }
+//    public void storeIntensityList() {
+//        try
+//      {
+//         FileOutputStream fileOut =
+//         new FileOutputStream(name);
+//         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+//         out.writeObject(this.IntensityArray);
+//         out.close();
+//         fileOut.close();
+//         System.out.printf("Serialized data is saved in " + name);
+//      }catch(IOException i)
+//      {
+//          i.printStackTrace();
+//      }
+//        
+//    }
+//    
+//    public void loadIntensityList() {
+//        try
+//      {
+//         FileInputStream fileIn = new FileInputStream("/tmp/employee.ser");
+//         ObjectInputStream in = new ObjectInputStream(fileIn);
+//         this.intensityList = (List<Float>) in.readObject();
+//         in.close();
+//         fileIn.close();
+//      }catch(IOException i)
+//      {
+//         i.printStackTrace();
+//         return;
+//      }catch(ClassNotFoundException c)
+//      {
+//         System.out.println("List class not found");
+//         c.printStackTrace();
+//         return;
+//      }
+//      System.out.println("Deserialized List...");
+//        
+//    }
 
     /**
      * @return the MZArray
@@ -1399,4 +1430,95 @@ public class Slice {
         this.byteMZArray = byteMZArray;
     }
     
+    public void writeData() throws IOException {
+        if (!stored) {
+        setRw(true);
+ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
+                for (int i : IntensityArray) {
+                        buffer.putInt(i); }
+                for (byte i :byteMZArray) {
+                    buffer.put(i);}
+ 
+                FileChannel fc = null;
+                IntensityArray = null;
+                byteMZArray = null;
+                try {
+                        fc = new FileOutputStream("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\tmp\\" + this.toString().substring(44)+"fcalt.out").getChannel();
+                        buffer.flip();
+                        fc.write(buffer);
+                        
+                        
+                } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                } catch (IOException e) {
+                        e.printStackTrace();
+                } finally {
+                    setStored(true);
+                    setRw(false);
+                        safeClose(fc);
+                }
+    }
+    }
+    
+    public void readData() throws FileNotFoundException, IOException{
+        if (stored) {
+        
+        setRw(true);
+    
+    Path path = Paths.get("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\tmp\\" + this.toString().substring(44)+"fcalt.out");
+    byte[] arr = Files.readAllBytes(path);
+    IntBuffer ib = ByteBuffer.wrap(arr).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
+    IntensityArray = new int[100];
+    for (int i = 0; i<100; i++) {
+        IntensityArray[i]=ib.get(i);
+    }
+    byteMZArray = new byte[100];
+    for (int i = 400; i<500; i++) {
+        byteMZArray[i-400] = arr[i];
+    }
+    
+    setStored(false);
+        setRw(false);
+        
+    }
+    }
+    private static void safeClose(FileChannel out) {
+                try {
+                        if (out != null) {
+                                out.close();
+                        }
+                } catch (IOException e) {
+                        // do nothing
+                }
+        }
+
+    /**
+     * @return the rw
+     */
+    public boolean isRw() {
+        return rw;
+    }
+
+    /**
+     * @param rw the rw to set
+     */
+    public void setRw(boolean rw) {
+        this.rw = rw;
+    }
+
+    /**
+     * @return the stored
+     */
+    public boolean isStored() {
+        return stored;
+    }
+
+    /**
+     * @param stored the stored to set
+     */
+    public void setStored(boolean stored) {
+        this.stored = stored;
+    }
+ 
+   
 }

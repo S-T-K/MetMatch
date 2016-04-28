@@ -7,6 +7,7 @@ import com.mycompany.fxmltableview.datamodel.Entry.orderbyRT;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
 import com.mycompany.fxmltableview.logic.CertaintyCalculator;
+import com.mycompany.fxmltableview.logic.IOThread;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
@@ -158,6 +159,8 @@ public class FXMLTableViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        
+        
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Score"));
@@ -179,6 +182,8 @@ public class FXMLTableViewController implements Initializable {
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
+        
+        
 
         //Parameters
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
@@ -834,7 +839,10 @@ public class FXMLTableViewController implements Initializable {
     //when closing the window, end all running processes, such as Rengine
     public void close() {
         session.getEngine().end();
+        session.getIothread().terminate();
 
     }
+
+    
 
 }

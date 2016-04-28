@@ -242,7 +242,7 @@ public class BatchController implements Initializable {
         // create a new task
         Task task = new Task<Void>() {
             @Override
-            public Void call() {
+            public Void call() throws IOException {
                 float test = 1 / (float) filelist.size();
                
                 if (filelist != null) {

@@ -159,6 +159,7 @@ int slices = 0;
                     slices++;
                 data.get(i).getListofAdducts().get(j).addSlice(newSlice);
                 getListofSlices().add(newSlice);
+                
                 //System.out.println("finished with Adduct " + j);
                 } else {
                     number++;
@@ -195,6 +196,7 @@ List<Slice> newlist = new ArrayList<Slice>();
 for (int i =0; i< listofSlices.size(); i++) {
     if (!listofSlices.get(i).isEmpty()) {
         newlist.add(listofSlices.get(i));
+        session.getIothread().addwrite(listofSlices.get(i));
     }
 }
 listofSlices=newlist;

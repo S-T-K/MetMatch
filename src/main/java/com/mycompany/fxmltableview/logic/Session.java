@@ -16,6 +16,7 @@ import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.rosuda.JRI.Rengine;
  */
 public class Session {
    
+    private IOThread iothread;
     private List<Entry> listofOGroups;
     private Reference reference;
     private List<Dataset> listofDatasets;
@@ -59,6 +61,14 @@ public class Session {
     private List<Float> listofadductmasses;
     
     public Session() {
+        
+        iothread = new IOThread(this);
+        Thread t = new Thread(getIothread());
+        // this will call run() function
+        t.start();
+        iothread.t=t;
+        
+        
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
         this.resolution = new SimpleIntegerProperty(100);
@@ -530,17 +540,36 @@ public class Session {
     }
     
     
-    public void testdeletearray() {
+    public void testdeletearray() throws IOException {
+        long start = System.currentTimeMillis();
         for (int i = 0; i<listofOGroups.size(); i++) {
             for (int j = 0; j<listofOGroups.get(i).getListofAdducts().size(); j++) {
                 Entry adduct = listofOGroups.get(i).getListofAdducts().get(j);
                 for (Slice slice:adduct.getListofSlices().values()) {
-                    slice.setIntensityArray(null);
-                    slice.setByteMZArray(null);
+                    
+                    slice.writeData();
+                    
+//                    slice.setIntensityArray(null);
+//                    slice.setByteMZArray(null);
+                    //slice.readData();
                  
                 }
             }
         }
-        
+        System.out.println("Time: " + (System.currentTimeMillis()-start));
+    }
+
+    /**
+     * @return the iothread
+     */
+    public IOThread getIothread() {
+        return iothread;
+    }
+
+    /**
+     * @param iothread the iothread to set
+     */
+    public void setIothread(IOThread iothread) {
+        this.iothread = iothread;
     }
 }
