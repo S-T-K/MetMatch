@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
@@ -193,7 +195,31 @@ public class Fxml_adductviewController implements Initializable {
             public Void call() throws IOException, InterruptedException {
                 //for every Adduct/Fragment
                 int row=0;
+                
+                //read
+                System.out.println("Adding Read OGroup from Adduct Print");
                 session.getIothread().addOGroup(entry);
+                session.getIothread().clearnext();
+                
+                 TreeItem<Entry> next = metTable.getSelectionModel().getSelectedItem().nextSibling(OGroupItem);
+                 TreeItem<Entry> prev = metTable.getSelectionModel().getSelectedItem().previousSibling(OGroupItem);
+                for (int i = 0; i<4; i++) {
+                     
+                     if(next!=null) {
+                         session.getIothread().addogrouptonext(next.getValue());
+                         next = metTable.getSelectionModel().getSelectedItem().nextSibling(next);
+                     }
+                     if (prev!=null) {
+                          session.getIothread().addogrouptonext(prev.getValue());
+                         prev = metTable.getSelectionModel().getSelectedItem().previousSibling(prev);   
+                     }
+                     
+                   
+                   
+                }
+                
+                
+                
                 for (int i = 0; i < entry.getListofAdducts().size(); i++) {
                    boolean empty = true;
                     Entry adduct = OGroupItem.getChildren().get(i).getValue();
@@ -212,7 +238,9 @@ public class Fxml_adductviewController implements Initializable {
                      }
                      
                      if (!empty) {
-                    
+                    System.out.println("Adding Read Adduct from Print");
+                    session.getIothread().addAdduct(adduct);
+                         
                     //Label showing the MZ
                     VBox box = new VBox();
                     String MZ = Float.toString(adduct.getMZ()).concat("00000000000");
@@ -953,21 +981,25 @@ chart.setOnMouseReleased((MouseEvent event) -> {
     Entry adduct = charttoadduct(chart);
     List<RawDataFile> list = session.getSelectedFiles();
     for (int i = 0; i<list.size(); i++) {
-        XYChart.Series peakSeries = adduct.manualPeak(list.get(i), (float)x1, (float)x2);
-        if (peakSeries!=null){
-        chart.getData().add(peakSeries);
-        chart.applyCss();
+        try {
+            XYChart.Series peakSeries = adduct.manualPeak(list.get(i), (float)x1, (float)x2);
+            if (peakSeries!=null){
+                chart.getData().add(peakSeries);
+                chart.applyCss();
                 if (list.get(i).isselected()) {
                     chartGenerator.paintselectedLine(peakSeries.getNode());
                 }else {
-                ((Path) peakSeries.getNode()).setStroke(list.get(i).getColor()); 
+                    ((Path) peakSeries.getNode()).setStroke(list.get(i).getColor()); 
                 }
                 ((Path) peakSeries.getNode()).setStrokeWidth(list.get(i).getWidth());
-        getSeriestopeak().put(peakSeries,adduct.getListofSlices().get(list.get(i)).getListofPeaks().get(adduct.getListofSlices().get(list.get(i)).getListofPeaks().size()-1));
-        getSeriestofile().put(peakSeries, list.get(i));
-        getSeriestochart().put(peakSeries, chart);
-        getFiletoseries().get(list.get(i)).add(peakSeries);
-        applyPeakMouseEvents(peakSeries);
+                getSeriestopeak().put(peakSeries,adduct.getListofSlices().get(list.get(i)).getListofPeaks().get(adduct.getListofSlices().get(list.get(i)).getListofPeaks().size()-1));
+                getSeriestofile().put(peakSeries, list.get(i));
+                getSeriestochart().put(peakSeries, chart);
+                getFiletoseries().get(list.get(i)).add(peakSeries);
+                applyPeakMouseEvents(peakSeries);
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Fxml_adductviewController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }

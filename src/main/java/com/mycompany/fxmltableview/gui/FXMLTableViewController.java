@@ -90,6 +90,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
+import org.apache.commons.io.FileUtils;
 import org.jfree.fx.FXGraphics2D;
 
 //this is the Controller for the Main GUI
@@ -183,7 +184,12 @@ public class FXMLTableViewController implements Initializable {
         session = new Session();
         session.getReference().setName("Reference");
         
-        
+//        try {
+//            FileUtils.deleteDirectory(new File("C:\\Users\\stefankoch\\Documents\\tmp"));
+//        } catch (IOException ex) {
+//            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        new File("C:\\Users\\stefankoch\\Documents\\tmp").mkdirs();
 
         //Parameters
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
@@ -400,7 +406,7 @@ public class FXMLTableViewController implements Initializable {
 
         Task task = new Task<Void>() {
             @Override
-            public Void call() throws IOException {
+            public Void call() throws IOException, InterruptedException {
 
                 for (int d = 0; d < session.getListofDatasets().size(); d++) {
                     if (session.getListofDatasets().get(d).getActive()) {
@@ -410,9 +416,13 @@ public class FXMLTableViewController implements Initializable {
 
                                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
                                 float[][] matrix = new float[getMasterListofOGroups().size()][session.getResolution()];
-
+//start reading of file
+session.getIothread().clearnext();
+System.out.println("adding file to next from calculate");
+session.getIothread().addfiletonext(currentfile);
+                                
+                                
                                 for (int i = 0; i < getMasterListofOGroups().size(); i++) {
-
                                     getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
                                     float[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
                                     //TODO: calculate Range as function of time

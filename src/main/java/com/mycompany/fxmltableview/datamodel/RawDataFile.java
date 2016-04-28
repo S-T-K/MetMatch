@@ -138,7 +138,7 @@ public class RawDataFile {
     }
 
     //extract Slices, according to tolerances
-    public void extractSlices(boolean isreference, List<Entry> data, float RTTolerance, float MZTolerance) {
+    public void extractSlices(boolean isreference, List<Entry> data, float RTTolerance, float MZTolerance) throws InterruptedException {
         double start = System.currentTimeMillis();
         this.setListofSlices(new ArrayList<>());
 

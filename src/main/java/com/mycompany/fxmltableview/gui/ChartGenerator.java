@@ -85,6 +85,7 @@ public class ChartGenerator {
                 if(adduct.getListofSlices().containsKey(currentfile)) {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
                 if (currentSlice.isStored()) {
+                     System.out.println("Adding Read Slice from ChartGenerator");
                     session.getIothread().addread(currentSlice);
                     while (currentSlice.isStored()) {
                         Thread.sleep(10);
@@ -151,7 +152,7 @@ public class ChartGenerator {
         return linechart;
     }
 
-    public LineChart generateNormalizedEIC(Entry adduct) {
+    public LineChart generateNormalizedEIC(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -237,7 +238,7 @@ public class ChartGenerator {
         return linechart;
     }
     
-    public LineChart generateNormalizedEICwithPeak(Entry adduct) {
+    public LineChart generateNormalizedEICwithPeak(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -366,7 +367,7 @@ public class ChartGenerator {
     }
 
 
-    public LineChart generateNormalizedEICwithProp(Entry adduct) {
+    public LineChart generateNormalizedEICwithProp(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -441,7 +442,7 @@ public class ChartGenerator {
         return linechart;
     }
 
-    public ScatterChart generateMassChart(Entry adduct) {
+    public ScatterChart generateMassChart(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
@@ -543,7 +544,7 @@ public class ChartGenerator {
 
     }
 
-    public float PropArray(Entry adduct, LineChart<Number, Number> linechart) {
+    public float PropArray(Entry adduct, LineChart<Number, Number> linechart) throws InterruptedException {
 
         float maxProp = 1;
          for (int d = 0; d<session.getListofDatasets().size(); d++) {

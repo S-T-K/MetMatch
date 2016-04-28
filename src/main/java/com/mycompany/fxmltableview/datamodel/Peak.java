@@ -22,7 +22,7 @@ public class Peak {
     private boolean manual;
     
     
-    public Peak(short index, float scale, float SNR, float area, Slice slice) {
+    public Peak(short index, float scale, float SNR, float area, Slice slice) throws InterruptedException {
         this.index = index;
         this.scale = scale;
         this.SNR = SNR;
@@ -41,7 +41,7 @@ public class Peak {
         
     }
 
-    public Peak(short index, short start, short end, Slice slice) {
+    public Peak(short index, short start, short end, Slice slice) throws InterruptedException {
         this.index = index;
         this.start = start;
         this.end = end;
@@ -52,7 +52,7 @@ public class Peak {
         
     }
     
-    public Peak(boolean manual, short index, short start, short end, Slice slice, int non) {
+    public Peak(boolean manual, short index, short start, short end, Slice slice, int non) throws InterruptedException {
         this.index = index;
         this.start = start;
         this.end = end;
@@ -134,7 +134,7 @@ public class Peak {
         this.slice = slice;
     }
     
-    public void trimPeak() {
+    public void trimPeak() throws InterruptedException {
         //max distance from middle to end in minutes
         //TODO: as parameter
         short maxdist = slice.getFile().getSession().getMaxPeakLengthint();
@@ -164,7 +164,7 @@ public class Peak {
         
     }
     
-    public void calculateArea() {
+    public void calculateArea() throws InterruptedException {
         area = 0;
         
         

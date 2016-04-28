@@ -160,7 +160,7 @@ listofSlices=newlist;
     }
     
     //generates PropArray of a dataset for an Adduct 
-    public void peakpickAdduct(RawDataFile file) {
+    public void peakpickAdduct(RawDataFile file) throws InterruptedException {
 //        float [] propArray = new float[getSession().getResolution()];
 //
 if (listofSlices.containsKey(file)) {
@@ -196,7 +196,7 @@ if (listofSlices.containsKey(file)) {
     
     //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?
-    public void peakpickOGroup(RawDataFile file) {
+    public void peakpickOGroup(RawDataFile file) throws InterruptedException {
         
         //float [] propArray = new float[getSession().getResolution()];
         if (session.isPeakPickchanged()) {
@@ -617,6 +617,8 @@ if (listofSlices.containsKey(file)) {
     
     //returns a "smooth" PropArray
     public float[] getOGroupPropArraySmooth(RawDataFile file) {
+        System.out.println("Adding Read OGroup from getOGroupPropArraySmooth");
+        session.getIothread().addOGroup(this);
         float[] PropArray = new float[session.getResolution()];
         List<Short> list = new ArrayList<>();
         for (int i = 0; i<listofAdducts.size(); i++) {
@@ -802,7 +804,7 @@ public float getPeakfound(RawDataFile file) {
     return 0;
 }
 
-public XYChart.Series manualPeak(RawDataFile file, float start, float end) {
+public XYChart.Series manualPeak(RawDataFile file, float start, float end) throws InterruptedException {
     
     //switch if wrong direction
     if (start>end) {

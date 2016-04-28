@@ -55,6 +55,21 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.EnumSet;
 import javafx.scene.chart.XYChart;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -65,6 +80,7 @@ public class Slice {
     //flag
     private boolean rw;
     private boolean stored;
+    private boolean written;
    
     private RawDataFile file;
     //private String name;
@@ -102,6 +118,7 @@ public class Slice {
         //this.name = (this+"intList.ser");
         this.fittedpeak = null;
         rw=false;
+        stored=false;
     }
     
 
@@ -338,17 +355,17 @@ public class Slice {
     
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
-    public void WaveletPeakPicking() {
+    public void WaveletPeakPicking() throws InterruptedException {
         float startc = System.currentTimeMillis();
         if (PropArray == null) {
-            PropArray = (new double[this.IntensityArray.length]);
+            PropArray = (new double[this.getIntensityArray().length]);
             deleteAutoPeaks();
         
             //baseline correct IntensityArray
-            float[] correctedIntArray = new float[IntensityArray.length];
-            for ( int j = 0; j<IntensityArray.length; j++)  {
-                if (IntensityArray[j]>=adduct.getSession().getBaseline()) {
-                    correctedIntArray[j]=IntensityArray[j]-adduct.getSession().getBaseline();
+            float[] correctedIntArray = new float[getIntensityArray().length];
+            for ( int j = 0; j<getIntensityArray().length; j++)  {
+                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
+                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
                 }
                 
             }
@@ -405,11 +422,11 @@ public class Slice {
     
     
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
- public void NaivePeakPicking() {
+ public void NaivePeakPicking() throws InterruptedException {
      float startc = System.currentTimeMillis();
          //initialize Array holding probabilities
         if (PropArray==null){ 
-        PropArray =(new double[this.IntensityArray.length]);
+        PropArray =(new double[this.getIntensityArray().length]);
         
         addGaussCorrelation(0.6f);
         addGaussCorrelation(0.5f);
@@ -422,7 +439,7 @@ public class Slice {
     }
  
  //adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
- public void addGaussCorrelation(float length) {
+ public void addGaussCorrelation(float length) throws InterruptedException {
      
       float valuesperminute = adduct.getSession().getResolution()/(adduct.getSession().getRTTolerance()*2);
       int arraylength = (int) (valuesperminute*length);
@@ -445,22 +462,22 @@ public class Slice {
 
          
          //baseline correct IntensityArray
-            double[] correctedIntArray = new double[IntensityArray.length];
-            for ( int j = 0; j<IntensityArray.length; j++)  {
-                if (IntensityArray[j]>=adduct.getSession().getBaseline()) {
-                    correctedIntArray[j]=IntensityArray[j]-adduct.getSession().getBaseline();
+            double[] correctedIntArray = new double[getIntensityArray().length];
+            for ( int j = 0; j<getIntensityArray().length; j++)  {
+                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
+                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
                 }
                 
             }
             
-        for (int i = 0; i< (IntensityArray.length-peakArray.length); i++) {
+        for (int i = 0; i< (getIntensityArray().length-peakArray.length); i++) {
             
         double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
         
                 //scale according to maxIntensity
                //and weaken weak signals
                if (corr > 0) {
-                   double newcorr = (corr*corr)*asymptoticFunction(IntensityArray[i+peakint]-minIntensity);
+                   double newcorr = (corr*corr)*asymptoticFunction(getIntensityArray()[i+peakint]-minIntensity);
                    if ((PropArray[i+peakint]<newcorr)) {
                        PropArray[i+peakint]= (float) newcorr;}
                }
@@ -479,7 +496,7 @@ public class Slice {
  
  //generates Array filled with Peak probabilites
  //TODO: negative Maxima
- public void generatePeakArray() {
+ public void generatePeakArray() throws InterruptedException {
 //     for (int i = 0; i<PropArray.length; i++) {
 //         if (PropArray[i]<0.2) {
 //             PropArray[i] = 0;
@@ -796,7 +813,7 @@ public class Slice {
     }
 
     
-    public void generateInterpolatedEIC() {
+    public void generateInterpolatedEIC() throws InterruptedException {
         
         if (!empty) {
             
@@ -888,9 +905,14 @@ public class Slice {
     /**
      * @return the IntensityArray
      */
-    public int[] getIntensityArray() {
+    public int[] getIntensityArray() throws InterruptedException {
         if (stored) {
-           // adduct.getSession().getIo
+            System.out.println("Adding Read Slice from getIntensity");
+           adduct.getSession().getIothread().addread(this);
+           while(stored) {
+               System.out.println("Waiting.......................");
+               Thread.sleep(10);
+           }
         }
         return IntensityArray;
     }
@@ -1326,16 +1348,16 @@ public class Slice {
         return listofPeaks.get(fittedpeak).getEnd();
     }
     
-    public XYChart.Series manualPeak(short start, short end) {
+    public XYChart.Series manualPeak(short start, short end) throws InterruptedException {
         
         //Peak picking
         //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
-        float delta = (IntensityArray[end]-IntensityArray[start])/(end-start);
-        float current = IntensityArray[start];
+        float delta = (getIntensityArray()[end]-getIntensityArray()[start])/(end-start);
+        float current = getIntensityArray()[start];
         
         List<Float> intensity = new ArrayList<>();
         for (int i = start; i<=end; i++) {
-            intensity.add(IntensityArray[i]-current);
+            intensity.add(getIntensityArray()[i]-current);
             current = current + delta;
         }
         float max = 0;
@@ -1355,7 +1377,7 @@ public class Slice {
         
         
         //no max or max at edge
-        if (max<=0 || IntensityArray[start+maxint]<adduct.getSession().getBaseline()) {
+        if (max<=0 || getIntensityArray()[start+maxint]<adduct.getSession().getBaseline()) {
             return null;
         }
         
@@ -1420,6 +1442,13 @@ public class Slice {
      * @return the byteMZArray
      */
     public byte[] getByteMZArray() {
+        if (stored) {
+             System.out.println("Adding Read Slice from getMZ");
+           adduct.getSession().getIothread().addread(this);
+           while(stored) {
+               //wait
+           }
+        }
         return byteMZArray;
     }
 
@@ -1431,7 +1460,7 @@ public class Slice {
     }
     
     public void writeData() throws IOException {
-        if (!stored) {
+        if (!written&&!stored) {
         setRw(true);
 ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
                 for (int i : IntensityArray) {
@@ -1443,7 +1472,7 @@ ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
                 IntensityArray = null;
                 byteMZArray = null;
                 try {
-                        fc = new FileOutputStream("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\tmp\\" + this.toString().substring(44)+"fcalt.out").getChannel();
+                        fc = new FileOutputStream("C:\\Users\\stefankoch\\Documents\\tmp\\" + this.toString().substring(44)+"fcalt.out").getChannel();
                         buffer.flip();
                         fc.write(buffer);
                         
@@ -1455,6 +1484,7 @@ ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
                 } finally {
                     setStored(true);
                     setRw(false);
+                    setWritten(true);
                         safeClose(fc);
                 }
     }
@@ -1465,7 +1495,7 @@ ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
         
         setRw(true);
     
-    Path path = Paths.get("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\tmp\\" + this.toString().substring(44)+"fcalt.out");
+    Path path = Paths.get("C:\\Users\\stefankoch\\Documents\\tmp\\" + this.toString().substring(44)+"fcalt.out");
     byte[] arr = Files.readAllBytes(path);
     IntBuffer ib = ByteBuffer.wrap(arr).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
     IntensityArray = new int[100];
@@ -1518,6 +1548,20 @@ ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
      */
     public void setStored(boolean stored) {
         this.stored = stored;
+    }
+
+    /**
+     * @return the written
+     */
+    public boolean isWritten() {
+        return written;
+    }
+
+    /**
+     * @param written the written to set
+     */
+    public void setWritten(boolean written) {
+        this.written = written;
     }
  
    

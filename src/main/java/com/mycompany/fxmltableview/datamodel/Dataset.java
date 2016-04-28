@@ -62,7 +62,7 @@ public class Dataset {
     
     
     //add new File and parse it
-    public void addFile(boolean isreference, File file, Session session) {
+    public void addFile(boolean isreference, File file, Session session) throws InterruptedException {
         RawDataFile newfile = new RawDataFile(this, file, session);
         this.listofFiles.add(newfile); 
         newfile.parseFile();
