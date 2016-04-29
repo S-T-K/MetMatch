@@ -73,7 +73,7 @@ public class IOThread implements Runnable{
              }
              byte count3 = 0;
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>10000) {
+             while (count3 < 100 && write.size()>1000000) {
                  Slice slice = write.pop();
                  try {
                      

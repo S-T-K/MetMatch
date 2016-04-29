@@ -363,17 +363,7 @@ public class FXMLTableViewController implements Initializable {
 
     //calculates Shift and opens a new window
     public void newwindowcalculate() throws IOException, InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() throws IOException, InterruptedException {
-                calculate(latch);
-
-                return null;
-            }
-        };
-        new Thread(task).start();
-        latch.await();
+        
 
         //open new window
         Stage stage = new Stage();
@@ -387,7 +377,7 @@ public class FXMLTableViewController implements Initializable {
 
         //print graphs
         controller.print(getMasterListofOGroups());
-        System.out.println("PRINT");
+        System.out.println("PRINTNEW");
         stage.show();
 
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

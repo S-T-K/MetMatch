@@ -170,7 +170,19 @@ public class Fxml_shiftviewController implements Initializable {
     }
 
     //method that generates the graphs
-    public void print(ObservableList<Entry> list) {
+    public void print(ObservableList<Entry> list) throws InterruptedException, IOException {
+       
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
+
+        
+        
+        CountDownLatch latch = new CountDownLatch(1);
+        
+        supercontroller.calculate(latch);
+        latch.await();
+        
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
@@ -181,9 +193,14 @@ public class Fxml_shiftviewController implements Initializable {
       
              scatterchart = chartGenerator.generateScatterShiftChart(olist); 
         
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                box.getChildren().add(scatterchart);
+            }
+        });
         
         
-        box.getChildren().add(scatterchart);
 
         //add listener to every color property, to show changes instantly
         for (int i = 0; i < filetoseries.size(); i++) {
@@ -237,34 +254,45 @@ public class Fxml_shiftviewController implements Initializable {
             applyMouseEvents(series);
         
         }
+        
+        return null;
+            }
+
+        };
+
+        //new thread that executes task
+        new Thread(task).start();
     }
 
     public void recalculate() throws IOException, InterruptedException {
         
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
         if (penSelection) {
             togglePenaltySelectionButton.fire();
         }
         
         CountDownLatch latch = new CountDownLatch(1);
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() throws IOException, InterruptedException {
+
                 supercontroller.calculate(latch);
 
-                return null;
-            }
-        };
-        new Thread(task).start();
         latch.await();
         
-        box.getChildren().remove(scatterchart);
         
         
        scatterchart = chartGenerator.generateScatterShiftChart(olist); 
        
         
         
-        box.getChildren().add(scatterchart);
+         Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                box.getChildren().clear();
+                box.getChildren().add(scatterchart);
+                System.out.println("new chart added");
+            }
+        });
 
         Set<XYChart.Series> set = seriestofile.keySet();
         for (XYChart.Series series : set) {
@@ -277,6 +305,13 @@ public class Fxml_shiftviewController implements Initializable {
                         Event.fireEvent((EventTarget) node, new MouseEvent(MouseEvent.MOUSE_EXITED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true, true, true, true, true, true, true, null));
                     }
                 }
+         return null;
+            }
+
+        };
+
+        //new thread that executes task
+        new Thread(task).start();
     }
 
     /**
