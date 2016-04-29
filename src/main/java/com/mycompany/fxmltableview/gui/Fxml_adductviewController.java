@@ -95,12 +95,15 @@ public class Fxml_adductviewController implements Initializable {
     @FXML
     ContextMenu contextMenu;
     
+    @FXML
+    Label nodatalabel;
     
            
 
     TreeTableView<Entry> metTable;
     private FXMLTableViewController mainController;
     ChartGenerator chartGenerator;
+    Thread t;
     boolean showProp;
     private Session session;
     private DropShadow hover = new DropShadow();
@@ -141,7 +144,7 @@ public class Fxml_adductviewController implements Initializable {
         hover.setRadius(1.8);
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
-        progress.setOpacity(0.15);
+        progress.setOpacity(0.25);
         EICToggle.selectedProperty().setValue(true);
         NEICToggle.selectedProperty().setValue(true);
         MZToggle.selectedProperty().setValue(true);
@@ -193,6 +196,7 @@ public class Fxml_adductviewController implements Initializable {
         task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
+                nodatalabel.setVisible(false);
                 //for every Adduct/Fragment
                 int row=0;
                 
@@ -218,7 +222,7 @@ public class Fxml_adductviewController implements Initializable {
                    
                 }
                 
-                
+                boolean nodata = true;
                 
                 for (int i = 0; i < entry.getListofAdducts().size(); i++) {
                    boolean empty = true;
@@ -238,6 +242,7 @@ public class Fxml_adductviewController implements Initializable {
                      }
                      
                      if (!empty) {
+                         nodata=false;
                     System.out.println("Adding Read Adduct from Print");
                     session.getIothread().addAdduct(adduct);
                          
@@ -282,9 +287,14 @@ public class Fxml_adductviewController implements Initializable {
                             System.out.println("generated charts " + (i + 1) + " of " + entry.getListofAdducts().size());
                            updateProgress(i+1,entry.getListofAdducts().size());
                            row++;
-                        }
+                        } else {
+                         
+                     }
+                     
+                     
                 }
                  
+                nodatalabel.setVisible(nodata);
                 
                 
                 //add listener to every color property, to show changes instantly
@@ -377,9 +387,8 @@ public class Fxml_adductviewController implements Initializable {
             }
         };
         progress.progressProperty().bind(task.progressProperty());
-        new Thread(task).start();
-        
-
+        t = new Thread(task);
+        t.start();
          float end = System.currentTimeMillis();
          
         System.out.println("Drawing time: " + (end-start) );
@@ -776,6 +785,7 @@ public class Fxml_adductviewController implements Initializable {
     }
     
     public void close() {
+        t.interrupt();
         //delete all nodes
         for(XYChart.Series ser : seriestofile.keySet()) {
             ser = null;

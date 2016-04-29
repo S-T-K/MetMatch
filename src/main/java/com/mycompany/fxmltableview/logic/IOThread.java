@@ -8,6 +8,7 @@ package com.mycompany.fxmltableview.logic;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Slice;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.util.LinkedList;
@@ -57,6 +58,8 @@ public class IOThread implements Runnable{
                      count1++;
                  } catch (IOException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (InterruptedException ex) {
+                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
              }
             
@@ -70,6 +73,8 @@ public class IOThread implements Runnable{
                     
                  } catch (IOException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (InterruptedException ex) {
+                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
                  
                  
@@ -79,13 +84,15 @@ public class IOThread implements Runnable{
              //if nothing else to do 
              if (count2==0){
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>40000) {
+             while (count3 < 100 && write.size()>100000) {
                  Slice slice = write.pop();
                  try {
                      
                      slice.writeData();
                      count3++;
                  } catch (IOException ex) {
+                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (InterruptedException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
              }
@@ -99,6 +106,8 @@ public class IOThread implements Runnable{
                      count4++;
                      
                  } catch (IOException ex) {
+                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (InterruptedException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
                  

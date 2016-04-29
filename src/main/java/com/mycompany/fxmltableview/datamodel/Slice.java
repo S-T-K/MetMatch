@@ -1459,58 +1459,73 @@ public class Slice {
         this.byteMZArray = byteMZArray;
     }
     
-    public void writeData() throws IOException {
+    public void writeData() throws IOException, InterruptedException {
         if (!written&&!stored) {
-        setRw(true);
-ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
-                for (int i : IntensityArray) {
-                        buffer.putInt(i); }
-                for (byte i :byteMZArray) {
-                    buffer.put(i);}
- 
-                FileChannel fc = null;
-                IntensityArray = null;
-                byteMZArray = null;
-                try {
-                        fc = new FileOutputStream("C:\\Users\\stefankoch\\Documents\\tmp\\" + this.toString().substring(44)+"fcalt.out").getChannel();
-                        buffer.flip();
-                        fc.write(buffer);
-                        
-                        
-                } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                } catch (IOException e) {
-                        e.printStackTrace();
-                } finally {
-                    setStored(true);
-                    setRw(false);
-                    setWritten(true);
-                        safeClose(fc);
-                }
-    }
+            setRw(true);
+            file.writeData(this);
+        }
+        
+//        if (!written&&!stored) {
+//        setRw(true);
+//ByteBuffer buffer = ByteBuffer.allocate(5 * IntensityArray.length);
+//                for (int i : IntensityArray) {
+//                        buffer.putInt(i); }
+//                for (byte i :byteMZArray) {
+//                    buffer.put(i);}
+// 
+//                FileChannel fc = null;
+//                IntensityArray = null;
+//                byteMZArray = null;
+//                try {
+//                        fc = new FileOutputStream("C:\\Users\\stefankoch\\Documents\\tmp\\" + this.toString().substring(44)+"fcalt.out").getChannel();
+//                        buffer.flip();
+//                        fc.write(buffer);
+//                        
+//                        
+//                } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                } catch (IOException e) {
+//                        e.printStackTrace();
+//                } finally {
+//                    setStored(true);
+//                    setRw(false);
+//                    setWritten(true);
+//                        safeClose(fc);
+//                }
+//    }
+
+
     }
     
-    public void readData() throws FileNotFoundException, IOException{
+    public void readData() throws FileNotFoundException, IOException, InterruptedException{
         if (stored) {
+            setRw(true);
+            file.readData(this);
+            
+        }
         
-        setRw(true);
-    
-    Path path = Paths.get("C:\\Users\\stefankoch\\Documents\\tmp\\" + this.toString().substring(44)+"fcalt.out");
-    byte[] arr = Files.readAllBytes(path);
-    IntBuffer ib = ByteBuffer.wrap(arr).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
-    IntensityArray = new int[100];
-    for (int i = 0; i<100; i++) {
-        IntensityArray[i]=ib.get(i);
-    }
-    byteMZArray = new byte[100];
-    for (int i = 400; i<500; i++) {
-        byteMZArray[i-400] = arr[i];
-    }
-    
-    setStored(false);
-        setRw(false);
-        
-    }
+//        if (stored) {
+//        
+//        setRw(true);
+//    
+//    Path path = Paths.get("C:\\Users\\stefankoch\\Documents\\tmp\\" + this.toString().substring(44)+"fcalt.out");
+//    byte[] arr = Files.readAllBytes(path);
+//    IntBuffer ib = ByteBuffer.wrap(arr).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
+//    IntensityArray = new int[100];
+//    for (int i = 0; i<100; i++) {
+//        IntensityArray[i]=ib.get(i);
+//    }
+//    byteMZArray = new byte[100];
+//    for (int i = 400; i<500; i++) {
+//        byteMZArray[i-400] = arr[i];
+//    }
+//    
+//    setStored(false);
+//        setRw(false);
+//        
+//    }
+
+
     }
     private static void safeClose(FileChannel out) {
                 try {

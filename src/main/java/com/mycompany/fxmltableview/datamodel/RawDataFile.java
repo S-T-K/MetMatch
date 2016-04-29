@@ -455,15 +455,29 @@ initializeFile();
         
     }
     
-    public void initializeFile() throws FileNotFoundException, IOException {
+    public void initializeFile() throws FileNotFoundException, IOException, InterruptedException {
         int count = 500*listofSlices.size();
-        RandomAccessFile memoryMappedFile = new RandomAccessFile(this.getName() + ".out", "rw");
+        RandomAccessFile memoryMappedFile = new RandomAccessFile(this.toString() + ".out", "rw");
         MMFile = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, count);
+        
     }
     
-    public void readData(Slice slice) {
+    public void readData(Slice slice) throws InterruptedException {
+        int number = listofSlices.indexOf(slice);
+        int pos = 500*number;
+        MMFile.position(pos);
+        int[] intensity = new int[session.getResolution()];
+        for (int i = 0; i <= 99; i++) {
+            intensity[i]=MMFile.getInt();
+        }
+        slice.setIntensityArray(intensity);
         
-        
+        byte[] MZ = new byte[session.getResolution()];
+        for (int i = 0; i<100; i++) {
+            MZ[i]=MMFile.get();
+        }
+        slice.setByteMZArray(MZ);
+        slice.setStored(false);
         
     }
     
@@ -471,11 +485,24 @@ initializeFile();
         int number = listofSlices.indexOf(slice);
         int pos = 500*number;
         
-        MMFile.position(pos);
+        
+        int[] intensity = slice.getIntensityArray();
+        try {MMFile.position(pos);}
+        catch (NullPointerException e) {
+            System.out.println("Error during File writing");
+        }
         for (int i = 0; i <= 99; i++) {
-            MMFile.putInt(slice.getIntensityArray()[i]);
+            MMFile.putInt(intensity[i]);
+        }
+        byte[] MZ = slice.getByteMZArray();
+        for (int i = 0; i<100; i++) {
+            MMFile.put(MZ[i]);
         }
 
+        slice.setStored(true);
+        slice.setWritten(true);
+        slice.setIntensityArray(null);
+        slice.setByteMZArray(null);
         
         
     }

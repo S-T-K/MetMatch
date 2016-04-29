@@ -852,7 +852,7 @@ public class ChartGenerator {
         
             
    
-        
+        double opacity = 1.0/((double)sellist.size()+1.0);
         
         for (int i = 0; i< sellist.size(); i++) {
             for (int k = 1; k < list.size()-1; k++) {
@@ -874,7 +874,7 @@ public class ChartGenerator {
                     XYChart.Data data = new XYChart.Data(slices.get(j).getRT(), (slices.get(j).getListofPeaks().get(p).getIndex()-middleint)*60*shiftiter);
                     Rectangle rect = new Rectangle(1.5,1.5);
                     rect.setFill(Color.BLACK);
-                    rect.setOpacity(0.3);
+                    rect.setOpacity(opacity);
                     data.setNode(rect);
                     points.add(data);
                     

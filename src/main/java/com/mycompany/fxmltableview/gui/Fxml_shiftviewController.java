@@ -44,6 +44,7 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
@@ -92,6 +93,9 @@ public class Fxml_shiftviewController implements Initializable {
     
     @FXML
     AnchorPane anchorPane;
+    
+    @FXML
+    ProgressBar progress;
     
             
     private boolean penSelection = false;
@@ -161,7 +165,7 @@ public class Fxml_shiftviewController implements Initializable {
 
     //method that generates the graphs
     public void print(ObservableList<Entry> list) throws InterruptedException, IOException {
-       
+       progress.setVisible(true);
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
@@ -170,7 +174,7 @@ public class Fxml_shiftviewController implements Initializable {
         
         CountDownLatch latch = new CountDownLatch(1);
         
-        supercontroller.calculate(latch);
+        supercontroller.calculate(latch, progress);
         latch.await();
         
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
@@ -244,7 +248,7 @@ public class Fxml_shiftviewController implements Initializable {
             applyMouseEvents(series);
         
         }
-        
+        progress.setVisible(false);
         return null;
             }
 
@@ -255,7 +259,7 @@ public class Fxml_shiftviewController implements Initializable {
     }
 
     public void recalculate() throws IOException, InterruptedException {
-        
+        progress.setVisible(true);
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
@@ -265,7 +269,7 @@ public class Fxml_shiftviewController implements Initializable {
         
         CountDownLatch latch = new CountDownLatch(1);
 
-                supercontroller.calculate(latch);
+                supercontroller.calculate(latch, progress);
 
         latch.await();
         
@@ -295,6 +299,7 @@ public class Fxml_shiftviewController implements Initializable {
                         Event.fireEvent((EventTarget) node, new MouseEvent(MouseEvent.MOUSE_EXITED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true, true, true, true, true, true, true, null));
                     }
                 }
+        progress.setVisible(false);
          return null;
             }
 

@@ -390,10 +390,11 @@ public class FXMLTableViewController implements Initializable {
     }
 
     //does the Shift calculation
-    public void calculate(CountDownLatch latch) throws IOException, InterruptedException {
+    public void calculate(CountDownLatch latch, ProgressBar prog) throws IOException, InterruptedException {
 
         FloatProperty progress = new SimpleFloatProperty(0.0f);
-        progressbar.progressProperty().bind(progress);
+        prog.progressProperty().bind(progress);
+       
 
         Task task = new Task<Void>() {
             @Override
@@ -659,19 +660,19 @@ public class FXMLTableViewController implements Initializable {
        
         
 
-        for (int i = 0; i < session.getListofDatasets().size(); i++) {
-            for (int j = 0; j < session.getListofDatasets().get(i).getListofFiles().size(); j++) {
-                RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
-                System.out.println("File: " + file.getName());
-                for (int o = 0; o < list.size(); o++) {
-                    for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
-                        System.out.println("OGroup: " + list.get(o).getOGroup() + "  Number: " + list.get(o).getListofAdducts().get(s).getNum() + "   Area: " + list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea());
-                    }
-                }
-
-            }
-
-        }
+//        for (int i = 0; i < session.getListofDatasets().size(); i++) {
+//            for (int j = 0; j < session.getListofDatasets().get(i).getListofFiles().size(); j++) {
+//                RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
+//                System.out.println("File: " + file.getName());
+//                for (int o = 0; o < list.size(); o++) {
+//                    for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
+//                        System.out.println("OGroup: " + list.get(o).getOGroup() + "  Number: " + list.get(o).getListofAdducts().get(s).getNum() + "   Area: " + list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea());
+//                    }
+//                }
+//
+//            }
+//
+//        }
 
         //parse Input Matrix again
         TsvParserSettings settings = new TsvParserSettings();

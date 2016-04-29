@@ -541,7 +541,7 @@ public class Session {
     }
     
     
-    public void testdeletearray() throws IOException {
+    public void testdeletearray() throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
         for (int i = 0; i<listofOGroups.size(); i++) {
             for (int j = 0; j<listofOGroups.get(i).getListofAdducts().size(); j++) {

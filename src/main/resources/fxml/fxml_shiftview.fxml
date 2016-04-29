@@ -41,5 +41,6 @@
             <Tooltip text="Shows peaks for selected files in a new window" />
          </tooltip>
       </Button>
+      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
    </children>
 </AnchorPane>

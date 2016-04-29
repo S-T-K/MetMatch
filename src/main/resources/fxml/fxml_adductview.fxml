@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.effect.*?>
@@ -53,5 +54,10 @@
       </ToggleButton>
       <ToggleButton fx:id="PeakMode" layoutX="167.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleEIC" prefHeight="25.0" prefWidth="77.0" text="Peak Mode" AnchorPane.leftAnchor="167.0" AnchorPane.topAnchor="2.0" />
       <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
+      <Label fx:id="nodatalabel" alignment="CENTER" contentDisplay="CENTER" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" text="No Data" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
