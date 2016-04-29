@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -406,42 +407,57 @@ public class FXMLTableViewController implements Initializable {
 
                                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
                                 float[][] matrix = new float[getMasterListofOGroups().size()][session.getResolution()];
-//start reading of file
-session.getIothread().clearnext();
-System.out.println("adding file to next from calculate");
-session.getIothread().addfiletonext(currentfile);
-                                
-                                
-                                for (int i = 0; i < getMasterListofOGroups().size(); i++) {
-                                    getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
-                                    float[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
-                                    //TODO: calculate Range as function of time
-                                    //int range = 0;
-                                    for (int j = 0; j < session.getResolution(); j++) {
-//                        //calculation of range
-//                        
-//                        //edge cases, reduces ifs
-//                        if (j<range||j>(session.getResolution()-range-1)) { 
-//                        for (int k = (j-range); k<=j+range; k++) {
-//                            if (k>=0&&k<session.getResolution()) {
-//                            if (matrix [i][j]<PropArray[k]) {
-//                                matrix [i][j] = PropArray[k];
-//                            }
-//                        } }
-//                            
-//                            
-//                        } else {
-//                        //normal cases
-//                        for (int k = (j-range); k<=j+range; k++) {
-//                            if (matrix [i][j]<PropArray[k]) {
-//                                matrix [i][j] = PropArray[k];
-//                            }
-//                        }
-//                        }  
-                                        matrix[i][j] = PropArray[j];
-                                    }
 
-                                }
+                                CountDownLatch latchpeak = new CountDownLatch(1);
+                                 Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
+                
+                LinkedList<Integer> queue = new LinkedList<Integer>();
+                //go trough and check if all are ready
+                for (int i = 0; i< getMasterListofOGroups().size(); i++) {
+                    //if not ready, add to queue
+                    if (getMasterListofOGroups().get(i).isStored(currentfile)) {
+                        queue.add(i);
+                        session.getIothread().addOGroup(getMasterListofOGroups().get(i), currentfile);
+                        //if ready calculate
+                    } else {
+                        getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
+                        float[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
+                         for (int j = 0; j < session.getResolution(); j++) {
+                             matrix[i][j] = PropArray[j];
+                         }
+                    }
+                }
+                System.out.println("Size of Queue: " + queue.size() );
+                //go through queue until it is empty
+                while (queue.size()>0) {
+                    Integer current = queue.pop();
+                    if (getMasterListofOGroups().get(current).isStored(currentfile)) {
+                        queue.add(current);
+                    } else {
+                        getMasterListofOGroups().get(current).peakpickOGroup(currentfile);
+                        float[] PropArray = getMasterListofOGroups().get(current).getOGroupPropArraySmooth(currentfile);
+                         for (int j = 0; j < session.getResolution(); j++) {
+                             matrix[current][j] = PropArray[j];
+                         }
+                    }  
+
+                }
+                
+                
+                latchpeak.countDown();
+                return null;
+            }
+
+        };
+
+        //new thread that executes task
+        new Thread(task).start();
+        latchpeak.await();
+            
+                                
+                                
 
                                 //Test artificial shift
 //                float[][] matrix2 = new float[MasterListofOGroups.size()][session.getResolution()];

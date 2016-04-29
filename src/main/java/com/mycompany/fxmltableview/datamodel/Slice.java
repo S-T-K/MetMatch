@@ -911,7 +911,7 @@ public class Slice {
            adduct.getSession().getIothread().addread(this);
            while(stored) {
                System.out.println("Waiting.......................");
-               Thread.sleep(10);
+               //Thread.sleep(10);
            }
         }
         return IntensityArray;

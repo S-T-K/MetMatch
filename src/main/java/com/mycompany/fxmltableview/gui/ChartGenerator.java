@@ -26,7 +26,6 @@ import javafx.scene.Cursor;
 import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 import javafx.scene.control.TreeItem;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.shape.Ellipse;
 
 /**
@@ -873,7 +872,7 @@ public class ChartGenerator {
             for (int j = 0; j< slices.size(); j++) {
                 for (int p = 0; p<slices.get(j).getListofPeaks().size(); p++) {
                     XYChart.Data data = new XYChart.Data(slices.get(j).getRT(), (slices.get(j).getListofPeaks().get(p).getIndex()-middleint)*60*shiftiter);
-                    Rectangle rect = new Rectangle();
+                    Rectangle rect = new Rectangle(1.5,1.5);
                     rect.setFill(Color.BLACK);
                     data.setNode(rect);
                     points.add(data);

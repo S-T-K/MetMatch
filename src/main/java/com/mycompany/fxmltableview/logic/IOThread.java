@@ -43,10 +43,13 @@ public class IOThread implements Runnable{
     
     public void run() {
          while (run) {
-             byte count1 = 0;
+             short count1 = 0;
+             short count2 = 0;
+             byte count3 = 0;
+              byte count4 = 0;
            
                //check if new Slices to write higher than crit
-             while (count1 < 100 && write.size()>1000000) {
+             while (count1 < 1000 && write.size()>2000000) {
                  Slice slice = write.pop();
                  try {
                     
@@ -56,9 +59,9 @@ public class IOThread implements Runnable{
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
              }
-            byte count2 = 0;
+            
              //then check if new Slices to read
-             while (count2 < 100 && read.size()>0) {
+             while (count2 < 1000 && read.size()>0) {
                  Slice slice = read.pop();
                  try {
                      slice.readData();
@@ -71,9 +74,12 @@ public class IOThread implements Runnable{
                  
                  
              }
-             byte count3 = 0;
+             
+             
+             //if nothing else to do 
+             if (count2==0){
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>1000000) {
+             while (count3 < 100 && write.size()>400000) {
                  Slice slice = write.pop();
                  try {
                      
@@ -83,9 +89,9 @@ public class IOThread implements Runnable{
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
              }
-             byte count4 = 0;
+            
              //then check if next Slices to read
-             while (count4 < 100 && nextread.size()>0) {
+             while (count4 < 500 && nextread.size()>0) {
                  Slice slice = nextread.pop();
                  try {
                      slice.readData();
@@ -98,7 +104,7 @@ public class IOThread implements Runnable{
                  
                  
              }
-             
+             }
              System.out.println("Crit. Write: " + count1);
              System.out.println("Read: " + count2);
              System.out.println("Write: " + count3);
@@ -109,7 +115,7 @@ public class IOThread implements Runnable{
              
              try {
                  if (count1==0&&count2==0&&count3==0&&count4==0) {
-                     sleep(1000);
+                     sleep(3000);
                  }
              } catch (InterruptedException ex) {
                  Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -168,6 +174,15 @@ public class IOThread implements Runnable{
     public void addfiletonext(RawDataFile file) {
         for (int i = 0; i<file.getListofSlices().size(); i++) {
             addtonext(file.getListofSlices().get(i));
+        }
+    }
+    
+    
+    public void addOGroup(Entry ogroup, RawDataFile file) {
+        for (int i = 0; i<ogroup.getListofAdducts().size(); i++) {
+            if (ogroup.getListofAdducts().get(i).getListofSlices().containsKey(file)){
+            addread(ogroup.getListofAdducts().get(i).getListofSlices().get(file));
+        }
         }
     }
 }

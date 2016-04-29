@@ -617,8 +617,6 @@ if (listofSlices.containsKey(file)) {
     
     //returns a "smooth" PropArray
     public float[] getOGroupPropArraySmooth(RawDataFile file) {
-        System.out.println("Adding Read OGroup from getOGroupPropArraySmooth");
-        session.getIothread().addOGroup(this);
         float[] PropArray = new float[session.getResolution()];
         List<Short> list = new ArrayList<>();
         for (int i = 0; i<listofAdducts.size(); i++) {
@@ -832,5 +830,16 @@ public XYChart.Series manualPeak(RawDataFile file, float start, float end) throw
 
 }
 
+public boolean isStored(RawDataFile file) {
+    boolean stored = false;
+    for (int i = 0; i<listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).getListofSlices().containsKey(file)&&listofAdducts.get(i).getListofSlices().get(file).isStored()) {
+            stored = true;
+        }
+        
+    }
+    
+    return stored;
+}
     
 }
