@@ -8,6 +8,7 @@ package com.mycompany.fxmltableview.datamodel;
 import com.mycompany.fxmltableview.gui.BatchController;
 import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
@@ -62,7 +63,7 @@ public class Dataset {
     
     
     //add new File and parse it
-    public void addFile(boolean isreference, File file, Session session) throws InterruptedException {
+    public void addFile(boolean isreference, File file, Session session) throws InterruptedException, IOException {
         RawDataFile newfile = new RawDataFile(this, file, session);
         this.listofFiles.add(newfile); 
         newfile.parseFile();

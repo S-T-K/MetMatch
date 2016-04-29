@@ -8,6 +8,11 @@ package com.mycompany.fxmltableview.datamodel;
 import com.mycompany.fxmltableview.logic.DomParser;
 import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,6 +45,7 @@ import javafx.scene.paint.Color;
 public class RawDataFile {
 
     private File file;
+    private MappedByteBuffer MMFile;
     private Dataset dataset;
     private List<Scan> listofScans;
     private List<Slice> listofSlices;
@@ -138,7 +144,7 @@ public class RawDataFile {
     }
 
     //extract Slices, according to tolerances
-    public void extractSlices(boolean isreference, List<Entry> data, float RTTolerance, float MZTolerance) throws InterruptedException {
+    public void extractSlices(boolean isreference, List<Entry> data, float RTTolerance, float MZTolerance) throws InterruptedException, IOException {
         double start = System.currentTimeMillis();
         this.setListofSlices(new ArrayList<>());
 
@@ -212,6 +218,9 @@ for (int i = 0; i < data.size(); i++) {
 this.listofScans=null; //get rid of Scans, they are not needed any more
 double end = System.currentTimeMillis();
 System.out.println("Complete Extraction: " + (end-start));
+
+initializeFile();
+
     }
 
     /**
@@ -442,6 +451,31 @@ System.out.println("Complete Extraction: " + (end-start));
     pfound=new SimpleFloatProperty((float)found/(float)session.getListofOGroups().size()*100);
   
     getDataset().getController().getBatchFileView().refresh();
+        
+        
+    }
+    
+    public void initializeFile() throws FileNotFoundException, IOException {
+        int count = 500*listofSlices.size();
+        RandomAccessFile memoryMappedFile = new RandomAccessFile(this.getName() + ".out", "rw");
+        MMFile = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, count);
+    }
+    
+    public void readData(Slice slice) {
+        
+        
+        
+    }
+    
+    public void writeData(Slice slice) throws InterruptedException {
+        int number = listofSlices.indexOf(slice);
+        int pos = 500*number;
+        
+        MMFile.position(pos);
+        for (int i = 0; i <= 99; i++) {
+            MMFile.putInt(slice.getIntensityArray()[i]);
+        }
+
         
         
     }

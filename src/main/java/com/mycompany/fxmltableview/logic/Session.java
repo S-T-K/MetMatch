@@ -67,6 +67,7 @@ public class Session {
         // this will call run() function
         t.start();
         iothread.t=t;
+        t.setPriority(1);
         
         
         this.reference= new Reference();
