@@ -62,13 +62,9 @@ public class Session {
     
     public Session() {
         
-        iothread = new IOThread(this);
-        Thread t = new Thread(getIothread());
-        // this will call run() function
-        t.start();
-        iothread.t=t;
-        t.setPriority(1);
         
+        startIOThread();
+       
         
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
@@ -572,5 +568,24 @@ public class Session {
      */
     public void setIothread(IOThread iothread) {
         this.iothread = iothread;
+    }
+    
+    //starts IOThread, is used to easily start new one if it crashes
+    public void startIOThread() {
+        iothread = new IOThread(this);
+        Thread t = new Thread(getIothread());
+         t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+   public void uncaughtException(Thread t, Throwable e) {
+   System.out.println("Uncaught IOThread exception, trying to restart IOThread....");
+   startIOThread();
+   }
+   });
+        // this will call run() function
+        t.start();
+        iothread.t=t;
+        t.setPriority(1);
+        System.out.println("New IOThread started");
+        
     }
 }

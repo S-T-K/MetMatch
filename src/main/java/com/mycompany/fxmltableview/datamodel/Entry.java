@@ -813,11 +813,11 @@ public XYChart.Series manualPeak(RawDataFile file, float start, float end) throw
     
     
     int i = 0;
-    while (start>getRTArray()[i]) {
+    while (start>getRTArray()[i]&&i<session.getResolution()-1) {
         i++;
     }
     start = i;
-    while (end>getRTArray()[i]) {
+    while (end>getRTArray()[i]&&i<session.getResolution()-1) {
         i++;
     }
     end = i;
