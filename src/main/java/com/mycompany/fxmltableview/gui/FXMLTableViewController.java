@@ -51,11 +51,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContextMenu;
@@ -63,6 +65,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
@@ -87,6 +90,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -114,8 +119,7 @@ public class FXMLTableViewController implements Initializable {
     @FXML
     TreeTableColumn mzColumn;
 
-    @FXML
-    Button referenceButton;
+ 
 
     @FXML
     private Accordion accordion;
@@ -137,9 +141,12 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     ChoiceBox PeakPick;
+    
+    @FXML
+    CheckBox toggleadductgeneration;
 
     @FXML
-    MenuItem paramMenu;
+    MenuItem paramMenu, shift, output;
 
     @FXML
     TabPane TabPane;
@@ -178,13 +185,6 @@ public class FXMLTableViewController implements Initializable {
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("MZ"));
 
-        //highlight the Button, can't be done the normal way
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                referenceButton.requestFocus();
-            }
-        });
 
         //create new Session
         session = new Session();
@@ -234,6 +234,23 @@ public class FXMLTableViewController implements Initializable {
 
         //set batchcount to 0,
         batchcount = 0;
+        
+        Label label = new Label("1.)    <------------  Set Parameters \n\n\n  2.)  Click here to choose Data Matrix");
+        label.setAlignment(Pos.CENTER);
+        label.setTextAlignment(TextAlignment.CENTER);
+        label.setFont(Font.font ("Verdana", 14));
+        label.setOnMouseClicked((MouseEvent event) -> {
+            try {
+                openReferenceDataMatrixChooser();
+                ProgressIndicator prog = new ProgressIndicator();
+                prog.setMaxHeight(50);
+               
+                metTable.setPlaceholder(prog);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        metTable.setPlaceholder(label);
 
     }
 
@@ -273,8 +290,7 @@ public class FXMLTableViewController implements Initializable {
 
         getMetTable().setRoot(superroot);
         getMetTable().setShowRoot(false);
-        referenceButton.setDisable(true);
-        referenceButton.setVisible(false);
+        
         addBatchButton.setDisable(false);
         addBatchButton.setVisible(true);
         accordion.setVisible(true);
@@ -300,8 +316,10 @@ public class FXMLTableViewController implements Initializable {
         AdMass5.setDisable(true);
         AdMass6.setDisable(true);
         AdMass7.setDisable(true);
+        toggleadductgeneration.setDisable(true);
 
         session.prepare();
+        
 
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
@@ -400,6 +418,7 @@ public class FXMLTableViewController implements Initializable {
     //calculates Shift and opens a new window
     public void newwindowcalculate() throws IOException, InterruptedException {
 
+        output.setDisable(false);
         //open new window
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_shiftview.fxml"));
@@ -817,6 +836,7 @@ public class FXMLTableViewController implements Initializable {
     }
 
     public void generateAdducts() {
+        if (toggleadductgeneration.selectedProperty().get()){
 
         //get highest num of Adduct
         int max = 0;
@@ -901,6 +921,7 @@ public class FXMLTableViewController implements Initializable {
         }
 
     }
+    }
 
     public void showParameters() {
         setParameterPane(true);
@@ -968,4 +989,21 @@ public class FXMLTableViewController implements Initializable {
 
     }
 
+    public void toggleAdductGeneration() {
+        boolean toggle = !toggleadductgeneration.selectedProperty().get();
+        AdName1.setDisable(toggle);
+        AdName2.setDisable(toggle);
+        AdName3.setDisable(toggle);
+        AdName4.setDisable(toggle);
+        AdName5.setDisable(toggle);
+        AdName6.setDisable(toggle);
+        AdName7.setDisable(toggle);
+        AdMass1.setDisable(toggle);
+        AdMass2.setDisable(toggle);
+        AdMass3.setDisable(toggle);
+        AdMass4.setDisable(toggle);
+        AdMass5.setDisable(toggle);
+        AdMass6.setDisable(toggle);
+        AdMass7.setDisable(toggle);
+    }
 }

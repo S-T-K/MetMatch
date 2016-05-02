@@ -19,19 +19,15 @@
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="826.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Actions">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#generateOutput" text="Output" />
+                  <MenuItem fx:id="shift" disable="true" mnemonicParsing="false" onAction="#newwindowcalculate" text="Calculate Shift" />
+                        <MenuItem fx:id="output" disable="true" mnemonicParsing="false" onAction="#generateOutput" text="Generate Output Matrix" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Parameters">
                     <items>
-                        <MenuItem fx:id="paramMenu" disable="true" mnemonicParsing="false" onAction="#showParameters" text="Parameters" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem fx:id="paramMenu" disable="true" mnemonicParsing="false" onAction="#showParameters" text="Show/Edit" />
                     </items>
                 </Menu>
             </menus>
@@ -80,30 +76,30 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TextField fx:id="AdName1" layoutX="18.0" layoutY="47.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <Label fx:id="label21" alignment="CENTER" layoutX="18.0" layoutY="28.0" prefHeight="17.0" prefWidth="109.0" text="Name" textAlignment="CENTER" />
-                                    <Label fx:id="label211" alignment="CENTER" layoutX="128.0" layoutY="28.0" prefHeight="17.0" prefWidth="110.0" text="Mass" />
-                                    <TextField fx:id="AdMass1" layoutX="128.0" layoutY="47.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdName2" layoutX="18.0" layoutY="79.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdMass2" layoutX="128.0" layoutY="79.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdName3" layoutX="18.0" layoutY="110.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdMass3" layoutX="128.0" layoutY="110.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdName4" layoutX="18.0" layoutY="141.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdMass4" layoutX="128.0" layoutY="141.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdName5" layoutX="18.0" layoutY="172.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdMass5" layoutX="128.0" layoutY="172.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdName6" layoutX="18.0" layoutY="203.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdMass6" layoutX="128.0" layoutY="203.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdName7" layoutX="18.0" layoutY="234.0" prefHeight="25.0" prefWidth="110.0" />
-                                    <TextField fx:id="AdMass7" layoutX="128.0" layoutY="234.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdName1" layoutX="18.0" layoutY="59.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <Label fx:id="label21" alignment="CENTER" layoutX="18.0" layoutY="40.0" prefHeight="17.0" prefWidth="109.0" text="Name" textAlignment="CENTER" />
+                                    <Label fx:id="label211" alignment="CENTER" layoutX="128.0" layoutY="40.0" prefHeight="17.0" prefWidth="110.0" text="Mass" />
+                                    <TextField fx:id="AdMass1" layoutX="128.0" layoutY="59.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdName2" layoutX="18.0" layoutY="91.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdMass2" layoutX="128.0" layoutY="91.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdName3" layoutX="18.0" layoutY="122.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdMass3" layoutX="128.0" layoutY="122.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdName4" layoutX="18.0" layoutY="153.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdMass4" layoutX="128.0" layoutY="153.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdName5" layoutX="18.0" layoutY="184.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdMass5" layoutX="128.0" layoutY="184.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdName6" layoutX="18.0" layoutY="215.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdMass6" layoutX="128.0" layoutY="215.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdName7" layoutX="18.0" layoutY="246.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <TextField fx:id="AdMass7" layoutX="128.0" layoutY="246.0" prefHeight="25.0" prefWidth="110.0" />
+                                    <CheckBox fx:id="toggleadductgeneration" layoutX="18.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleAdductGeneration" selected="true" text="Generate additional adducts" />
                                  </children>
                               </AnchorPane>
                         </content>
                       </Tab>
                     </tabs>
                   </TabPane>
-                  <Button fx:id="paramButton" layoutX="40.0" layoutY="490.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#hideParameters" prefHeight="25.0" prefWidth="154.0" text="Apply" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="480.0" />
-                              <Button fx:id="referenceButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#openReferenceDataMatrixChooser" prefHeight="25.0" prefWidth="154.0" text="+ Add Data Matrix" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="480.0" />
+                  <Button fx:id="paramButton" layoutX="40.0" layoutY="490.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#hideParameters" prefHeight="25.0" prefWidth="154.0" text="Apply" visible="false" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="480.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">

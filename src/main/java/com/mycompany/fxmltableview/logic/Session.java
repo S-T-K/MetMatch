@@ -73,9 +73,9 @@ public class Session {
         this.listofDatasets = new ArrayList<>();
         this.resolution = new SimpleIntegerProperty(100);
         this.baseline = new SimpleFloatProperty(1000);
-        SliceMZTolerance = new SimpleFloatProperty (2.5f);
+        SliceMZTolerance = new SimpleFloatProperty (4.0f);
         RTTolerance = new SimpleFloatProperty(1.5f);
-        MZTolerance = new SimpleFloatProperty(10);
+        MZTolerance = new SimpleFloatProperty(14);
         PeakRTTolerance = new SimpleFloatProperty(0.15f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
         engine = new Rengine(new String[] { "--no-save" }, false, null);

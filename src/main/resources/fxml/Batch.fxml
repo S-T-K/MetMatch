@@ -16,25 +16,6 @@
                   <Menu mnemonicParsing="false" text="Files">
                      <items>
                         <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openBatchmzxmlChooser" text="Add new .mzXML" />
-                        <Menu mnemonicParsing="false" text="Shift">
-                           <items>
-                              <MenuItem fx:id="calculate" mnemonicParsing="false" onAction="#newwindowcalculate" text="Calculate Shift" />
-                              <MenuItem mnemonicParsing="false" text="Change Penalty">
-                                 <graphic>
-                                    <TextField fx:id="batsetpen" maxWidth="40.0" />
-                                 </graphic>
-                              </MenuItem>
-                           </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Rename">
-                           <items>
-                              <MenuItem mnemonicParsing="false">
-                                 <graphic>
-                                    <TextField fx:id="paneName" />
-                                 </graphic>
-                              </MenuItem>
-                           </items>
-                        </Menu>
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Edit">
@@ -69,11 +50,15 @@
                               </MenuItem>
                            </items>
                         </Menu>
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Help">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <Menu mnemonicParsing="false" text="Rename">
+                           <items>
+                              <MenuItem mnemonicParsing="false">
+                                 <graphic>
+                                    <TextField fx:id="paneName" />
+                                 </graphic>
+                              </MenuItem>
+                           </items>
+                        </Menu>
                      </items>
                   </Menu>
                </menus>

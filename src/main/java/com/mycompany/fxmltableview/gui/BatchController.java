@@ -46,6 +46,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 import javafx.scene.control.TableCell;
@@ -101,7 +102,7 @@ public class BatchController implements Initializable {
     TableColumn<RawDataFile, Color> colorColumn;
     
     @FXML
-    TextField batdefwidth, batsetwidth, paneName, batsetpen;
+    TextField batdefwidth, batsetwidth, paneName;
     
     @FXML
     ColorPicker batdefcol, batsetcol;
@@ -144,6 +145,22 @@ public class BatchController implements Initializable {
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
+        Label label = new Label("Click to add Files");
+        label.setOnMouseClicked((MouseEvent event) -> {
+            try {
+                openBatchmzxmlChooser();
+                ProgressIndicator prog = new ProgressIndicator();
+                prog.setMaxHeight(50);
+               
+                batchFileView.setPlaceholder(prog);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        batchFileView.setPlaceholder(label);
+        
+        
         
         //set Factories for the tables
 
@@ -190,7 +207,7 @@ public class BatchController implements Initializable {
         //bind default values
         batdefwidth.textProperty().bindBidirectional(batch.getWidthProperty(), new NumberStringConverter());
         batdefcol.valueProperty().bindBidirectional(batch.getColorProperty());
-        batsetpen.textProperty().bindBidirectional(batch.getPenaltyProperty(), new NumberStringConverter());
+        
         
         //add functionality to set the color for all files
         batsetcol.setOnAction(new EventHandler() {
@@ -271,7 +288,7 @@ public class BatchController implements Initializable {
 
         //new thread that executes task
         new Thread(task).start();
-
+TVcontroller.shift.setDisable(false);
         
     }
     
