@@ -132,6 +132,9 @@ public class Session {
         int indexOGroup = headers.indexOf("OGroup");
         int indexIon = headers.indexOf("Ion");
         int indexM = headers.indexOf("M");
+        int indexCharge = headers.indexOf("Charge");
+        int indexEvent = headers.indexOf("ScanEvent");
+        int indexIonisation = headers.indexOf("Ionisation_Mode");
         int Num;
         float MZ;
         float RT;
@@ -139,6 +142,9 @@ public class Session {
         int OGroup;
         String Ion;
         float M;
+        int Charge;
+        String ScanEvent;
+        String Ionisation;
         
         
         String lastOGroup = "-1";
@@ -151,6 +157,10 @@ public class Session {
             OGroup = Integer.parseInt(allRows.get(i)[indexOGroup]);
             Ion = allRows.get(i)[indexIon];
             M = parseFloatSafely(allRows.get(i)[indexM]);
+            Charge = Integer.parseInt(allRows.get(i)[indexCharge]);
+            ScanEvent = allRows.get(i)[indexEvent];
+            Ionisation = allRows.get(i)[indexIonisation];
+            
             
             //if new Ogroup, make new Ogroup
             if (!(lastOGroup.equals(allRows.get(i)[indexOGroup]))) {
@@ -161,7 +171,7 @@ public class Session {
                 obsList.add(ogroup);
             }
             //add Adduct to current Ogroup
-            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,this,ogroup);
+            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,Charge,ScanEvent,Ionisation,this,ogroup);
             ogroup.addAdduct(adduct);
             
             

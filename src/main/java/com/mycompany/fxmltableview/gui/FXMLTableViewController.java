@@ -156,6 +156,9 @@ public class FXMLTableViewController implements Initializable {
 
     //number of current batches, as an index
     int batchcount;
+    
+    //max number of adducts in Input Matrix
+    int maxnumber;
 
     //initialize the table, and various elements
     @Override
@@ -695,14 +698,71 @@ public class FXMLTableViewController implements Initializable {
         PrintWriter printwriter = new PrintWriter("the-file-name.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
 
+        //add newly generated adducts to rows
+        int currentline = 1;
+        for (int o = 0; o < list.size(); o++) {
+                    for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
+                        Entry adduct = list.get(o).getListofAdducts().get(s);
+                        //if old
+                        if (list.get(o).getListofAdducts().get(s).getNum()<=maxnumber) {
+                            currentline++;
+                            //if new
+                        } else {
+                            //check if empty
+                            boolean empty = true;
+                             for (int i = 0; i < session.getListofDatasets().size(); i++) {
+                                for (int j = 0; j < session.getListofDatasets().get(i).getListofFiles().size(); j++) {
+                                    RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
+                                    if (adduct.getListofSlices().containsKey(file)&&adduct.getListofSlices().get(file).getfittedArea()!=null) {
+                                        empty = false;
+                                        break;
+                                    }
+                                }
+                             }
+                             
+                             adduct.setEmpty(empty);
+                            
+                             if (!empty) {
+                            List<String> newline = new ArrayList<String>();
+                            newline.add(String.valueOf(adduct.getNum()));
+                            newline.add(String.valueOf(adduct.getMZ()));
+                            newline.add("");
+                            newline.add("");
+                            newline.add(String.valueOf(adduct.getRT()));
+                            newline.add(String.valueOf(adduct.getXn()));
+                            newline.add(String.valueOf(adduct.getOriginalAdduct().getCharge()));
+                            newline.add(adduct.getOriginalAdduct().getScanEvent());
+                            newline.add(adduct.getOriginalAdduct().getIonisation());
+                            newline.add("");
+                            newline.add(String.valueOf(adduct.getOGroup()));
+                            newline.add(adduct.getIon());
+                            newline.add("");
+                            if (adduct.getM()>0) {
+                                newline.add(String.valueOf(adduct.getM()));
+                            } else {
+                                newline.add("");
+                            }
+                            rows.add(currentline, newline);
+                            currentline++;
+                             }
+                        }
+                    }
+        }
+        
+        
+        
+        
+        
+        //write data from top to bottom, add data of currentfile
         for (int i = 0; i < session.getListofDatasets().size(); i++) {
             for (int j = 0; j < session.getListofDatasets().get(i).getListofFiles().size(); j++) {
                 RawDataFile file = session.getListofDatasets().get(i).getListofFiles().get(j);
                 headers.add(14, file.getName().substring(0, file.getName().length() - 6) + "_Test_Area");
-                int currentline = 1;
+                currentline = 1;
                 for (int o = 0; o < list.size(); o++) {
                     for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
-                        if (list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea() == null) {
+                        if (!list.get(o).getListofAdducts().get(s).isEmpty()) {
+                        if (list.get(o).getListofAdducts().get(s).getListofSlices().get(file)==null || list.get(o).getListofAdducts().get(s).getListofSlices().get(file).getfittedArea() == null) {
                             rows.get(currentline).add(14, "");
                             currentline++;
                         } else {
@@ -711,16 +771,18 @@ public class FXMLTableViewController implements Initializable {
                         }
                     }
                 }
+                }
 
             }
 
         }
 
         //back to arrays...
+        allRows = new ArrayList<String[]>();
         for (int i = 1; i < rows.size(); i++) {
             String[] row = new String[rows.get(i).size()];
             row = rows.get(i).toArray(row);
-            allRows.set(i, row);
+            allRows.add(row);
         }
 
         writer.writeHeaders(headers);
@@ -747,6 +809,7 @@ public class FXMLTableViewController implements Initializable {
                 }
             }
         }
+        this.maxnumber=max;
         max++;
         
         
@@ -775,7 +838,7 @@ public class FXMLTableViewController implements Initializable {
                             }
                             if (!duplicate) {
                             String Ion = "[(" + adduct.getNum() + "-" + session.getListofadductnames().get(k) + ")+" + session.getListofadductnames().get(j) + "]+";
-                            MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o)));
+                            MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o),adduct));
                 max++;
                         }
                         }
@@ -783,8 +846,40 @@ public class FXMLTableViewController implements Initializable {
                     
                 }
                 
+                //if ion specified
             } else {
-                //if Ion is specified, only substract the specified value
+                //if multiple Ions specified
+                if (adduct.getIon().indexOf(',')>0){
+                    //do something
+                } else {
+                    String Ion = adduct.getIon().substring(adduct.getIon().indexOf('+')+1, adduct.getIon().indexOf(']',3));
+                    int k = session.getListofadductnames().indexOf(Ion);
+                    //if specified Ion in List
+                    if (k>0) {
+                        for (int j = 0; j<session.getListofadductnames().size(); j++) {
+                        //and add every possible adduct
+                        if (j!=k) {
+                            //don't add the same value
+                            Float mass = adduct.getMZ()+session.getListofadductmasses().get(j)-session.getListofadductmasses().get(k);
+                            Float ppm = mass/1000000*session.getMZTolerance();
+                            boolean duplicate=false;
+                            for (int c = 0; c<MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                if (Math.abs(mass-MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ())<ppm) {
+                                    duplicate = true;
+                                    System.out.println("Duplicate generated");
+                                    break;
+                                }
+                            }
+                            if (!duplicate) {
+                            Ion = "[M+" + session.getListofadductnames().get(j) + "]+";
+                            MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o),adduct));
+                max++;
+                        }
+                        }
+                    }
+                        
+                    }
+                }
                 
                 
             }

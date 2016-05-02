@@ -46,13 +46,17 @@ public class Entry {
     private IntegerProperty OGroup;
     private StringProperty Ion;
     private SimpleFloatProperty M;
+    private int Charge;
+    private String ScanEvent;
+    private String Ionisation;
     private Entry OGroupObject;
     private List<Entry> listofAdducts;
     private HashMap<RawDataFile, Slice> listofSlices;   //stores all slices
     private Session session;
     private HashMap<RawDataFile, Float> Scores;
     private HashMap<RawDataFile, Float> Certainties;
-    
+    private Entry originalAdduct;
+    private boolean empty;
 
     
     
@@ -74,7 +78,32 @@ public class Entry {
     }
 
     //constructor for Adduct
-    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, Session session, Entry ogroup) {
+    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, int Charge, String scanEvent, String Ionisation, Session session, Entry ogroup) {
+        this.Num = new SimpleIntegerProperty(Num);
+        this.MZ = new SimpleFloatProperty((float) MZ);
+        this.RT = new SimpleFloatProperty((float) RT);
+        this.Xn = new SimpleIntegerProperty(Xn);
+        this.OGroup = new SimpleIntegerProperty(OGroup);
+        this.Ion = new SimpleStringProperty(Ion);
+        this.M = new SimpleFloatProperty((float) M);
+        this.Charge=Charge;
+        this.ScanEvent=scanEvent;
+        this.Ionisation=Ionisation;
+        this.Score = new SimpleFloatProperty(0);
+        this.Scorepeakclose = new SimpleFloatProperty(0);
+        this.Scorepeakfound = new SimpleFloatProperty(0);
+        this.Scorecertainty = new SimpleFloatProperty(1.0f);
+        this.listofSlices = new HashMap<RawDataFile, Slice>();
+
+        this.Scores = new HashMap<RawDataFile, Float>();
+        
+        this.session=session;
+        this.OGroupObject=ogroup;
+        this.maxIntensity = 0;
+        AdductfittedShift = new HashMap<>();
+    }
+    //constructor for generated Adduct
+    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, Session session, Entry ogroup, Entry orig) {
         this.Num = new SimpleIntegerProperty(Num);
         this.MZ = new SimpleFloatProperty((float) MZ);
         this.RT = new SimpleFloatProperty((float) RT);
@@ -94,6 +123,7 @@ public class Entry {
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
         AdductfittedShift = new HashMap<>();
+        this.originalAdduct = orig;
     }
     
    
@@ -725,6 +755,76 @@ if (listofSlices.containsKey(file)) {
      */
     public void setCertainties(HashMap<RawDataFile, Float> Certainties) {
         this.Certainties = Certainties;
+    }
+
+    /**
+     * @return the originalAdduct
+     */
+    public Entry getOriginalAdduct() {
+        return originalAdduct;
+    }
+
+    /**
+     * @param originalAdduct the originalAdduct to set
+     */
+    public void setOriginalAdduct(Entry originalAdduct) {
+        this.originalAdduct = originalAdduct;
+    }
+
+    /**
+     * @return the Charge
+     */
+    public int getCharge() {
+        return Charge;
+    }
+
+    /**
+     * @param Charge the Charge to set
+     */
+    public void setCharge(int Charge) {
+        this.Charge = Charge;
+    }
+
+    /**
+     * @return the ScanEvent
+     */
+    public String getScanEvent() {
+        return ScanEvent;
+    }
+
+    /**
+     * @param ScanEvent the ScanEvent to set
+     */
+    public void setScanEvent(String ScanEvent) {
+        this.ScanEvent = ScanEvent;
+    }
+
+    /**
+     * @return the Ionisation
+     */
+    public String getIonisation() {
+        return Ionisation;
+    }
+
+    /**
+     * @param Ionisation the Ionisation to set
+     */
+    public void setIonisation(String Ionisation) {
+        this.Ionisation = Ionisation;
+    }
+
+    /**
+     * @return the empty
+     */
+    public boolean isEmpty() {
+        return empty;
+    }
+
+    /**
+     * @param empty the empty to set
+     */
+    public void setEmpty(boolean empty) {
+        this.empty = empty;
     }
 
     
