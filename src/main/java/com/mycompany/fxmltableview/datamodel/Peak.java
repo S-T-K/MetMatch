@@ -157,7 +157,25 @@ public class Peak {
             }
         }
         
+        int min = Integer.MAX_VALUE;
+        int mini= index;
+        for (int i = index-1; i>start; i--) {
+            if (intensity[i]<min) {
+                min = intensity[i];
+                mini = i;
+            }
+        }
+        setStart((short) mini);
         
+        min = Integer.MAX_VALUE;
+        mini= index;
+        for (int i = index+1; i<end; i++) {
+            if (intensity[i]<min) {
+                min = intensity[i];
+                mini = i;
+            }
+        }
+        setEnd((short) mini);
         
         
        

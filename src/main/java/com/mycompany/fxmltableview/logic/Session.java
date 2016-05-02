@@ -73,9 +73,9 @@ public class Session {
         this.listofDatasets = new ArrayList<>();
         this.resolution = new SimpleIntegerProperty(100);
         this.baseline = new SimpleFloatProperty(1000);
-        SliceMZTolerance = new SimpleFloatProperty (4.0f);
+        SliceMZTolerance = new SimpleFloatProperty (3.0f);
         RTTolerance = new SimpleFloatProperty(1.5f);
-        MZTolerance = new SimpleFloatProperty(14);
+        MZTolerance = new SimpleFloatProperty(11.0f);
         PeakRTTolerance = new SimpleFloatProperty(0.15f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
@@ -595,6 +595,7 @@ public class Session {
 
    public void uncaughtException(Thread t, Throwable e) {
    System.out.println("Uncaught IOThread exception, trying to restart IOThread....");
+   iothread.terminate();
    startIOThread();
    }
    });

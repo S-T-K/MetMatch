@@ -124,7 +124,7 @@ public class IOThread implements Runnable{
              
              try {
                  if (count1==0&&count2==0&&count3==0&&count4==0) {
-                     sleep(3000);
+                     sleep(500);
                  }
              } catch (InterruptedException ex) {
                  Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,10 +134,13 @@ public class IOThread implements Runnable{
     
     public void addwrite(Slice slice) {
         write.add(slice);
+        
+       
     }
     
     public void addread(Slice slice) {
       read.add(slice);
+      
     }
     
     public void terminate() {
@@ -160,6 +163,7 @@ public class IOThread implements Runnable{
     
     public void addtonext(Slice slice) {
         nextread.add(slice);
+        
     }
     
     public void addadducttonext(Entry adduct) {

@@ -989,4 +989,112 @@ public class ChartGenerator {
         
     }
     
+    
+     public LineChart generateShiftMap(Entry adduct) throws InterruptedException {
+
+        //Basic Chart attributes
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Shift [seconds]");
+        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+        float upper = 0;
+        float lower = 0;
+        
+        if (adductcontroller.getAdducttochart().containsKey(adduct)) {
+            adductcontroller.getAdducttochart().get(adduct).add(linechart);
+        } else {
+            ArrayList list = new ArrayList();
+            list.add(linechart);
+            adductcontroller.getAdducttochart().put(adduct, list);
+        }
+        
+        
+
+        //float startouter = System.currentTimeMillis();
+        // for all slices (= for all files)
+        for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
+            if (currentfile.getActive().booleanValue()) {
+                
+                XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, linechart);
+                
+                //add Series to HashMaps
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (adductcontroller.getFiletoseries().containsKey(currentfile)){
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
+                } else {
+                ArrayList list = new ArrayList();
+                list.add(newSeries);
+                adductcontroller.getFiletoseries().put(currentfile, list);
+                        }
+
+                //while the next RT is the same as the one before, add Intensities
+                //float startinner = System.currentTimeMillis();
+                float shiftiter = (session.getRTTolerance() * 2) / session.getResolution();
+                int middleint = (session.getResolution() / 2) - 1;
+                
+                for (int j = 0; j < session.getListofOGroups().size(); j++) {
+                   float shift = (session.getListofOGroups().get(j).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
+                    XYChart.Data data = new XYChart.Data(session.getListofOGroups().get(j).getRT(), shift);
+                    newSeries.getData().add(data);
+                    if (shift > upper) {
+                        upper = shift;
+                    } else if (shift < lower) {
+                        lower = shift;
+                    }
+                   
+
+                }
+                
+                 XYChart.Series shiftSeries = new XYChart.Series();
+                 XYChart.Data data = new XYChart.Data(adduct.getRT(), -100);
+                 shiftSeries.getData().add(data);
+                 XYChart.Data data2 = new XYChart.Data(adduct.getRT(), 100);
+                shiftSeries.getData().add(data2);
+                
+                // add new Series
+                linechart.getData().add(newSeries);
+                linechart.getData().add(shiftSeries);
+                //apply Css to create nodes
+                linechart.applyCss();
+                //cast to path to be able to set stroke
+                if (currentfile.isselected()) {
+                    paintselectedLine(newSeries.getNode());
+                }else {
+                ((Path) newSeries.getNode()).setStroke(currentfile.getColor()); 
+                }
+                
+                ((Path) newSeries.getNode()).setStrokeWidth(currentfile.getWidth());
+                ((Path) shiftSeries.getNode()).setStrokeWidth(1.0);
+                ((Path) shiftSeries.getNode()).setStroke(Color.BLACK); 
+                ((Path) shiftSeries.getNode()).getStrokeDashArray().setAll(0.5d, 6d, 0.5d, 6d);
+
+
+            }
+        }}}
+
+        //don't draw symbols
+        linechart.setCreateSymbols(false);
+        //set size of chart
+        linechart.setMaxSize(450, 300);
+
+        
+        //set Range
+       
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(lower - 20);
+        yAxis.setUpperBound(upper + 20);
+
+        linechart.setAnimated(false);
+//        linechart.setCache(true);
+//        linechart.setCacheHint(CacheHint.SPEED);
+        linechart.setLegendVisible(false);
+        return linechart;
+    }
+    
+    
 }

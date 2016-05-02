@@ -42,6 +42,7 @@
                   <CheckMenuItem fx:id="EICToggle" mnemonicParsing="false" selected="true" text="EIC" />
                   <CheckMenuItem fx:id="NEICToggle" mnemonicParsing="false" selected="true" text="Normalized EIC" />
                   <CheckMenuItem fx:id="MZToggle" mnemonicParsing="false" selected="true" text="M/Z" />
+                  <CheckMenuItem fx:id="ShiftToggle" mnemonicParsing="false" text="Shift" />
                </items>
           </Menu>
         </menus>

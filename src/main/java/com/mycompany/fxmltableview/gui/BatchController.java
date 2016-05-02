@@ -35,6 +35,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
@@ -71,6 +72,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -147,6 +149,10 @@ public class BatchController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         
         Label label = new Label("Click to add Files");
+        label.setFont(Font.font ("Verdana", 14));
+        label.setAlignment(Pos.CENTER);
+        label.setMinHeight(500);
+        label.setMinWidth(500);
         label.setOnMouseClicked((MouseEvent event) -> {
             try {
                 openBatchmzxmlChooser();

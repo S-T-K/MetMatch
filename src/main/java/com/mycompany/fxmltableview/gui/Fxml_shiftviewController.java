@@ -45,6 +45,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
@@ -96,6 +97,9 @@ public class Fxml_shiftviewController implements Initializable {
     
     @FXML
     ProgressBar progress;
+    
+    @FXML
+    ProgressIndicator calculating;
     
             
     private boolean penSelection = false;
@@ -249,6 +253,7 @@ public class Fxml_shiftviewController implements Initializable {
         
         }
         progress.setVisible(false);
+        calculating.setVisible(false);
         return null;
             }
 
@@ -260,6 +265,8 @@ public class Fxml_shiftviewController implements Initializable {
 
     public void recalculate() throws IOException, InterruptedException {
         progress.setVisible(true);
+        calculating.setVisible(true);
+        calculating.toFront();
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
@@ -300,6 +307,8 @@ public class Fxml_shiftviewController implements Initializable {
                     }
                 }
         progress.setVisible(false);
+        calculating.setVisible(false);
+        calculating.toBack();
          return null;
             }
 

@@ -237,15 +237,25 @@ public class FXMLTableViewController implements Initializable {
         
         Label label = new Label("1.)    <------------  Set Parameters \n\n\n  2.)  Click here to choose Data Matrix");
         label.setAlignment(Pos.CENTER);
+        label.setMinHeight(500);
+        label.setMinWidth(500);
         label.setTextAlignment(TextAlignment.CENTER);
         label.setFont(Font.font ("Verdana", 14));
         label.setOnMouseClicked((MouseEvent event) -> {
             try {
-                openReferenceDataMatrixChooser();
+               
                 ProgressIndicator prog = new ProgressIndicator();
                 prog.setMaxHeight(50);
                
                 metTable.setPlaceholder(prog);
+                prog.setOnMouseClicked((MouseEvent event2) -> {
+            try {
+                openReferenceDataMatrixChooser();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+                openReferenceDataMatrixChooser();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -736,7 +746,7 @@ public class FXMLTableViewController implements Initializable {
             rows.add(new ArrayList<>(Arrays.asList(allRows.get(i))));
         }
 
-        PrintWriter printwriter = new PrintWriter("the-file-name.txt", "UTF-8");
+        PrintWriter printwriter = new PrintWriter("output.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
 
         //add newly generated adducts to rows
@@ -907,7 +917,7 @@ public class FXMLTableViewController implements Initializable {
                                     }
                                 }
                                 if (!duplicate) {
-                                    Ion = "[M+" + session.getListofadductnameproperties().get(j) + "]+";
+                                    Ion = "[M+" + session.getListofadductnameproperties().get(j).get() + "]+";
                                     MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o), adduct));
                                     max++;
                                 }

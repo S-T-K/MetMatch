@@ -87,7 +87,7 @@ public class Fxml_adductviewController implements Initializable {
     ProgressBar progress;
     
     @FXML
-    CheckMenuItem EICToggle, NEICToggle, MZToggle;
+    CheckMenuItem EICToggle, NEICToggle, MZToggle, ShiftToggle;
     
     @FXML
     ToggleButton EICMode, PeakMode, addPeak;
@@ -224,6 +224,7 @@ public class Fxml_adductviewController implements Initializable {
                 
                 boolean nodata = true;
                 
+                
                 for (int i = 0; i < entry.getListofAdducts().size(); i++) {
                    boolean empty = true;
                     Entry adduct = OGroupItem.getChildren().get(i).getValue();
@@ -282,6 +283,12 @@ public class Fxml_adductviewController implements Initializable {
                             if (MZToggle.selectedProperty().get()) {
                             ScatterChart<Number, Number> scatterchart = chartGenerator.generateMassChart(adduct);
                             addColumn(3, scatterchart);
+                            }
+                            
+                            if (ShiftToggle.selectedProperty().get()) {
+                            LineChart<Number, Number> shiftchart = chartGenerator.generateShiftMap(adduct);
+                            addColumn(4, shiftchart);
+                                
                             }
                             
                             System.out.println("generated charts " + (i + 1) + " of " + entry.getListofAdducts().size());

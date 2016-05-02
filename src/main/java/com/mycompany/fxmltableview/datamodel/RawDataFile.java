@@ -180,7 +180,7 @@ int slices = 0;
  //get max bin
  int maxint = 0;
  int max = 0;
- for (int i =0; i<mzbins.length; i++) {
+ for (int i =3; i<mzbins.length-3; i++) {
      if (mzbins[i]>max){
          max = mzbins[i];
          maxint = i;   
@@ -483,13 +483,18 @@ initializeFile();
     
     public void writeData(Slice slice) throws InterruptedException {
         int number = listofSlices.indexOf(slice);
+        //System.out.println("number: " + number);
         int pos = 500*number;
-        
+        //System.out.println("Pos: " + pos);
         
         int[] intensity = slice.getIntensityArray();
         try {MMFile.position(pos);}
         catch (NullPointerException e) {
             System.out.println("Error during File writing");
+            System.out.println("number: " + number);
+            System.out.println("Pos: " + pos);
+            System.out.println("MMFile: " + MMFile);
+            writeData(slice);
         }
         for (int i = 0; i <= 99; i++) {
             MMFile.putInt(intensity[i]);
