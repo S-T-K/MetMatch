@@ -47,10 +47,10 @@ public class IOThread implements Runnable{
              short count1 = 0;
              short count2 = 0;
              byte count3 = 0;
-              byte count4 = 0;
+              short count4 = 0;
            
                //check if new Slices to write higher than crit
-             while (count1 < 1000 && write.size()>2000000) {
+             while (count1 < 10000 && write.size()>2000000) {
                  Slice slice = write.pop();
                  try {
                     
@@ -64,7 +64,7 @@ public class IOThread implements Runnable{
              }
             
              //then check if new Slices to read
-             while (count2 < 1000 && read.size()>0) {
+             while (count2 < 10000 && read.size()>0) {
                  Slice slice = read.pop();
                  try {
                      slice.readData();
@@ -84,7 +84,7 @@ public class IOThread implements Runnable{
              //if nothing else to do 
              if (count2==0){
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>1) {
+             while (count3 < 100 && write.size()>100000) {
                  Slice slice = write.pop();
                  try {
                      
@@ -98,7 +98,7 @@ public class IOThread implements Runnable{
              }
             
              //then check if next Slices to read
-             while (count4 < 500 && nextread.size()>0) {
+             while (count4 < 1000 && nextread.size()>0) {
                  Slice slice = nextread.pop();
                  try {
                      slice.readData();

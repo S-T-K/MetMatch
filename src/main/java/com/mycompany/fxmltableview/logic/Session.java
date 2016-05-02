@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.rosuda.JRI.Rengine;
@@ -57,6 +58,8 @@ public class Session {
     
     private boolean peakPickchanged;
     
+    private List<SimpleStringProperty> listofadductnameproperties;
+    private List<SimpleFloatProperty> listofadductmassproperties;
     private List<String> listofadductnames;
     private List<Float> listofadductmasses;
     
@@ -80,18 +83,22 @@ public class Session {
         peakPickchanged = true;
         
         //TODO: change
-        listofadductnames= new ArrayList<String>();
-        listofadductnames.add("H");
-        listofadductnames.add("NH4");
-        listofadductnames.add("Na");
-        listofadductnames.add("CH3OH+H");
-        listofadductnames.add("K");
-        listofadductmasses= new ArrayList<Float>();
-        listofadductmasses.add(1.007276f);
-        listofadductmasses.add(18.033823f);
-        listofadductmasses.add(22.989218f);
-        listofadductmasses.add(33.033489f);
-        listofadductmasses.add(38.963158f);
+        listofadductnameproperties= new ArrayList<>();
+        listofadductnameproperties.add(new SimpleStringProperty("H"));
+        listofadductnameproperties.add(new SimpleStringProperty("NH4"));
+        listofadductnameproperties.add(new SimpleStringProperty("Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("CH3OH+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("K"));
+        listofadductnameproperties.add(new SimpleStringProperty(""));
+        listofadductnameproperties.add(new SimpleStringProperty(""));
+        listofadductmassproperties= new ArrayList<>();
+        listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
+        listofadductmassproperties.add(new SimpleFloatProperty(18.033823f));
+        listofadductmassproperties.add(new SimpleFloatProperty(22.989218f));
+        listofadductmassproperties.add(new SimpleFloatProperty(33.033489f));
+        listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
+        listofadductmassproperties.add(new SimpleFloatProperty());
+        listofadductmassproperties.add(new SimpleFloatProperty());
         
     }
 
@@ -519,31 +526,31 @@ public class Session {
     }
 
     /**
-     * @return the listofadductnames
+     * @return the listofadductnameproperties
      */
-    public List<String> getListofadductnames() {
-        return listofadductnames;
+    public List<SimpleStringProperty> getListofadductnameproperties() {
+        return listofadductnameproperties;
     }
 
     /**
-     * @param listofadductnames the listofadductnames to set
+     * @param listofadductnameproperties the listofadductnameproperties to set
      */
-    public void setListofadductnames(List<String> listofadductnames) {
-        this.listofadductnames = listofadductnames;
+    public void setListofadductnameproperties(List<SimpleStringProperty> listofadductnameproperties) {
+        this.listofadductnameproperties = listofadductnameproperties;
     }
 
     /**
      * @return the listogadductmasses
      */
-    public List<Float> getListofadductmasses() {
-        return listofadductmasses;
+    public List<SimpleFloatProperty> getListofadductmassproperties() {
+        return listofadductmassproperties;
     }
 
     /**
      * @param listogadductmasses the listogadductmasses to set
      */
-    public void setListofadductmasses(List<Float> listogadductmasses) {
-        this.listofadductmasses = listogadductmasses;
+    public void setListofadductmassproperties(List<SimpleFloatProperty> listogadductmasses) {
+        this.listofadductmassproperties = listogadductmasses;
     }
     
     
@@ -597,5 +604,48 @@ public class Session {
         t.setPriority(1);
         System.out.println("New IOThread started");
         
+    }
+    
+    
+    public void finalizeAdducts() {
+        listofadductnames = new ArrayList<String>();
+        listofadductmasses = new ArrayList<Float>();
+        for (int i = 0; i<listofadductnameproperties.size(); i++) {
+            if (!listofadductnameproperties.get(i).get().isEmpty()&&listofadductmassproperties.get(i).floatValue()>0) {
+                listofadductnames.add(listofadductnameproperties.get(i).get());
+                listofadductmasses.add(listofadductmassproperties.get(i).floatValue());
+            }
+            
+        }
+        
+        
+    }
+
+    /**
+     * @return the listofadductnames
+     */
+    public List<String> getListofadductnames() {
+        return listofadductnames;
+    }
+
+    /**
+     * @param listofadductnames the listofadductnames to set
+     */
+    public void setListofadductnames(List<String> listofadductnames) {
+        this.listofadductnames = listofadductnames;
+    }
+
+    /**
+     * @return the listofadductmasses
+     */
+    public List<Float> getListofadductmasses() {
+        return listofadductmasses;
+    }
+
+    /**
+     * @param listofadductmasses the listofadductmasses to set
+     */
+    public void setListofadductmasses(List<Float> listofadductmasses) {
+        this.listofadductmasses = listofadductmasses;
     }
 }

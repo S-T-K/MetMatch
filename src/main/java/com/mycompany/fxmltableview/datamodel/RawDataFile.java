@@ -457,7 +457,7 @@ initializeFile();
     
     public void initializeFile() throws FileNotFoundException, IOException, InterruptedException {
         int count = 500*listofSlices.size();
-        RandomAccessFile memoryMappedFile = new RandomAccessFile(this.toString() + ".out", "rw");
+        RandomAccessFile memoryMappedFile = new RandomAccessFile("C:\\Users\\stefankoch\\Documents\\tmp2\\" + this.toString() + ".out", "rw");
         MMFile = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, count);
         
     }
