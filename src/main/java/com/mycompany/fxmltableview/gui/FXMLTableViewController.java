@@ -885,7 +885,7 @@ public class FXMLTableViewController implements Initializable {
                                 }
                                 if (!duplicate) {
                                     String Ion = "[(" + adduct.getNum() + "-" + session.getListofadductnames().get(k) + ")+" + session.getListofadductnames().get(j) + "]+";
-                                    MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o), adduct));
+                                    MasterListofOGroups.get(o).addAdduct(new Entry(max,mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), session, MasterListofOGroups.get(o), adduct));
                                     max++;
                                 }
                             }
