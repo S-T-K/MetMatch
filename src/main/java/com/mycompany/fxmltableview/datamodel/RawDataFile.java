@@ -180,7 +180,7 @@ int slices = 0;
  //get max bin
  int maxint = 0;
  int max = 0;
- for (int i =3; i<mzbins.length-3; i++) {
+ for (int i =10; i<mzbins.length-10; i++) {
      if (mzbins[i]>max){
          max = mzbins[i];
          maxint = i;   

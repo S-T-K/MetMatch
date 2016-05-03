@@ -855,9 +855,9 @@ public class Slice {
     List<Float> newIntList= new ArrayList<>();
     List<Float> newMZList= new ArrayList<>();
     
-    float shiftedMZ = adduct.getMZ()-adduct.getMZ()/1000000*file.getMzshift();
-    float maxMZ = shiftedMZ+shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
-    float minMZ = shiftedMZ-shiftedMZ/1000000*adduct.getSession().getSliceMZTolerance();
+    float shiftedMZ = adduct.getMZ()-(adduct.getMZ()/1000000.0f*file.getMzshift());
+    float maxMZ = shiftedMZ+(shiftedMZ/1000000.0f*adduct.getSession().getSliceMZTolerance());
+    float minMZ = shiftedMZ-(shiftedMZ/1000000.0f*adduct.getSession().getSliceMZTolerance());
     
     int numberofsignals = 0;
     
@@ -882,9 +882,11 @@ public class Slice {
        
        }
        
+       if (mz<=maxMZ&&massList.get(i)>=mz) {
        newRTList.add(retentionTimeList.get(i));
        newIntList.add(intensity);
        newMZList.add(mz);
+       }
         
         
         
@@ -1243,8 +1245,8 @@ public class Slice {
                  end = middle;
              }
          }
-         
-         file.addtoBin(start);
+         middle = (end+start)/2;
+         file.addtoBin(middle);
          
      }
      

@@ -190,12 +190,12 @@ public class FXMLTableViewController implements Initializable {
         session = new Session();
         session.getReference().setName("Reference");
 
-        try {
-            FileUtils.deleteDirectory(new File("C:\\Users\\stefankoch\\Documents\\tmp2"));
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        new File("C:\\Users\\stefankoch\\Documents\\tmp2").mkdirs();
+//        try {
+//            FileUtils.deleteDirectory(new File("C:\\Users\\stefankoch\\Documents\\tmp2"));
+//        } catch (IOException ex) {
+//            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        new File("C:\\Users\\stefankoch\\Documents\\tmp2").mkdirs();
 
         //Parameters
         AdName1.textProperty().bindBidirectional(session.getListofadductnameproperties().get(0));
@@ -699,7 +699,7 @@ public class FXMLTableViewController implements Initializable {
         this.datasettocontroller = datasettocontroller;
     }
 
-    public void generateOutput() throws FileNotFoundException, UnsupportedEncodingException {
+    public void generateOutput() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 
         //sort by OGroup and Num, to get order of Input
         getMetTable().getSortOrder().clear();
@@ -746,7 +746,7 @@ public class FXMLTableViewController implements Initializable {
             rows.add(new ArrayList<>(Arrays.asList(allRows.get(i))));
         }
 
-        PrintWriter printwriter = new PrintWriter("output.txt", "UTF-8");
+        PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
 
         //add newly generated adducts to rows
@@ -838,7 +838,7 @@ public class FXMLTableViewController implements Initializable {
         }
 
         writer.close();
-
+        Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
