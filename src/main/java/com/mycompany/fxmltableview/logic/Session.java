@@ -53,7 +53,7 @@ public class Session {
     private SimpleFloatProperty start;
     private SimpleFloatProperty end;
    
-    
+    private int numberofadducts;
     private int numberofFiles;
     private Rengine engine;
     private SimpleFloatProperty SliceMZTolerance;
@@ -680,5 +680,19 @@ public class Session {
      */
     public void setEnd(SimpleFloatProperty end) {
         this.end = end;
+    }
+
+    /**
+     * @return the numberofadducts
+     */
+    public int getNumberofadducts() {
+        return numberofadducts;
+    }
+
+    /**
+     * @param numberofadducts the numberofadducts to set
+     */
+    public void setNumberofadducts(int numberofadducts) {
+        this.numberofadducts = numberofadducts;
     }
 }

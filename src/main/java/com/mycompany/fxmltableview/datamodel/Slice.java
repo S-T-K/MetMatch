@@ -41,12 +41,14 @@ public class Slice {
     private RawDataFile file;
     //private String name;
     
-    //TODO: one RTList/OGroup or calculation every time
-    //TODO: maybe less precision for Intensity?
-    private List<Float> retentionTimeList = new ArrayList<Float>();
-    private List<Float> intensityList = new ArrayList<Float>();
-    private List<Float> massList = new ArrayList<Float>();
-    private PolynomialSplineFunction intensityFunction;
+    
+   
+    //relative to RawDataFile RT
+    private int RTstart;
+    private int RTend;
+    
+    private float[] IntArray;
+    private float[] MZArray;
     private float minIntensity;
     private float maxIntensity;
     private List<Peak> listofPeaks;
@@ -58,9 +60,7 @@ public class Slice {
     private Dataset dataset;
     
     //processed information
-    private float[] MZArray;
-    private byte[] byteMZArray;
-    private int[] IntensityArray;
+    
     private double[] PropArray;
     
     private float[] Bins;
@@ -76,206 +76,85 @@ public class Slice {
         rw=false;
         stored=false;
     }
-    
-
-    
-    public void extractSlicefromScans(List<Scan> listofScans) {
-        float start = System.currentTimeMillis();
-        
-         //for all Scans
-         setMinIntensity(900000000);
-         setMaxIntensity(0);
-         boolean found;
+     public void newbinaryExtractSlicefromScans(List<Scan> listofScans, float[] ScanRTs) {
          
-         
-        for (int i = 0; i< listofScans.size(); i++) {
-            //if RT is within tolerance
-            
-            
-            float currentRT = listofScans.get(i).getRetentionTime();
-            
-            //0.05 so that ranges for the interpolation are smaller than the actual ranges, otherwise out of range
-           
-        if (currentRT>= (getMinRT()) && currentRT<= (getMaxRT())) {
-            
-                        found = false;
-                        
-                        
-                        //TODO binary search!!!!!!
-                        for (int l=0; l<listofScans.get(i).getPeakscount(); l++) {
-                           float mz = listofScans.get(i).getMassovercharge()[l];
-                            if (mz >= getMinMZ() && mz <= getMaxMZ()) {
-                                getRetentionTimeList().add(currentRT);
-                                getIntensityList().add(listofScans.get(i).getIntensity()[l]);
-                                getMassList().add(mz);
-                                //add mass to bins for "median" calculation
-                                addmasstoBin(mz);
-                                
-                                if (listofScans.get(i).getIntensity()[l]>getMaxIntensity()) {
-                                    setMaxIntensity(listofScans.get(i).getIntensity()[l]);
-                                }
-                                if (listofScans.get(i).getIntensity()[l] < getMinIntensity()) {
-                                    setMinIntensity(listofScans.get(i).getIntensity()[l]);
-                                }
-                                found = true;
-                                
-                                
-                                
-                            }
-                            
-                        }
-                        if (!found) {
-                            getRetentionTimeList().add(currentRT);
-                            getIntensityList().add(0.0f);
-                            getMassList().add(0.0f);
-                            
-                        }
-                    }
-        
-        }
-      
-     //this.clean();
-     //this.generateInterpolatedEIC();
-    
-     float end = System.currentTimeMillis();
-     //System.out.println("Extraction: " + (end-start));
-    }
-    
-    //not yet working...
-    public void binaryExtractSlicefromScans(List<Scan> listofScans) {
         
        generateBins();
          //for all Scans
-         setMinIntensity(900000000);
-         setMaxIntensity(0);
        float minMZ = getMinMZ();
        float maxMZ = getMaxMZ();
        float minRT = getMinRT();
        float maxRT = getMaxRT();
        int numberofsignals=0;
          
-         //for all Scans
-         int start = 0;
-         int end = listofScans.size()-1;
-         int middle = end/2;
-         boolean foundRT = false;
-         int lower = start;
-         
-         while (!foundRT && (end-start)>0) {
-             if (listofScans.get(middle).getRetentionTime() < getMinRT()) {
-                 start = middle +1;
-                 lower = middle;
-             } else if (listofScans.get(middle).getRetentionTime() > getMaxRT()) {
-                 end = middle-1;
-             } else {
-                 foundRT = true;
-             }
-             middle = start + (end - start)/2;
-         }
-         
-         
-         if (foundRT) {
-                end = middle;
-                middle = (lower+end)/2;
-             boolean foundMinRT = false;
-             while (!foundMinRT) {
-             if (listofScans.get(middle).getRetentionTime() < getMinRT()) {
-                 lower = middle+1;
-             } else if (listofScans.get(middle-1).getRetentionTime() < getMinRT()) {
-                 foundMinRT = true;
-             } else {
-                 end = middle-1;
-             }
-             middle = lower + (end - lower)/2;
-             if(middle==0) {
-                     foundMinRT = true;
-                 }
-         }
-             //System.out.println("RT search done");
-             //middle is the lowest RT
-             int current = middle;
-             Scan currentScan = listofScans.get(middle);
-             while (currentScan.getRetentionTime() < getMaxRT()) {
-                 boolean foundMZ = false;
-                 start = 0;
-                 end = currentScan.getMassovercharge().length-1;
-                 
-                 while (!foundMZ && start<=end) {
-                     middle = start + (end - start)/2;
-                     if (currentScan.getMassovercharge()[middle] < getMinMZ()) {
-                         start = middle + 1;
-                         //System.out.println("MZ too low");
-                         
-                     } else if (currentScan.getMassovercharge()[middle] > getMaxMZ()) {
-                         end = middle - 1;
-                         //System.out.println("MZ too high");
-                         
-                     } else {
-                         foundMZ = true;
-                        // System.out.println("MZ found");
-                         middle = start + (end - start)/2;
-                         break;
-                     }
-                     
-                 }
-                 //System.out.println("MZ search done");
-                 
-                 //if MZ found
-                 if (foundMZ) {
-                     
-                     numberofsignals++;
-                     start = middle;
-                     end = middle+1;
-                     
-                     while (start>0 &&currentScan.getMassovercharge()[start]>=getMinMZ()) {
-                     getRetentionTimeList().add(currentScan.getRetentionTime());
-                                getIntensityList().add(currentScan.getIntensity()[start]);
-                                getMassList().add(currentScan.getMassovercharge()[start]);
-                                //add mass to bins for "median" calculation
-                                addmasstoBin(currentScan.getMassovercharge()[start]);  
-                                if (currentScan.getIntensity()[start]>getMaxIntensity()) {
-                                    setMaxIntensity(currentScan.getIntensity()[start]);
-                                }
-                                if (currentScan.getIntensity()[start] < getMinIntensity()) {
-                                    setMinIntensity(currentScan.getIntensity()[start]);
-                                }
-                                start--;
-                                //System.out.println("lower MZ found");
-                 }
-                     while (end<currentScan.getMassovercharge().length && currentScan.getMassovercharge()[end]<=getMaxMZ()) {
-                     getRetentionTimeList().add(currentScan.getRetentionTime());
-                                getIntensityList().add(currentScan.getIntensity()[end]);
-                                getMassList().add(currentScan.getMassovercharge()[end]);
-                                //add mass to bins for "median" calculation
-                                addmasstoBin(currentScan.getMassovercharge()[end]);
-                                if (currentScan.getIntensity()[end]>getMaxIntensity()) {
-                                    setMaxIntensity(currentScan.getIntensity()[end]);
-                                }
-                                if (currentScan.getIntensity()[end] < getMinIntensity()) {
-                                    setMinIntensity(currentScan.getIntensity()[end]);
-                                }
-                                end++;
-                                //System.out.println("upper MZ found");
-                 }
-                 } else {
-                 getRetentionTimeList().add(currentScan.getRetentionTime());
-                            getIntensityList().add(0.0f);
-                            getMassList().add(0.0f);
-                            //System.out.println("MZ not found");
-             }
-
-                 current++;
-                 if (current == listofScans.size()){
-                 break;
-                 }
-                 currentScan = listofScans.get(current);
-                  //System.out.println("next Scan");
-             }
-
-
-             
-         }
-         
+       RTstart = Arrays.binarySearch(ScanRTs, minRT);
+        
+       if (RTstart<0) {
+           RTstart = (RTstart+1)*(-1);
+       }
+       
+       RTend = Arrays.binarySearch(ScanRTs, maxRT)-1;
+       
+       if (RTend<0) {
+           RTend = (RTend+3)*(-1);
+       }
+       
+            setIntArray(new float[RTend-RTstart+1]);
+            setMZArray(new float[RTend-RTstart+1]);
+     
+       
+       
+       for (int i = RTstart; i<=RTend; i++) {
+           
+           int minM = Arrays.binarySearch(listofScans.get(i).getMassovercharge(), minMZ);
+           
+           if (minM<0) {
+           minM = (minM+1)*(-1);
+           }
+           
+           int length = listofScans.get(i).getMassovercharge().length;
+          
+          if (minM<length) {
+           while (listofScans.get(i).getMassovercharge()[minM]<=maxMZ) {
+               
+                       if (listofScans.get(i).getIntensity()[minM]>getIntArray()[i-RTstart]) {
+                            getMZArray()[i-RTstart] = listofScans.get(i).getMassovercharge()[minM];
+                            getIntArray()[i-RTstart] = listofScans.get(i).getIntensity()[minM];
+                            numberofsignals++;
+                       }
+                   
+                   minM++;
+                   if (minM==length) {
+                       break;
+                   }
+           }
+          }
+           
+//           if (!found) {
+//               MZArray[i-RTstart] = 0;
+//               IntArray[i-RTstart] = 0;
+//               
+//               
+//               
+//           }
+       }
+       
+       
+           
+           
+           
+           
+           
+           
+           
+       
+       
+    
+       
+       
+       
+       
+        
     
        Bins=null;
       
@@ -291,157 +170,159 @@ public class Slice {
      
     }
     
+     
+   
     
     //interpolates intensities
-    public  void generateIntensityFunction() {
-       double[] RT = new double[this.retentionTimeList.size()];
-       double[] Intensity = new double[this.retentionTimeList.size()];
-       for (int i =0; i<RT.length; i++) {
-           RT[i] = this.retentionTimeList.get(i);
-           Intensity[i] = this.intensityList.get(i);
-       }
-        
-        
-        
-       LinearInterpolator interpolator = new LinearInterpolator();
-       
-       this.intensityFunction = interpolator.interpolate(RT, Intensity);
-    }
-    
+//    public  void generateIntensityFunction() {
+//       double[] RT = new double[this.retentionTimeList.size()];
+//       double[] Intensity = new double[this.retentionTimeList.size()];
+//       for (int i =0; i<RT.length; i++) {
+//           RT[i] = this.retentionTimeList.get(i);
+//           Intensity[i] = this.intensityList.get(i);
+//       }
+//        
+//        
+//        
+//       LinearInterpolator interpolator = new LinearInterpolator();
+//       
+//       this.intensityFunction = interpolator.interpolate(RT, Intensity);
+//    }
+//    
     
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
-    public void WaveletPeakPicking() throws InterruptedException {
-        float startc = System.currentTimeMillis();
-        if (PropArray == null) {
-            PropArray = (new double[this.getIntensityArray().length]);
-            deleteAutoPeaks();
-        
-            //baseline correct IntensityArray
-            float[] correctedIntArray = new float[getIntensityArray().length];
-            for ( int j = 0; j<getIntensityArray().length; j++)  {
-                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
-                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
-                }
-                
-            }
-
-        
-        float start1 = System.currentTimeMillis();
-        // Create an R vector in the form of a string.
-        String EIC = Arrays.toString(correctedIntArray);
-        EIC = EIC.substring(1, EIC.length()-1);
-        //100 zeros at start and end, 50 are not enough
-        EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
-        EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
-        //System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
-       
-        
-        // Start Rengine.
-        Rengine engine = adduct.getSession().getEngine();
-
-        // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
-        //=INPUTS
-        engine.eval("eic=" + EIC);
-       
-        
-        
-        //Retrieve values, see script for names
-        //=OUTPUTS
-        float start3 = System.currentTimeMillis();
-        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
-        //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
-        
-        //Print output values, work with them...
-        if (ret!=null) {
-            float start4 = System.currentTimeMillis();
-        
-            for (int j = 0; j<ret[0].length; j++) {
-                //101 because of 100 zeros at start and R starts at 1
-                if (((int)ret[0][j]-101)<100) {
-                PropArray[(int)ret[0][j]-101]=1;
-                addPeak(new Peak((short) ((short)ret[0][j]-101), (float)ret[1][j], (float)ret[2][j], (float)ret[3][j], this));
-            }}
-            
-        
-        //System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
-        }
-        //end Rengine, otherwise thread doesn't terminate
-        //engine.end();
-         EIC=null;
-}
-        PropArray = null;
-       
-        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
-    }
-    
+//    public void WaveletPeakPicking() throws InterruptedException {
+//        float startc = System.currentTimeMillis();
+//        if (PropArray == null) {
+//            PropArray = (new double[this.getIntensityArray().length]);
+//            deleteAutoPeaks();
+//        
+//            //baseline correct IntensityArray
+//            float[] correctedIntArray = new float[getIntensityArray().length];
+//            for ( int j = 0; j<getIntensityArray().length; j++)  {
+//                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
+//                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
+//                }
+//                
+//            }
+//
+//        
+//        float start1 = System.currentTimeMillis();
+//        // Create an R vector in the form of a string.
+//        String EIC = Arrays.toString(correctedIntArray);
+//        EIC = EIC.substring(1, EIC.length()-1);
+//        //100 zeros at start and end, 50 are not enough
+//        EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
+//        EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
+//        //System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
+//       
+//        
+//        // Start Rengine.
+//        Rengine engine = adduct.getSession().getEngine();
+//
+//        // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
+//        //=INPUTS
+//        engine.eval("eic=" + EIC);
+//       
+//        
+//        
+//        //Retrieve values, see script for names
+//        //=OUTPUTS
+//        float start3 = System.currentTimeMillis();
+//        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
+//        //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
+//        
+//        //Print output values, work with them...
+//        if (ret!=null) {
+//            float start4 = System.currentTimeMillis();
+//        
+//            for (int j = 0; j<ret[0].length; j++) {
+//                //101 because of 100 zeros at start and R starts at 1
+//                if (((int)ret[0][j]-101)<100) {
+//                PropArray[(int)ret[0][j]-101]=1;
+//                addPeak(new Peak((short) ((short)ret[0][j]-101), (float)ret[1][j], (float)ret[2][j], (float)ret[3][j], this));
+//            }}
+//            
+//        
+//        //System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
+//        }
+//        //end Rengine, otherwise thread doesn't terminate
+//        //engine.end();
+//         EIC=null;
+//}
+//        PropArray = null;
+//       
+//        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+//    }
+//    
     
     
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
- public void NaivePeakPicking() throws InterruptedException {
-     float startc = System.currentTimeMillis();
-         //initialize Array holding probabilities
-        if (PropArray==null){ 
-        PropArray =(new double[this.getIntensityArray().length]);
-        
-        addGaussCorrelation(0.6f);
-        addGaussCorrelation(0.5f);
-        addGaussCorrelation(0.4f);
-        
-        }
-        generatePeakArray();
-        PropArray = null;
-        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
-    }
+// public void NaivePeakPicking() throws InterruptedException {
+//     float startc = System.currentTimeMillis();
+//         //initialize Array holding probabilities
+//        if (PropArray==null){ 
+//        PropArray =(new double[this.getIntensityArray().length]);
+//        
+//        addGaussCorrelation(0.6f);
+//        addGaussCorrelation(0.5f);
+//        addGaussCorrelation(0.4f);
+//        
+//        }
+//        generatePeakArray();
+//        PropArray = null;
+//        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+//    }
  
  //adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
- public void addGaussCorrelation(float length) throws InterruptedException {
-     
-      float valuesperminute = adduct.getSession().getResolution()/(adduct.getSession().getRTTolerance()*2);
-      int arraylength = (int) (valuesperminute*length);
-        if (arraylength%2==0) {
-                   arraylength++;
-        }
-        
-        double[] peakArray = new double[arraylength];
-        int peakint = Math.floorDiv(arraylength, 2);
-        NormalDistribution normdist = new NormalDistribution();
-        //edge of peak is at X std
-        float peakedge = 2;
-        float increment = peakedge/(peakint-1);
-        for (int i = 0; i<=peakint; i++) {
-            peakArray[i]= normdist.density(peakedge-i*increment);
-            peakArray[(arraylength-1)-i]=peakArray[i];
-        }
-                
-         PearsonsCorrelation pear = new PearsonsCorrelation();
-
-         
-         //baseline correct IntensityArray
-            double[] correctedIntArray = new double[getIntensityArray().length];
-            for ( int j = 0; j<getIntensityArray().length; j++)  {
-                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
-                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
-                }
-                
-            }
-            
-        for (int i = 0; i< (getIntensityArray().length-peakArray.length); i++) {
-            
-        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
-        
-                //scale according to maxIntensity
-               //and weaken weak signals
-               if (corr > 0) {
-                   double newcorr = (corr*corr)*asymptoticFunction(getIntensityArray()[i+peakint]-minIntensity);
-                   if ((PropArray[i+peakint]<newcorr)) {
-                       PropArray[i+peakint]= (float) newcorr;}
-               }
-        
-        }
-     
- }
- 
+// public void addGaussCorrelation(float length) throws InterruptedException {
+//     
+//      float valuesperminute = adduct.getSession().getResolution()/(adduct.getSession().getRTTolerance()*2);
+//      int arraylength = (int) (valuesperminute*length);
+//        if (arraylength%2==0) {
+//                   arraylength++;
+//        }
+//        
+//        double[] peakArray = new double[arraylength];
+//        int peakint = Math.floorDiv(arraylength, 2);
+//        NormalDistribution normdist = new NormalDistribution();
+//        //edge of peak is at X std
+//        float peakedge = 2;
+//        float increment = peakedge/(peakint-1);
+//        for (int i = 0; i<=peakint; i++) {
+//            peakArray[i]= normdist.density(peakedge-i*increment);
+//            peakArray[(arraylength-1)-i]=peakArray[i];
+//        }
+//                
+//         PearsonsCorrelation pear = new PearsonsCorrelation();
+//
+//         
+//         //baseline correct IntensityArray
+//            double[] correctedIntArray = new double[getIntensityArray().length];
+//            for ( int j = 0; j<getIntensityArray().length; j++)  {
+//                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
+//                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
+//                }
+//                
+//            }
+//            
+//        for (int i = 0; i< (getIntensityArray().length-peakArray.length); i++) {
+//            
+//        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
+//        
+//                //scale according to maxIntensity
+//               //and weaken weak signals
+//               if (corr > 0) {
+//                   double newcorr = (corr*corr)*asymptoticFunction(getIntensityArray()[i+peakint]-minIntensity);
+//                   if ((PropArray[i+peakint]<newcorr)) {
+//                       PropArray[i+peakint]= (float) newcorr;}
+//               }
+//        
+//        }
+//     
+// }
+// 
  
  //returns value between 0 and 1, rapidly falling for values lower than the baseline
  public float asymptoticFunction(float intensity) {
@@ -574,27 +455,7 @@ public class Slice {
     
     
     
-    
-    /**
-     * @return the retentionTimeList
-     */
-    public List<Float> getRetentionTimeList() {
-        return retentionTimeList;
-    }
 
-    /**
-     * @return the intensityList
-     */
-    public List<Float> getIntensityList() {
-        return intensityList;
-    }
-
-    /**
-     * @return the massList
-     */
-    public List<Float> getMassList() {
-        return massList;
-    }
 
     /**
      * @return the minRT
@@ -643,85 +504,26 @@ public class Slice {
     
 
     
-    //removes duplicate RT entries, only takes the max intensity
-    //within tolerance range around mzshift
-    public void clean() {
-        
-    List<Float> newRTList = new ArrayList<>();
-    List<Float> newIntList= new ArrayList<>();
-    List<Float> newMZList= new ArrayList<>();
-    
-    float shiftedMZ = adduct.getMZ()-(adduct.getMZ()/1000000.0f*file.getMzshift());
-    float maxMZ = shiftedMZ+(shiftedMZ/1000000.0f*adduct.getSession().getSliceMZTolerance());
-    float minMZ = shiftedMZ-(shiftedMZ/1000000.0f*adduct.getSession().getSliceMZTolerance());
-    
-    int numberofsignals = 0;
-    
-    for (int i =0; i<massList.size(); i++) {
-        
-       float intensity = 0;
-       
-       float mz =0;
-       if (massList.get(i)<=maxMZ&&massList.get(i)>=minMZ){
-           numberofsignals++;
-       mz = massList.get(i); 
-       intensity = intensityList.get(i);}
-       while (i<retentionTimeList.size()-1 && Math.abs(retentionTimeList.get(i)-retentionTimeList.get(i+1))<0.001) {
-           if (massList.get(i+1)<=maxMZ&&massList.get(i+1)>=minMZ){
-           if (intensityList.get(i+1)> intensity) {
-               
-               intensity = intensityList.get(i+1);
-               mz = massList.get(i+1);
-           }
-           }
-           i++; 
-       
-       }
-       
-       if (mz<=maxMZ&&massList.get(i)>=mz) {
-       newRTList.add(retentionTimeList.get(i));
-       newIntList.add(intensity);
-       newMZList.add(mz);
-       }
-        
-        
-        
-        
-    }
-       
-        
-        setRetentionTimeList(newRTList);
-        setIntensityList(newIntList);
-        setMassList(newMZList);
-        
-    if (numberofsignals<5||maxIntensity<adduct.getSession().getBaseline()) {
-        this.empty=true;
-    }
-}
+
 
     
     
-    public List<Float> smooth(int iterations) {
-        List<Float> newIntList= new ArrayList<>(intensityList);
-        for (int i= 0; i<iterations; i++) {
-      
-            for (int j = 1; j< (retentionTimeList.size()-1); j++) {
-                if (newIntList.get(j)>100) {
-                newIntList.set(j, (newIntList.get(j-1)+ newIntList.get(j) + newIntList.get(j+1))/3);
-                
-            }
-            }
-        
-        }
-    return newIntList;
-}
+//    public List<Float> smooth(int iterations) {
+//        List<Float> newIntList= new ArrayList<>(intensityList);
+//        for (int i= 0; i<iterations; i++) {
+//      
+//            for (int j = 1; j< (retentionTimeList.size()-1); j++) {
+//                if (newIntList.get(j)>100) {
+//                newIntList.set(j, (newIntList.get(j-1)+ newIntList.get(j) + newIntList.get(j+1))/3);
+//                
+//            }
+//            }
+//        
+//        }
+//    return newIntList;
+//}
 
-    /**
-     * @param intensityList the intensityList to set
-     */
-    public void setIntensityList(List<Float> intensityList) {
-        this.intensityList = intensityList;
-    }
+    
 
    
     /**
@@ -742,115 +544,11 @@ public class Slice {
 
  
 
-    /**
-     * @param retentionTimeList the retentionTimeList to set
-     */
-    public void setRetentionTimeList(List<Float> retentionTimeList) {
-        this.retentionTimeList = retentionTimeList;
-    }
-
-    /**
-     * @param massList the massList to set
-     */
-    public void setMassList(List<Float> massList) {
-        this.massList = massList;
-    }
-
-    /**
-     * @return the intensityFunction
-     */
-    public PolynomialSplineFunction getIntensityFunction() {
-        return intensityFunction;
-    }
-
-    /**
-     * @param intensityFunction the intensityFunction to set
-     */
-    public void setIntensityFunction(PolynomialSplineFunction intensityFunction) {
-        this.intensityFunction = intensityFunction;
-    }
+    
 
     
-    public void generateInterpolatedEIC() throws InterruptedException {
-        
-        if (!empty) {
-            
 
-        
-        int resolution = adduct.getSession().getResolution();
-       
-
-        
-       generateIntensityFunction();
-        
-        setIntensityArray(new int[resolution]);
-        setMZArray(new float[resolution]);
-       
-      
-     
-      
-      //fill Intensity Array
-      for (int i = 0; i< resolution; i++) {
-           try { getIntensityArray()[i]=(int) getIntensityFunction().value(getRTArray()[i]);
-            }
-           catch (OutOfRangeException e) {
-               getIntensityArray()[i] = 0;
-               
-           }
-      }
-      
-      //fill MZArray
-      //get half of delta
-      float RTdeltah = (adduct.getOGroupObject().getRTArray()[1]-adduct.getOGroupObject().getRTArray()[0])/2;
-      int RT = 0;
-      int values = 0;
-      //for all M/Z values
-      for (int i = 0; i<massList.size(); i++) {
-          //if M/Z is greater than 0
-          if (massList.get(i)>0) {
-              //while not correct bin
-              while(retentionTimeList.get(i)>adduct.getOGroupObject().getRTArray()[RT]+RTdeltah) {
-                  if (values>0) {
-                      MZArray[RT]=MZArray[RT]/values;
-                  }
-                  RT++;
-                  values = 0;
-                  if (RT==adduct.getSession().getResolution()) {
-                      RT=adduct.getSession().getResolution()-1;
-                      break;
-                  }
-              }
-               
-              MZArray[RT]+=massList.get(i);
-              values++;  
-          }
-
-      }
-      
-      if (values>0) {
-                      MZArray[RT]=MZArray[RT]/values;
-                  }
    
-    //use byteMZArray instead
-    float step = adduct.getSession().getMZTolerance()/100*adduct.getMZ()/1000000f;
-            setByteMZArray(new byte[MZArray.length]);
-    
-    for (int i = 0; i<MZArray.length; i++) {
-                getByteMZArray()[i] = (byte) ((MZArray[i]-adduct.getMZ())/step);
-    }
-      
-      
-     
-     //delete originals
-    this.intensityList = null;
-    this.intensityFunction = null;
-    this.massList = null;
-    this.retentionTimeList = null;
-    this.MZArray=null;
-     
-    }
-    }
-
     /**
      * @return the RTArray
      */
@@ -860,27 +558,8 @@ public class Slice {
 
  
 
-    /**
-     * @return the IntensityArray
-     */
-    public int[] getIntensityArray() throws InterruptedException {
-        if (stored) {
-            System.out.println("Adding Read Slice from getIntensity");
-           adduct.getSession().getIothread().addread(this);
-           while(stored) {
-               System.out.println("Waiting.......................");
-               //Thread.sleep(10);
-           }
-        }
-        return IntensityArray;
-    }
 
-    /**
-     * @param IntensityArray the IntensityArray to set
-     */
-    public void setIntensityArray(int[] IntensityArray) {
-        this.IntensityArray = IntensityArray;
-    }
+
 
     
 
@@ -1106,30 +785,30 @@ public class Slice {
         this.listofPeaks.add(peak);
     }
     
-    public void deleteSlice() {
-       
-        
-        this.file= null;
-        this.dataset = null;
-        this.adduct = null;
-        this.retentionTimeList = null;
-        this.intensityList = null;
-        this.massList = null;
-        
-        if(this.IntensityArray!=null){
-            this.IntensityArray=null;
-        }
-        
-        if(this.PropArray!=null){
-            this.PropArray=null;
-        }
-        if(this.intensityFunction!=null){
-            this.intensityFunction=null;
-        }
-        
-        
-        
-    }
+//    public void deleteSlice() {
+//       
+//        
+//        this.file= null;
+//        this.dataset = null;
+//        this.adduct = null;
+//        this.retentionTimeList = null;
+//        this.intensityList = null;
+//        this.massList = null;
+//        
+//        if(this.IntensityArray!=null){
+//            this.IntensityArray=null;
+//        }
+//        
+//        if(this.PropArray!=null){
+//            this.PropArray=null;
+//        }
+//        if(this.intensityFunction!=null){
+//            this.intensityFunction=null;
+//        }
+//        
+//        
+//        
+//    }
     
 //    public void storeIntensityList() {
 //        try
@@ -1170,26 +849,7 @@ public class Slice {
 //        
 //    }
 
-    /**
-     * @return the MZArray
-     */
-    public float[] getMZArray() {
-        return MZArray;
-    }
-    
-    /**
-     * @return the MZArray
-     */
-    public float getMZValue(int i) {
-        return getByteMZArray()[i]*adduct.getMZ()/1000000*adduct.getSession().getMZTolerance()/100+adduct.getMZ();
-    }
 
-    /**
-     * @param MZArray the MZArray to set
-     */
-    public void setMZArray(float[] MZArray) {
-        this.MZArray = MZArray;
-    }
     
     public Short setFittedPeak(int shift) {
         
@@ -1306,74 +966,74 @@ public class Slice {
         return listofPeaks.get(fittedpeak).getEnd();
     }
     
-    public XYChart.Series manualPeak(short start, short end) throws InterruptedException {
-        
-        //Peak picking
-        //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
-        float delta = (getIntensityArray()[end]-getIntensityArray()[start])/(end-start);
-        float current = getIntensityArray()[start];
-        
-        List<Float> intensity = new ArrayList<>();
-        for (int i = start; i<=end; i++) {
-            intensity.add(getIntensityArray()[i]-current);
-            current = current + delta;
-        }
-        float max = 0;
-        int maxint = -1;
-        
-        //only look for max in the middle 70% region
-        int pstart = (int) (0.15*(intensity.size()-1));
-        int pend = (int) (0.85*(intensity.size()-1));
-        
-        for (int i = pstart; i<= pend; i++) {
-            if (intensity.get(i)>max) {
-                max = intensity.get(i);
-                maxint = i;
-            }
-        }
-        
-        
-        
-        //no max or max at edge
-        if (max<=0 || getIntensityArray()[start+maxint]<adduct.getSession().getBaseline()) {
-            return null;
-        }
-        
-        
-        
-        short index = (short) (maxint+start);
-        
-        //don't add Peak if there is already a similar peak
-        if (listofPeaks != null) {
-            for (int i = 0; i<listofPeaks.size(); i++) {
-                if (Math.abs(listofPeaks.get(i).getIndex()-index)<adduct.getSession().getIntPeakRTTol()) {
-                    return null;
-                }
-            }
-        }
-        
-        if (listofPeaks == null) {
-            setListofPeaks(new ArrayList<>());
-        }
-        Peak newPeak = new Peak(true,index, start,end, this, 1);
-        listofPeaks.add(newPeak);
-        XYChart.Series newSeries = new XYChart.Series();
-        
-        float[] RTArray = adduct.getRTArray();
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.2));
-              
-        
-                return newSeries;
-    }
+//    public XYChart.Series manualPeak(short start, short end) throws InterruptedException {
+//        
+//        //Peak picking
+//        //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
+//        float delta = (getIntensityArray()[end]-getIntensityArray()[start])/(end-start);
+//        float current = getIntensityArray()[start];
+//        
+//        List<Float> intensity = new ArrayList<>();
+//        for (int i = start; i<=end; i++) {
+//            intensity.add(getIntensityArray()[i]-current);
+//            current = current + delta;
+//        }
+//        float max = 0;
+//        int maxint = -1;
+//        
+//        //only look for max in the middle 70% region
+//        int pstart = (int) (0.15*(intensity.size()-1));
+//        int pend = (int) (0.85*(intensity.size()-1));
+//        
+//        for (int i = pstart; i<= pend; i++) {
+//            if (intensity.get(i)>max) {
+//                max = intensity.get(i);
+//                maxint = i;
+//            }
+//        }
+//        
+//        
+//        
+//        //no max or max at edge
+//        if (max<=0 || getIntensityArray()[start+maxint]<adduct.getSession().getBaseline()) {
+//            return null;
+//        }
+//        
+//        
+//        
+//        short index = (short) (maxint+start);
+//        
+//        //don't add Peak if there is already a similar peak
+//        if (listofPeaks != null) {
+//            for (int i = 0; i<listofPeaks.size(); i++) {
+//                if (Math.abs(listofPeaks.get(i).getIndex()-index)<adduct.getSession().getIntPeakRTTol()) {
+//                    return null;
+//                }
+//            }
+//        }
+//        
+//        if (listofPeaks == null) {
+//            setListofPeaks(new ArrayList<>());
+//        }
+//        Peak newPeak = new Peak(true,index, start,end, this, 1);
+//        listofPeaks.add(newPeak);
+//        XYChart.Series newSeries = new XYChart.Series();
+//        
+//        float[] RTArray = adduct.getRTArray();
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.2));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
+//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.2));
+//              
+//        
+//                return newSeries;
+//    }
     
     public void deleteAutoPeaks() {
         if (listofPeaks!=null) {
@@ -1396,26 +1056,7 @@ public class Slice {
         return empty;
     }
 
-    /**
-     * @return the byteMZArray
-     */
-    public byte[] getByteMZArray() {
-        if (stored) {
-             System.out.println("Adding Read Slice from getMZ");
-           adduct.getSession().getIothread().addread(this);
-           while(stored) {
-               //wait
-           }
-        }
-        return byteMZArray;
-    }
-
-    /**
-     * @param byteMZArray the byteMZArray to set
-     */
-    public void setByteMZArray(byte[] byteMZArray) {
-        this.byteMZArray = byteMZArray;
-    }
+ 
     
     public void writeData() throws IOException, InterruptedException {
         if (!written&&!stored) {
@@ -1536,6 +1177,60 @@ public class Slice {
     public void setWritten(boolean written) {
         this.written = written;
     }
+
+    /**
+     * @return the IntArray
+     */
+    public float[] getIntArray() {
+        return IntArray;
+    }
+
+    /**
+     * @param IntArray the IntArray to set
+     */
+    public void setIntArray(float[] IntArray) {
+        this.IntArray = IntArray;
+    }
+
+    /**
+     * @return the MZArray
+     */
+    public float[] getMZArray() {
+        return MZArray;
+    }
+
+    /**
+     * @param MZArray the MZArray to set
+     */
+    public void setMZArray(float[] MZArray) {
+        this.MZArray = MZArray;
+    }
  
-   
+    public Entry getAdduct() {
+        return adduct;
+    }
+ 
+    public boolean narrowMZ(float shift) {
+        float newMZ = adduct.getMZ()+(adduct.getMZ()/1000000*shift);
+        float dif = newMZ/1000000*file.getSession().getSliceMZTolerance();
+        float maxMZ = newMZ+dif;
+        float minMZ = newMZ-dif;
+        empty = true;
+        for (int i = 0; i<MZArray.length; i++) {
+            if (MZArray[i]==0||MZArray[i]<minMZ||MZArray[i]>maxMZ) {
+                MZArray[i] = 0;
+                IntArray[i] = 0;
+              
+            } else {
+                empty = false;
+            }
+        }
+        
+        if (!empty) {
+            adduct.getListofSlices().put(file, this);
+        }
+return empty;
+    }
+    
+    
 }

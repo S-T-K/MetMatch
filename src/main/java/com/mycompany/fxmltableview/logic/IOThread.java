@@ -114,10 +114,10 @@ public class IOThread implements Runnable{
                  
              }
              }
-             System.out.println("Crit. Write: " + count1);
-             System.out.println("Read: " + count2);
-             System.out.println("Write: " + count3);
-             System.out.println("Next Read: " + count4);
+//             System.out.println("Crit. Write: " + count1);
+//             System.out.println("Read: " + count2);
+//             System.out.println("Write: " + count3);
+//             System.out.println("Next Read: " + count4);
              
              
              

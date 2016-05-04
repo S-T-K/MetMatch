@@ -256,6 +256,7 @@ public class FXMLTableViewController implements Initializable {
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
 
+        int numberofadducts=0;
         //for all OGroups
         for (int i = 0; i < getMasterListofOGroups().size(); i++) {
             TreeItem<Entry> root = new TreeItem<>(getMasterListofOGroups().get(i));
@@ -265,11 +266,12 @@ public class FXMLTableViewController implements Initializable {
             for (int j = 0; j < getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                 TreeItem<Entry> childNode1 = new TreeItem<>(getMasterListofOGroups().get(i).getListofAdducts().get(j));
                 root.getChildren().add(childNode1);
-
+            numberofadducts++;
             }
 
         }
-
+session.setNumberofadducts(numberofadducts);
+        
         getMetTable().setRoot(superroot);
         getMetTable().setShowRoot(false);
         

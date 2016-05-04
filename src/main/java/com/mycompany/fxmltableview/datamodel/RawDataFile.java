@@ -48,7 +48,8 @@ public class RawDataFile {
     private MappedByteBuffer MMFile;
     private Dataset dataset;
     private List<Scan> listofScans;
-    private List<Slice> listofSlices;
+    private float[] RTArray;
+    private Slice[] listofSlices;
     private StringProperty name;
     private Session session;
     private float scanspersecond;
@@ -124,7 +125,10 @@ public class RawDataFile {
     public void parseFile() {
         DomParser dpe = new DomParser(file.toString());
         this.listofScans = dpe.ParseFile();
-     
+        setRTArray(new float[listofScans.size()]);
+     for (int i = 0; i<listofScans.size(); i++) {
+            getRTArray()[i] = listofScans.get(i).getRetentionTime();
+     }
 //        int RT = 0;
 //        int points = 0;
 //        for (int i = 0; i< listofScans.size(); i++) {
@@ -146,26 +150,20 @@ public class RawDataFile {
     //extract Slices, according to tolerances
     public void extractSlices(boolean isreference, List<Entry> data, float RTTolerance, float MZTolerance) throws InterruptedException, IOException {
         double start = System.currentTimeMillis();
-        this.setListofSlices(new ArrayList<>());
-
-int number = 0;
-int slices = 0;
+        listofSlices = new Slice[session.getNumberofadducts()];
+        int number = 0;
+        int slices = 0;
         for (int i = 0; i < data.size(); i++) {
             //System.out.println("started with OGroup " + i);
             for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
                 //System.out.println("started with Adduct " + j);
-                int Num = data.get(i).getListofAdducts().get(j).getNum();
-                float MZ = (float) data.get(i).getListofAdducts().get(j).getMZ();
-                float RT = (float) data.get(i).getListofAdducts().get(j).getOGroupRT();   //RT in Minutes
                 Slice newSlice = new Slice(this, data.get(i).getListofAdducts().get(j)); 
-                newSlice.binaryExtractSlicefromScans(listofScans);
+                newSlice.newbinaryExtractSlicefromScans(listofScans, getRTArray());
                 
                 
                 if(!newSlice.isEmpty()) {
-                    slices++;
-                data.get(i).getListofAdducts().get(j).addSlice(newSlice);
-                getListofSlices().add(newSlice);
-                
+                listofSlices[slices]=newSlice;
+                slices++;
                 //System.out.println("finished with Adduct " + j);
                 } else {
                     number++;
@@ -177,43 +175,50 @@ int slices = 0;
         }
         System.out.println("empty slices: " + number);
         System.out.println("nonempty slices: " + slices);
- //get max bin
- int maxint = 0;
- int max = 0;
- for (int i =10; i<mzbins.length-10; i++) {
-     if (mzbins[i]>max){
-         max = mzbins[i];
-         maxint = i;   
-     }
- }
+        System.out.println("                               Time:  " + (System.currentTimeMillis()-start));
  
- //calculate "median" shift
-float step = session.getMZTolerance()/(mzbins.length)*2;
-mzshift = new SimpleFloatProperty(session.getMZTolerance()-maxint*step);
-
-//clean slices according to shift and tolerance
-for (int i =0; i< listofSlices.size(); i++) {
-    listofSlices.get(i).clean();
-    listofSlices.get(i).generateInterpolatedEIC();
-    
-}
-
-List<Slice> newlist = new ArrayList<Slice>();
-for (int i =0; i< listofSlices.size(); i++) {
-    if (!listofSlices.get(i).isEmpty()) {
-        newlist.add(listofSlices.get(i));
-        session.getIothread().addwrite(listofSlices.get(i));
-    }
-}
-listofSlices=newlist;
-        
-
-for (int i = 0; i < data.size(); i++) {
-            //System.out.println("started with OGroup " + i);
-            for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
-                data.get(i).getListofAdducts().get(j).delteemptySlices();
+        double start2 = System.currentTimeMillis();
+        //calculate MZshift
+        float ppm= 0.0f;
+        int count = 0;
+        for (int i = 0; i< listofSlices.length; i++) {
+            if (listofSlices[i]!=null){
+            float[] mzs = new float[listofSlices[i].getMZArray().length];
+            System.arraycopy(listofSlices[i].getMZArray(), 0, mzs, 0, listofSlices[i].getMZArray().length);
+            Arrays.sort(mzs);
+            //calculate ppm for middle value
+            if (mzs[mzs.length/2]!=0) {
+            ppm += (mzs[mzs.length/2]-listofSlices[i].getAdduct().getMZ())/(listofSlices[i].getAdduct().getMZ()/1000000); 
+            count++;
             }
-}
+        }
+        }
+        ppm/=count;
+        System.out.println("PPM: " + ppm);
+        System.out.println("                               Timeppm:  " + (System.currentTimeMillis()-start2));
+        
+        double start3 = System.currentTimeMillis();
+        int numberofgoodslices = 0;
+        //correct MZvalues
+        for (int i = 0; i< listofSlices.length; i++) {
+            if (listofSlices[i]!=null){
+                if (!listofSlices[i].narrowMZ(ppm)) {
+                    numberofgoodslices++;
+                }
+            }
+        }
+        
+        
+    Slice[] newlist = new Slice[numberofgoodslices];
+    count = 0;
+    for(int i = 0; i<listofSlices.length; i++) {
+        if (listofSlices[i]!=null&&!listofSlices[i].isEmpty()) {
+            newlist[count] = listofSlices[i];
+            count++;
+        }
+    }
+ System.out.println("                               Timenarrow:  " + (System.currentTimeMillis()-start3));
+        
         
 this.listofScans=null; //get rid of Scans, they are not needed any more
 double end = System.currentTimeMillis();
@@ -510,5 +515,19 @@ initializeFile();
         slice.setByteMZArray(null);
         
         
+    }
+
+    /**
+     * @return the RTArray
+     */
+    public float[] getRTArray() {
+        return RTArray;
+    }
+
+    /**
+     * @param RTArray the RTArray to set
+     */
+    public void setRTArray(float[] RTArray) {
+        this.RTArray = RTArray;
     }
 }
