@@ -7,22 +7,17 @@ import com.mycompany.fxmltableview.datamodel.Entry.orderbyRT;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
 import com.mycompany.fxmltableview.logic.CertaintyCalculator;
-import com.mycompany.fxmltableview.logic.IOThread;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import com.univocity.parsers.tsv.TsvWriter;
 import com.univocity.parsers.tsv.TsvWriterSettings;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,74 +25,47 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
-import org.apache.commons.io.FileUtils;
 import org.jfree.fx.FXGraphics2D;
 
 //this is the Controller for the Main GUI
@@ -131,7 +99,7 @@ public class FXMLTableViewController implements Initializable {
     ProgressBar progressbar;
 
     @FXML
-    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7;
+    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7;
 
     @FXML
     Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
@@ -213,6 +181,8 @@ public class FXMLTableViewController implements Initializable {
         AdMass6.textProperty().bindBidirectional(session.getListofadductmassproperties().get(5), new NumberStringConverter());
         AdMass7.textProperty().bindBidirectional(session.getListofadductmassproperties().get(6), new NumberStringConverter());
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
+        Start.textProperty().bindBidirectional(session.getStart(), new NumberStringConverter());
+        End.textProperty().bindBidirectional(session.getEnd(), new NumberStringConverter());
         RTTolShift.textProperty().bindBidirectional(session.getPeakRTTolerance(), new NumberStringConverter());
         MZTol.textProperty().bindBidirectional(session.getMZTolProp(), new NumberStringConverter());
         SliceMZTol.textProperty().bindBidirectional(session.getSliceMZTolProp(), new NumberStringConverter());
@@ -277,6 +247,8 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         setMasterListofOGroups(session.parseReferenceTsv());
+        
+        
 
         //generate additional adducts
         session.finalizeAdducts();
@@ -311,6 +283,8 @@ public class FXMLTableViewController implements Initializable {
         MZTol.setDisable(true);
         SliceMZTol.setDisable(true);
         Res.setDisable(true);
+        Start.setDisable(true);
+        End.setDisable(true);
         paramMenu.setDisable(false);
         AdName1.setDisable(true);
         AdName2.setDisable(true);
@@ -754,6 +728,11 @@ public class FXMLTableViewController implements Initializable {
         for (int o = 0; o < list.size(); o++) {
             for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
                 Entry adduct = list.get(o).getListofAdducts().get(s);
+                //while not included
+                while (list.get(o).getOGroup()!=Integer.parseInt(rows.get(currentline).get(10))) {
+                    currentline++;
+                }
+                
                 //if old
                 if (list.get(o).getListofAdducts().get(s).getNum() <= maxnumber) {
                     currentline++;
@@ -1016,4 +995,6 @@ public class FXMLTableViewController implements Initializable {
         AdMass6.setDisable(toggle);
         AdMass7.setDisable(toggle);
     }
+    
+    
 }

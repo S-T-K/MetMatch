@@ -50,6 +50,8 @@ public class Session {
     private SimpleFloatProperty maxPeakLength;
     //max points from middle to end of peak
     private short maxPeakLengthint;
+    private SimpleFloatProperty start;
+    private SimpleFloatProperty end;
    
     
     private int numberofFiles;
@@ -81,6 +83,8 @@ public class Session {
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
+        start = new SimpleFloatProperty (5.0f);
+        end = new SimpleFloatProperty (30.0f);
         
         //TODO: change
         listofadductnameproperties= new ArrayList<>();
@@ -168,7 +172,7 @@ public class Session {
             ScanEvent = allRows.get(i)[indexEvent];
             Ionisation = allRows.get(i)[indexIonisation];
             
-            
+            if (RT>=start.floatValue()&&RT<=end.floatValue()) {
             //if new Ogroup, make new Ogroup
             if (!(lastOGroup.equals(allRows.get(i)[indexOGroup]))) {
                 if (ogroup!=null){
@@ -182,7 +186,7 @@ public class Session {
             ogroup.addAdduct(adduct);
             
             
-           
+            } 
         }
         ogroup.generateRTArray();
         
@@ -648,5 +652,33 @@ public class Session {
      */
     public void setListofadductmasses(List<Float> listofadductmasses) {
         this.listofadductmasses = listofadductmasses;
+    }
+
+    /**
+     * @return the start
+     */
+    public SimpleFloatProperty getStart() {
+        return start;
+    }
+
+    /**
+     * @param start the start to set
+     */
+    public void setStart(SimpleFloatProperty start) {
+        this.start = start;
+    }
+
+    /**
+     * @return the end
+     */
+    public SimpleFloatProperty getEnd() {
+        return end;
+    }
+
+    /**
+     * @param end the end to set
+     */
+    public void setEnd(SimpleFloatProperty end) {
+        this.end = end;
     }
 }

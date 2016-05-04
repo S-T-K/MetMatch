@@ -831,6 +831,9 @@ public class ChartGenerator {
         yAxis.setAutoRanging(false);
         yAxis.setLowerBound(lower - 30);
         yAxis.setUpperBound(upper + 30);
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(session.getStart().floatValue()-5.0f);
+        xAxis.setUpperBound(session.getEnd().floatValue()+5.0f);
         return scatterchart;
     }
     

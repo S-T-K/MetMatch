@@ -46,7 +46,7 @@
                         <content>
                           <AnchorPane fx:id="Tab1" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="322.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="322.0" />
+                                    <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="36.0" layoutX="16.0" layoutY="322.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="322.0" />
                                     <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="327.0" prefHeight="25.0" prefWidth="80.0" />
                                     <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="222.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="222.0" />
                                     <ChoiceBox fx:id="PeakPick" layoutX="105.0" layoutY="257.0" prefHeight="25.0" prefWidth="129.0" />
@@ -72,6 +72,14 @@
                                     <Label layoutX="209.0" layoutY="66.0" text="ppm" />
                                     <Label layoutX="207.0" layoutY="132.0" text="ppm" />
                                     <Label layoutX="211.0" layoutY="331.0" text="min" />
+                                    <Rectangle fx:id="box31" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="389.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" />
+                                    <Label fx:id="label91" layoutX="25.0" layoutY="428.0" text="End:" />
+                                    <Label fx:id="label81" layoutX="25.0" layoutY="398.0" text="Start:" />
+                                    <Label fx:id="label71" layoutX="18.0" layoutY="364.0" prefHeight="31.0" prefWidth="117.0" text="Range" />
+                                    <Label layoutX="209.0" layoutY="429.0" text="min" />
+                                    <Label layoutX="209.0" layoutY="399.0" text="min" />
+                                    <TextField fx:id="End" layoutX="125.0" layoutY="425.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="Start" layoutX="125.0" layoutY="395.0" prefHeight="25.0" prefWidth="80.0" />
                                  </children>
                               </AnchorPane>
                         </content>

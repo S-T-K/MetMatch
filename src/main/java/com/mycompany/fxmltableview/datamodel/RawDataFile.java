@@ -125,16 +125,16 @@ public class RawDataFile {
         DomParser dpe = new DomParser(file.toString());
         this.listofScans = dpe.ParseFile();
      
-        int RT = 0;
-        int points = 0;
-        for (int i = 0; i< listofScans.size(); i++) {
-        RT++;
-        points+=listofScans.get(i).getMassovercharge().length;
-            
-    }
+//        int RT = 0;
+//        int points = 0;
+//        for (int i = 0; i< listofScans.size(); i++) {
+//        RT++;
+//        points+=listofScans.get(i).getMassovercharge().length;
+//            
+//    }
         
-        System.out.println("Number of scans: " + RT);
-        System.out.println("Number of points: " + points);
+//        System.out.println("Number of scans: " + RT);
+//        System.out.println("Number of points: " + points);
         
         //calculate scans/second for area calculation
         scanspersecond = 1.0f/(listofScans.get(1).getRetentionTime()-listofScans.get(0).getRetentionTime());
