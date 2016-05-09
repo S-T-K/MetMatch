@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import javafx.scene.chart.XYChart;
+import org.apache.commons.lang3.ArrayUtils;
 
 
 /**
@@ -76,6 +78,8 @@ public class Slice {
         rw=false;
         stored=false;
     }
+    
+    //returns the length of information in bytes
      public void newbinaryExtractSlicefromScans(List<Scan> listofScans, float[] ScanRTs) {
          
         
@@ -87,40 +91,45 @@ public class Slice {
        float maxRT = getMaxRT();
        int numberofsignals=0;
          
-       RTstart = Arrays.binarySearch(ScanRTs, minRT);
+        setRTstart(Arrays.binarySearch(ScanRTs, minRT));
         
-       if (RTstart<0) {
-           RTstart = (RTstart+1)*(-1);
+       if (getRTstart()<0) {
+            setRTstart((getRTstart() + 1) * (-1));
        }
        
-       RTend = Arrays.binarySearch(ScanRTs, maxRT)-1;
+        setRTend(Arrays.binarySearch(ScanRTs, maxRT)-1);
        
-       if (RTend<0) {
-           RTend = (RTend+3)*(-1);
+       if (getRTend()<0) {
+            setRTend((getRTend() + 3) * (-1));
        }
        
-            setIntArray(new float[RTend-RTstart+1]);
-            setMZArray(new float[RTend-RTstart+1]);
+            setIntArray(new float[getRTend()-getRTstart()+1]);
+            setMZArray(new float[getRTend()-getRTstart()+1]);
      
        
-       
-       for (int i = RTstart; i<=RTend; i++) {
+       float max = Float.MIN_VALUE;
+       for (int i = getRTstart(); i<=getRTend(); i++) {
+           float[] mz = listofScans.get(i).getMassovercharge();
+           float[] intensity = listofScans.get(i).getIntensity();
            
-           int minM = Arrays.binarySearch(listofScans.get(i).getMassovercharge(), minMZ);
+           int minM = Arrays.binarySearch(mz, minMZ);
            
            if (minM<0) {
            minM = (minM+1)*(-1);
            }
            
-           int length = listofScans.get(i).getMassovercharge().length;
+           int length = mz.length;
           
           if (minM<length) {
-           while (listofScans.get(i).getMassovercharge()[minM]<=maxMZ) {
+           while (mz[minM]<=maxMZ) {
                
-                       if (listofScans.get(i).getIntensity()[minM]>getIntArray()[i-RTstart]) {
-                            getMZArray()[i-RTstart] = listofScans.get(i).getMassovercharge()[minM];
-                            getIntArray()[i-RTstart] = listofScans.get(i).getIntensity()[minM];
+                       if (intensity[minM]>IntArray[i-getRTstart()]) {
+                            MZArray[i-getRTstart()] = mz[minM];
+                            IntArray[i-getRTstart()] = intensity[minM];
                             numberofsignals++;
+                            if (intensity[minM]>max) {
+                                max=intensity[minM];
+                            }
                        }
                    
                    minM++;
@@ -129,14 +138,9 @@ public class Slice {
                    }
            }
           }
-           
-//           if (!found) {
-//               MZArray[i-RTstart] = 0;
-//               IntArray[i-RTstart] = 0;
-//               
-//               
-//               
-//           }
+          
+          
+          maxIntensity = max;
        }
        
        
@@ -1231,6 +1235,36 @@ public class Slice {
         }
 return empty;
     }
+
+    /**
+     * @return the RTstart
+     */
+    public int getRTstart() {
+        return RTstart;
+    }
+
+    /**
+     * @param RTstart the RTstart to set
+     */
+    public void setRTstart(int RTstart) {
+        this.RTstart = RTstart;
+    }
+
+    /**
+     * @return the RTend
+     */
+    public int getRTend() {
+        return RTend;
+    }
+
+    /**
+     * @param RTend the RTend to set
+     */
+    public void setRTend(int RTend) {
+        this.RTend = RTend;
+    }
+    
+    
     
     
 }

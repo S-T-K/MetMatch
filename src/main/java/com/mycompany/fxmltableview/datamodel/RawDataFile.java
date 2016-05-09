@@ -153,12 +153,13 @@ public class RawDataFile {
         listofSlices = new Slice[session.getNumberofadducts()];
         int number = 0;
         int slices = 0;
+       
         for (int i = 0; i < data.size(); i++) {
             //System.out.println("started with OGroup " + i);
             for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
                 //System.out.println("started with Adduct " + j);
                 Slice newSlice = new Slice(this, data.get(i).getListofAdducts().get(j)); 
-                newSlice.newbinaryExtractSlicefromScans(listofScans, getRTArray());
+                newSlice.newbinaryExtractSlicefromScans(listofScans, RTArray);
                 
                 
                 if(!newSlice.isEmpty()) {
@@ -211,12 +212,18 @@ public class RawDataFile {
         
     Slice[] newlist = new Slice[numberofgoodslices];
     count = 0;
+    //get number of bytes stored in all slices
+    int bytecount = 0;
     for(int i = 0; i<listofSlices.length; i++) {
         if (listofSlices[i]!=null&&!listofSlices[i].isEmpty()) {
             newlist[count] = listofSlices[i];
             count++;
+            bytecount+=listofSlices[i].getMZArray().length;
+            
         }
     }
+    //multiply to get the corrent number (2 because 2 arrays, 4 because 1 float=4bytes)
+    bytecount*=8;
  System.out.println("                               Timenarrow:  " + (System.currentTimeMillis()-start3));
         
         
@@ -224,7 +231,7 @@ this.listofScans=null; //get rid of Scans, they are not needed any more
 double end = System.currentTimeMillis();
 System.out.println("Complete Extraction: " + (end-start));
 
-initializeFile();
+initializeFile(bytecount);
 
     }
 
@@ -460,10 +467,9 @@ initializeFile();
         
     }
     
-    public void initializeFile() throws FileNotFoundException, IOException, InterruptedException {
-        int count = 500*listofSlices.size();
+    public void initializeFile(int bytecount) throws FileNotFoundException, IOException, InterruptedException {
         RandomAccessFile memoryMappedFile = new RandomAccessFile("C:\\Users\\stefankoch\\Documents\\tmp2\\" + this.toString() + ".out", "rw");
-        MMFile = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, count);
+        MMFile = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, bytecount);
         
     }
     

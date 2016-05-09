@@ -269,15 +269,11 @@ public class Fxml_adductviewController implements Initializable {
                             }
                             
                             if(NEICToggle.selectedProperty().get()) {
-                            if (showProp) {
-                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICwithProp(adduct);
-                                addColumn(2, linechart2);
-                            } else {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
                                 addColumn(2, linechart2);
                                 charts.add(linechart2);
                                 addChartMouseEvents(linechart2);
-                            }}
+                            }
                             
                             
                             if (MZToggle.selectedProperty().get()) {
