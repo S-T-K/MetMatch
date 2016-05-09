@@ -65,11 +65,14 @@ public class Session {
     private List<String> listofadductnames;
     private List<Float> listofadductmasses;
     
+    private PropArrayCalculator proparraycalculator;
+    
     public Session() {
         
         
         startIOThread();
        
+        proparraycalculator=new PropArrayCalculator(this);
         
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
@@ -176,7 +179,8 @@ public class Session {
             //if new Ogroup, make new Ogroup
             if (!(lastOGroup.equals(allRows.get(i)[indexOGroup]))) {
                 if (ogroup!=null){
-                ogroup.generateRTArray();}
+                //ogroup.generateRTArray();
+                }
                 ogroup = new Entry(OGroup, this);
                 lastOGroup = allRows.get(i)[indexOGroup];
                 obsList.add(ogroup);
@@ -188,7 +192,7 @@ public class Session {
             
             } 
         }
-        ogroup.generateRTArray();
+        //ogroup.generateRTArray();
         
         this.listofOGroups= obsList;
         return obsList;
@@ -695,4 +699,19 @@ public class Session {
     public void setNumberofadducts(int numberofadducts) {
         this.numberofadducts = numberofadducts;
     }
+
+    /**
+     * @return the proparraycalculator
+     */
+    public PropArrayCalculator getProparraycalculator() {
+        return proparraycalculator;
+    }
+
+    /**
+     * @param proparraycalculator the proparraycalculator to set
+     */
+    public void setProparraycalculator(PropArrayCalculator proparraycalculator) {
+        this.proparraycalculator = proparraycalculator;
+    }
+    
 }

@@ -63,7 +63,6 @@ public class Slice {
     
     //processed information
     
-    private double[] PropArray;
     
     private float[] Bins;
     
@@ -172,6 +171,8 @@ public class Slice {
      }
      
      
+     System.out.println(file.getRTArray()[RTend]-file.getRTArray()[RTstart]);
+     
     }
     
      
@@ -196,137 +197,132 @@ public class Slice {
     
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
-//    public void WaveletPeakPicking() throws InterruptedException {
-//        float startc = System.currentTimeMillis();
-//        if (PropArray == null) {
-//            PropArray = (new double[this.getIntensityArray().length]);
-//            deleteAutoPeaks();
-//        
-//            //baseline correct IntensityArray
-//            float[] correctedIntArray = new float[getIntensityArray().length];
-//            for ( int j = 0; j<getIntensityArray().length; j++)  {
-//                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
-//                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
-//                }
-//                
-//            }
-//
-//        
-//        float start1 = System.currentTimeMillis();
-//        // Create an R vector in the form of a string.
-//        String EIC = Arrays.toString(correctedIntArray);
-//        EIC = EIC.substring(1, EIC.length()-1);
-//        //100 zeros at start and end, 50 are not enough
-//        EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
-//        EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
-//        //System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
-//       
-//        
-//        // Start Rengine.
-//        Rengine engine = adduct.getSession().getEngine();
-//
-//        // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
-//        //=INPUTS
-//        engine.eval("eic=" + EIC);
-//       
-//        
-//        
-//        //Retrieve values, see script for names
-//        //=OUTPUTS
-//        float start3 = System.currentTimeMillis();
-//        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
-//        //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
-//        
-//        //Print output values, work with them...
-//        if (ret!=null) {
-//            float start4 = System.currentTimeMillis();
-//        
-//            for (int j = 0; j<ret[0].length; j++) {
-//                //101 because of 100 zeros at start and R starts at 1
-//                if (((int)ret[0][j]-101)<100) {
-//                PropArray[(int)ret[0][j]-101]=1;
-//                addPeak(new Peak((short) ((short)ret[0][j]-101), (float)ret[1][j], (float)ret[2][j], (float)ret[3][j], this));
-//            }}
-//            
-//        
-//        //System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
-//        }
-//        //end Rengine, otherwise thread doesn't terminate
-//        //engine.end();
-//         EIC=null;
-//}
-//        PropArray = null;
-//       
-//        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
-//    }
-//    
+    public void WaveletPeakPicking() throws InterruptedException {
+        float startc = System.currentTimeMillis();
+            deleteAutoPeaks();
+        
+            //baseline correct IntensityArray
+            float[] correctedIntArray = new float[IntArray.length];
+            for ( int j = 0; j<IntArray.length; j++)  {
+                if (IntArray[j]>=adduct.getSession().getBaseline()) {
+                    correctedIntArray[j]=IntArray[j]-adduct.getSession().getBaseline();
+                }
+                
+            }
+
+        
+        float start1 = System.currentTimeMillis();
+        // Create an R vector in the form of a string.
+        String EIC = Arrays.toString(correctedIntArray);
+        EIC = EIC.substring(1, EIC.length()-1);
+        //100 zeros at start and end, 50 are not enough
+        EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
+        EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
+        //System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
+       
+        
+        // Start Rengine.
+        Rengine engine = adduct.getSession().getEngine();
+
+        // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
+        //=INPUTS
+        engine.eval("eic=" + EIC);
+       
+        
+        
+        //Retrieve values, see script for names
+        //=OUTPUTS
+        float start3 = System.currentTimeMillis();
+        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
+        //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
+        
+        //Print output values, work with them...
+        if (ret!=null) {
+            float start4 = System.currentTimeMillis();
+        
+            for (int j = 0; j<ret[0].length; j++) {
+                //101 because of 100 zeros at start and R starts at 1
+                if (((int)ret[0][j]-101)<100) {
+                
+                addPeak(new Peak((short) ((short)ret[0][j]-101), (float)ret[1][j], (float)ret[2][j], (float)ret[3][j], this));
+            }}
+            
+        
+        //System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
+        }
+        //end Rengine, otherwise thread doesn't terminate
+        //engine.end();
+         EIC=null;
+
+        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+    }
+    
     
     
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
-// public void NaivePeakPicking() throws InterruptedException {
-//     float startc = System.currentTimeMillis();
-//         //initialize Array holding probabilities
-//        if (PropArray==null){ 
-//        PropArray =(new double[this.getIntensityArray().length]);
-//        
-//        addGaussCorrelation(0.6f);
-//        addGaussCorrelation(0.5f);
-//        addGaussCorrelation(0.4f);
-//        
-//        }
-//        generatePeakArray();
-//        PropArray = null;
-//        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
-//    }
+ public void NaivePeakPicking() throws InterruptedException {
+     float startc = System.currentTimeMillis();
+         //initialize Array holding probabilities
+        double [] PropArray =(new double[IntArray.length]);
+        
+        addGaussCorrelation(0.6f,PropArray);
+        addGaussCorrelation(0.5f, PropArray);
+        addGaussCorrelation(0.4f, PropArray);
+        
+        
+        generatePeakArray(PropArray);
+        PropArray = null;
+        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+    }
  
- //adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
-// public void addGaussCorrelation(float length) throws InterruptedException {
-//     
-//      float valuesperminute = adduct.getSession().getResolution()/(adduct.getSession().getRTTolerance()*2);
-//      int arraylength = (int) (valuesperminute*length);
-//        if (arraylength%2==0) {
-//                   arraylength++;
-//        }
-//        
-//        double[] peakArray = new double[arraylength];
-//        int peakint = Math.floorDiv(arraylength, 2);
-//        NormalDistribution normdist = new NormalDistribution();
-//        //edge of peak is at X std
-//        float peakedge = 2;
-//        float increment = peakedge/(peakint-1);
-//        for (int i = 0; i<=peakint; i++) {
-//            peakArray[i]= normdist.density(peakedge-i*increment);
-//            peakArray[(arraylength-1)-i]=peakArray[i];
-//        }
-//                
-//         PearsonsCorrelation pear = new PearsonsCorrelation();
-//
-//         
-//         //baseline correct IntensityArray
-//            double[] correctedIntArray = new double[getIntensityArray().length];
-//            for ( int j = 0; j<getIntensityArray().length; j++)  {
-//                if (getIntensityArray()[j]>=adduct.getSession().getBaseline()) {
-//                    correctedIntArray[j]=getIntensityArray()[j]-adduct.getSession().getBaseline();
-//                }
-//                
-//            }
-//            
-//        for (int i = 0; i< (getIntensityArray().length-peakArray.length); i++) {
-//            
-//        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
-//        
-//                //scale according to maxIntensity
-//               //and weaken weak signals
-//               if (corr > 0) {
-//                   double newcorr = (corr*corr)*asymptoticFunction(getIntensityArray()[i+peakint]-minIntensity);
-//                   if ((PropArray[i+peakint]<newcorr)) {
-//                       PropArray[i+peakint]= (float) newcorr;}
-//               }
-//        
-//        }
-//     
-// }
-// 
+// adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
+ public void addGaussCorrelation(float length, double[] PropArray) throws InterruptedException {
+     
+      float valuesperminute = 60.0f/file.getScanspersecond();
+      int arraylength = (int) (valuesperminute*length);
+        if (arraylength%2==0) {
+                   arraylength++;
+        }
+        
+        double[] peakArray = new double[arraylength];
+        int peakint = Math.floorDiv(arraylength, 2);
+        NormalDistribution normdist = new NormalDistribution();
+        //edge of peak is at X std
+        float peakedge = 2;
+        float increment = peakedge/(peakint-1);
+        for (int i = 0; i<=peakint; i++) {
+            peakArray[i]= normdist.density(peakedge-i*increment);
+            peakArray[(arraylength-1)-i]=peakArray[i];
+        }
+                
+         PearsonsCorrelation pear = new PearsonsCorrelation();
+
+         
+         //baseline correct IntensityArray
+            double[] correctedIntArray = new double[IntArray.length];
+            for ( int j = 0; j<IntArray.length; j++)  {
+                if (IntArray[j]>=adduct.getSession().getBaseline()) {
+                    correctedIntArray[j]=IntArray[j]-adduct.getSession().getBaseline();
+                }
+                
+            }
+            
+        for (int i = 0; i< (IntArray.length-peakArray.length); i++) {
+            
+        double corr = pear.correlation(peakArray ,Arrays.copyOfRange(correctedIntArray, i, i+peakArray.length));
+        
+                //scale according to maxIntensity
+               //and weaken weak signals
+               if (corr > 0) {
+                   double newcorr = (corr*corr)*asymptoticFunction(IntArray[i+peakint]-minIntensity);
+                   if ((PropArray[i+peakint]<newcorr)) {
+                       PropArray[i+peakint]= (float) newcorr;}
+               }
+        
+        }
+     
+ }
+ 
  
  //returns value between 0 and 1, rapidly falling for values lower than the baseline
  public float asymptoticFunction(float intensity) {
@@ -337,7 +333,7 @@ public class Slice {
  
  //generates Array filled with Peak probabilites
  //TODO: negative Maxima
- public void generatePeakArray() throws InterruptedException {
+ public void generatePeakArray(double[] PropArray) throws InterruptedException {
 //     for (int i = 0; i<PropArray.length; i++) {
 //         if (PropArray[i]<0.2) {
 //             PropArray[i] = 0;
@@ -855,7 +851,7 @@ public class Slice {
 
 
     
-    public Short setFittedPeak(int shift) {
+    public int setFittedPeak(int shift) {
         
        
         //TODO: range as function of RTTolerance
@@ -865,21 +861,20 @@ public class Slice {
         //first step is to find the peak
         //get maximum range
         if (listofPeaks != null) {
-        int min = adduct.getSession().getIntPeakRTTol();
+        int min = file.getPeakRTTolerance();
         for (short i = 0; i<listofPeaks.size(); i++) {
-            //if smaller than maximum range or already found peak, set peak
+            //if smaller than maximum range set peak
             if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
                 min = Math.abs(listofPeaks.get(i).getIndex()-shift);
                 fittedpeak = i;
                     
-                //test to see if found or not
              
             }
         }
         
         //calc score for close peaks, if within range, small score
-        int range = 5;
-        min = adduct.getSession().getIntPeakRTTol()+range;
+        int range = file.getPeakRTTolerance()*2;
+        min = file.getPeakRTTolerance()+range;
         for (int i = 0; i<listofPeaks.size(); i++) {
             if (fittedpeak==null||i!=fittedpeak) {
                 if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {

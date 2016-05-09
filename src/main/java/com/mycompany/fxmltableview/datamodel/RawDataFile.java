@@ -53,6 +53,7 @@ public class RawDataFile {
     private StringProperty name;
     private Session session;
     private float scanspersecond;
+    private float factor;
     
     private Property<Boolean> active;
     private final Property<Color> color;
@@ -64,6 +65,9 @@ public class RawDataFile {
     
     private FloatProperty pfound;
     private FloatProperty avgcertainty;
+    
+    private int maxPeakLengthInt;
+    private int peakRTTolerance;
 
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file, Session session) {
@@ -78,6 +82,8 @@ public class RawDataFile {
         pfound = new SimpleFloatProperty();
         avgcertainty = new SimpleFloatProperty();
         active = new SimpleBooleanProperty(true);
+        
+        
         
         color.addListener(new ChangeListener<Color>() {
             @Override
@@ -141,10 +147,15 @@ public class RawDataFile {
 //        System.out.println("Number of points: " + points);
         
         //calculate scans/second for area calculation
-        scanspersecond = 1.0f/(listofScans.get(1).getRetentionTime()-listofScans.get(0).getRetentionTime());
+        scanspersecond = (listofScans.get(listofScans.size()-1).getRetentionTime()-listofScans.get(0).getRetentionTime())/listofScans.size()*60;
         
         
         dpe=null;
+        
+        maxPeakLengthInt = (int) (session.getMaxPeakLength().floatValue()*60/scanspersecond);
+        peakRTTolerance = (int) (session.getPeakRTTolerance().floatValue()*60/scanspersecond);
+        //factor is the value whith whitch a int from the datapoints has to be multiplied in order to get the corresponding int of the resolution
+        setFactor(1.0f/(session.getRTTolerance()*2.0f*60.0f/(float)session.getResolution()*scanspersecond));
     }
 
     //extract Slices, according to tolerances
@@ -535,5 +546,47 @@ initializeFile(bytecount);
      */
     public void setRTArray(float[] RTArray) {
         this.RTArray = RTArray;
+    }
+
+    /**
+     * @return the maxPeakLengthInt
+     */
+    public int getMaxPeakLengthInt() {
+        return maxPeakLengthInt;
+    }
+
+    /**
+     * @param maxPeakLengthInt the maxPeakLengthInt to set
+     */
+    public void setMaxPeakLengthInt(int maxPeakLengthInt) {
+        this.maxPeakLengthInt = maxPeakLengthInt;
+    }
+
+    /**
+     * @return the peakRTTolerance
+     */
+    public int getPeakRTTolerance() {
+        return peakRTTolerance;
+    }
+
+    /**
+     * @param peakRTTolerance the peakRTTolerance to set
+     */
+    public void setPeakRTTolerance(int peakRTTolerance) {
+        this.peakRTTolerance = peakRTTolerance;
+    }
+
+    /**
+     * @return the factor
+     */
+    public float getFactor() {
+        return factor;
+    }
+
+    /**
+     * @param factor the factor to set
+     */
+    public void setFactor(float factor) {
+        this.factor = factor;
     }
 }

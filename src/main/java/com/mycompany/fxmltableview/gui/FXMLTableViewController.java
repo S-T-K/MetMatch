@@ -437,7 +437,7 @@ session.setNumberofadducts(numberofadducts);
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
-
+                CertaintyCalculator calc = new CertaintyCalculator(session);
                 for (int d = 0; d < session.getListofDatasets().size(); d++) {
                     if (session.getListofDatasets().get(d).getActive()) {
                         for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
@@ -462,10 +462,7 @@ session.setNumberofadducts(numberofadducts);
                                                 //if ready calculate
                                             } else {
                                                 getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
-                                                float[] PropArray = getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile);
-                                                for (int j = 0; j < session.getResolution(); j++) {
-                                                    matrix[i][j] = PropArray[j];
-                                                }
+                                                getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
                                             }
                                         }
                                         System.out.println("Size of Queue: " + queue.size());
@@ -476,10 +473,7 @@ session.setNumberofadducts(numberofadducts);
                                                 queue.add(current);
                                             } else {
                                                 getMasterListofOGroups().get(current).peakpickOGroup(currentfile);
-                                                float[] PropArray = getMasterListofOGroups().get(current).getOGroupPropArraySmooth(currentfile);
-                                                for (int j = 0; j < session.getResolution(); j++) {
-                                                    matrix[current][j] = PropArray[j];
-                                                }
+                                                getMasterListofOGroups().get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
                                             }
 
                                         }
@@ -565,14 +559,15 @@ session.setNumberofadducts(numberofadducts);
                                         maxint = j + 1;
                                     }
 
+                                   
                                     getMasterListofOGroups().get(i).setFittedShift(currentfile, (short) maxint);
 
                                     //set score for OPGroup
-                                    getMasterListofOGroups().get(i).addScore(currentfile, (getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
+                                    //getMasterListofOGroups().get(i).addScore(currentfile, (getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
 
                                     //set score for every addact
                                     for (int a = 0; a < getMasterListofOGroups().get(i).getListofAdducts().size(); a++) {
-                                        getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile, (getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
+                                        //getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile, (getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
                                     }
 
                                     getMetTable().refresh();
@@ -582,6 +577,7 @@ session.setNumberofadducts(numberofadducts);
 
                                 progress.set(progress.get() + 1.0f / (session.getListofDatasets().get(d).getListofFiles().size()));
                                 System.out.println("Calculation: " + progress.get() + "%");
+                                calc.calculate(currentfile, matrix);
                             }
                         }
                     }
@@ -589,8 +585,7 @@ session.setNumberofadducts(numberofadducts);
 
                 //don't recalculate unless something changes
                 session.setPeakPickchanged(false);
-                CertaintyCalculator calc = new CertaintyCalculator(session);
-                calc.calculate();
+                
                 latch.countDown();
                 return null;
             }

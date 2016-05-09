@@ -12,9 +12,9 @@ package com.mycompany.fxmltableview.datamodel;
  * hold information of a peak detected by MassSpecWavelet
  */
 public class Peak {
-    private short index;
-    private short start;
-    private short end;
+    private int index;
+    private int start;
+    private int end;
     private float scale;
     private float SNR;
     private float area;
@@ -37,7 +37,7 @@ public class Peak {
         if (end >=slice.getFile().getSession().getResolution()) {
             end = (short) (slice.getFile().getSession().getResolution()-1);
         }
-        calculateArea();
+        //calculateArea();
         
     }
 
@@ -67,7 +67,7 @@ public class Peak {
     /**
      * @return the index
      */
-    public short getIndex() {
+    public int getIndex() {
         return index;
     }
 
@@ -137,10 +137,10 @@ public class Peak {
     public void trimPeak() throws InterruptedException {
         //max distance from middle to end in minutes
         //TODO: as parameter
-        short maxdist = slice.getFile().getSession().getMaxPeakLengthint();
-        int[] intensity = slice.getIntensityArray();
-        if (index-getStart()>maxdist) {
-            setStart((short) (index-maxdist));
+        int maxdist = slice.getFile().getMaxPeakLengthInt();
+        float[] intensity = slice.getIntArray();
+        if (index-start>maxdist) {
+            setStart((index-maxdist));
             
             //look for minima in EIC
             while (intensity[start+1]<intensity[start]&&start<index) {
@@ -148,8 +148,8 @@ public class Peak {
             }
             
         }
-        if (getEnd()-index>maxdist) {
-            setEnd((short) (index+maxdist));
+        if (end-index>maxdist) {
+            setEnd((index+maxdist));
             
             //look for minima in EIC
             while (intensity[end-1]<intensity[end]&&end>index) {
@@ -157,7 +157,7 @@ public class Peak {
             }
         }
         
-        int min = Integer.MAX_VALUE;
+        float min = Float.MAX_VALUE;
         int mini= index;
         for (int i = index-1; i>start; i--) {
             if (intensity[i]<min) {
@@ -165,7 +165,7 @@ public class Peak {
                 mini = i;
             }
         }
-        setStart((short) mini);
+        setStart(mini);
         
         min = Integer.MAX_VALUE;
         mini= index;
@@ -175,7 +175,7 @@ public class Peak {
                 mini = i;
             }
         }
-        setEnd((short) mini);
+        setEnd( mini);
         
         
        
@@ -185,9 +185,9 @@ public class Peak {
     public void calculateArea() throws InterruptedException {
         area = 0;
         
-        
-       for (int i = getStart(); i<=getEnd(); i++) {
-           area+=slice.getIntensityArray()[i];
+        float[] intensity = slice.getIntArray();
+       for (int i = start; i<=end; i++) {
+           area+=intensity[i];
        }
         
     }
@@ -202,7 +202,7 @@ public class Peak {
     /**
      * @param start the start to set
      */
-    public void setStart(short start) {
+    public void setStart(int start) {
         this.start = start;
     }
 
@@ -216,7 +216,7 @@ public class Peak {
     /**
      * @param end the end to set
      */
-    public void setEnd(short end) {
+    public void setEnd(int end) {
         this.end = end;
     }
 

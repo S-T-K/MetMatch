@@ -70,9 +70,9 @@ public class Entry {
     //maxIntensity of all Slices
     private float maxIntensity;
 
-    //Interpolated Arrays
-    private float[] RTArray;
-    private float[] IntensityArray;
+//    //Interpolated Arrays
+//    private float[] RTArray;
+//    private float[] IntensityArray;
     
     public Entry() {
     }
@@ -172,22 +172,22 @@ listofSlices=newlist;
         this.setRT(new SimpleFloatProperty((float) (((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size())));
     }
     
-    public void generateRTArray() {
-        
-        int resolution = getSession().getResolution();
-        float startRT = (float) this.getMinRT();
-        float endRT = (float) this.getMaxRT();
-        setRTArray(new float[resolution]);
-        
-     
-      
-      //fill Arrays
-      for (int i = 0; i< resolution; i++) {
-            getRTArray()[i] = startRT+(((endRT-startRT))/(resolution-1))*i;
-      }
-        
-        
-    }
+//    public void generateRTArray() {
+//        
+//        int resolution = getSession().getResolution();
+//        float startRT = (float) this.getMinRT();
+//        float endRT = (float) this.getMaxRT();
+//        setRTArray(new float[resolution]);
+//        
+//     
+//      
+//      //fill Arrays
+//      for (int i = 0; i< resolution; i++) {
+//            getRTArray()[i] = startRT+(((endRT-startRT))/(resolution-1))*i;
+//      }
+//        
+//        
+//    }
     
     //generates PropArray of a dataset for an Adduct 
     public void peakpickAdduct(RawDataFile file) throws InterruptedException {
@@ -477,37 +477,37 @@ if (listofSlices.containsKey(file)) {
     
    
 
-    /**
-     * @return the RTArray
-     */
-    public float[] getRTArray() {
-       if(OGroupObject!=null){
-            return (OGroupObject.getRTArray());
-        } else {
-            return (RTArray);
-        }
-    }
-
-    /**
-     * @param RTArray the RTArray to set
-     */
-    public void setRTArray(float[] RTArray) {
-        this.RTArray = RTArray;
-    }
-
-    /**
-     * @return the IntensityArray
-     */
-    public float[] getIntensityArray() {
-        return IntensityArray;
-    }
-
-    /**
-     * @param IntensityArray the IntensityArray to set
-     */
-    public void setIntensityArray(float[] IntensityArray) {
-        this.IntensityArray = IntensityArray;
-    }
+//    /**
+//     * @return the RTArray
+//     */
+//    public float[] getRTArray() {
+//       if(OGroupObject!=null){
+//            return (OGroupObject.getRTArray());
+//        } else {
+//            return (RTArray);
+//        }
+//    }
+//
+//    /**
+//     * @param RTArray the RTArray to set
+//     */
+//    public void setRTArray(float[] RTArray) {
+//        this.RTArray = RTArray;
+//    }
+//
+//    /**
+//     * @return the IntensityArray
+//     */
+//    public float[] getIntensityArray() {
+//        return IntensityArray;
+//    }
+//
+//    /**
+//     * @param IntensityArray the IntensityArray to set
+//     */
+//    public void setIntensityArray(float[] IntensityArray) {
+//        this.IntensityArray = IntensityArray;
+//    }
 
     
     public float median(float[] m) {
@@ -600,11 +600,14 @@ if (listofSlices.containsKey(file)) {
      * @param fittedShift the OGroupfittedShift to set
      */
     public void setFittedShift(RawDataFile file, short shift) {
+        System.out.println("Was: " + shift);
+        shift = (short)((float)shift/file.getFactor());
+        System.out.println("Is: " + shift);
         this.getOGroupFittedShift().put(file, shift);
         
         for (int i = 0; i<listofAdducts.size(); i++) {
             if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
-        listofAdducts.get(i).getAdductfittedShift().put(file,listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shift));
+        listofAdducts.get(i).getAdductfittedShift().put(file,(short)listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shift));
     }
         }
     }
@@ -646,41 +649,55 @@ if (listofSlices.containsKey(file)) {
     }
     
     //returns a "smooth" PropArray
-    public float[] getOGroupPropArraySmooth(RawDataFile file) {
-        float[] PropArray = new float[session.getResolution()];
-        List<Short> list = new ArrayList<>();
+    public void getOGroupPropArraySmooth(RawDataFile file, float[][] matrix, int row) {
+        float factor = 0;
+        //get factor, if nothing found, return 0 array
+        List<Slice> list = new ArrayList<Slice>();
+        // get list of Slices
         for (int i = 0; i<listofAdducts.size(); i++) {
-            if (listofAdducts.get(i).listofSlices.containsKey(file)){
-        list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
-        }
+            if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
+                list.add(listofAdducts.get(i).getListofSlices().get(file));
+            }
         }
         
-        
-        for (int i = 0; i< list.size(); i++) {
-            PropArray[list.get(i)] = 1;
-            //change values within tolerance
-            for (int j = 1; j<=session.getIntPeakRTTol(); j++) {
+        //if slices found
+        if (list.size()>0) {
+            factor = file.getFactor();
+            int tol = session.getIntPeakRTTol();
+            for (int i = 0; i<list.size(); i++) {
+                for (int j = 0; j<list.get(i).getListofPeaks().size(); j++) {
+                    int peak = (int) Math.floor((float)list.get(i).getListofPeaks().get(j).getIndex()*factor);
+                    matrix[row][peak]=1;
+                     //change values within tolerance
+                    for (int k = 1; k<=tol; k++) {
                 //calculate the value
-                float value = 1*((float)session.getIntPeakRTTol()-j)/(float)session.getIntPeakRTTol();
+                float value = 1*((float)tol-k)/(float)tol;
                 
                 //check for borders and insert new value of old value is smaller
-                if((list.get(i)-j)>0&&PropArray[list.get(i)-j]<value) {
-                    PropArray[list.get(i)-j]=value;
+                if((peak-k)>0&&matrix[row][peak-k]<value) {
+                    matrix[row][peak-k]=value;
                 }
-                if ((list.get(i)+j)<PropArray.length&&PropArray[list.get(i)+j]<value) {
-                    PropArray[list.get(i)+j]=value;
+                if ((peak+k)<session.getResolution()&&matrix[row][peak+k]<value) {
+                    matrix[row][peak+k]=value;
                 }
             }
+                    
+                    
+                }
+                
+                
+            }
+            
+            
         }
         
         if (getPenArray().containsKey(file)) {
             short[] PenArr = getPenArray().get(file);
             for (int i = 0; i<PenArr.length; i++) {
-                PropArray[i]+=PenArr[i];
+                matrix[row][i]+=PenArr[i];
             }
             
         }
-        return PropArray;
     }
 
     
