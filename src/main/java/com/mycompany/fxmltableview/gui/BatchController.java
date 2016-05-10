@@ -365,19 +365,19 @@ public void newwindowcalculate() throws IOException, InterruptedException {
 //                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleFloatProperty(maxScore));
 //                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleFloatProperty(maxScorepeakclose));
 //                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleFloatProperty(maxScorepeakfound));
-                   float omaxScore = 0;
+//                   float omaxScore = 0;
                        float ominScorepeakclose = 1;
                        float omaxScorepeakfound = 0;
                    
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
-                       float maxScore = 0;
+//                       float maxScore = 0;
                        float minScorepeakclose = 1;
                        float maxScorepeakfound = 0;
                    for (int f = 0; f<completeList.size(); f++) {
                        RawDataFile file = completeList.get(f);
-                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
-                           maxScore = TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
-                       }
+//                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
+//                           maxScore = TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file);
+//                       }
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().containsKey(file)) {
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound()>maxScorepeakfound) {
                            maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound();
@@ -388,14 +388,14 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                        }}
                        
                    }
-                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleFloatProperty(maxScore));
+//                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleFloatProperty(maxScore));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleFloatProperty(minScorepeakclose));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakfound(new SimpleFloatProperty(maxScorepeakfound));
                    
                    
-                   if (maxScore>omaxScore) {
-                       omaxScore = maxScore;
-                   }
+//                   if (maxScore>omaxScore) {
+//                       omaxScore = maxScore;
+//                   }
                    if(minScorepeakclose<ominScorepeakclose) {
                        ominScorepeakclose=minScorepeakclose;
                    }
@@ -403,15 +403,16 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                        omaxScorepeakfound=maxScorepeakfound;
                    }
                    
-                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleFloatProperty(omaxScore));
+//                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleFloatProperty(omaxScore));
                    TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleFloatProperty(ominScorepeakclose));
                    TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleFloatProperty(omaxScorepeakfound));
                    
                    }
                    
                     for (int f = 0; f<completeList.size(); f++) {
-                        float omincertainty = 9999;
+                        float omincertainty = Float.NaN;
                         if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().containsKey(completeList.get(f))) {
+                            omincertainty=Float.MAX_VALUE;
                         if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f))<omincertainty) {
                             omincertainty=TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f));
                         }}

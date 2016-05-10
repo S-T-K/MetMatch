@@ -302,14 +302,14 @@ initializeFile(bytecount);
     /**
      * @return the listofSlices
      */
-    public List<Slice> getListofSlices() {
+    public Slice[] getListofSlices() {
         return listofSlices;
     }
 
     /**
      * @param listofSlices the listofSlices to set
      */
-    public void setListofSlices(List<Slice> listofSlices) {
+    public void setListofSlices(Slice[] listofSlices) {
         this.listofSlices = listofSlices;
     }
 

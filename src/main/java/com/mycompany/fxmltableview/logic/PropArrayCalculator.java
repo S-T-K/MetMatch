@@ -19,12 +19,13 @@ public class PropArrayCalculator {
     
     
     public PropArrayCalculator(Session session) {
+        this.session=session;
         middle = (session.getResolution()/2)-1;
         step = (float) (session.getRTTolerance()*2*0.9/session.getResolution());
     }
     
     //gets RT of peak
-    public float[][] calculate(float peak, float ogroupRT, float[][] matrix, int row) {
+    public void calculate(float peak, float ogroupRT, float[][] matrix, int row) {
         //calculate the index
         int index = middle+(int) ((peak-ogroupRT)/step);
         int tol = session.getIntPeakRTTol();
@@ -47,5 +48,11 @@ public class PropArrayCalculator {
         
     }
     
+}
+    
+    public float getshiftintime(int index)  {
+        return (index-middle)*step;
+        
+    }
     
 }

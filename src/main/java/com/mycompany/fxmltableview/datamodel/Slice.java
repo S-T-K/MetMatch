@@ -171,7 +171,6 @@ public class Slice {
      }
      
      
-     System.out.println(file.getRTArray()[RTend]-file.getRTArray()[RTstart]);
      
     }
     
@@ -851,21 +850,23 @@ public class Slice {
 
 
     
-    public int setFittedPeak(int shift) {
+    public void setFittedPeak(float shift) {
         
+       
        
         //TODO: range as function of RTTolerance
         fittedpeak = null;
         
+       
         
         //first step is to find the peak
         //get maximum range
         if (listofPeaks != null) {
-        int min = file.getPeakRTTolerance();
+        float min = file.getSession().getPeakRTTolerance().floatValue();
         for (short i = 0; i<listofPeaks.size(); i++) {
             //if smaller than maximum range set peak
-            if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
-                min = Math.abs(listofPeaks.get(i).getIndex()-shift);
+            if (Math.abs(listofPeaks.get(i).getIndexshift()-shift)<=min) {
+                min = Math.abs(listofPeaks.get(i).getIndexshift()-shift);
                 fittedpeak = i;
                     
              
@@ -873,13 +874,13 @@ public class Slice {
         }
         
         //calc score for close peaks, if within range, small score
-        int range = file.getPeakRTTolerance()*2;
-        min = file.getPeakRTTolerance()+range;
+        float range = file.getSession().getPeakRTTolerance().floatValue()*2;
+        min = file.getSession().getPeakRTTolerance().floatValue()+range;
         for (int i = 0; i<listofPeaks.size(); i++) {
             if (fittedpeak==null||i!=fittedpeak) {
-                if (Math.abs(listofPeaks.get(i).getIndex()-shift)<=min) {
-                    min = Math.abs(listofPeaks.get(i).getIndex()-shift);
-                        setScorepeakclose((1.0f/(float)(adduct.getSession().getIntPeakRTTol()+range+1))*min);
+                if (Math.abs(listofPeaks.get(i).getIndexshift()-shift)<=min) {
+                    min = Math.abs(listofPeaks.get(i).getIndexshift()-shift);
+                        setScorepeakclose((1.0f/(float)(file.getSession().getPeakRTTolerance().floatValue()+range+1))*min);
                 }
             }
         }
@@ -890,12 +891,6 @@ public class Slice {
 //        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  getScorepeakfound());
         }
         
-        if (fittedpeak == null) {
-            return 0;
-            
-        } else {
-            return listofPeaks.get(fittedpeak).getIndex();
-        }
     }
     
     //return the area of the fitted peak, or -1 if no fitted peak
@@ -1258,7 +1253,28 @@ return empty;
     public void setRTend(int RTend) {
         this.RTend = RTend;
     }
+
+    /**
+     * @return the fittedpeak
+     */
+    public Short getFittedpeak() {
+        return fittedpeak;
+    }
+
+    /**
+     * @param fittedpeak the fittedpeak to set
+     */
+    public void setFittedpeak(Short fittedpeak) {
+        this.fittedpeak = fittedpeak;
+    }
     
+  
+    public Peak getFittedPeak() {
+        if (fittedpeak!=null) {
+            return listofPeaks.get(fittedpeak);
+        }
+        return null;
+    }
     
     
     

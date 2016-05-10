@@ -72,7 +72,7 @@ public class Session {
         
         startIOThread();
        
-        proparraycalculator=new PropArrayCalculator(this);
+        
         
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
@@ -89,7 +89,8 @@ public class Session {
         start = new SimpleFloatProperty (5.0f);
         end = new SimpleFloatProperty (30.0f);
         
-        //TODO: change
+        proparraycalculator=new PropArrayCalculator(this);
+        
         listofadductnameproperties= new ArrayList<>();
         listofadductnameproperties.add(new SimpleStringProperty("H"));
         listofadductnameproperties.add(new SimpleStringProperty("NH4"));

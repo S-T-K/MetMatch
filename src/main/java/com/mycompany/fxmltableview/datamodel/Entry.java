@@ -61,8 +61,8 @@ public class Entry {
     
     
     //for peak probability
-    private HashMap<RawDataFile, Short> OGroupfittedShift;
-    private HashMap<RawDataFile, Short> AdductfittedShift;
+    private HashMap<RawDataFile, Short> Interpolatedshift;
+    private HashMap<RawDataFile, Float> OgroupShift;
     
     //for penalties and bonuses in certain regions
     private HashMap<RawDataFile, short[]> PenArray;
@@ -92,7 +92,7 @@ public class Entry {
         this.Score = new SimpleFloatProperty(0);
         this.Scorepeakclose = new SimpleFloatProperty(0);
         this.Scorepeakfound = new SimpleFloatProperty(0);
-        this.Scorecertainty = new SimpleFloatProperty(1.0f);
+        this.Scorecertainty = new SimpleFloatProperty(Float.NaN);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
 
         this.Scores = new HashMap<RawDataFile, Float>();
@@ -100,7 +100,7 @@ public class Entry {
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
-        AdductfittedShift = new HashMap<>();
+     
     }
     //constructor for generated Adduct
     public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, Session session, Entry ogroup, Entry orig) {
@@ -122,7 +122,7 @@ public class Entry {
         this.session=session;
         this.OGroupObject=ogroup;
         this.maxIntensity = 0;
-        AdductfittedShift = new HashMap<>();
+       
         this.originalAdduct = orig;
     }
     
@@ -139,7 +139,8 @@ public class Entry {
         this.session = session;
         this.OGroupObject=null;
 
-        OGroupfittedShift = new HashMap<>();
+        Interpolatedshift = new HashMap<>();
+        OgroupShift = new HashMap<>();
         this.Scores = new HashMap<RawDataFile, Float>();
         this.Certainties = new HashMap<RawDataFile, Float>();
         PenArray = new HashMap<RawDataFile, short[]>();
@@ -574,40 +575,23 @@ if (listofSlices.containsKey(file)) {
         this.session = session;
     }
 
-    /**
-     * @return the OGroupfittedShift
-     */
-    public int getOGroupFittedShift(RawDataFile file) {
-        if (Entry.this.getOGroupFittedShift().containsKey(file)){
-        return Entry.this.getOGroupFittedShift().get(file);}
-        else {
-            return 0;
-        }
-    }
-    
-    /**
-     * @return the OGroupfittedShift
-     */
-    public int getAdductFittedShift(RawDataFile file) {
-        if (Entry.this.getAdductfittedShift().containsKey(file)){
-        return Entry.this.getAdductfittedShift().get(file);}
-        else {
-            return 0;
-        }
-    }
+  
 
     /**
      * @param fittedShift the OGroupfittedShift to set
      */
     public void setFittedShift(RawDataFile file, short shift) {
-        System.out.println("Was: " + shift);
-        shift = (short)((float)shift/file.getFactor());
-        System.out.println("Is: " + shift);
-        this.getOGroupFittedShift().put(file, shift);
+        this.Interpolatedshift.put(file,shift);
+        float shiftintime = session.getProparraycalculator().getshiftintime(shift);
+        
+        this.OgroupShift.put(file, shiftintime);
+        
+        
+        
         
         for (int i = 0; i<listofAdducts.size(); i++) {
             if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
-        listofAdducts.get(i).getAdductfittedShift().put(file,(short)listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shift));
+        listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shiftintime);
     }
         }
     }
@@ -650,53 +634,13 @@ if (listofSlices.containsKey(file)) {
     
     //returns a "smooth" PropArray
     public void getOGroupPropArraySmooth(RawDataFile file, float[][] matrix, int row) {
-        float factor = 0;
-        //get factor, if nothing found, return 0 array
-        List<Slice> list = new ArrayList<Slice>();
-        // get list of Slices
-        for (int i = 0; i<listofAdducts.size(); i++) {
-            if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
-                list.add(listofAdducts.get(i).getListofSlices().get(file));
-            }
+        for (int j = 0; j<listofAdducts.size(); j++) {
+        Slice slice = listofAdducts.get(j).listofSlices.get(file);
+        if (slice!=null) {
+        for (int i = 0; i<slice.getListofPeaks().size(); i++) {
+        session.getProparraycalculator().calculate(slice.getListofPeaks().get(i).getIndexRT(), RT.floatValue(), matrix, row);
+                }
         }
-        
-        //if slices found
-        if (list.size()>0) {
-            factor = file.getFactor();
-            int tol = session.getIntPeakRTTol();
-            for (int i = 0; i<list.size(); i++) {
-                for (int j = 0; j<list.get(i).getListofPeaks().size(); j++) {
-                    int peak = (int) Math.floor((float)list.get(i).getListofPeaks().get(j).getIndex()*factor);
-                    matrix[row][peak]=1;
-                     //change values within tolerance
-                    for (int k = 1; k<=tol; k++) {
-                //calculate the value
-                float value = 1*((float)tol-k)/(float)tol;
-                
-                //check for borders and insert new value of old value is smaller
-                if((peak-k)>0&&matrix[row][peak-k]<value) {
-                    matrix[row][peak-k]=value;
-                }
-                if ((peak+k)<session.getResolution()&&matrix[row][peak+k]<value) {
-                    matrix[row][peak+k]=value;
-                }
-            }
-                    
-                    
-                }
-                
-                
-            }
-            
-            
-        }
-        
-        if (getPenArray().containsKey(file)) {
-            short[] PenArr = getPenArray().get(file);
-            for (int i = 0; i<PenArr.length; i++) {
-                matrix[row][i]+=PenArr[i];
-            }
-            
         }
     }
 
@@ -718,34 +662,7 @@ if (listofSlices.containsKey(file)) {
 
    
 
-    /**
-     * @return the OGroupfittedShift
-     */
-    public HashMap<RawDataFile, Short> getOGroupFittedShift() {
-        return OGroupfittedShift;
-    }
-
-    /**
-     * @param fittedShift the OGroupfittedShift to set
-     */
-    public void setOGroupFittedShift(HashMap<RawDataFile, Short> fittedShift) {
-        this.OGroupfittedShift = fittedShift;             
-    }
-
-    /**
-     * @return the AdductfittedShift
-     */
-    public HashMap<RawDataFile, Short> getAdductfittedShift() {
-        return AdductfittedShift;
-    }
-
-    /**
-     * @param AdductfittedShift the AdductfittedShift to set
-     */
-    public void setAdductfittedShift(HashMap<RawDataFile, Short> AdductfittedShift) {
-        this.AdductfittedShift = AdductfittedShift;
-    }
-
+    
     /**
      * @return the PenArray
      */
@@ -844,6 +761,38 @@ if (listofSlices.containsKey(file)) {
         this.empty = empty;
     }
 
+    /**
+     * @return the Interpolatedshift
+     */
+    public HashMap<RawDataFile, Short> getInterpolatedshift() {
+        return Interpolatedshift;
+    }
+
+    /**
+     * @param Interpolatedshift the Interpolatedshift to set
+     */
+    public void setInterpolatedshift(HashMap<RawDataFile, Short> Interpolatedshift) {
+        this.Interpolatedshift = Interpolatedshift;
+    }
+
+    /**
+     * @return the OgroupShift
+     */
+    public HashMap<RawDataFile, Float> getOgroupShift() {
+        return OgroupShift;
+    }
+
+    /**
+     * @param OgroupShift the OgroupShift to set
+     */
+    public void setOgroupShift(HashMap<RawDataFile, Float> OgroupShift) {
+        this.OgroupShift = OgroupShift;
+    }
+
+    public int getInterpolatedshift(RawDataFile currentfile) {
+        return Interpolatedshift.get(currentfile);
+    }
+
     
     
     //Comparator to sort List of Entries
@@ -874,11 +823,10 @@ public float getScore(RawDataFile file) {
 public float getmaxScorepeakfound(RawDataFile file) {
     float max = 0;
     for (int i  = 0; i<listofAdducts.size(); i++) {
-        if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
             if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
         if (listofAdducts.get(i).getListofSlices().get(file).getScorepeakfound()>max) {
             max = listofAdducts.get(i).getListofSlices().get(file).getScorepeakfound();
-        }}
+        }
     }}
     return max;
 }
@@ -959,4 +907,8 @@ public boolean isStored(RawDataFile file) {
     return stored;
 }
     
+
+
+
+
 }

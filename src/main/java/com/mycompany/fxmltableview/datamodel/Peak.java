@@ -234,4 +234,15 @@ public class Peak {
         this.manual = manual;
     }
     
+    //returns the RT value of the peak index
+    public float getIndexRT() {
+        return slice.getFile().getRTArray()[slice.getRTstart()+index];
+    }
+    
+    //returns the RT shift relative to the Ogroup RT
+    public float getIndexshift() {
+        return getIndexRT()-slice.getAdduct().getOGroupObject().getRT();
+    }
+    
+    
 }

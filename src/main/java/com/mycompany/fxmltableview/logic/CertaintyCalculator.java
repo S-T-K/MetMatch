@@ -30,6 +30,10 @@ public class CertaintyCalculator {
         //penalty for change in position
         float distpen = 1.0f/session.getResolution();
         
+        for (int i = 0; i < session.getListofOGroups().size(); i++) {
+                                session.getListofOGroups().get(i).getCertainties().put(currentfile, 1.0f);
+        }
+        
 
                         //iterate
                         for (int p = 0; p < 20; p++) {
@@ -38,8 +42,9 @@ public class CertaintyCalculator {
                             //add penalty to fittedpeaks
                             //subtracts p*cert*value from value in original matrix, linear penalty
                             for (int i = 0; i < session.getListofOGroups().size(); i++) {
-                                int start = session.getListofOGroups().get(i).getOGroupFittedShift(currentfile)-session.getIntPeakRTTol();
-                                int end = session.getListofOGroups().get(i).getOGroupFittedShift(currentfile)+session.getIntPeakRTTol();
+                            
+                                int start = session.getListofOGroups().get(i).getInterpolatedshift(currentfile)-session.getIntPeakRTTol();
+                                int end = session.getListofOGroups().get(i).getInterpolatedshift(currentfile)+session.getIntPeakRTTol();
                                 if (start<0) {
                                     start = 0;
                                 }
@@ -92,10 +97,8 @@ public class CertaintyCalculator {
                                 }
                                 
                                   //check if changed
-                                  if (!session.getListofOGroups().get(session.getListofOGroups().size()-1).getCertainties().containsKey(currentfile)) {
-                                        session.getListofOGroups().get(session.getListofOGroups().size()-1).getCertainties().put(currentfile, Float.MAX_VALUE);
-                                    }
-                                    int dist = Math.abs(maxint-session.getListofOGroups().get(session.getListofOGroups().size()-1).getOGroupFittedShift(currentfile));
+                                  
+                                    int dist = Math.abs(maxint-session.getListofOGroups().get(session.getListofOGroups().size()-1).getInterpolatedshift(currentfile));
                                     if (dist>session.getIntPeakRTTol()) {
                                         //calculate certainty
                                         
@@ -112,9 +115,7 @@ public class CertaintyCalculator {
                                 //TODO: calculate range as function of time
                                 for (int i = session.getListofOGroups().size() - 2; i > -1; i--) {
                                     
-                                    if (!session.getListofOGroups().get(i).getCertainties().containsKey(currentfile)) {
-                                        session.getListofOGroups().get(i).getCertainties().put(currentfile, Float.MAX_VALUE);
-                                    }
+                                 
                                             
                                             
                                     max = 0;
@@ -134,7 +135,7 @@ public class CertaintyCalculator {
                                     }
                             
                                     //check if changed
-                                    dist = Math.abs(maxint-session.getListofOGroups().get(i).getOGroupFittedShift(currentfile));
+                                    dist = Math.abs(maxint-session.getListofOGroups().get(i).getInterpolatedshift(currentfile));
                                     if (dist>session.getIntPeakRTTol()) {
                                         //calculate certainty
                                         

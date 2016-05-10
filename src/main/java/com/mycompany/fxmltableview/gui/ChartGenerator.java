@@ -789,14 +789,11 @@ public class ChartGenerator {
                 
                 
 
-                float oshift = (list.get(0).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
-                float oRT = list.get(0).getRT();
-                float nshift;
-                float nRT;
+                
                 
                 for (int i = 1; i < list.size()-1; i++) {
                     
-                    float shift = currentfile.getRTArray()[list.get(i).getOGroupFittedShift(currentfile)+]-list.get(i).getRT()
+                    float shift = (list.get(i).getOgroupShift().get(currentfile))*60;
                     XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
                     
                     Ellipse cir = new Ellipse(1.5,4);
@@ -861,8 +858,8 @@ public class ChartGenerator {
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
 
      
-        float shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
-        int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
+        //float shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
+        //int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
           List<XYChart.Data> points = new ArrayList<XYChart.Data>();
           List<RawDataFile> sellist =  session.getSelectedFiles();
         
@@ -873,7 +870,7 @@ public class ChartGenerator {
         
         for (int i = 0; i< sellist.size(); i++) {
             for (int k = 1; k < list.size()-1; k++) {
-            float shift = (list.get(k).getOGroupFittedShift(sellist.get(i)) - middleint) * shiftiter * 60;
+            float shift = (list.get(k).getOgroupShift().get(sellist.get(i)))*60;
                    XYChart.Data data = new XYChart.Data(list.get(k).getRT(), shift);
                     
                     Ellipse cir = new Ellipse(1.5,4);
@@ -885,10 +882,12 @@ public class ChartGenerator {
         
         for (int i = 0; i< sellist.size(); i++) {
            
-            List<Slice> slices = sellist.get(i).getListofSlices();
-            for (int j = 0; j< slices.size(); j++) {
-                for (int p = 0; p<slices.get(j).getListofPeaks().size(); p++) {
-                    XYChart.Data data = new XYChart.Data(slices.get(j).getRT(), (slices.get(j).getListofPeaks().get(p).getIndex()-middleint)*60*shiftiter);
+            Slice[] slices = sellist.get(i).getListofSlices();
+            for (int j = 0; j< slices.length; j++) {
+                if (slices[j]!=null&&slices[j].getListofPeaks()!=null) {
+                    int middle = (slices[j].getRTend()-slices[j].getRTstart())/2;
+                for (int p = 0; p<slices[j].getListofPeaks().size(); p++) {
+                    XYChart.Data data = new XYChart.Data(slices[j].getRT(), slices[j].getListofPeaks().get(p).getIndexshift()*60);
                     Rectangle rect = new Rectangle(1.5,1.5);
                     rect.setFill(Color.BLACK);
                     rect.setOpacity(opacity);
@@ -897,7 +896,7 @@ public class ChartGenerator {
                     
                 }
                 
-                   
+                }
                     
             }
             
@@ -919,12 +918,13 @@ public class ChartGenerator {
     
     void generateShiftmarker(Entry adduct, RawDataFile currentfile, LineChart linechart) {
         
-          if (adduct.getAdductFittedShift(currentfile) > 0) {
+          if (adduct.getListofSlices().get(currentfile).getFittedpeak()!=null) {
                     XYChart.Series newSeries2 = new XYChart.Series();
                     adductcontroller.getSeriestochart().put(newSeries2, linechart);
-                    float[] RTArray = adduct.getRTArray();
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 0));
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 1));
+                    float[] RTArray = currentfile.getRTArray();
+                    float RT = RTArray[adduct.getListofSlices().get(currentfile).getListofPeaks().get(adduct.getListofSlices().get(currentfile).getFittedpeak()).getIndex()+adduct.getListofSlices().get(currentfile).getRTstart()];
+                    newSeries2.getData().add(new XYChart.Data(RT, 0));
+                    newSeries2.getData().add(new XYChart.Data(RT, 1));
                     linechart.getData().add(newSeries2);
                     linechart.applyCss();
                     if (currentfile.isselected()) {
@@ -940,9 +940,10 @@ public class ChartGenerator {
                 } else {
                     XYChart.Series newSeries2 = new XYChart.Series();
                     adductcontroller.getSeriestochart().put(newSeries2, linechart);
-                    float[] RTArray = adduct.getRTArray();
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 0));
-                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 1));
+                    //float[] RTArray = currentfile.getRTArray();
+                    float RT = adduct.getOGroupObject().getOgroupShift().get(currentfile)+adduct.getOGroupObject().getRT();
+                    newSeries2.getData().add(new XYChart.Data(RT, 0));
+                    newSeries2.getData().add(new XYChart.Data(RT, 1));
                     linechart.getData().add(newSeries2);
                     linechart.applyCss();
                     if (currentfile.isselected()) {
@@ -1058,7 +1059,7 @@ public class ChartGenerator {
                 int middleint = (session.getResolution() / 2) - 1;
                 
                 for (int j = 0; j < session.getListofOGroups().size(); j++) {
-                   float shift = (session.getListofOGroups().get(j).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
+                  float shift = (session.getListofOGroups().get(j).getOgroupShift().get(currentfile))*60;
                     XYChart.Data data = new XYChart.Data(session.getListofOGroups().get(j).getRT(), shift);
                     newSeries.getData().add(data);
                     if (shift > upper) {
