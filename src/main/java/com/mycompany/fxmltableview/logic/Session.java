@@ -86,7 +86,7 @@ public class Session {
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
-        start = new SimpleFloatProperty (5.0f);
+        start = new SimpleFloatProperty (3.0f);
         end = new SimpleFloatProperty (30.0f);
         
         proparraycalculator=new PropArrayCalculator(this);

@@ -617,67 +617,67 @@ public class ChartGenerator {
 //        return maxProp;
 //    }
 
-    public LineChart generateShiftChart(ObservableList<Entry> list) {
-
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("RT [minutes]");
-        yAxis.setLabel("Shift [seconds]");
-        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
-
-        float upper = 0;
-        float lower = 0;
- for (int d = 0; d<session.getListofDatasets().size(); d++) {
-                    if (session.getListofDatasets().get(d).getActive()) {
-        for (int f = 0; f < list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
-            RawDataFile currentfile = list.get(0).getSession().getListofDatasets().get(d).getListofFiles().get(f);
-            if (currentfile.getActive().booleanValue()) {
-                XYChart.Series newSeries = new XYChart.Series();
-                
-                shiftcontroller.getSeriestofile().put(newSeries, currentfile);
-                if (shiftcontroller.getFiletoseries().containsKey(currentfile)){
-                    shiftcontroller.getFiletoseries().get(currentfile).add(newSeries);
-                } else {
-                ArrayList array = new ArrayList();
-                array.add(newSeries);
-                shiftcontroller.getFiletoseries().put(currentfile, array);
-                        }
-                
-                float shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
-                int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
-
-                for (int i = 0; i < list.size(); i++) {
-                    float shift = (list.get(i).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
-                    XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
-                    newSeries.getData().add(data);
-                    if (shift > upper) {
-                        upper = shift;
-                    } else if (shift < lower) {
-                        lower = shift;
-                    }
-                }
-                linechart.getData().add(newSeries);
-                linechart.applyCss();
-                if (currentfile.isselected()) {
-                    paintselectedLine(newSeries.getNode());
-                }else{
-                ((Path) newSeries.getNode()).setStroke(currentfile.getColor());
-                }
-                
-                ((Path) newSeries.getNode()).setStrokeWidth(currentfile.getWidth());
-
-//TODO: calulate number of active files
-                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size() + " drawn");
-            }
-        }}}
-        linechart.setCreateSymbols(false);
-        linechart.setMaxSize(2000, 500);
-        linechart.setLegendVisible(false);
-        yAxis.setAutoRanging(false);
-        yAxis.setLowerBound(lower - 20);
-        yAxis.setUpperBound(upper + 20);
-        return linechart;
-    }
+//    public LineChart generateShiftChart(ObservableList<Entry> list) {
+//
+//        NumberAxis xAxis = new NumberAxis();
+//        NumberAxis yAxis = new NumberAxis();
+//        xAxis.setLabel("RT [minutes]");
+//        yAxis.setLabel("Shift [seconds]");
+//        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+//
+//        float upper = 0;
+//        float lower = 0;
+// for (int d = 0; d<session.getListofDatasets().size(); d++) {
+//                    if (session.getListofDatasets().get(d).getActive()) {
+//        for (int f = 0; f < list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+//            RawDataFile currentfile = list.get(0).getSession().getListofDatasets().get(d).getListofFiles().get(f);
+//            if (currentfile.getActive().booleanValue()) {
+//                XYChart.Series newSeries = new XYChart.Series();
+//                
+//                shiftcontroller.getSeriestofile().put(newSeries, currentfile);
+//                if (shiftcontroller.getFiletoseries().containsKey(currentfile)){
+//                    shiftcontroller.getFiletoseries().get(currentfile).add(newSeries);
+//                } else {
+//                ArrayList array = new ArrayList();
+//                array.add(newSeries);
+//                shiftcontroller.getFiletoseries().put(currentfile, array);
+//                        }
+//                
+//                float shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
+//                int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
+//
+//                for (int i = 0; i < list.size(); i++) {
+//                    float shift = (list.get(i).getOGroupFittedShift(currentfile) - middleint) * shiftiter * 60;
+//                    XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
+//                    newSeries.getData().add(data);
+//                    if (shift > upper) {
+//                        upper = shift;
+//                    } else if (shift < lower) {
+//                        lower = shift;
+//                    }
+//                }
+//                linechart.getData().add(newSeries);
+//                linechart.applyCss();
+//                if (currentfile.isselected()) {
+//                    paintselectedLine(newSeries.getNode());
+//                }else{
+//                ((Path) newSeries.getNode()).setStroke(currentfile.getColor());
+//                }
+//                
+//                ((Path) newSeries.getNode()).setStrokeWidth(currentfile.getWidth());
+//
+////TODO: calulate number of active files
+//                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size() + " drawn");
+//            }
+//        }}}
+//        linechart.setCreateSymbols(false);
+//        linechart.setMaxSize(2000, 500);
+//        linechart.setLegendVisible(false);
+//        yAxis.setAutoRanging(false);
+//        yAxis.setLowerBound(lower - 20);
+//        yAxis.setUpperBound(upper + 20);
+//        return linechart;
+//    }
 
     public float getppm(float massref, float mass) {
         float dif = massref - mass;
@@ -917,6 +917,7 @@ public class ChartGenerator {
     }
     
     void generateShiftmarker(Entry adduct, RawDataFile currentfile, LineChart linechart) {
+        if (adduct.getOGroupObject().getOgroupShift().containsKey(currentfile)) {
         
           if (adduct.getListofSlices().get(currentfile).getFittedpeak()!=null) {
                     XYChart.Series newSeries2 = new XYChart.Series();
@@ -959,7 +960,7 @@ public class ChartGenerator {
                     
                 }
           
-          
+        }
         
     }
     

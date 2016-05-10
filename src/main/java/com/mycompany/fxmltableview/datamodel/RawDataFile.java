@@ -209,6 +209,7 @@ public class RawDataFile {
         System.out.println("PPM: " + ppm);
         System.out.println("                               Timeppm:  " + (System.currentTimeMillis()-start2));
         
+        mzshift.set(ppm);
         double start3 = System.currentTimeMillis();
         int numberofgoodslices = 0;
         //correct MZvalues
@@ -410,7 +411,7 @@ initializeFile(bytecount);
         for (int i = 0; i<list.size(); i++) {
             list.get(i).getScores().remove(this);
             //list.get(i).getOGroupPropArray().remove(this);
-            list.get(i).getOGroupFittedShift().remove(this);
+            list.get(i).getOgroupShift().remove(this);
             for (int j =0; j<list.get(i).getListofAdducts().size(); j++) {
                 list.get(i).getListofAdducts().get(j).getListofSlices().remove(this);
                 list.get(i).getListofAdducts().get(j).getScores().remove(this);
@@ -421,8 +422,8 @@ initializeFile(bytecount);
             }
         }
         
-        for ( int i =0; i<listofSlices.size(); i++) {
-            listofSlices.get(i).deleteSlice();
+        for ( int i =0; i<listofSlices.length; i++) {
+            listofSlices[i].deleteSlice();
             
         }
        System.out.println("Deleted File");

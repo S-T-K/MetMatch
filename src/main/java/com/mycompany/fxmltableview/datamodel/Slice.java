@@ -64,7 +64,7 @@ public class Slice {
     //processed information
     
     
-    private float[] Bins;
+    //private float[] Bins;
     
     private boolean empty;
    
@@ -82,7 +82,7 @@ public class Slice {
      public void newbinaryExtractSlicefromScans(List<Scan> listofScans, float[] ScanRTs) {
          
         
-       generateBins();
+       //generateBins();
          //for all Scans
        float minMZ = getMinMZ();
        float maxMZ = getMaxMZ();
@@ -159,7 +159,7 @@ public class Slice {
        
         
     
-       Bins=null;
+       //Bins=null;
       
      //this.clean();
      //this.generateInterpolatedEIC();
@@ -197,7 +197,7 @@ public class Slice {
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
     public void WaveletPeakPicking() throws InterruptedException {
-        float startc = System.currentTimeMillis();
+        //float startc = System.currentTimeMillis();
             deleteAutoPeaks();
         
             //baseline correct IntensityArray
@@ -210,7 +210,7 @@ public class Slice {
             }
 
         
-        float start1 = System.currentTimeMillis();
+        //float start1 = System.currentTimeMillis();
         // Create an R vector in the form of a string.
         String EIC = Arrays.toString(correctedIntArray);
         EIC = EIC.substring(1, EIC.length()-1);
@@ -231,17 +231,17 @@ public class Slice {
         
         //Retrieve values, see script for names
         //=OUTPUTS
-        float start3 = System.currentTimeMillis();
-        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 12), snrTh=3)").asDoubleMatrix();
+        //float start3 = System.currentTimeMillis();
+        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 19), snrTh=3)").asDoubleMatrix();
         //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
         
         //Print output values, work with them...
         if (ret!=null) {
-            float start4 = System.currentTimeMillis();
+            //float start4 = System.currentTimeMillis();
         
             for (int j = 0; j<ret[0].length; j++) {
                 //101 because of 100 zeros at start and R starts at 1
-                if (((int)ret[0][j]-101)<100) {
+                if (((int)ret[0][j]-101)<IntArray.length) {
                 
                 addPeak(new Peak((short) ((short)ret[0][j]-101), (float)ret[1][j], (float)ret[2][j], (float)ret[3][j], this));
             }}
@@ -253,7 +253,8 @@ public class Slice {
         //engine.end();
          EIC=null;
 
-        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+        //System.out.println("Slice processed.......");
     }
     
     
@@ -548,15 +549,7 @@ public class Slice {
     
 
    
-    /**
-     * @return the RTArray
-     */
-    public float[] getRTArray() {
-        return adduct.getRTArray();
-    }
-
- 
-
+    
 
 
 
@@ -691,38 +684,38 @@ public class Slice {
         return smooth;
     }
 
-     
-     public void generateBins() {
-         float step = this.adduct.getMaxMZ()-this.adduct.getMinMZ();
-         step = step/file.getMzbins().length;
-         Bins = new float[file.getMzbins().length];
-         
-         //store upper limits for each bin
-         Bins[0]=this.adduct.getMinMZ()+step;
-         for (int i =1; i< Bins.length; i++) {
-             Bins[i] = Bins[i-1]+step;
-         }
-         
-     }
-     
-     public void addmasstoBin(float mass) {
-         //add mass to corresponding bin using binary search
-         int start = 0;
-         int end = Bins.length-1;
-         int middle;
-         
-         while (end > start) {
-             middle = (end+start)/2;
-             if (Bins[middle]<mass) {
-                 start = middle+1;
-             } else if (Bins[middle]>=mass) {
-                 end = middle;
-             }
-         }
-         middle = (end+start)/2;
-         file.addtoBin(middle);
-         
-     }
+//     
+//     public void generateBins() {
+//         float step = this.adduct.getMaxMZ()-this.adduct.getMinMZ();
+//         step = step/file.getMzbins().length;
+//         Bins = new float[file.getMzbins().length];
+//         
+//         //store upper limits for each bin
+//         Bins[0]=this.adduct.getMinMZ()+step;
+//         for (int i =1; i< Bins.length; i++) {
+//             Bins[i] = Bins[i-1]+step;
+//         }
+//         
+//     }
+//     
+//     public void addmasstoBin(float mass) {
+//         //add mass to corresponding bin using binary search
+//         int start = 0;
+//         int end = Bins.length-1;
+//         int middle;
+//         
+//         while (end > start) {
+//             middle = (end+start)/2;
+//             if (Bins[middle]<mass) {
+//                 start = middle+1;
+//             } else if (Bins[middle]>=mass) {
+//                 end = middle;
+//             }
+//         }
+//         middle = (end+start)/2;
+//         file.addtoBin(middle);
+//         
+//     }
      
     /**
      * @return the dataset
@@ -784,30 +777,22 @@ public class Slice {
         this.listofPeaks.add(peak);
     }
     
-//    public void deleteSlice() {
-//       
-//        
-//        this.file= null;
-//        this.dataset = null;
-//        this.adduct = null;
-//        this.retentionTimeList = null;
-//        this.intensityList = null;
-//        this.massList = null;
-//        
-//        if(this.IntensityArray!=null){
-//            this.IntensityArray=null;
-//        }
-//        
-//        if(this.PropArray!=null){
-//            this.PropArray=null;
-//        }
-//        if(this.intensityFunction!=null){
-//            this.intensityFunction=null;
-//        }
-//        
-//        
-//        
-//    }
+    public void deleteSlice() {
+       
+        
+        this.file= null;
+        this.dataset = null;
+        this.adduct = null;
+        this.IntArray=null;
+        this.MZArray=null;
+        
+        listofPeaks=null;
+        
+     
+        
+        
+        
+    }
     
 //    public void storeIntensityList() {
 //        try
@@ -935,22 +920,11 @@ public class Slice {
             return 0;
         } else {
             //System.out.println((Math.abs((float)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(float)file.getSession().getIntPeakRTTol());
-            return 1-((Math.abs((float)adduct.getOGroupObject().getOGroupFittedShift(file)-listofPeaks.get(fittedpeak).getIndex()))/(float)file.getSession().getIntPeakRTTol());
+            return 1-((Math.abs(getFittedPeak().getIndexshift()))/(float)file.getSession().getPeakRTTolerance().floatValue());
             
         }
     }
     
-    //returns list filled with indexes of peaks
-    public List<Short> getPeakIndex() {
-        List<Short> list = new ArrayList<>();
-        if (listofPeaks!=null) {
-            for (int i = 0; i<listofPeaks.size(); i++) {
-                list.add(listofPeaks.get(i).getIndex());
-            }
-        }
-        
-        return list;
-    }
     
     public int getfittedPeakStart() {
         return listofPeaks.get(fittedpeak).getStart();
@@ -960,74 +934,77 @@ public class Slice {
         return listofPeaks.get(fittedpeak).getEnd();
     }
     
-//    public XYChart.Series manualPeak(short start, short end) throws InterruptedException {
-//        
-//        //Peak picking
-//        //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
-//        float delta = (getIntensityArray()[end]-getIntensityArray()[start])/(end-start);
-//        float current = getIntensityArray()[start];
-//        
-//        List<Float> intensity = new ArrayList<>();
-//        for (int i = start; i<=end; i++) {
-//            intensity.add(getIntensityArray()[i]-current);
-//            current = current + delta;
-//        }
-//        float max = 0;
-//        int maxint = -1;
-//        
-//        //only look for max in the middle 70% region
-//        int pstart = (int) (0.15*(intensity.size()-1));
-//        int pend = (int) (0.85*(intensity.size()-1));
-//        
-//        for (int i = pstart; i<= pend; i++) {
-//            if (intensity.get(i)>max) {
-//                max = intensity.get(i);
-//                maxint = i;
-//            }
-//        }
-//        
-//        
-//        
-//        //no max or max at edge
-//        if (max<=0 || getIntensityArray()[start+maxint]<adduct.getSession().getBaseline()) {
-//            return null;
-//        }
-//        
-//        
-//        
-//        short index = (short) (maxint+start);
-//        
-//        //don't add Peak if there is already a similar peak
-//        if (listofPeaks != null) {
-//            for (int i = 0; i<listofPeaks.size(); i++) {
-//                if (Math.abs(listofPeaks.get(i).getIndex()-index)<adduct.getSession().getIntPeakRTTol()) {
-//                    return null;
-//                }
-//            }
-//        }
-//        
-//        if (listofPeaks == null) {
-//            setListofPeaks(new ArrayList<>());
-//        }
-//        Peak newPeak = new Peak(true,index, start,end, this, 1);
-//        listofPeaks.add(newPeak);
-//        XYChart.Series newSeries = new XYChart.Series();
-//        
-//        float[] RTArray = adduct.getRTArray();
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.2));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getStart()], 1.17));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.2));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getIndex()], 1.05));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.17));
-//                newSeries.getData().add(new XYChart.Data(RTArray[newPeak.getEnd()], 1.2));
-//              
-//        
-//                return newSeries;
-//    }
+    public XYChart.Series manualPeak(short start, short end) throws InterruptedException {
+        
+        //Peak picking
+        //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
+        float delta = (IntArray[end]-IntArray[start])/(end-start);
+        float current = IntArray[start];
+        
+        List<Float> intensity = new ArrayList<>();
+        for (int i = start; i<=end; i++) {
+            intensity.add(IntArray[i]-current);
+            current = current + delta;
+        }
+        float max = 0;
+        int maxint = -1;
+        
+        //only look for max in the middle 70% region
+        int pstart = (int) (0.15*(intensity.size()-1));
+        int pend = (int) (0.85*(intensity.size()-1));
+        
+        for (int i = pstart; i<= pend; i++) {
+            if (intensity.get(i)>max) {
+                max = intensity.get(i);
+                maxint = i;
+            }
+        }
+        
+        
+        
+        //no max or max at edge
+        if (max<=0 || IntArray[start+maxint]<adduct.getSession().getBaseline()) {
+            return null;
+        }
+        
+        
+        
+        short index = (short) (maxint+start);
+        
+        //don't add Peak if there is already a similar peak
+        if (listofPeaks != null) {
+            for (int i = 0; i<listofPeaks.size(); i++) {
+                if (Math.abs(listofPeaks.get(i).getIndex()-index)<adduct.getSession().getIntPeakRTTol()) {
+                    return null;
+                }
+            }
+        }
+        
+        if (listofPeaks == null) {
+            setListofPeaks(new ArrayList<>());
+        }
+        Peak newPeak = new Peak(true,index, start,end, this, 1);
+        listofPeaks.add(newPeak);
+        XYChart.Series newSeries = new XYChart.Series();
+        
+        float[] RTArray = file.getRTArray();
+                start = (short) (start+RTstart);
+                index = (short) (index+RTstart);
+                end = (short) (end+RTstart);
+                newSeries.getData().add(new XYChart.Data(RTArray[start], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[start], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[start], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.05));
+                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.2));
+                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.05));
+                newSeries.getData().add(new XYChart.Data(RTArray[end], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[end], 1.17));
+                newSeries.getData().add(new XYChart.Data(RTArray[end], 1.2));
+              
+        
+                return newSeries;
+    }
     
     public void deleteAutoPeaks() {
         if (listofPeaks!=null) {

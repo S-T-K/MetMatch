@@ -463,6 +463,7 @@ session.setNumberofadducts(numberofadducts);
                                             } else {
                                                 getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
                                                 getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
+                                                System.out.println(i+" of " + getMasterListofOGroups().size() + " OGroups calculated");
                                             }
                                         }
                                         System.out.println("Size of Queue: " + queue.size());
@@ -855,7 +856,7 @@ session.setNumberofadducts(numberofadducts);
                                 for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
                                     if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
                                         duplicate = true;
-                                        System.out.println("Duplicate generated");
+                                       // System.out.println("Duplicate generated");
                                         break;
                                     }
                                 }
@@ -888,7 +889,7 @@ session.setNumberofadducts(numberofadducts);
                                 for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
                                     if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
                                         duplicate = true;
-                                        System.out.println("Duplicate generated");
+                                        //System.out.println("Duplicate generated");
                                         break;
                                     }
                                 }

@@ -34,8 +34,8 @@ public class Peak {
             start = 0;
         }
         this.end = (short) (int) (index+1.5*scale);
-        if (end >=slice.getFile().getSession().getResolution()) {
-            end = (short) (slice.getFile().getSession().getResolution()-1);
+        if (end >=slice.getIntArray().length) {
+            end = (short) (slice.getIntArray().length-1);
         }
         //calculateArea();
         

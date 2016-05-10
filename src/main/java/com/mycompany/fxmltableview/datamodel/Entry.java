@@ -596,41 +596,41 @@ if (listofSlices.containsKey(file)) {
         }
     }
 
-    /**
-     * @return the AdductPropArray
-     */
-    public float[] getAdductPropArray(RawDataFile file) {
-        float[] PropArray = new float[session.getResolution()];
-        List<Short> list = new ArrayList<>();
-        if (listofSlices.containsKey(file)) {
-        list.addAll(listofSlices.get(file).getPeakIndex());
-        }
-        for (int i = 0; i< list.size(); i++) {
-            PropArray[list.get(i)] = 1;
-        }
-        
-        return PropArray;
-    }
+//    /**
+//     * @return the AdductPropArray
+//     */
+//    public float[] getAdductPropArray(RawDataFile file) {
+//        float[] PropArray = new float[session.getResolution()];
+//        List<Short> list = new ArrayList<>();
+//        if (listofSlices.containsKey(file)) {
+//        list.addAll(listofSlices.get(file).getPeakIndex());
+//        }
+//        for (int i = 0; i< list.size(); i++) {
+//            PropArray[list.get(i)] = 1;
+//        }
+//        
+//        return PropArray;
+//    }
 
    
-    /**
-     * @return the OGroupPropArray
-     * with only 1 and 0
-     */
-    public float[] getOGroupPropArray(RawDataFile file) {
-        float[] PropArray = new float[session.getResolution()];
-        List<Short> list = new ArrayList<>();
-        for (int i = 0; i<listofAdducts.size(); i++) {
-            if (listofAdducts.get(i).listofSlices.containsKey(file)){
-        list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
-        }}
-        
-        for (int i = 0; i< list.size(); i++) {
-            PropArray[list.get(i)] = 1;
-        }
-        
-        return PropArray;
-    }
+//    /**
+//     * @return the OGroupPropArray
+//     * with only 1 and 0
+//     */
+//    public float[] getOGroupPropArray(RawDataFile file) {
+//        float[] PropArray = new float[session.getResolution()];
+//        List<Short> list = new ArrayList<>();
+//        for (int i = 0; i<listofAdducts.size(); i++) {
+//            if (listofAdducts.get(i).listofSlices.containsKey(file)){
+//        list.addAll(listofAdducts.get(i).listofSlices.get(file).getPeakIndex());
+//        }}
+//        
+//        for (int i = 0; i< list.size(); i++) {
+//            PropArray[list.get(i)] = 1;
+//        }
+//        
+//        return PropArray;
+//    }
     
     //returns a "smooth" PropArray
     public void getOGroupPropArraySmooth(RawDataFile file, float[][] matrix, int row) {
@@ -877,18 +877,24 @@ public XYChart.Series manualPeak(RawDataFile file, float start, float end) throw
     }
     
     
-    int i = 0;
-    while (start>getRTArray()[i]&&i<session.getResolution()-1) {
-        i++;
-    }
-    start = i;
-    while (end>getRTArray()[i]&&i<session.getResolution()-1) {
-        i++;
-    }
-    end = i;
+    
+    start =  Arrays.binarySearch(file.getRTArray(), start);
+        
+       if (start<0) {
+            start=(start + 1) * (-1);
+       }
+       
+       
+    
+    end = Arrays.binarySearch(file.getRTArray(), end)-1;
+       
+       if (end<0) {
+            end = (end + 3) * (-1);
+       }
     
     if ((end!=start)&&listofSlices.containsKey(file)){
-    return this.listofSlices.get(file).manualPeak((short)start, (short)end);
+        Slice slice = listofSlices.get(file);
+    return slice.manualPeak((short)(start-slice.getRTstart()), (short) (end-slice.getRTstart()));
     } else {
         return null;
     }

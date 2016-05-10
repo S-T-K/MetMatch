@@ -39,10 +39,10 @@ public class PropArrayCalculator {
                 float value = 1*((float)tol-k)/(float)tol;
                 
                 //check for borders and insert new value of old value is smaller
-                if((index-k)>0&&matrix[row][index-k]<value) {
+                if((index-k)>0&&(index-k)<session.getResolution()&&matrix[row][index-k]<value) {
                     matrix[row][index-k]=value;
                 }
-                if ((index+k)<session.getResolution()&&matrix[row][index+k]<value) {
+                if ((index+k)<session.getResolution()&&(index+k)>0&&matrix[row][index+k]<value) {
                     matrix[row][index+k]=value;
                 }
         
