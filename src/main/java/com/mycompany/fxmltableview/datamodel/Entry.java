@@ -906,6 +906,7 @@ public boolean isStored(RawDataFile file) {
     for (int i = 0; i<listofAdducts.size(); i++) {
         if (listofAdducts.get(i).getListofSlices().containsKey(file)&&listofAdducts.get(i).getListofSlices().get(file).isStored()) {
             stored = true;
+            break;
         }
         
     }

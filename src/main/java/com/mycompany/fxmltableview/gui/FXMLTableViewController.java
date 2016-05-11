@@ -443,6 +443,7 @@ session.setNumberofadducts(numberofadducts);
                         for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
                             RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
                             if (currentfile.getActive().booleanValue()) {
+                                
 
                                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
                                 float[][] matrix = new float[getMasterListofOGroups().size()][session.getResolution()];
@@ -451,7 +452,8 @@ session.setNumberofadducts(numberofadducts);
                                 Task task = new Task<Void>() {
                                     @Override
                                     public Void call() throws IOException, InterruptedException {
-
+                                        session.getIothread().lockFile(currentfile, true);
+                                        double start = System.currentTimeMillis();
                                         LinkedList<Integer> queue = new LinkedList<Integer>();
                                         //go trough and check if all are ready
                                         for (int i = 0; i < getMasterListofOGroups().size(); i++) {
@@ -468,18 +470,27 @@ session.setNumberofadducts(numberofadducts);
                                         }
                                         System.out.println("Size of Queue: " + queue.size());
                                         //go through queue until it is empty
+                                        double picktime = 0;
                                         while (queue.size() > 0) {
+                                            int size = queue.size();
+                                            for (int j = 0; j<size; j++) {
                                             Integer current = queue.pop();
                                             if (getMasterListofOGroups().get(current).isStored(currentfile)) {
                                                 queue.add(current);
                                             } else {
+                                                double pick = System.currentTimeMillis();
                                                 getMasterListofOGroups().get(current).peakpickOGroup(currentfile);
+                                                picktime+=System.currentTimeMillis()-pick;
                                                 getMasterListofOGroups().get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
-                                            }
-
+                                               
+                                            }}
+                                        System.out.println("Size of Queue: " + queue.size());
                                         }
 
                                         latchpeak.countDown();
+                                        System.out.println("Total peak picking time: " + picktime);
+                                        System.out.println("Total time: " + (System.currentTimeMillis()-start));
+                                        session.getIothread().lockFile(currentfile, false);
                                         return null;
                                     }
 

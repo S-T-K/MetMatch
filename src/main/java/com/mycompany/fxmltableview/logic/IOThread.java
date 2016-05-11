@@ -54,8 +54,16 @@ public class IOThread implements Runnable{
                  Slice slice = write.pop();
                  try {
                     
+                     if (!slice.isLocked()) {
                      slice.writeData();
-                     count1++;
+                     
+                     
+                     }
+                 else {
+                     writeslice(slice);
+                     //System.out.println("can't write, is locked");
+                     }
+                        count1++; 
                  } catch (IOException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  } catch (InterruptedException ex) {
@@ -84,11 +92,18 @@ public class IOThread implements Runnable{
              //if nothing else to do 
              if (count2==0){
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>10) {
+             while (count3 < 100 && write.size()>1) {
                  Slice slice = write.pop();
                  try {
-                     
+                     if (!slice.isLocked()) {
                      slice.writeData();
+                     
+                    
+                     }
+                 else {
+                     writeslice(slice);
+                      //System.out.println("can't write, is locked");
+                     }
                      count3++;
                  } catch (IOException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -211,5 +226,28 @@ public class IOThread implements Runnable{
         
     }
     
+    public void lockSlice(Slice slice, boolean lock) {
+        slice.setLocked(lock);
+        //System.out.println("Slice locked: " + lock);
+    }
     
+    public void lockFile(RawDataFile file, boolean lock) {
+        for (int i = 0; i<file.getListofSlices().length; i++) {
+            lockSlice(file.getListofSlices()[i],lock);
+        }
+    }
+    
+    public void lockOGroup(Entry ogroup, boolean lock) {
+        for (int i = 0; i<ogroup.getListofAdducts().size(); i++) {
+            lockAdduct(ogroup.getListofAdducts().get(i),lock);
+        }
+    }
+    
+    public void lockAdduct(Entry adduct, boolean lock) {
+        for(Map.Entry<RawDataFile,Slice> entry: adduct.getListofSlices().entrySet()) {
+            if (entry.getKey().getActive()) {
+                lockSlice(entry.getValue(),lock);
+            }
+        }
+    }
 }

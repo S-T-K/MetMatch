@@ -39,6 +39,7 @@ public class Slice {
     //private boolean rw;
     private boolean stored;
     private boolean written;
+    private boolean locked;
     private int size;
     private int position;
    
@@ -78,6 +79,7 @@ public class Slice {
         this.fittedpeak = null;
         //rw=false;
         stored=false;
+        locked = false;
     }
     
     //returns the length of information in bytes
@@ -264,18 +266,25 @@ public class Slice {
     
     //generates Array filled with probabilities, correspond to the probabiltiy of a guassian peak at this RT
  public void NaivePeakPicking() throws InterruptedException {
-     float startc = System.currentTimeMillis();
+     //long startc = System.nanoTime();
          //initialize Array holding probabilities
+    //long startp = System.nanoTime();
         double [] PropArray =(new double[IntArray.length]);
+        //System.out.println("PropArray allocation: " + (System.nanoTime()-startp));
         
+        //long startg = System.nanoTime();
         addGaussCorrelation(0.6f,PropArray);
         addGaussCorrelation(0.5f, PropArray);
         addGaussCorrelation(0.4f, PropArray);
+        //System.out.println("Gauss: " + (System.nanoTime()-startg));
         
-        
+        //long start2 = System.nanoTime();
         generatePeakArray(PropArray);
+       // System.out.println("PeakArrayGeneration: " + (System.nanoTime()-start2));
         PropArray = null;
-        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+         
+        //System.out.println("Complete processing: " + (System.nanoTime()-startc));
+        
     }
  
 // adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
@@ -302,6 +311,7 @@ public class Slice {
 
          
          //baseline correct IntensityArray
+         
             double[] correctedIntArray = new double[IntArray.length];
             for ( int j = 0; j<IntArray.length; j++)  {
                 if (IntArray[j]>=adduct.getSession().getBaseline()) {
@@ -346,96 +356,115 @@ public class Slice {
 
 
      CurveSmooth csm = new CurveSmooth(PropArray);
-     PropArray = csm.movingAverage(3);
-     PropArray = csm.movingAverage(3);
-     PropArray = csm.movingAverage(3);
+    csm.movingAverage(3);
+    csm.movingAverage(3);
+    csm.movingAverage(3);
      double[][] maxima = csm.getMaximaMovingAverage();
      double[][] minima = csm.getMinimaMovingAverage();
      
+     if (listofPeaks==null) {
+         listofPeaks = new ArrayList<Peak>();
+     } else {
+         deleteAutoPeaks();
+     }
+     short start = 0;
      for (int i = 0; i<maxima[0].length; i++) {
-         if (PropArray[(int)maxima[0][i]]<0.2) {
-             maxima[0][i] = -1;
+         if (minima[0].length>i) {
+             short end = (short) minima[0][i];
+             addPeak(new Peak((short)maxima[0][i],start,end, this));
+             start = end;
+         } else {
+             short end = (short) (size-1);
+             addPeak(new Peak((short)maxima[0][i],start,end, this));
          }
      }
+
      
      
-     for (int i = 0; i<PropArray.length; i++ ) {
-         PropArray[i] = 0;
-     }
-     
-     for (int i = 0; i<maxima[0].length; i++) {
-         if (maxima[0][i]>0) {
-         PropArray[(int)maxima[0][i]] = 1;
-         }
-     }
-     
-     for (int i = 0; i<minima[0].length; i++) {
-         PropArray[(int)minima[0][i]] = 0.3;
-         
-     }
-     
-     //now we have an Array with Marks at Max and Min
-     deleteAutoPeaks();
-     short start = 0; 
-    short index = 0;
-    short end = 0;
-     for (short i = 0; i< PropArray.length; i++) {
-         //search for non 0 entry
-        while (PropArray[i]==0) {
-            i++;
-            if (i == (PropArray.length-1)) {
-                break;
-            }
-        }
-        //if Min, mark start
-        if (PropArray[i]==0.3) {
-            PropArray[i]=0;
-            start = i;
-            //if Max, mark index and look for end
-        } else if (PropArray[i]==1) {
-            index = i;
-            i++;
-            //if end of Array
-            if (i==(PropArray.length-1)) {
-            end = i;
-            addPeak(new Peak(index,start,end, this));
-            }
-            //while not at end
-            while (i<PropArray.length-1 && PropArray[i]==0) {
-                i++;
-                //if end of Array
-                if (i==(PropArray.length-1)) {
-            end = i;
-            addPeak(new Peak(index,start,end, this)); 
-            }
-            }
-            //if end found, make peak
-            if (PropArray[i]==0.3) {
-            PropArray[i]=0;
-            end = i;
-            addPeak(new Peak(index,start,end, this));
-            //if another max, split
-            } else if (PropArray[i]==1) {
-                end = (short) ((index+i)/2);
-                addPeak(new Peak(index,start,end, this));
-                start = end;
-                i--;
-            } else if (PropArray[i]==0){
-                //do nothing
-            } else {
-                System.out.println("Unexpected value in PropArray");
-            }
-            
-        } else if (PropArray[i]==0){
-            //do nothing
-        } else {
-            System.out.println("Unexpected value in PropArray");
-        }
+//     for (int i = 0; i<maxima[0].length; i++) {
+//         if (PropArray[(int)maxima[0][i]]<0.2) {
+//             maxima[0][i] = -1;
+//         }
+//     }
+//     
+//     
+//     for (int i = 0; i<PropArray.length; i++ ) {
+//         PropArray[i] = 0;
+//     }
+//     
+//     for (int i = 0; i<maxima[0].length; i++) {
+//         if (maxima[0][i]>0) {
+//         PropArray[(int)maxima[0][i]] = 1;
+//         }
+//     }
+//     
+//     for (int i = 0; i<minima[0].length; i++) {
+//         PropArray[(int)minima[0][i]] = 0.3;
+//         
+//     }
+//     
+//     //now we have an Array with Marks at Max and Min
+//     deleteAutoPeaks();
+//     short start = 0; 
+//    short index = 0;
+//    short end = 0;
+//     for (short i = 0; i< PropArray.length; i++) {
+//         //search for non 0 entry
+//        while (PropArray[i]==0) {
+//            i++;
+//            if (i == (PropArray.length-1)) {
+//                break;
+//            }
+//        }
+//        //if Min, mark start
+//        if (PropArray[i]==0.3) {
+//            PropArray[i]=0;
+//            start = i;
+//            //if Max, mark index and look for end
+//        } else if (PropArray[i]==1) {
+//            index = i;
+//            i++;
+//            //if end of Array
+//            if (i==(PropArray.length-1)) {
+//            end = i;
+//            addPeak(new Peak(index,start,end, this));
+//            }
+//            //while not at end
+//            while (i<PropArray.length-1 && PropArray[i]==0) {
+//                i++;
+//                //if end of Array
+//                if (i==(PropArray.length-1)) {
+//            end = i;
+//            addPeak(new Peak(index,start,end, this)); 
+//            }
+//            }
+//            //if end found, make peak
+//            if (PropArray[i]==0.3) {
+//            PropArray[i]=0;
+//            end = i;
+//            addPeak(new Peak(index,start,end, this));
+//            //if another max, split
+//            } else if (PropArray[i]==1) {
+//                end = (short) ((index+i)/2);
+//                addPeak(new Peak(index,start,end, this));
+//                start = end;
+//                i--;
+//            } else if (PropArray[i]==0){
+//                //do nothing
+//            } else {
+//                System.out.println("Unexpected value in PropArray");
+//            }
+//            
+//        } else if (PropArray[i]==0){
+//            //do nothing
+//        } else {
+//            System.out.println("Unexpected value in PropArray");
+//        }
+//        
+//      
         
-      
-        
          
-     }
+//     }
      
      
      
@@ -1136,6 +1165,9 @@ public class Slice {
      */
     public void setStored(boolean stored) {
         this.stored = stored;
+        if (stored) {
+        MZArray=null;
+        IntArray=null;}
     }
 
     /**
@@ -1284,6 +1316,20 @@ return empty;
      */
     public void setSize(int size) {
         this.size = size;
+    }
+
+    /**
+     * @return the locked
+     */
+    public boolean isLocked() {
+        return locked;
+    }
+
+    /**
+     * @param locked the locked to set
+     */
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
     
     

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.BufferOverflowException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -260,6 +261,7 @@ public class RawDataFile {
     }
     //multiply to get the corrent number (2 because 2 arrays, 4 because 1 float=4bytes)
     bytecount*=8;
+    listofSlices=newlist;
  System.out.println("                               Timenarrow:  " + (System.currentTimeMillis()-start3));
         
         
@@ -509,6 +511,9 @@ session.getIothread().writefile(this);
         }
         slice.setMZArray(MZ);
         slice.setStored(false);
+        if (slice.getMZArray()==null) {
+            System.out.println("Error while reading");
+        }
         
     }
     
@@ -523,10 +528,11 @@ session.getIothread().writefile(this);
         slice.setPosition(pointer);
         for (int i = 0; i <intensity.length; i++) {
             MMFile.putFloat(intensity[i]);
+           
         }
         float[] MZ = slice.getMZArray();
         for (int i = 0; i<MZ.length; i++) {
-            MMFile.putFloat(MZ[i]);
+            MMFile.putFloat(MZ[i]); 
         }
 
         slice.setStored(true);
@@ -537,7 +543,7 @@ session.getIothread().writefile(this);
             System.out.println("Error during File writing");
             System.out.println("MMFile: " + MMFile);
             writeData(slice);
-        }
+        } 
         
     }
 
