@@ -202,7 +202,7 @@ public class Fxml_adductviewController implements Initializable {
                 
                 //read
                 System.out.println("Adding Read OGroup from Adduct Print");
-                session.getIothread().addOGroup(entry);
+                session.getIothread().readOGroup(entry);
                 session.getIothread().clearnext();
                 
                  TreeItem<Entry> next = metTable.getSelectionModel().getSelectedItem().nextSibling(OGroupItem);
@@ -210,11 +210,11 @@ public class Fxml_adductviewController implements Initializable {
                 for (int i = 0; i<4; i++) {
                      
                      if(next!=null) {
-                         session.getIothread().addogrouptonext(next.getValue());
+                         session.getIothread().nextogroup(next.getValue());
                          next = metTable.getSelectionModel().getSelectedItem().nextSibling(next);
                      }
                      if (prev!=null) {
-                          session.getIothread().addogrouptonext(prev.getValue());
+                          session.getIothread().nextogroup(prev.getValue());
                          prev = metTable.getSelectionModel().getSelectedItem().previousSibling(prev);   
                      }
                      
@@ -245,7 +245,7 @@ public class Fxml_adductviewController implements Initializable {
                      if (!empty) {
                          nodata=false;
                     System.out.println("Adding Read Adduct from Print");
-                    session.getIothread().addAdduct(adduct);
+                    session.getIothread().readAdduct(adduct);
                          
                     //Label showing the MZ
                     VBox box = new VBox();

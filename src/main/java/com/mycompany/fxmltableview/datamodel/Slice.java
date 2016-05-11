@@ -36,9 +36,11 @@ import org.apache.commons.lang3.ArrayUtils;
 public class Slice {
     
     //flag
-    private boolean rw;
+    //private boolean rw;
     private boolean stored;
     private boolean written;
+    private int size;
+    private int position;
    
     private RawDataFile file;
     //private String name;
@@ -74,7 +76,7 @@ public class Slice {
         this.adduct = adduct;
         //this.name = (this+"intList.ser");
         this.fittedpeak = null;
-        rw=false;
+        //rw=false;
         stored=false;
     }
     
@@ -168,6 +170,7 @@ public class Slice {
          this.empty = true;
      } else {
          this.empty = false;
+         size = MZArray.length;
      }
      
      
@@ -1030,8 +1033,8 @@ public class Slice {
  
     
     public void writeData() throws IOException, InterruptedException {
-        if (!written&&!stored) {
-            setRw(true);
+        if (!written) {
+            //setRw(true);
             file.writeData(this);
         }
         
@@ -1069,7 +1072,7 @@ public class Slice {
     
     public void readData() throws FileNotFoundException, IOException, InterruptedException{
         if (stored) {
-            setRw(true);
+            //setRw(true);
             file.readData(this);
             
         }
@@ -1107,19 +1110,19 @@ public class Slice {
                 }
         }
 
-    /**
-     * @return the rw
-     */
-    public boolean isRw() {
-        return rw;
-    }
-
-    /**
-     * @param rw the rw to set
-     */
-    public void setRw(boolean rw) {
-        this.rw = rw;
-    }
+//    /**
+//     * @return the rw
+//     */
+//    public boolean isRw() {
+//        return rw;
+//    }
+//
+//    /**
+//     * @param rw the rw to set
+//     */
+//    public void setRw(boolean rw) {
+//        this.rw = rw;
+//    }
 
     /**
      * @return the stored
@@ -1251,6 +1254,36 @@ return empty;
             return listofPeaks.get(fittedpeak);
         }
         return null;
+    }
+
+    
+
+    /**
+     * @return the position
+     */
+    public int getPosition() {
+        return position;
+    }
+
+    /**
+     * @param position the position to set
+     */
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    /**
+     * @return the size
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * @param size the size to set
+     */
+    public void setSize(int size) {
+        this.size = size;
     }
     
     

@@ -46,6 +46,7 @@ public class RawDataFile {
 
     private File file;
     private MappedByteBuffer MMFile;
+    private int pointer;
     private Dataset dataset;
     private List<Scan> listofScans;
     private float[] RTArray;
@@ -81,7 +82,7 @@ public class RawDataFile {
         pfound = new SimpleFloatProperty();
         avgcertainty = new SimpleFloatProperty();
         active = new SimpleBooleanProperty(true);
-        
+        pointer = 0;
         
         
         color.addListener(new ChangeListener<Color>() {
@@ -267,6 +268,8 @@ double end = System.currentTimeMillis();
 System.out.println("Complete Extraction: " + (end-start));
 
 initializeFile(bytecount);
+session.getIothread().writefile(this);
+
 
     }
 
@@ -351,24 +354,8 @@ initializeFile(bytecount);
         this.dataset = dataset;
     }
     
-    public void addtoBin(int bin){
-        mzbins[bin]++;
-        
-    }
+   
 
-    /**
-     * @return the mzbins
-     */
-    public int[] getMzbins() {
-        return mzbins;
-    }
-
-    /**
-     * @param mzbins the mzbins to set
-     */
-    public void setMzbins(int[] mzbins) {
-        this.mzbins = mzbins;
-    }
 
     /**
      * @return the mzshift
@@ -509,52 +496,48 @@ initializeFile(bytecount);
     }
     
     public void readData(Slice slice) throws InterruptedException {
-        int number = listofSlices.indexOf(slice);
-        int pos = 500*number;
-        MMFile.position(pos);
-        int[] intensity = new int[session.getResolution()];
-        for (int i = 0; i <= 99; i++) {
-            intensity[i]=MMFile.getInt();
+        MMFile.position(slice.getPosition());
+        float[] intensity = new float[slice.getSize()];
+        for (int i = 0; i <slice.getSize(); i++) {
+            intensity[i]=MMFile.getFloat();
         }
-        slice.setIntensityArray(intensity);
+        slice.setIntArray(intensity);
         
-        byte[] MZ = new byte[session.getResolution()];
-        for (int i = 0; i<100; i++) {
-            MZ[i]=MMFile.get();
+        float[] MZ = new float[slice.getSize()];
+        for (int i = 0; i<slice.getSize(); i++) {
+            MZ[i]=MMFile.getFloat();
         }
-        slice.setByteMZArray(MZ);
+        slice.setMZArray(MZ);
         slice.setStored(false);
         
     }
     
     public void writeData(Slice slice) throws InterruptedException {
-        int number = listofSlices.indexOf(slice);
         //System.out.println("number: " + number);
-        int pos = 500*number;
+        //int pos = 500*number;
         //System.out.println("Pos: " + pos);
         
-        int[] intensity = slice.getIntensityArray();
-        try {MMFile.position(pos);}
-        catch (NullPointerException e) {
-            System.out.println("Error during File writing");
-            System.out.println("number: " + number);
-            System.out.println("Pos: " + pos);
-            System.out.println("MMFile: " + MMFile);
-            writeData(slice);
+        
+        float[] intensity = slice.getIntArray();
+        try {MMFile.position(pointer);
+        slice.setPosition(pointer);
+        for (int i = 0; i <intensity.length; i++) {
+            MMFile.putFloat(intensity[i]);
         }
-        for (int i = 0; i <= 99; i++) {
-            MMFile.putInt(intensity[i]);
-        }
-        byte[] MZ = slice.getByteMZArray();
-        for (int i = 0; i<100; i++) {
-            MMFile.put(MZ[i]);
+        float[] MZ = slice.getMZArray();
+        for (int i = 0; i<MZ.length; i++) {
+            MMFile.putFloat(MZ[i]);
         }
 
         slice.setStored(true);
         slice.setWritten(true);
-        slice.setIntensityArray(null);
-        slice.setByteMZArray(null);
-        
+        pointer = MMFile.position();
+        }
+        catch (NullPointerException e) {
+            System.out.println("Error during File writing");
+            System.out.println("MMFile: " + MMFile);
+            writeData(slice);
+        }
         
     }
 

@@ -458,7 +458,7 @@ session.setNumberofadducts(numberofadducts);
                                             //if not ready, add to queue
                                             if (getMasterListofOGroups().get(i).isStored(currentfile)) {
                                                 queue.add(i);
-                                                session.getIothread().addOGroup(getMasterListofOGroups().get(i), currentfile);
+                                                session.getIothread().readOGroup(getMasterListofOGroups().get(i), currentfile);
                                                 //if ready calculate
                                             } else {
                                                 getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
@@ -519,11 +519,11 @@ session.setNumberofadducts(numberofadducts);
                                         if (weights[i - 1][j] > max) {
                                             max = weights[i - 1][j] + matrix[i][j];
                                         }
-                                        if ((j - 1) > 0 && weights[i - 1][j - 1] + matrix[i][j] - penalty > max) {
-                                            max = weights[i - 1][j - 1] + matrix[i][j] - penalty;
+                                        if ((j - 1) > 0 && weights[i - 1][j - 1] + matrix[i][j] > max) {
+                                            max = weights[i - 1][j - 1] + matrix[i][j] ;
                                         }
-                                        if ((j + 1) < session.getResolution() && weights[i - 1][j + 1] + matrix[i][j] - penalty > max) {
-                                            max = weights[i - 1][j + 1] + matrix[i][j] - penalty;
+                                        if ((j + 1) < session.getResolution() && weights[i - 1][j + 1] + matrix[i][j]  > max) {
+                                            max = weights[i - 1][j + 1] + matrix[i][j] ;
                                         }
                                         weights[i][j] = max;
 
@@ -546,16 +546,18 @@ session.setNumberofadducts(numberofadducts);
                                 for (int i = getMasterListofOGroups().size() - 1; i > -1; i--) {
                                     max = 0;
 
+                                    
                                     int j = maxint;
-                                    if ((j - 1) > 0 && weights[i][j - 1] > max) {
-                                        max = weights[i][j - 1];
-                                        maxint = j - 1;
-                                    }
-                                    if (weights[i][j] > max) {
+                                     if (weights[i][j] > max) {
                                         max = weights[i][j];
                                         maxint = j;
                                     }
-                                    if ((j + 1) < session.getResolution() && weights[i][j + 1] > max) {
+                                    if ((j - 1) > 0 && weights[i][j - 1]-penalty > max) {
+                                        max = weights[i][j - 1]-penalty;
+                                        maxint = j - 1;
+                                    }
+                                   
+                                    if ((j + 1) < session.getResolution() && weights[i][j + 1]-penalty > max) {
                                         //max = weights[i][j+1];
                                         maxint = j + 1;
                                     }

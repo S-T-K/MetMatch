@@ -68,7 +68,7 @@ public class IOThread implements Runnable{
                  Slice slice = read.pop();
                  try {
                      slice.readData();
-                     addwrite(slice);
+                     writeslice(slice);
                      count2++;
                     
                  } catch (IOException ex) {
@@ -84,7 +84,7 @@ public class IOThread implements Runnable{
              //if nothing else to do 
              if (count2==0){
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>100000) {
+             while (count3 < 100 && write.size()>10) {
                  Slice slice = write.pop();
                  try {
                      
@@ -102,7 +102,7 @@ public class IOThread implements Runnable{
                  Slice slice = nextread.pop();
                  try {
                      slice.readData();
-                     addwrite(slice);
+                     writeslice(slice);
                      count4++;
                      
                  } catch (IOException ex) {
@@ -132,13 +132,13 @@ public class IOThread implements Runnable{
          } 
     }
     
-    public void addwrite(Slice slice) {
+    public void writeslice(Slice slice) {
         write.add(slice);
         
        
     }
     
-    public void addread(Slice slice) {
+    public void readslice(Slice slice) {
       read.add(slice);
       
     }
@@ -147,36 +147,36 @@ public class IOThread implements Runnable{
         run=false;
     }
     
-    public void addAdduct(Entry adduct) {
+    public void readAdduct(Entry adduct) {
         for(Map.Entry<RawDataFile,Slice> entry: adduct.getListofSlices().entrySet()) {
             if (entry.getKey().getActive()) {
-                addread(entry.getValue());
+                readslice(entry.getValue());
             }
         }
     }
     
-    public void addOGroup(Entry ogroup) {
+    public void readOGroup(Entry ogroup) {
         for (int i = 0; i<ogroup.getListofAdducts().size(); i++) {
-            addAdduct(ogroup.getListofAdducts().get(i));
+            readAdduct(ogroup.getListofAdducts().get(i));
         }
     }
     
-    public void addtonext(Slice slice) {
+    public void nextslice(Slice slice) {
         nextread.add(slice);
         
     }
     
-    public void addadducttonext(Entry adduct) {
+    public void nextadduct(Entry adduct) {
         for(Map.Entry<RawDataFile,Slice> entry: adduct.getListofSlices().entrySet()) {
             if (entry.getKey().getActive()) {
-                addtonext(entry.getValue());
+                nextslice(entry.getValue());
             }
         }
     }
     
-    public void addogrouptonext(Entry ogroup) {
+    public void nextogroup(Entry ogroup) {
         for (int i = 0; i<ogroup.getListofAdducts().size(); i++) {
-            addadducttonext(ogroup.getListofAdducts().get(i));
+            nextadduct(ogroup.getListofAdducts().get(i));
         }
     }
     
@@ -184,18 +184,32 @@ public class IOThread implements Runnable{
         nextread.clear();
     }
     
-    public void addfiletonext(RawDataFile file) {
-        for (int i = 0; i<file.getListofSlices().size(); i++) {
-            addtonext(file.getListofSlices().get(i));
+    public void nextfile(RawDataFile file) {
+        for (int i = 0; i<file.getListofSlices().length; i++) {
+            nextslice(file.getListofSlices()[i]);
         }
     }
     
+    public void readfile(RawDataFile file) {
+        for (int i = 0; i<file.getListofSlices().length; i++) {
+            readslice(file.getListofSlices()[i]);
+        }
+    }
     
-    public void addOGroup(Entry ogroup, RawDataFile file) {
+    public void readOGroup(Entry ogroup, RawDataFile file) {
         for (int i = 0; i<ogroup.getListofAdducts().size(); i++) {
             if (ogroup.getListofAdducts().get(i).getListofSlices().containsKey(file)){
-            addread(ogroup.getListofAdducts().get(i).getListofSlices().get(file));
-        }
+            readslice(ogroup.getListofAdducts().get(i).getListofSlices().get(file));
+            }
         }
     }
+    
+    public void writefile(RawDataFile file) {
+        for (int i = 0; i<file.getListofSlices().length; i++) {
+            writeslice(file.getListofSlices()[i]);
+        }
+        
+    }
+    
+    
 }

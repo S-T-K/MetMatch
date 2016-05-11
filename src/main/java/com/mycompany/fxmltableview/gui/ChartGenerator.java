@@ -86,7 +86,7 @@ public class ChartGenerator {
                 Slice currentSlice = adduct.getListofSlices().get(currentfile);
                 if (currentSlice.isStored()) {
                      System.out.println("Adding Read Slice from ChartGenerator");
-                    session.getIothread().addread(currentSlice);
+                    session.getIothread().readslice(currentSlice);
                     while (currentSlice.isStored()) {
                         Thread.sleep(10);
                     }
