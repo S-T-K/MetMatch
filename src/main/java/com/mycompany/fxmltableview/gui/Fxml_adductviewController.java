@@ -104,7 +104,7 @@ public class Fxml_adductviewController implements Initializable {
     private FXMLTableViewController mainController;
     ChartGenerator chartGenerator;
     Thread t;
-    boolean showProp;
+    
     private Session session;
     private DropShadow hover = new DropShadow();
     private HashMap<RawDataFile, List<XYChart.Series>> filetoseries;
@@ -272,7 +272,8 @@ public class Fxml_adductviewController implements Initializable {
                                 LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
                                 addColumn(2, linechart2);
                                 charts.add(linechart2);
-                                addChartMouseEvents(linechart2);
+                                if (addPeak.selectedProperty().get()) {
+                                addChartMouseEvents(linechart2);}
                             }
                             
                             
@@ -419,12 +420,6 @@ public class Fxml_adductviewController implements Initializable {
 
     }
 
-    public void setShowProp() {
-        nextprev();
-        showProp = !showProp;
-        print();
-
-    }
 
     /**
      * @return the filetoseries
@@ -804,6 +799,8 @@ public class Fxml_adductviewController implements Initializable {
     }
     
      public void nextprev() {
+      
+         
         //delete all nodes
         filetoseries.clear();
         seriestofile.clear();
