@@ -680,7 +680,7 @@ public class ChartGenerator {
 //    }
 
     public float getppm(float massref, float mass) {
-        float dif = massref - mass;
+        float dif = mass-massref;
 
         return dif / (massref / 1000000);
     }

@@ -60,7 +60,6 @@ public class RawDataFile {
     private FloatProperty Width;
    
     //for M/Z cleaning
-    private int[] mzbins;
     private FloatProperty mzshift;
     
     private FloatProperty pfound;
@@ -77,7 +76,7 @@ public class RawDataFile {
         this.color= new SimpleObjectProperty(dataset.getColor());
         this.Width = new SimpleFloatProperty(dataset.getWidth());
         this.session = session;
-        mzbins = new int[session.getResolution()];
+       
         mzshift = new SimpleFloatProperty();
         pfound = new SimpleFloatProperty();
         avgcertainty = new SimpleFloatProperty();
@@ -191,21 +190,45 @@ public class RawDataFile {
  
         double start2 = System.currentTimeMillis();
         //calculate MZshift
-        float ppm= 0.0f;
-        int count = 0;
+        int[] mzbins = new int[(int)session.getMZTolerance()*4+1];
+        float[] ppmvalues = new float[mzbins.length];
+        float valuestep = session.getMZTolerance()*2/mzbins.length;
+        for (int i = 0; i< mzbins.length; i++) {
+            ppmvalues[i]=session.getMZTolerance()*(-1)+i*valuestep;
+        }
+        float ppm;
         for (int i = 0; i< listofSlices.length; i++) {
             if (listofSlices[i]!=null){
-            float[] mzs = new float[listofSlices[i].getMZArray().length];
-            System.arraycopy(listofSlices[i].getMZArray(), 0, mzs, 0, listofSlices[i].getMZArray().length);
-            Arrays.sort(mzs);
-            //calculate ppm for middle value
-            if (mzs[mzs.length/2]!=0) {
-            ppm += (mzs[mzs.length/2]-listofSlices[i].getAdduct().getMZ())/(listofSlices[i].getAdduct().getMZ()/1000000); 
-            count++;
+                int count = 0;
+                float sum = 0;
+                for (int j = 0; j<listofSlices[i].getMZArray().length; j++) {
+                    if (listofSlices[i].getMZArray()[j]!=0) {
+                        sum+=listofSlices[i].getMZArray()[j];
+                        count++;
+                    }}
+                    sum/=count;
+                    sum-=listofSlices[i].getAdduct().getMZ();
+                    sum/=listofSlices[i].getAdduct().getMZ()/1000000;
+                    int bin = Arrays.binarySearch(ppmvalues, sum)-1;
+       //System.out.println(bin);
+       if (bin<0) {
+            bin =((bin + 3) * (-1));
+       }
+      if (bin>=0){
+       mzbins[bin]++;
+       //System.out.println(bin);
+        }}
+        }
+        int max = 0;
+        int maxbin = 0;
+        for (int i  = 0; i<mzbins.length; i++) {
+            if (mzbins[i]>max) {
+                max = mzbins[i];
+                maxbin = i;
             }
+            
         }
-        }
-        ppm/=count;
+        ppm = ppmvalues[maxbin];
         System.out.println("PPM: " + ppm);
         System.out.println("                               Timeppm:  " + (System.currentTimeMillis()-start2));
         
@@ -223,7 +246,7 @@ public class RawDataFile {
         
         
     Slice[] newlist = new Slice[numberofgoodslices];
-    count = 0;
+    int count = 0;
     //get number of bytes stored in all slices
     int bytecount = 0;
     for(int i = 0; i<listofSlices.length; i++) {
