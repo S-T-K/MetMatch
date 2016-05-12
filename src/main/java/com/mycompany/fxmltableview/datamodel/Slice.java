@@ -287,9 +287,63 @@ public class Slice {
         
     }
  
- public void SavitzkyGolayPeakPicking() {
+ public void SavitzkyGolayPeakPicking() throws InterruptedException {
+      //baseline correct IntensityArray
+         
+         //if (adduct.getNum()==4031) {
+            // System.out.println("Starting on Slice: " + adduct.getNum()) ;
+        // }
+            double[] correctedIntArray = new double[IntArray.length];
+            for ( int j = 0; j<IntArray.length; j++)  {
+                if (IntArray[j]>=adduct.getSession().getBaseline()) {
+                    correctedIntArray[j]=IntArray[j]-adduct.getSession().getBaseline();
+                }
+                
+            }
      
+            CurveSmooth csm = new CurveSmooth(correctedIntArray);
+            csm.savitzkyGolay(50);
+            
+           
+            double[] max = csm.getMaximaSavitzkyGolay()[0];
+     double[] minima = csm.getMinimaSavitzkyGolay()[0];
      
+     //create max and min, min holding the starts/ends of the peaks, and max holding the index
+     double[]min = new double[max.length+2];
+     int offsetmin;
+     if (max.length>0) {
+     if (minima.length==0||minima[0]>max[0]) {
+             min[0]=0;
+             offsetmin = 1;
+         } else {
+         min[0]=minima[0];
+         offsetmin = 0;
+     }
+     for (int i = 0; i<max.length-1; i++) {
+        min[i+offsetmin]=minima[i];
+     }
+     //if last min specified
+     if (minima.length-(1-offsetmin)==max.length) {
+          min[max.length+1]=minima[minima.length-1];
+     } else {
+         min[max.length+1]=(short)size-1;
+     }
+     
+    
+     
+     if (listofPeaks==null) {
+         listofPeaks = new ArrayList<Peak>();
+     } else {
+         deleteAutoPeaks();
+     }
+     short start = (short)min[0];
+   for (int i = 0; i<max.length; i++) {
+       short end = (short) min[i+1];
+       short index = (short)max[i];
+       addPeak(new Peak((short)max[i],start,end,this));
+       start = end;
+   }
+     } 
  }
  
 // adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
@@ -364,30 +418,46 @@ public class Slice {
     csm.movingAverage(3);
     csm.movingAverage(3);
     csm.movingAverage(3);
-     double[][] maxima = csm.getMaximaMovingAverage();
-     double[][] minima = csm.getMinimaMovingAverage();
+     double[] max = csm.getMaximaMovingAverage()[0];
+     double[] minima = csm.getMinimaMovingAverage()[0];
+     
+     //create max and min, min holding the starts/ends of the peaks, and max holding the index
+     double[]min = new double[max.length+2];
+     int offsetmin;
+     if (max.length>0) {
+     if (minima.length==0||minima[0]>max[0]) {
+             min[0]=0;
+             offsetmin = 1;
+         } else {
+         min[0]=minima[0];
+         offsetmin = 0;
+     }
+     for (int i = 0; i<max.length-1; i++) {
+        min[i+offsetmin]=minima[i];
+     }
+     //if last min specified
+     if (minima.length-(1-offsetmin)==max.length) {
+          min[max.length+1]=minima[minima.length-1];
+     } else {
+         min[max.length+1]=(short)size-1;
+     }
+     
+    
      
      if (listofPeaks==null) {
          listofPeaks = new ArrayList<Peak>();
      } else {
          deleteAutoPeaks();
      }
-     short start = 0;
-     for (int i = 0; i<maxima[0].length; i++) {
-         if (minima[0].length>i) {
-             short end = (short) minima[0][i];
-             short index= (short)maxima[0][i];
-             if (PropArray[index]>0.2){
-             addPeak(new Peak((short)maxima[0][i],start,end, this));}
-             start = end;
-         } else {
-             short end = (short) (size-1);
-             short index= (short)maxima[0][i];
-             if (PropArray[index]>0.2){
-             addPeak(new Peak((short)maxima[0][i],start,end, this));}
-             
-         }
-     }
+     short start = (short)min[0];
+   for (int i = 0; i<max.length; i++) {
+       short end = (short) min[i+1];
+       short index = (short)max[i];
+       if (PropArray[index]>0.3){
+       addPeak(new Peak((short)max[i],start,end,this)); }
+       start = end;
+   }
+     } 
 
      
      

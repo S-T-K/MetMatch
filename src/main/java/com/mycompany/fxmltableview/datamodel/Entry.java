@@ -203,6 +203,9 @@ if (listofSlices.containsKey(file)) {
         } else if (session.getPeackPick().equals("MassSpecWavelet")) {
             currentSlice.WaveletPeakPicking();
             
+        } else if (session.getPeackPick().equals("Savitzky-Golay")) {
+            currentSlice.SavitzkyGolayPeakPicking();
+            
         } else {
             System.out.println("Error");
         }
@@ -637,10 +640,11 @@ if (listofSlices.containsKey(file)) {
         for (int j = 0; j<listofAdducts.size(); j++) {
         Slice slice = listofAdducts.get(j).listofSlices.get(file);
         if (slice!=null) {
+            if (slice.getListofPeaks()!=null){
         for (int i = 0; i<slice.getListofPeaks().size(); i++) {
         session.getProparraycalculator().calculate(slice.getListofPeaks().get(i).getIndexRT(), RT.floatValue(), matrix, row);
                 }
-        }
+        }}
         }
     }
 

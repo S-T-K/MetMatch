@@ -189,7 +189,7 @@ public class FXMLTableViewController implements Initializable {
         Res.textProperty().bindBidirectional(session.getResProp(), new NumberStringConverter());
         Base.textProperty().bindBidirectional(session.getBaseProp(), new NumberStringConverter());
         PeakPick.setItems(FXCollections.observableArrayList(
-                "Naïve", "MassSpecWavelet")
+                "Naïve", "MassSpecWavelet", "Savitzky-Golay")
         );
 
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
