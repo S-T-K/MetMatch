@@ -939,7 +939,7 @@ public class Fxml_adductviewController implements Initializable {
      
     public void addChartMouseEvents(XYChart chart) {
         chart.setOnMousePressed((MouseEvent event) -> {
-
+if (event.isPrimaryButtonDown()) {
     Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
     double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
     double y = chart.getYAxis().sceneToLocal(mouseSceneCoords).getY();
@@ -959,9 +959,10 @@ public class Fxml_adductviewController implements Initializable {
     ((Path) line.getNode()).setStrokeWidth(2.0);
     ((Path) line.getNode()).setOpacity(1.0);
     
-});
+}});
         
 chart.setOnMouseDragged((MouseEvent event) -> {
+    if (event.isPrimaryButtonDown()) {
 
     Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
     double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
@@ -977,7 +978,7 @@ chart.setOnMouseDragged((MouseEvent event) -> {
     ((XYChart.Data)line.getData().get(1)).setYValue(chart.getYAxis().getValueForDisplay(y));
     
     
-});
+}});
        
 chart.setOnMouseReleased((MouseEvent event) -> {
 
@@ -986,7 +987,7 @@ chart.setOnMouseReleased((MouseEvent event) -> {
     double x1 = (double) ((XYChart.Data)line.getData().get(0)).getXValue();
     double x2 = (double) ((XYChart.Data)line.getData().get(1)).getXValue();
     
-    
+    if (x1!=x2) {
    
     Entry adduct = charttoadduct(chart);
     List<RawDataFile> list = session.getSelectedFiles();
@@ -1019,7 +1020,12 @@ chart.setOnMouseReleased((MouseEvent event) -> {
     chart.getData().remove(line);
     line = null;
     
-});
+}
+    else  {
+        chart.getData().remove(line);
+    line = null;
+        
+    }});
         
         
     }
@@ -1086,6 +1092,7 @@ chart.setOnMouseReleased(null);
     }
     
     public void deletePeak() {
+        if (selectedPeak!=null) {
         selectedSlice.getListofPeaks().remove(seriestopeak.get(selectedPeak));
         List<XYChart.Series> list = filetoseries.get(selectedFile);
         list.remove(selectedPeak);
@@ -1093,7 +1100,7 @@ chart.setOnMouseReleased(null);
         seriestochart.get(selectedPeak).getData().remove(selectedPeak);
         seriestochart.remove(selectedPeak);
         seriestopeak.remove(selectedPeak);     
-    }
+    }}
     
     public void lock() {
         locked = true;

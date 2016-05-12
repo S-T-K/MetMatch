@@ -287,6 +287,11 @@ public class Slice {
         
     }
  
+ public void SavitzkyGolayPeakPicking() {
+     
+     
+ }
+ 
 // adds correlation to PropArray calulated for a gaussian of length "length" (in minutes) from -2 to +2 std
  public void addGaussCorrelation(float length, double[] PropArray) throws InterruptedException {
      
@@ -371,11 +376,16 @@ public class Slice {
      for (int i = 0; i<maxima[0].length; i++) {
          if (minima[0].length>i) {
              short end = (short) minima[0][i];
-             addPeak(new Peak((short)maxima[0][i],start,end, this));
+             short index= (short)maxima[0][i];
+             if (PropArray[index]>0.2){
+             addPeak(new Peak((short)maxima[0][i],start,end, this));}
              start = end;
          } else {
              short end = (short) (size-1);
-             addPeak(new Peak((short)maxima[0][i],start,end, this));
+             short index= (short)maxima[0][i];
+             if (PropArray[index]>0.2){
+             addPeak(new Peak((short)maxima[0][i],start,end, this));}
+             
          }
      }
 
@@ -806,7 +816,8 @@ public class Slice {
     }
     
     public void addPeak(Peak peak){
-        this.listofPeaks.add(peak);
+        if (peak.getlength()>=file.getSession().getMinPeakLength().floatValue()) {
+        this.listofPeaks.add(peak);}
     }
     
     public void deleteSlice() {

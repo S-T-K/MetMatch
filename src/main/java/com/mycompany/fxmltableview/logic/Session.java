@@ -45,6 +45,7 @@ public class Session {
     private SimpleIntegerProperty resolution;
     private SimpleFloatProperty baseline;
     private SimpleFloatProperty PeakRTTolerance;
+    private SimpleFloatProperty minPeakLength;
     private int IntPeakRTTol;
     private String PeackPick;
     private SimpleFloatProperty maxPeakLength;
@@ -83,6 +84,7 @@ public class Session {
         MZTolerance = new SimpleFloatProperty(11.0f);
         PeakRTTolerance = new SimpleFloatProperty(0.15f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
+        minPeakLength = new SimpleFloatProperty(0.2f);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
@@ -713,6 +715,20 @@ public class Session {
      */
     public void setProparraycalculator(PropArrayCalculator proparraycalculator) {
         this.proparraycalculator = proparraycalculator;
+    }
+
+    /**
+     * @return the minPeakLength
+     */
+    public SimpleFloatProperty getMinPeakLength() {
+        return minPeakLength;
+    }
+
+    /**
+     * @param minPeakLength the minPeakLength to set
+     */
+    public void setMinPeakLength(SimpleFloatProperty minPeakLength) {
+        this.minPeakLength = minPeakLength;
     }
     
 }

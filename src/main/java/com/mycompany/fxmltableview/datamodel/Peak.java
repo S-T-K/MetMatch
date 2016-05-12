@@ -49,7 +49,7 @@ public class Peak {
         this.manual = false;
         trimPeak();
         calculateArea();
-        
+     
     }
     
     public Peak(boolean manual, short index, short start, short end, Slice slice, int non) throws InterruptedException {
@@ -58,7 +58,7 @@ public class Peak {
         this.end = end;
         this.slice = slice;
         this.manual = manual;
-        trimPeak();
+        //trimPeak();
         calculateArea();
         
     }
@@ -143,7 +143,7 @@ public class Peak {
             setStart((index-maxdist));
             
             //look for minima in EIC
-            while (intensity[start+1]<intensity[start]&&start<index) {
+            while (intensity[start+1]<intensity[start]&&intensity[start+2]<intensity[start]&&start<index-1) {
                 start++;
             }
             
@@ -152,7 +152,7 @@ public class Peak {
             setEnd((index+maxdist));
             
             //look for minima in EIC
-            while (intensity[end-1]<intensity[end]&&end>index) {
+            while (intensity[end-1]<intensity[end]&&intensity[end-2]<intensity[end]&&end>index+1) {
                 end--;
             }
         }
@@ -244,5 +244,9 @@ public class Peak {
         return getIndexRT()-slice.getAdduct().getOGroupObject().getRT();
     }
     
+    public float getlength() {
+        float[] RTArray = slice.getFile().getRTArray();
+        return (RTArray[end+slice.getRTstart()]-RTArray[start+slice.getRTstart()]);  
+    }
     
 }
