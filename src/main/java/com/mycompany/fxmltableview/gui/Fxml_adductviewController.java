@@ -38,7 +38,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
@@ -66,6 +68,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.Group;
 
 /**
  * FXML Controller class
@@ -269,7 +272,7 @@ public class Fxml_adductviewController implements Initializable {
                             }
                             
                             if(NEICToggle.selectedProperty().get()) {
-                                LineChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEIC(adduct);
+                                AreaChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICArea(adduct);
                                 addColumn(2, linechart2);
                                 charts.add(linechart2);
                                 if (addPeak.selectedProperty().get()) {
@@ -320,7 +323,14 @@ public class Fxml_adductviewController implements Initializable {
                                                 ((Rectangle) node).setFill(new_val);
                                                 
                                             }
-                                        } else {
+                                        } else if (list.get(i).getNode().getClass().equals(Group.class)){
+                                Color c = new_val;
+                                double[] color = new double[] {c.getRed(), c.getGreen(), c.getBlue()};
+                                color = chartGenerator.brightencolor(color);
+                                ((Path)((Group) list.get(i).getNode()).getChildren().get(0)).setStroke(file.getColor());
+                                ((Path)((Group) list.get(i).getNode()).getChildren().get(0)).setFill(Color.color(color[0],color[1],color[2]));
+                                ((Path)((Group) list.get(i).getNode()).getChildren().get(1)).setStroke(file.getColor());
+                            } else {
                                             
                                             Node node = list.get(i).getNode();
                                             ((Path) node).setStroke(new_val);
@@ -348,7 +358,11 @@ public class Fxml_adductviewController implements Initializable {
                                             ((Rectangle) node).setWidth(file.getWidth() + 1.5);
                                             
                                         }
-                                    } else {
+                                    } else if (list.get(i).getNode().getClass().equals(Group.class)){
+                                
+                                ((Path)((Group) list.get(i).getNode()).getChildren().get(0)).setStrokeWidth(file.getWidth());
+                                ((Path)((Group) list.get(i).getNode()).getChildren().get(1)).setStrokeWidth(file.getWidth());
+                            } else {
                                         
                                         Node node = list.get(i).getNode();
                                         ((Path) node).setStrokeWidth(file.getWidth());
@@ -503,6 +517,10 @@ public class Fxml_adductviewController implements Initializable {
 
                                 }
                                 System.out.println("Scatter colored Red");
+                            } else if (list.get(j).getNode().getClass().equals(Group.class)){
+                                ((Path)((Group) list.get(j).getNode()).getChildren().get(0)).setStroke(Color.RED);
+                                ((Path)((Group) list.get(j).getNode()).getChildren().get(0)).setFill(Color.color(1,0.5,0.5));
+                                ((Path)((Group) list.get(j).getNode()).getChildren().get(1)).setStroke(Color.RED);
                             } else {
 
                                 Node node = list.get(j).getNode();
@@ -525,6 +543,13 @@ public class Fxml_adductviewController implements Initializable {
 
                                 }
                                 System.out.println("Scatter colored normal");
+                            } else if (list.get(j).getNode().getClass().equals(Group.class)){
+                                Color c = completeList.get(i).getColor();
+                                double[] color = new double[] {c.getRed(), c.getGreen(), c.getBlue()};
+                                color = chartGenerator.brightencolor(color);
+                                ((Path)((Group) list.get(j).getNode()).getChildren().get(0)).setStroke(completeList.get(i).getColor());
+                                ((Path)((Group) list.get(j).getNode()).getChildren().get(0)).setFill(Color.color(color[0],color[1],color[2]));
+                                ((Path)((Group) list.get(j).getNode()).getChildren().get(1)).setStroke(completeList.get(i).getColor());
                             } else {
                                 Node node = list.get(j).getNode();
                                 //node.setEffect(hover);
@@ -661,9 +686,7 @@ public class Fxml_adductviewController implements Initializable {
             @Override
             public void handle(MouseEvent arg0) {
                 if (!locked) {
-                ((XYChart.Data)series.getData().get(1)).setYValue(0);
-                ((XYChart.Data)series.getData().get(5)).setYValue(0);
-                ((XYChart.Data)series.getData().get(8)).setYValue(0);
+                ((Path)((Group) series.getNode()).getChildren().get(0)).setFill(Color.GREENYELLOW);
                 
                 selectedPeak = series;
                 selectedSlice = charttoadduct(seriestochart.get(series)).getListofSlices().get(seriestofile.get(series));
@@ -699,14 +722,21 @@ public class Fxml_adductviewController implements Initializable {
             @Override
             public void handle(MouseEvent arg0) {
                 if (!locked) {
-                ((XYChart.Data)series.getData().get(1)).setYValue(1.17);
-                ((XYChart.Data)series.getData().get(5)).setYValue(1.2);
-                ((XYChart.Data)series.getData().get(8)).setYValue(1.17);
+               
                 
           
                 toggleContextMenu(false);
                 
                 RawDataFile file = getSeriestofile().get(series);
+                
+                if (file.isselected()) {
+                    
+                ((Path)((Group) series.getNode()).getChildren().get(0)).setFill(Color.color(1,0.5,0.5));
+                } else {
+                double[] color = new double[] {file.getColor().getRed(),file.getColor().getGreen(),file.getColor().getBlue()};
+                color = chartGenerator.brightencolor(color);
+                ((Path)((Group) series.getNode()).getChildren().get(0)).setFill(Color.color(color[0], color[1], color[2]));
+                }
                 List<XYChart.Series> list = getFiletoseries().get(file);
                 
                 for (int i = 0; i<list.size(); i++) {
@@ -955,9 +985,13 @@ if (event.isPrimaryButtonDown()) {
     chart.getData().add(line);
     chart.applyCss();
     
-    ((Path) line.getNode()).setStroke(Color.GREEN);
-    ((Path) line.getNode()).setStrokeWidth(2.0);
-    ((Path) line.getNode()).setOpacity(1.0);
+    Group group = (Group) line.getNode();
+    Path area = (Path) group.getChildren().get(0);
+    Path invisible = (Path) group.getChildren().get(1);
+    area.setStroke(Color.GREEN);
+    area.setFill(Color.LIGHTGREEN.deriveColor(1, 1, 1, 0.3));
+    area.setStrokeWidth(1.0);
+    invisible.setVisible(false);
     
 }});
         
@@ -998,11 +1032,18 @@ chart.setOnMouseReleased((MouseEvent event) -> {
                 chart.getData().add(peakSeries);
                 chart.applyCss();
                 if (list.get(i).isselected()) {
-                    chartGenerator.paintselectedLine(peakSeries.getNode());
+                                     chartGenerator.paintselectedLine(((Group) peakSeries.getNode()).getChildren().get(0));
+                    ((Path)((Group) peakSeries.getNode()).getChildren().get(0)).setFill(Color.color(1,0.5,0.5));
                 }else {
-                    ((Path) peakSeries.getNode()).setStroke(list.get(i).getColor()); 
+                ((Path)((Group) peakSeries.getNode()).getChildren().get(1)).setStroke(list.get(i).getColor());
+                ((Path)((Group) peakSeries.getNode()).getChildren().get(0)).setStroke(list.get(i).getColor());
+                double[] color = new double[] {list.get(i).getColor().getRed(),list.get(i).getColor().getGreen(),list.get(i).getColor().getBlue()};
+                color = chartGenerator.brightencolor(color);
+                ((Path)((Group) peakSeries.getNode()).getChildren().get(0)).setFill(Color.color(color[0],color[1],color[2]));
                 }
-                ((Path) peakSeries.getNode()).setStrokeWidth(list.get(i).getWidth());
+                ((Path)((Group) peakSeries.getNode()).getChildren().get(1)).setVisible(false);
+                ((Path)((Group) peakSeries.getNode()).getChildren().get(1)).setStrokeWidth(list.get(i).getWidth());
+                ((Path)((Group) peakSeries.getNode()).getChildren().get(0)).setStrokeWidth(list.get(i).getWidth());
                 getSeriestopeak().put(peakSeries,adduct.getListofSlices().get(list.get(i)).getListofPeaks().get(adduct.getListofSlices().get(list.get(i)).getListofPeaks().size()-1));
                 getSeriestofile().put(peakSeries, list.get(i));
                 getSeriestochart().put(peakSeries, chart);
@@ -1093,7 +1134,11 @@ chart.setOnMouseReleased(null);
     
     public void deletePeak() {
         if (selectedPeak!=null) {
-        selectedSlice.getListofPeaks().remove(seriestopeak.get(selectedPeak));
+        Peak peak = seriestopeak.get(selectedPeak);
+        if (selectedSlice.getFittedPeak()!=null&&selectedSlice.getListofPeaks().indexOf(peak)==selectedSlice.getFittedpeak()) {
+            selectedSlice.setFittedpeak(null);
+        }
+        selectedSlice.getListofPeaks().remove(peak);
         List<XYChart.Series> list = filetoseries.get(selectedFile);
         list.remove(selectedPeak);
         seriestofile.remove(selectedPeak);

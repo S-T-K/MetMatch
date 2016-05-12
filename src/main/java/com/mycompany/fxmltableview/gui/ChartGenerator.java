@@ -25,14 +25,16 @@ import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
+import javafx.scene.Group;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.control.TreeItem;
 import javafx.scene.shape.Ellipse;
 
 /**
  *
  * @author stefankoch TODO: Just read every slice once and generate all the
- * different graphs TODO: Performance:
- * http://stackoverflow.com/questions/28850211/performance-issue-with-javafx-linechart-with-65000-data-points
+ different graphs TODO: Performance:
+ http://stackoverflow.com/questions/28850211/performance-issue-with-javafx-areachart-with-65000-data-points
  *
  */
 public class ChartGenerator {
@@ -149,12 +151,125 @@ public class ChartGenerator {
         xAxis.setUpperBound(upper);
 
         linechart.setAnimated(false);
-//        linechart.setCache(true);
-//        linechart.setCacheHint(CacheHint.SPEED);
+//        areachart.setCache(true);
+//        areachart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
 
+      public AreaChart generateAreaTest(Entry adduct) throws InterruptedException {
+//Info:
+//newSeries.getNode() is Group, consisting of 2 Paths, 0 is a simple line, as in areachart, 1 is the line plus the area, color is a pale version of line
+//1 can be set invisible, then it works like a normal line chart
+          
+          
+        //Basic Chart attributes
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Intensity");
+        AreaChart<Number, Number> linechart = new AreaChart(xAxis, yAxis);
+        
+        
+        if (adductcontroller.getAdducttochart().containsKey(adduct)) {
+            adductcontroller.getAdducttochart().get(adduct).add(linechart);
+        } else {
+            ArrayList list = new ArrayList();
+            list.add(linechart);
+            adductcontroller.getAdducttochart().put(adduct, list);
+        }
+        
+        
+
+        //float startouter = System.currentTimeMillis();
+        // for all slices (= for all files)
+        for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
+            if (currentfile.getActive().booleanValue()) {
+                float[] RTArray=currentfile.getRTArray();
+                if(adduct.getListofSlices().containsKey(currentfile)) {
+                Slice currentSlice = adduct.getListofSlices().get(currentfile);
+                if (currentSlice.isStored()) {
+                     System.out.println("Adding Read Slice from ChartGenerator");
+                    session.getIothread().readslice(currentSlice);
+                    while (currentSlice.isStored()) {
+                        Thread.sleep(10);
+                    }
+                }
+                XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, linechart);
+                
+                //add Series to HashMaps
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (adductcontroller.getFiletoseries().containsKey(currentfile)){
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
+                } else {
+                ArrayList list = new ArrayList();
+                list.add(newSeries);
+                adductcontroller.getFiletoseries().put(currentfile, list);
+                        }
+
+                //while the next RT is the same as the one before, add Intensities
+                //float startinner = System.currentTimeMillis();
+                float[]intArr = currentSlice.getIntArray();
+                int startRT = currentSlice.getRTstart();
+                
+                for (int j = 0; j < intArr.length; j++) {
+                    float intensity = intArr[j];
+                    float currentRT = RTArray[startRT+j];
+                    XYChart.Data data = new XYChart.Data(currentRT, intensity);
+
+                    newSeries.getData().add(data);
+
+                }
+
+                // add new Series
+                linechart.getData().add(newSeries);
+                //apply Css to create nodes
+                linechart.applyCss();
+                //cast to path to be able to set stroke
+                if (currentfile.isselected()) {
+                    paintselectedLine(((Group) newSeries.getNode()).getChildren().get(0));
+                    ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.color(1,0.5,0.5));
+                    
+                }else {
+                    
+                ObservableList<Node> list = ((Group) newSeries.getNode()).getChildren();
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStroke(currentSlice.getFile().getColor());
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setStroke(currentSlice.getFile().getColor());
+                double[] color = new double[] {currentSlice.getFile().getColor().getRed(),currentSlice.getFile().getColor().getGreen(),currentSlice.getFile().getColor().getBlue()};
+                color = brightencolor(color);
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.color(color[0],color[1],color[2]));
+                }
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setVisible(false);
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setStrokeWidth(currentSlice.getFile().getWidth());
+
+
+            }}
+        }}}
+
+        //don't draw symbols
+        linechart.setCreateSymbols(false);
+        //set size of chart
+        linechart.setMaxSize(450, 300);
+
+        float lower = adduct.getMinRT();
+        float upper = adduct.getMaxRT();
+        //set Range
+        xAxis.setAutoRanging(false);
+        xAxis.setTickUnit((upper - lower) / 6);
+        xAxis.setLowerBound(lower);
+        xAxis.setUpperBound(upper);
+
+        linechart.setAnimated(false);
+//        areachart.setCache(true);
+//        areachart.setCacheHint(CacheHint.SPEED);
+        linechart.setLegendVisible(false);
+        return linechart;
+    }
     public LineChart generateNormalizedEIC(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
@@ -237,12 +352,107 @@ public class ChartGenerator {
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(1);
         linechart.setAnimated(false);
-//        linechart.setCache(true);
-//        linechart.setCacheHint(CacheHint.SPEED);
+//        areachart.setCache(true);
+//        areachart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
     
+     public AreaChart generateNormalizedEICArea(Entry adduct) throws InterruptedException {
+
+        //Basic Chart attributes
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Intensity (normalized)");
+        AreaChart<Number, Number> areachart = new AreaChart(xAxis, yAxis);
+        
+        if (adductcontroller.getAdducttochart().containsKey(adduct)) {
+            adductcontroller.getAdducttochart().get(adduct).add(areachart);
+        } else {
+            ArrayList list = new ArrayList();
+            list.add(areachart);
+            adductcontroller.getAdducttochart().put(adduct, list);
+        }
+
+        // for all slices (= for all files)
+        //float startouter = System.currentTimeMillis();
+         for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
+            if (currentfile.getActive().booleanValue()) {
+                float[] RTArray=currentfile.getRTArray();
+                if(adduct.getListofSlices().containsKey(currentfile)) {
+                Slice currentSlice = adduct.getListofSlices().get(currentfile);
+
+                XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, areachart);
+ 
+                //add Series to HashMaps
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (adductcontroller.getFiletoseries().containsKey(currentfile)){
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
+                } else {
+                ArrayList list = new ArrayList();
+                list.add(newSeries);
+                adductcontroller.getFiletoseries().put(currentfile, list);
+                        }
+                float[]intArr = currentSlice.getIntArray();
+                int startRT = currentSlice.getRTstart();
+                float maxIntensity = currentSlice.getMaxIntensity();
+                //float startinner = System.currentTimeMillis();
+                for (int j = 0; j < intArr.length; j++) {
+                    float intensity = intArr[j];
+                    float currentRT = RTArray[j+startRT];
+                    newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
+
+                }
+                //float endinner = System.currentTimeMillis();
+                //System.out.println("Inner loop norm: " + (endinner-startinner));
+                areachart.getData().add(newSeries);
+                areachart.applyCss();
+                if (currentfile.isselected()) {
+                    paintselectedLine(((Group) newSeries.getNode()).getChildren().get(1));
+                    
+                }else {
+                    
+                ObservableList<Node> list = ((Group) newSeries.getNode()).getChildren();
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStroke(currentSlice.getFile().getColor());
+                double[] color = new double[] {currentSlice.getFile().getColor().getRed(),currentSlice.getFile().getColor().getGreen(),currentSlice.getFile().getColor().getBlue()};
+                color = brightencolor(color);
+                
+                }
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setVisible(false);
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());
+
+                areachart.setCreateSymbols(false);
+                areachart.setMaxSize(450, 300);
+
+                //float endouter = System.currentTimeMillis();
+                //System.out.println("Outer loop norm: " + (endouter-startouter));
+//set Range
+             generateShiftmarkerArea(adduct,currentfile,areachart);
+             generatePeakmarkerArea(adduct, currentfile, areachart);
+            }}
+            
+        }}}
+        float lower = adduct.getMinRT();
+        float upper = adduct.getMaxRT();
+        xAxis.setAutoRanging(false);
+        xAxis.setTickUnit((upper - lower) / 6);
+        xAxis.setLowerBound(lower);
+        xAxis.setUpperBound(upper);
+
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(1);
+        areachart.setAnimated(false);
+//        areachart.setCache(true);
+//        areachart.setCacheHint(CacheHint.SPEED);
+        areachart.setLegendVisible(false);
+        return areachart;
+    }
 //    public LineChart generateNormalizedEICwithPeak(Entry adduct) throws InterruptedException {
 //
 //        //Basic Chart attributes
@@ -250,7 +460,7 @@ public class ChartGenerator {
 //        NumberAxis yAxis = new NumberAxis();
 //        xAxis.setLabel("RT [minutes]");
 //        yAxis.setLabel("Intensity (normalized)");
-//        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+//        LineChart<Number, Number> areachart = new LineChart(xAxis, yAxis);
 //
 //        // for all slices (= for all files)
 //        //float startouter = System.currentTimeMillis();
@@ -284,16 +494,16 @@ public class ChartGenerator {
 //                }
 //                //float endinner = System.currentTimeMillis();
 //                //System.out.println("Inner loop norm: " + (endinner-startinner));
-//                linechart.getData().add(newSeries);
-//                linechart.applyCss();
+//                areachart.getData().add(newSeries);
+//                areachart.applyCss();
 //                if (currentfile.isselected()) {
 //                    paintselectedLine(newSeries.getNode());
 //                }else {
 //                ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor()); 
 //                }
 //                ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
-//                linechart.setCreateSymbols(false);
-//                linechart.setMaxSize(300, 200);
+//                areachart.setCreateSymbols(false);
+//                areachart.setMaxSize(300, 200);
 //
 //                //float endouter = System.currentTimeMillis();
 //                //System.out.println("Outer loop norm: " + (endouter-startouter));
@@ -303,8 +513,8 @@ public class ChartGenerator {
 //                    float[] RTArray = adduct.getRTArray();
 //                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 0));
 //                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getAdductFittedShift(currentfile)], 1));
-//                    linechart.getData().add(newSeries2);
-//                    linechart.applyCss();
+//                    areachart.getData().add(newSeries2);
+//                    areachart.applyCss();
 //                    if (currentfile.isselected()) {
 //                    paintselectedLine(newSeries2.getNode());
 //                }else {
@@ -321,8 +531,8 @@ public class ChartGenerator {
 //                    newSeries3.getData().add(new XYChart.Data(RTArray[adduct.getListofSlices().get(currentfile).getfittedPeakStart()], 0));
 //                     newSeries3.getData().add(new XYChart.Data(RTArray[adduct.getListofSlices().get(currentfile).getfittedPeakEnd()], 0));
 //                    newSeries3.getData().add(new XYChart.Data(RTArray[adduct.getListofSlices().get(currentfile).getfittedPeakEnd()], 1));
-//                    linechart.getData().add(newSeries3);
-//                    linechart.applyCss();
+//                    areachart.getData().add(newSeries3);
+//                    areachart.applyCss();
 //                    if (currentfile.isselected()) {
 //                    paintselectedLine(newSeries3.getNode());
 //                }else {
@@ -338,8 +548,8 @@ public class ChartGenerator {
 //                    float[] RTArray = adduct.getRTArray();
 //                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 0));
 //                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 1));
-//                    linechart.getData().add(newSeries2);
-//                    linechart.applyCss();
+//                    areachart.getData().add(newSeries2);
+//                    areachart.applyCss();
 //                    if (currentfile.isselected()) {
 //                    paintselectedLine(newSeries2.getNode());
 //                }else {
@@ -364,11 +574,11 @@ public class ChartGenerator {
 //        yAxis.setAutoRanging(false);
 //        yAxis.setLowerBound(0);
 //        yAxis.setUpperBound(1);
-//        linechart.setAnimated(false);
-////        linechart.setCache(true);
-////        linechart.setCacheHint(CacheHint.SPEED);
-//        linechart.setLegendVisible(false);
-//        return linechart;
+//        areachart.setAnimated(false);
+////        areachart.setCache(true);
+////        areachart.setCacheHint(CacheHint.SPEED);
+//        areachart.setLegendVisible(false);
+//        return areachart;
 //    }
 
 
@@ -379,7 +589,7 @@ public class ChartGenerator {
 //        NumberAxis yAxis = new NumberAxis();
 //        xAxis.setLabel("RT [minutes]");
 //        yAxis.setLabel("Intensity (normalized)");
-//        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+//        LineChart<Number, Number> areachart = new LineChart(xAxis, yAxis);
 //
 //        // for all slices (= for all files)
 //        //float startouter = System.currentTimeMillis();
@@ -413,16 +623,16 @@ public class ChartGenerator {
 //                }
 //                //float endinner = System.currentTimeMillis();
 //                //System.out.println("Inner loop norm: " + (endinner-startinner));
-//                linechart.getData().add(newSeries);
-//                linechart.applyCss();
+//                areachart.getData().add(newSeries);
+//                areachart.applyCss();
 //                if (currentfile.isselected()) {
 //                    paintselectedLine(newSeries.getNode());
 //                }else {
 //                ((Path) newSeries.getNode()).setStroke(currentSlice.getFile().getColor()); 
 //                }
 //                ((Path) newSeries.getNode()).setStrokeWidth(currentSlice.getFile().getWidth());
-//                linechart.setCreateSymbols(false);
-//                linechart.setMaxSize(300, 200);
+//                areachart.setCreateSymbols(false);
+//                areachart.setMaxSize(300, 200);
 //
 //            }}
 //        }}}
@@ -437,14 +647,14 @@ public class ChartGenerator {
 //        xAxis.setLowerBound(lower);
 //        xAxis.setUpperBound(upper);
 //
-//        linechart.setAnimated(false);
-////        linechart.setCache(true);
-////        linechart.setCacheHint(CacheHint.SPEED);
-//        linechart.setLegendVisible(false);
+//        areachart.setAnimated(false);
+////        areachart.setCache(true);
+////        areachart.setCacheHint(CacheHint.SPEED);
+//        areachart.setLegendVisible(false);
 //        yAxis.setAutoRanging(false);
 //        yAxis.setLowerBound(0);
-//        yAxis.setUpperBound(PropArray(adduct, linechart));
-//        return linechart;
+//        yAxis.setUpperBound(PropArray(adduct, areachart));
+//        return areachart;
 //    }
 
     public ScatterChart generateMassChart(Entry adduct) throws InterruptedException {
@@ -553,7 +763,7 @@ public class ChartGenerator {
 
     }
 
-//    public float PropArray(Entry adduct, LineChart<Number, Number> linechart) throws InterruptedException {
+//    public float PropArray(Entry adduct, LineChart<Number, Number> areachart) throws InterruptedException {
 //
 //        float maxProp = 1;
 //         for (int d = 0; d<session.getListofDatasets().size(); d++) {
@@ -580,8 +790,8 @@ public class ChartGenerator {
 //                    }
 //
 //                }
-//                linechart.getData().add(newSeries);
-//                linechart.applyCss();
+//                areachart.getData().add(newSeries);
+//                areachart.applyCss();
 //                ((Path) newSeries.getNode()).setStroke(Color.ORANGE);
 //                ((Path) newSeries.getNode()).setStrokeWidth(1.5);
 //
@@ -596,8 +806,8 @@ public class ChartGenerator {
 //                    newSeries3.getData().add(new XYChart.Data(RTArray2[i], PropArray2[i]));
 //
 //                }
-//                linechart.getData().add(newSeries3);
-//                linechart.applyCss();
+//                areachart.getData().add(newSeries3);
+//                areachart.applyCss();
 //                ((Path) newSeries3.getNode()).setStroke(Color.RED);
 //                ((Path) newSeries3.getNode()).setStrokeWidth(1.5);
 //
@@ -605,8 +815,8 @@ public class ChartGenerator {
 //                    XYChart.Series newSeries2 = new XYChart.Series();
 //                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], 0));
 //                    newSeries2.getData().add(new XYChart.Data(RTArray[adduct.getOGroupObject().getOGroupFittedShift(currentfile)], maxProp));
-//                    linechart.getData().add(newSeries2);
-//                    linechart.applyCss();
+//                    areachart.getData().add(newSeries2);
+//                    areachart.applyCss();
 //                    ((Path) newSeries2.getNode()).setStroke(currentfile.getColor());
 //                    ((Path) newSeries2.getNode()).setStrokeWidth(currentfile.getWidth());
 //                    ((Path) newSeries2.getNode()).getStrokeDashArray().setAll(4d, 4d, 4d, 4d, 4d);
@@ -623,7 +833,7 @@ public class ChartGenerator {
 //        NumberAxis yAxis = new NumberAxis();
 //        xAxis.setLabel("RT [minutes]");
 //        yAxis.setLabel("Shift [seconds]");
-//        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+//        LineChart<Number, Number> areachart = new LineChart(xAxis, yAxis);
 //
 //        float upper = 0;
 //        float lower = 0;
@@ -656,8 +866,8 @@ public class ChartGenerator {
 //                        lower = shift;
 //                    }
 //                }
-//                linechart.getData().add(newSeries);
-//                linechart.applyCss();
+//                areachart.getData().add(newSeries);
+//                areachart.applyCss();
 //                if (currentfile.isselected()) {
 //                    paintselectedLine(newSeries.getNode());
 //                }else{
@@ -670,13 +880,13 @@ public class ChartGenerator {
 //                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size() + " drawn");
 //            }
 //        }}}
-//        linechart.setCreateSymbols(false);
-//        linechart.setMaxSize(2000, 500);
-//        linechart.setLegendVisible(false);
+//        areachart.setCreateSymbols(false);
+//        areachart.setMaxSize(2000, 500);
+//        areachart.setLegendVisible(false);
 //        yAxis.setAutoRanging(false);
 //        yAxis.setLowerBound(lower - 20);
 //        yAxis.setUpperBound(upper + 20);
-//        return linechart;
+//        return areachart;
 //    }
 
     public float getppm(float massref, float mass) {
@@ -706,6 +916,7 @@ public class ChartGenerator {
         ((Path) node).setStroke(Color.RED);
         
     }
+    
     
     public void paintselectedScatter(Rectangle rect) {
         rect.setFill(Color.RED);
@@ -963,6 +1174,54 @@ public class ChartGenerator {
         }
         
     }
+    void generateShiftmarkerArea(Entry adduct, RawDataFile currentfile, AreaChart areachart) {
+        if (adduct.getOGroupObject().getOgroupShift().containsKey(currentfile)) {
+        
+          if (adduct.getListofSlices().get(currentfile).getFittedpeak()!=null) {
+                    XYChart.Series newSeries2 = new XYChart.Series();
+                    adductcontroller.getSeriestochart().put(newSeries2, areachart);
+                    float[] RTArray = currentfile.getRTArray();
+                    float RT = RTArray[adduct.getListofSlices().get(currentfile).getListofPeaks().get(adduct.getListofSlices().get(currentfile).getFittedpeak()).getIndex()+adduct.getListofSlices().get(currentfile).getRTstart()];
+                    newSeries2.getData().add(new XYChart.Data(RT, 0));
+                    newSeries2.getData().add(new XYChart.Data(RT, 1));
+                    areachart.getData().add(newSeries2);
+                    areachart.applyCss();
+                    if (currentfile.isselected()) {
+                     paintselectedLine(((Group) newSeries2.getNode()).getChildren().get(1));
+                }else {
+                ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setStroke(currentfile.getColor()); 
+                }
+                    ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setStrokeWidth(currentfile.getWidth());
+                    ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).getStrokeDashArray().setAll(4d, 4d, 4d, 4d, 4d);
+                    adductcontroller.getSeriestofile().put(newSeries2, currentfile);
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
+
+                } else {
+                    XYChart.Series newSeries2 = new XYChart.Series();
+                    adductcontroller.getSeriestochart().put(newSeries2, areachart);
+                    //float[] RTArray = currentfile.getRTArray();
+                    float RT = adduct.getOGroupObject().getOgroupShift().get(currentfile)+adduct.getOGroupObject().getRT();
+                    newSeries2.getData().add(new XYChart.Data(RT, 0));
+                    newSeries2.getData().add(new XYChart.Data(RT, 1));
+                    areachart.getData().add(newSeries2);
+                    areachart.applyCss();
+                    if (currentfile.isselected()) {
+                    paintselectedLine(((Group) newSeries2.getNode()).getChildren().get(1));
+                }else {
+                ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setStroke(currentfile.getColor()); 
+                }
+                    ((Group) newSeries2.getNode()).getChildren().get(0).setVisible(false);
+                    ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setStrokeWidth(currentfile.getWidth());
+                    ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).getStrokeDashArray().setAll(1d,15d,1d,15d);
+                    adductcontroller.getSeriestofile().put(newSeries2, currentfile);
+                    adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
+
+                    
+                }
+          
+        }
+        
+    }
     
     void generatePeakmarker(Entry adduct, RawDataFile currentfile, LineChart linechart) {
         
@@ -1009,6 +1268,50 @@ public class ChartGenerator {
         
         
         
+    }
+    
+    //generates peak marker
+        void generatePeakmarkerArea(Entry adduct, RawDataFile currentfile, AreaChart areachart) {
+        Slice currentSlice = adduct.getListofSlices().get(currentfile);
+        List<Peak> list = currentSlice.getListofPeaks();
+        float[] RTArray = currentfile.getRTArray();
+        float[] IntArray = currentSlice.getIntArray();
+        int offset = currentSlice.getRTstart();
+        if (list!= null) {
+           //for all peaks
+            for (int i = 0; i< list.size(); i++) {
+                XYChart.Series newSeries = new XYChart.Series();
+                adductcontroller.getSeriestochart().put(newSeries, areachart);
+                Peak peak = list.get(i);
+                 //get Data Points
+                for ( int j = peak.getStart(); j<=peak.getEnd(); j++) {
+                    newSeries.getData().add(new XYChart.Data(RTArray[j+offset], IntArray[j]/currentSlice.getMaxIntensity()));
+                }
+              
+                areachart.getData().add(newSeries);
+                adductcontroller.getSeriestopeak().put(newSeries, list.get(i));
+                adductcontroller.getSeriestofile().put(newSeries, currentfile);
+                adductcontroller.getFiletoseries().get(currentfile).add(newSeries);
+                areachart.applyCss();
+                
+                if (currentfile.isselected()) {
+                     paintselectedLine(((Group) newSeries.getNode()).getChildren().get(0));
+                    ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.color(1,0.5,0.5));
+                }else {
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStroke(currentSlice.getFile().getColor());
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setStroke(currentSlice.getFile().getColor());
+                double[] color = new double[] {currentSlice.getFile().getColor().getRed(),currentSlice.getFile().getColor().getGreen(),currentSlice.getFile().getColor().getBlue()};
+                color = brightencolor(color);
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.color(color[0],color[1],color[2]));
+                }
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setVisible(false);
+                ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setStrokeWidth(currentSlice.getFile().getWidth());
+                
+            } 
+
+        }
+ 
     }
     
     
@@ -1112,11 +1415,27 @@ public class ChartGenerator {
         yAxis.setUpperBound(upper + 20);
 
         linechart.setAnimated(false);
-//        linechart.setCache(true);
-//        linechart.setCacheHint(CacheHint.SPEED);
+//        areachart.setCache(true);
+//        areachart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
         return linechart;
     }
     
+     public double[] brightencolor(double[] color) {
+         boolean black = true;
+         for (int i = 0; i<3; i++) {
+             if (color[i]>0){
+             color[i] = 1-((1-color[i])/2);
+             black = false;
+             }
+         }
+         if (black) {
+             color[0]= 0.5;
+             color[1]=0.5;
+             color[2] = 0.5;
+         }
+         return color;
+     }
+     
     
 }

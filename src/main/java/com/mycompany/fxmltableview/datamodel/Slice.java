@@ -202,7 +202,7 @@ public class Slice {
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
     public void WaveletPeakPicking() throws InterruptedException {
-        //float startc = System.currentTimeMillis();
+        float startc = System.currentTimeMillis();
             deleteAutoPeaks();
         
             //baseline correct IntensityArray
@@ -258,7 +258,7 @@ public class Slice {
         //engine.end();
          EIC=null;
 
-        //System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
         //System.out.println("Slice processed.......");
     }
     
@@ -1101,21 +1101,9 @@ public class Slice {
         XYChart.Series newSeries = new XYChart.Series();
         
         float[] RTArray = file.getRTArray();
-                start = (short) (start+RTstart);
-                index = (short) (index+RTstart);
-                end = (short) (end+RTstart);
-                newSeries.getData().add(new XYChart.Data(RTArray[start], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[start], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[start], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.05));
-                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.2));
-                newSeries.getData().add(new XYChart.Data(RTArray[index], 1.05));
-                newSeries.getData().add(new XYChart.Data(RTArray[end], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[end], 1.17));
-                newSeries.getData().add(new XYChart.Data(RTArray[end], 1.2));
-              
-        
+        for (int i = start; i<end; i++) {
+            newSeries.getData().add(new XYChart.Data(RTArray[i+RTstart], IntArray[i]/maxIntensity));
+        }
                 return newSeries;
     }
     

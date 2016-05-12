@@ -223,25 +223,6 @@ public class Fxml_shiftviewController implements Initializable {
                 file.getColorProperty().addListener(listener);
                 listeners.put(listener, file.getColorProperty());
 
-                ChangeListener listener2 = new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                        System.out.println("Change");
-                        List<XYChart.Series> list = filetoseries.get(file);
-
-                        for (int i = 0; i < list.size(); i++) {
-
-                            Node node = list.get(i).getNode();
-                            ((Path) node).setStrokeWidth(file.getWidth());
-
-                        }
-
-                    }
-                };
-
-                file.getWidthProperty().addListener(listener2);
-                listeners.put(listener2, file.getWidthProperty());
-
             }
 
         }
