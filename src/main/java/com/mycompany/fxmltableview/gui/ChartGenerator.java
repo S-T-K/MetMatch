@@ -1284,7 +1284,11 @@ public class ChartGenerator {
                 adductcontroller.getSeriestochart().put(newSeries, areachart);
                 Peak peak = list.get(i);
                  //get Data Points
-                for ( int j = peak.getStart(); j<=peak.getEnd(); j++) {
+                for ( int j = peak.getStart(); j<=peak.getIndex(); j++) {
+                    newSeries.getData().add(new XYChart.Data(RTArray[j+offset], IntArray[j]/currentSlice.getMaxIntensity()));
+                }
+                newSeries.getData().add(new XYChart.Data(RTArray[peak.getIndex()+offset], 0));
+                for ( int j = peak.getIndex(); j<=peak.getEnd(); j++) {
                     newSeries.getData().add(new XYChart.Data(RTArray[j+offset], IntArray[j]/currentSlice.getMaxIntensity()));
                 }
               
