@@ -249,4 +249,13 @@ public class Peak {
         return (RTArray[end+slice.getRTstart()]-RTArray[start+slice.getRTstart()]);  
     }
     
+    //returns the length from start to index, and from index to end
+    public float[] gethalflength() {
+        float[] RTArray = slice.getFile().getRTArray();
+        float[] length = new float[2];
+        length[0] = RTArray[index+slice.getRTstart()]-RTArray[start+slice.getRTstart()];
+        length[1] = RTArray[end+slice.getRTstart()]-RTArray[index+slice.getRTstart()];
+        return length;  
+    }
+    
 }

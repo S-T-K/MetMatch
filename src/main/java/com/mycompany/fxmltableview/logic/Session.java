@@ -84,7 +84,7 @@ public class Session {
         MZTolerance = new SimpleFloatProperty(11.0f);
         PeakRTTolerance = new SimpleFloatProperty(0.15f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
-        minPeakLength = new SimpleFloatProperty(0.2f);
+        minPeakLength = new SimpleFloatProperty(0.1f);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;

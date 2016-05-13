@@ -886,7 +886,9 @@ public class Slice {
     }
     
     public void addPeak(Peak peak){
-        if (peak.getlength()>=file.getSession().getMinPeakLength().floatValue()) {
+        float[] length = peak.gethalflength();
+        float halflength =file.getSession().getMinPeakLength().floatValue()/2;
+        if (length[0]>=halflength&&length[1]>=halflength) {
         this.listofPeaks.add(peak);}
     }
     
@@ -1101,9 +1103,14 @@ public class Slice {
         XYChart.Series newSeries = new XYChart.Series();
         
         float[] RTArray = file.getRTArray();
-        for (int i = start; i<end; i++) {
-            newSeries.getData().add(new XYChart.Data(RTArray[i+RTstart], IntArray[i]/maxIntensity));
-        }
+        for ( int j = start; j<=index; j++) {
+                    newSeries.getData().add(new XYChart.Data(RTArray[j+RTstart], IntArray[j]/maxIntensity));
+                }
+                newSeries.getData().add(new XYChart.Data(RTArray[index+RTstart], 0));
+                for ( int j = index; j<=end; j++) {
+                    newSeries.getData().add(new XYChart.Data(RTArray[j+RTstart], IntArray[j]/maxIntensity));
+                }
+              
                 return newSeries;
     }
     
