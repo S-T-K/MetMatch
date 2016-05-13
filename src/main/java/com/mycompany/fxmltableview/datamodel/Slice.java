@@ -1142,6 +1142,9 @@ public class Slice {
             //setRw(true);
             file.writeData(this);
         }
+        stored = true;
+        MZArray = null;
+        IntArray = null;
         
 //        if (!written&&!stored) {
 //        setRw(true);
