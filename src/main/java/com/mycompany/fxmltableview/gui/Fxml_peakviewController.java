@@ -42,7 +42,7 @@ public class Fxml_peakviewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        chartGenerator = new ChartGenerator(null,null);
+        chartGenerator = new ChartGenerator(null,null,null);
         box.setMaxHeight(2000);
         
        

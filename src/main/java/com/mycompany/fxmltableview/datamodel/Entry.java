@@ -197,13 +197,13 @@ listofSlices=newlist;
 if (listofSlices.containsKey(file)) {
         Slice currentSlice = listofSlices.get(file);
 //        
-        if (session.getPeackPick().equals("Naïve")) {
+        if (session.getPeackPick().equals("Naïve (Gauss)")) {
             currentSlice.NaivePeakPicking();
             
         } else if (session.getPeackPick().equals("MassSpecWavelet")) {
             currentSlice.WaveletPeakPicking();
             
-        } else if (session.getPeackPick().equals("Savitzky-Golay")) {
+        } else if (session.getPeackPick().equals("Naïve (Savitzky-Golay)")) {
             currentSlice.SavitzkyGolayPeakPicking();
             
         } else {

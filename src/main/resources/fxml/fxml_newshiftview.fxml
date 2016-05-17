@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_newshiftviewController">
+   <children>
+      <StackPane fx:id="stackpane" layoutY="35.0" prefHeight="365.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+      <ToolBar prefHeight="27.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+            <Button fx:id="button" mnemonicParsing="false" prefHeight="20.0" prefWidth="126.0" text="Recalculate">
+               <graphic>
+                  <TextField fx:id="refsetpen" minHeight="20.0" prefHeight="7.0" prefWidth="43.0" />
+               </graphic>
+            </Button>
+            <ChoiceBox fx:id="shiftOpacity" prefHeight="28.0" prefWidth="126.0" />
+            <ToggleButton fx:id="togglePenaltySelectionButton" maxWidth="28.0" minWidth="28.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="28.0">
+               <graphic>
+                  <ImageView fx:id="PenSelectionImage" blendMode="MULTIPLY" fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../PenSelectionImage.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Select Area with Penalty" />
+               </tooltip>
+            </ToggleButton>
+        </items>
+      </ToolBar>
+      <Button mnemonicParsing="false" onAction="#showPeakView" prefHeight="28.0" text="Peaks" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <tooltip>
+            <Tooltip text="Shows peaks for selected files in a new window" />
+         </tooltip>
+      </Button>
+      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
+   </children>
+</AnchorPane>

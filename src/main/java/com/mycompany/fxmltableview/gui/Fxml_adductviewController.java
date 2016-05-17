@@ -135,7 +135,7 @@ public class Fxml_adductviewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //add ChartGenerator
-        chartGenerator = new ChartGenerator(this, null);
+        chartGenerator = new ChartGenerator(this, null, null);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         seriestochart = new HashMap<XYChart.Series, XYChart<Number,Number>>();
@@ -205,6 +205,7 @@ public class Fxml_adductviewController implements Initializable {
                 
                 //read
                 System.out.println("Adding Read OGroup from Adduct Print");
+                session.getIothread().lockOGroup(entry, true);
                 session.getIothread().readOGroup(entry);
                 session.getIothread().clearnext();
                 
@@ -401,6 +402,7 @@ public class Fxml_adductviewController implements Initializable {
                         public void run() {
                             scroll();
                         }});
+                session.getIothread().lockOGroup(entry, false);
                 return null;
             }
         };

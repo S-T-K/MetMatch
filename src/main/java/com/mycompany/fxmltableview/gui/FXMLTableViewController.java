@@ -114,7 +114,7 @@ public class FXMLTableViewController implements Initializable {
     CheckBox toggleadductgeneration;
 
     @FXML
-    MenuItem paramMenu, shift, output;
+    MenuItem paramMenu, shift, shift2, output;
 
     @FXML
     TabPane TabPane;
@@ -189,7 +189,7 @@ public class FXMLTableViewController implements Initializable {
         Res.textProperty().bindBidirectional(session.getResProp(), new NumberStringConverter());
         Base.textProperty().bindBidirectional(session.getBaseProp(), new NumberStringConverter());
         PeakPick.setItems(FXCollections.observableArrayList(
-                "Naïve", "MassSpecWavelet", "Savitzky-Golay")
+                "Naïve (Gauss)", "MassSpecWavelet", "Naïve (Savitzky-Golay)")
         );
 
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -608,6 +608,33 @@ session.setNumberofadducts(numberofadducts);
 
         //new thread that executes task
         new Thread(task).start();
+
+    }
+    
+    //calculates Shift and opens a new window
+    public void newWindowShiftFitting() throws IOException, InterruptedException {
+
+        output.setDisable(false);
+        //open new window
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_newshiftview.fxml"));
+        Pane myPane = (Pane) loader.load();
+        Scene myScene = new Scene(myPane);
+        stage.setScene(myScene);
+        Fxml_newshiftviewController controller = loader.<Fxml_newshiftviewController>getController();
+        controller.setSupercontroller(this);
+        controller.setSession(session);
+
+        //print graphs
+        controller.print(getMasterListofOGroups());
+        System.out.println("PRINTNEW");
+        stage.show();
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                controller.close();
+            }
+        });
 
     }
 

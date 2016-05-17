@@ -92,7 +92,7 @@ public class IOThread implements Runnable{
              //if nothing else to do 
              if (count2==0){
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>1) {
+             while (count3 < 100 && write.size()>0) {
                  Slice slice = write.pop();
                  try {
                      if (!slice.isLocked()) {
@@ -129,12 +129,12 @@ public class IOThread implements Runnable{
                  
              }
              }
-             System.out.println("Crit. Write: " + count1);
-             System.out.println("Read: " + count2);
-             System.out.println("Write: " + count3);
-             System.out.println("Next Read: " + count4);
-             System.out.println("Length of read: "+ read.size());
-             System.out.println("Length of write: "+ write.size());
+//             System.out.println("Crit. Write: " + count1);
+//             System.out.println("Read: " + count2);
+//             System.out.println("Write: " + count3);
+//             System.out.println("Next Read: " + count4);
+//             System.out.println("Length of read: "+ read.size());
+//             System.out.println("Length of write: "+ write.size());
              
              
              

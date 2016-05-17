@@ -22,6 +22,7 @@
                 <Menu mnemonicParsing="false" text="Actions">
                     <items>
                   <MenuItem fx:id="shift" disable="true" mnemonicParsing="false" onAction="#newwindowcalculate" text="Calculate Shift" />
+                  <MenuItem fx:id="shift2" disable="true" mnemonicParsing="false" onAction="#newWindowShiftFitting" text="new Shift (experimental)" />
                         <MenuItem fx:id="output" disable="true" mnemonicParsing="false" onAction="#generateOutput" text="Generate Output Matrix" />
                     </items>
                 </Menu>

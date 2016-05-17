@@ -5,6 +5,8 @@
  */
 package com.mycompany.fxmltableview.datamodel;
 
+import java.util.Comparator;
+
 /**
  *
  * @author stefankoch
@@ -20,6 +22,7 @@ public class Peak {
     private float area;
     private Slice slice;
     private boolean manual;
+    private float indexshift;
     
     
     public Peak(short index, float scale, float SNR, float area, Slice slice) throws InterruptedException {
@@ -38,7 +41,7 @@ public class Peak {
             end = (short) (slice.getIntArray().length-1);
         }
         //calculateArea();
-        
+        indexshift = (getIndexRT()-slice.getAdduct().getOGroupObject().getRT());
     }
 
     public Peak(short index, short start, short end, Slice slice) throws InterruptedException {
@@ -49,7 +52,7 @@ public class Peak {
         this.manual = false;
         trimPeak();
         calculateArea();
-     
+     indexshift = (getIndexRT()-slice.getAdduct().getOGroupObject().getRT());
     }
     
     public Peak(boolean manual, short index, short start, short end, Slice slice, int non) throws InterruptedException {
@@ -60,7 +63,7 @@ public class Peak {
         this.manual = manual;
         //trimPeak();
         calculateArea();
-        
+       indexshift = (getIndexRT()-slice.getAdduct().getOGroupObject().getRT());
     }
     
     
@@ -241,7 +244,7 @@ public class Peak {
     
     //returns the RT shift relative to the Ogroup RT
     public float getIndexshift() {
-        return getIndexRT()-slice.getAdduct().getOGroupObject().getRT();
+        return indexshift;
     }
     
     public float getlength() {
@@ -256,6 +259,15 @@ public class Peak {
         length[0] = RTArray[index+slice.getRTstart()]-RTArray[start+slice.getRTstart()];
         length[1] = RTArray[end+slice.getRTstart()]-RTArray[index+slice.getRTstart()];
         return length;  
+    }
+    
+    //Comparator to sort List of Entries
+    public static class orderbyIndexShift implements Comparator<Peak> {
+
+        @Override
+        public int compare(Peak o1, Peak o2) {
+            return Float.valueOf(o1.getIndexshift()).compareTo(o2.getIndexshift());
+        }
     }
     
 }

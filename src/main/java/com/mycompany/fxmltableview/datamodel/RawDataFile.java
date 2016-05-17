@@ -136,6 +136,7 @@ public class RawDataFile {
      for (int i = 0; i<listofScans.size(); i++) {
             getRTArray()[i] = listofScans.get(i).getRetentionTime();
      }
+ 
 //        int RT = 0;
 //        int points = 0;
 //        for (int i = 0; i< listofScans.size(); i++) {
@@ -602,4 +603,6 @@ session.getIothread().writefile(this);
     public void setFactor(float factor) {
         this.factor = factor;
     }
+    
+    
 }

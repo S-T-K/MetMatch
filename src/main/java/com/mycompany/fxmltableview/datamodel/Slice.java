@@ -77,6 +77,7 @@ public class Slice {
         this.adduct = adduct;
         //this.name = (this+"intList.ser");
         this.fittedpeak = null;
+        
         //rw=false;
         stored=false;
         locked = false;

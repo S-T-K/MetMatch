@@ -143,7 +143,7 @@ public class Fxml_shiftviewController implements Initializable {
         anchorPane.getChildren().add(select);
 
         //add ChartGenerator
-        chartGenerator = new ChartGenerator(null, this);
+        chartGenerator = new ChartGenerator(null, this, null);
         hover.setColor(Color.LIME);
         hover.setSpread(1);
         hover.setRadius(2);
