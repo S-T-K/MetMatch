@@ -1615,8 +1615,25 @@ public class ChartGenerator {
         yAxis.setLabel("Intensity");
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
         XYChart.Series backSeries = new XYChart.Series();
-        XYChart.Data data = new XYChart.Data(10,10);
-        backSeries.getData().add(data);
+        RawDataFile file = session.getAllFiles().get(0);
+        for (int i = 0; i<list.size(); i++) {
+            for (int j = 0; j<list.get(i).getListofAdducts().size(); j++) {
+                Entry adduct = list.get(i).getListofAdducts().get(j);
+                if (adduct.getListofSlices().containsKey(file)) {
+                    Slice slice = adduct.getListofSlices().get(file);
+                    if (slice.getListofPeaks()!=null){
+                    for (int p = 0; p<slice.getListofPeaks().size(); p++) {
+                         XYChart.Data data = new XYChart.Data(list.get(i).getRT(),slice.getListofPeaks().get(p).getIndexshift()*60);
+                          Rectangle rect = new Rectangle(1.5,1.5);
+                    rect.setFill(Color.BLACK);
+                    rect.setOpacity(0.5);
+                    data.setNode(rect);
+                         backSeries.getData().add(data);
+                    }
+                    }
+                }
+            }
+        }
         scatterchart.getData().add(backSeries);
 //        float upper = 0;
 //        float lower = 0;

@@ -626,7 +626,7 @@ session.setNumberofadducts(numberofadducts);
         controller.setSession(session);
 
         //print graphs
-        controller.print(getMasterListofOGroups());
+        controller.calculate(getMasterListofOGroups());
         System.out.println("PRINTNEW");
         stage.show();
 
