@@ -534,7 +534,13 @@ public class Fxml_newshiftviewController implements Initializable {
                                     count++;
 
                                 }
-
+                                
+//set fitted peak
+                for (int i = 0; i<olist.size(); i++) {
+                olist.get(i).setFittedShift(currentfile, (short) centroids[i]);
+                }
+                
+                
                             }
                         }
                     }
@@ -542,9 +548,11 @@ public class Fxml_newshiftviewController implements Initializable {
 
                 //don't recalculate unless something changes
                 session.setPeakPickchanged(false);
-
+                
+                
                 paramToggle.setDisable(false);
                 return null;
+                
             }
 
         };

@@ -1051,6 +1051,15 @@ public class Slice {
     }
     
     public XYChart.Series manualPeak(short start, short end) throws InterruptedException {
+        file.getSession().getIothread().lockSlice(this, true);
+        
+        if (this.stored) {
+        file.getSession().getIothread().readslice(this);
+                }
+        
+        while (this.stored) {
+            Thread.sleep(10);
+        }
         
         //Peak picking
         //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
@@ -1112,6 +1121,7 @@ public class Slice {
                     newSeries.getData().add(new XYChart.Data(RTArray[j+RTstart], IntArray[j]/maxIntensity));
                 }
               
+                file.getSession().getIothread().lockSlice(this, false);
                 return newSeries;
     }
     
