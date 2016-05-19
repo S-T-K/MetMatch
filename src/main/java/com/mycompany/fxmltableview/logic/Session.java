@@ -60,6 +60,7 @@ public class Session {
     private SimpleFloatProperty SliceMZTolerance;
     
     private boolean peakPickchanged;
+    private boolean peakschanged;
     
     private List<SimpleStringProperty> listofadductnameproperties;
     private List<SimpleFloatProperty> listofadductmassproperties;
@@ -88,6 +89,7 @@ public class Session {
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
+        peakschanged = true;
         start = new SimpleFloatProperty (3.0f);
         end = new SimpleFloatProperty (30.0f);
         
@@ -729,6 +731,20 @@ public class Session {
      */
     public void setMinPeakLength(SimpleFloatProperty minPeakLength) {
         this.minPeakLength = minPeakLength;
+    }
+
+    /**
+     * @return the peakschanged
+     */
+    public boolean isPeakschanged() {
+        return peakschanged;
+    }
+
+    /**
+     * @param peakschanged the peakschanged to set
+     */
+    public void setPeakschanged(boolean peakschanged) {
+        this.peakschanged = peakschanged;
     }
     
 }

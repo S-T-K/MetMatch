@@ -13,14 +13,11 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_newshiftviewController">
    <children>
+      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
       <StackPane fx:id="stackpane" layoutY="35.0" prefHeight="365.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
       <ToolBar prefHeight="27.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-            <Button fx:id="button" mnemonicParsing="false" prefHeight="20.0" prefWidth="126.0" text="Recalculate">
-               <graphic>
-                  <TextField fx:id="refsetpen" minHeight="20.0" prefHeight="7.0" prefWidth="43.0" />
-               </graphic>
-            </Button>
+            <ToggleButton fx:id="paramToggle" mnemonicParsing="false" onAction="#showhideparam" prefHeight="28.0" prefWidth="140.0" text="Parameters" />
             <ChoiceBox fx:id="shiftOpacity" prefHeight="28.0" prefWidth="126.0" />
             <ToggleButton fx:id="togglePenaltySelectionButton" maxWidth="28.0" minWidth="28.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="28.0">
                <graphic>
@@ -41,6 +38,33 @@
             <Tooltip text="Shows peaks for selected files in a new window" />
          </tooltip>
       </Button>
-      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
+      <Pane fx:id="paramPane" prefHeight="365.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+         <children>
+            <TextField fx:id="y4" layoutX="124.0" layoutY="165.0" prefHeight="25.0" prefWidth="110.0" />
+            <TextField layoutX="14.0" layoutY="165.0" prefHeight="25.0" prefWidth="110.0" fx:id="x4" />
+            <TextField fx:id="y2" layoutX="124.0" layoutY="103.0" prefHeight="25.0" prefWidth="110.0" />
+            <TextField layoutX="14.0" layoutY="196.0" prefHeight="25.0" prefWidth="110.0" fx:id="x5" />
+            <TextField fx:id="y1" layoutX="124.0" layoutY="71.0" prefHeight="25.0" prefWidth="110.0" />
+            <TextField fx:id="y3" layoutX="124.0" layoutY="134.0" prefHeight="25.0" prefWidth="110.0" />
+            <TextField layoutX="14.0" layoutY="258.0" prefHeight="25.0" prefWidth="110.0" fx:id="x7" />
+            <TextField layoutX="14.0" layoutY="103.0" prefHeight="25.0" prefWidth="110.0" fx:id="x2" />
+            <TextField fx:id="y7" layoutX="124.0" layoutY="258.0" prefHeight="25.0" prefWidth="110.0" />
+            <Label fx:id="label211" alignment="CENTER" layoutX="124.0" layoutY="52.0" prefHeight="17.0" prefWidth="110.0" text="yRange" />
+            <TextField layoutX="14.0" layoutY="134.0" prefHeight="25.0" prefWidth="110.0" fx:id="x3" />
+            <TextField fx:id="y5" layoutX="124.0" layoutY="196.0" prefHeight="25.0" prefWidth="110.0" />
+            <Label fx:id="label21" alignment="CENTER" layoutX="14.0" layoutY="52.0" prefHeight="17.0" prefWidth="109.0" text="xRange" textAlignment="CENTER" />
+            <TextField layoutX="14.0" layoutY="71.0" prefHeight="25.0" prefWidth="110.0" fx:id="x1" />
+            <TextField fx:id="y6" layoutX="124.0" layoutY="227.0" prefHeight="25.0" prefWidth="110.0" />
+            <TextField layoutX="14.0" layoutY="227.0" prefHeight="25.0" prefWidth="110.0" fx:id="x6" />
+            <Slider fx:id="speed" layoutX="54.0" layoutY="31.0" majorTickUnit="1000.0" max="6000.0" minorTickCount="2" prefHeight="14.0" prefWidth="147.0" showTickMarks="true" value="3000.0" />
+            <Label fx:id="label212" alignment="CENTER" layoutX="69.0" layoutY="6.0" prefHeight="17.0" prefWidth="109.0" text="Animation Speed" textAlignment="CENTER" />
+            <Label fx:id="label213" alignment="CENTER" layoutX="190.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Slow" textAlignment="CENTER" />
+            <Label fx:id="label2131" alignment="CENTER" layoutX="14.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Fast" textAlignment="CENTER" />
+            <TextField fx:id="y8" layoutX="124.0" layoutY="289.0" prefHeight="25.0" prefWidth="110.0" />
+            <TextField layoutX="14.0" layoutY="289.0" prefHeight="25.0" prefWidth="110.0" fx:id="x8" />
+            <TextField layoutX="14.0" layoutY="320.0" prefHeight="25.0" prefWidth="110.0" fx:id="x9" />
+            <TextField fx:id="y9" layoutX="124.0" layoutY="320.0" prefHeight="25.0" prefWidth="110.0" />
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

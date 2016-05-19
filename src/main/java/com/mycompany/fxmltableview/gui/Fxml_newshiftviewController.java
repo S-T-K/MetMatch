@@ -54,6 +54,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
@@ -85,13 +86,10 @@ public class Fxml_newshiftviewController implements Initializable {
     //Gridpane holding all the graphs
     @FXML
     StackPane stackpane;
-
+    
     @FXML
-    TextField refsetpen;
-
-    @FXML
-    Button button;
-
+    ToggleButton paramToggle;
+            
     @FXML
     ChoiceBox shiftOpacity;
 
@@ -103,6 +101,15 @@ public class Fxml_newshiftviewController implements Initializable {
     
     @FXML
     AnchorPane anchorPane;
+    
+    @FXML
+    Pane paramPane;
+    
+    @FXML
+    TextField x1,x2,x3,x4,x5,x6,x7,x8,x9,y1,y2,y3,y4,y5,y6,y7,y8,y9;
+    
+    @FXML
+    Slider speed;
     
 //    @FXML
 //    ProgressBar progress;
@@ -124,13 +131,14 @@ public class Fxml_newshiftviewController implements Initializable {
     private Session session;
     ChartGenerator chartGenerator;
     private FXMLTableViewController supercontroller;
-    ObservableList<Entry> olist;
+    private ObservableList<Entry> olist;
     private HashMap<RawDataFile, List<XYChart.Series>> filetoseries;
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
     private HashMap<Ellipse, TreeItem<Entry>> nodetoogroup;
     private DropShadow hover = new DropShadow();
     private String OpacityMode;
-    
+    private int[] xRanges;
+    private int[] yRanges;
     
     //newShift
     private XYChart.Series topSeries;
@@ -145,8 +153,19 @@ public class Fxml_newshiftviewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        
-        
+        paramToggle.setSelected(true);
+        xRanges = new int[9];
+        yRanges = new int[9];
+        paramPane.setVisible(true);
+        stackpane.setVisible(false);
+        x1.setText("1000");
+        y1.setText("100");
+        x2.setText("100");
+        y2.setText("10");
+        x3.setText("10");
+        y3.setText("4");
+        x4.setText("1");
+        y4.setText("1");
         
         //Load Image
         Image image = new Image("file:PenSelectionImage.png", true);
@@ -202,7 +221,7 @@ public class Fxml_newshiftviewController implements Initializable {
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
 
         Collections.sort(list, new Entry.orderbyRT());
-        olist = list;
+                setOlist(list);
         //get selected Entry
 
       
@@ -417,14 +436,14 @@ public class Fxml_newshiftviewController implements Initializable {
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
 
-        Collections.sort(list, new Entry.orderbyRT());
+       
         olist = list;
         //get selected Entry
 
-      
+      if (areachart==null) {
              areachart = chartGenerator.generateNewShift(list); 
              areachart.setAnimated(true);
-             
+      
         
         Platform.runLater(new Runnable() {
             @Override
@@ -433,7 +452,7 @@ public class Fxml_newshiftviewController implements Initializable {
 
             }
         });
-  
+      }
 
         Task task = new Task<Void>() {
             @Override
@@ -446,13 +465,14 @@ public class Fxml_newshiftviewController implements Initializable {
                             if (currentfile.getActive().booleanValue()) {
                                 
 
-                                Collections.sort(list, new Entry.orderbyRT());
-                                matrix = new float[list.size()][session.getResolution()];
+                                
 
                                 CountDownLatch latchpeak = new CountDownLatch(1);
                                 Task task = new Task<Void>() {
                                     @Override
                                     public Void call() throws IOException, InterruptedException {
+                                        
+                                        matrix = new float[list.size()][session.getResolution()];
                                         session.getIothread().lockFile(currentfile, true);
                                         double start = System.currentTimeMillis();
                                         LinkedList<Integer> queue = new LinkedList<Integer>();
@@ -492,15 +512,18 @@ public class Fxml_newshiftviewController implements Initializable {
                                         System.out.println("Total peak picking time: " + picktime);
                                         System.out.println("Total time: " + (System.currentTimeMillis()-start));
                                         session.getIothread().lockFile(currentfile, false);
+                                        
                                         return null;
                                     }
-
+                                    
                                 };
 
                                 //new thread that executes task
+                              if (scatterchart==null) {
                                 new Thread(task).start();
                                 latchpeak.await();
-
+                              
+                              
                                scatterchart = chartGenerator.generateNewPeak(list);
                                
                                 Platform.runLater(new Runnable() {
@@ -510,24 +533,23 @@ public class Fxml_newshiftviewController implements Initializable {
 
                                     }
                                 });
-                                
+                              }
                                 //calculation
                                 //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
                                 centroids = new float[list.size()];
                                 
-                                gravity(1000,100);
-                           
                                 
-                                gravity(100,10);
-                               gravity(10,4);
-                                gravity(1,1);
-                                //gravity(1,5);
-                                
-
-                                
-                                
-
-         
+                                if (!getParameters()) {
+                                    System.out.println("Error while parsing Parameters!!!!");
+                                    System.out.println("Please check Parameters, all have to be Integers.");
+                                    return null;
+                                }
+                                int count = 0;
+                                while (xRanges[count]!=0) {
+                                    gravity(xRanges[count],yRanges[count]);
+                                    count++;
+                                }
+     
                               
                             }
                         }
@@ -536,8 +558,9 @@ public class Fxml_newshiftviewController implements Initializable {
 
                 //don't recalculate unless something changes
                 session.setPeakPickchanged(false);
+               
                 
-                
+                paramToggle.setDisable(false);
                 return null;
             }
 
@@ -560,7 +583,7 @@ public class Fxml_newshiftviewController implements Initializable {
      */
     public void setSupercontroller(FXMLTableViewController supercontroller) {
         this.supercontroller = supercontroller;
-        refsetpen.textProperty().bindBidirectional(supercontroller.session.getListofDatasets().get(0).getPenaltyProperty(), new NumberStringConverter());
+      
 
         //Colors selected files in Shiftview, reacts to selection
         ListChangeListener<RawDataFile> listener = new ListChangeListener<RawDataFile>() {
@@ -979,6 +1002,7 @@ public class Fxml_newshiftviewController implements Initializable {
      */
     public void setMidSeries(XYChart.Series midSeries) {
         this.midSeries = midSeries;
+        midSeries.getNode().toFront();
     }
 
     /**
@@ -1324,7 +1348,7 @@ float[] weights = new float[centroids.length];
 
                                     }
                                 });
-        Thread.sleep(3000);
+        Thread.sleep((long) speed.getValue());
         
          float[] ncentroids = new float[centroids.length];
         for (int i = 0; i<centroids.length; i++) {
@@ -1389,8 +1413,119 @@ float[] weights = new float[centroids.length];
                                 });
        
         centroids=ncentroids;
-        Thread.sleep(3000);
+        Thread.sleep((long) speed.getValue());
     }
    
+    public void showhideparam() throws IOException, InterruptedException {
+        paramPane.setVisible(paramToggle.selectedProperty().get());
+        stackpane.setVisible(!paramToggle.selectedProperty().get());
+        if (!paramToggle.selectedProperty().get()) {
+            calculate(olist);
+            paramToggle.setDisable(true);
+        }
+    }
+    
+    public boolean getParameters () {
+        int count = 0;
+        xRanges=new int[9];
+        yRanges=new int[9];
+        if (!x1.getText().isEmpty()&&!y1.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x1.getText());
+                yRanges[count]=Integer.parseInt(y1.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+         if (!x2.getText().isEmpty()&&!y2.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x2.getText());
+                yRanges[count]=Integer.parseInt(y2.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+         if (!x3.getText().isEmpty()&&!y3.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x3.getText());
+                yRanges[count]=Integer.parseInt(y3.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+          if (!x4.getText().isEmpty()&&!y4.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x4.getText());
+                yRanges[count]=Integer.parseInt(y4.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+       if (!x5.getText().isEmpty()&&!y5.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x5.getText());
+                yRanges[count]=Integer.parseInt(y5.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+             if (!x6.getText().isEmpty()&&!y6.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x6.getText());
+                yRanges[count]=Integer.parseInt(y6.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+              if (!x7.getText().isEmpty()&&!y7.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x7.getText());
+                yRanges[count]=Integer.parseInt(y7.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+              if (!x8.getText().isEmpty()&&!y8.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x8.getText());
+                yRanges[count]=Integer.parseInt(y8.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+                if (!x9.getText().isEmpty()&&!y9.getText().isEmpty()) {
+            try {
+                xRanges[count]=Integer.parseInt(x9.getText());
+                yRanges[count]=Integer.parseInt(y9.getText());
+                count++;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+                return true;
+    }
+
+    /**
+     * @return the olist
+     */
+    public ObservableList<Entry> getOlist() {
+        return olist;
+    }
+
+    /**
+     * @param olist the olist to set
+     */
+    public void setOlist(ObservableList<Entry> olist) {
+        this.olist = olist;
+         Collections.sort(olist, new Entry.orderbyRT());
+    }
     
 }

@@ -1470,12 +1470,12 @@ public class ChartGenerator {
             XYChart.Data data1 = new XYChart.Data(list.get(i).getRT(), 100);
             topSeries.getData().add(data1);
             newshiftcontroller.setTopSeries(topSeries);
-            XYChart.Data data2 = new XYChart.Data(list.get(i).getRT(), 0.0f);
-            midSeries.getData().add(data2);
-            newshiftcontroller.setMidSeries(midSeries);
             XYChart.Data data3 = new XYChart.Data(list.get(i).getRT(), 0);
             botSeries.getData().add(data3);
             newshiftcontroller.setBotSeries(botSeries);
+            XYChart.Data data2 = new XYChart.Data(list.get(i).getRT(), 0.0f);
+            midSeries.getData().add(data2);
+            newshiftcontroller.setMidSeries(midSeries);
         }
         
         linechart.applyCss();

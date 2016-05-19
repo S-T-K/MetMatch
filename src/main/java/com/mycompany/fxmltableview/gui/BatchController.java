@@ -287,6 +287,7 @@ public class BatchController implements Initializable {
 
                 }
                 session.setPeakPickchanged(true);
+                 session.setPeakschanged(true);
                 return null;
             }
 
