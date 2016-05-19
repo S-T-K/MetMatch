@@ -1467,13 +1467,13 @@ public class ChartGenerator {
         linechart.getData().add(botSeries);
         
         for (int i = 0; i<list.size(); i++) {
-            XYChart.Data data1 = new XYChart.Data(list.get(i).getRT(), 80);
+            XYChart.Data data1 = new XYChart.Data(list.get(i).getRT(), 100);
             topSeries.getData().add(data1);
             newshiftcontroller.setTopSeries(topSeries);
             XYChart.Data data2 = new XYChart.Data(list.get(i).getRT(), 0.0f);
             midSeries.getData().add(data2);
             newshiftcontroller.setMidSeries(midSeries);
-            XYChart.Data data3 = new XYChart.Data(list.get(i).getRT(), -80);
+            XYChart.Data data3 = new XYChart.Data(list.get(i).getRT(), 0);
             botSeries.getData().add(data3);
             newshiftcontroller.setBotSeries(botSeries);
         }
@@ -1481,18 +1481,18 @@ public class ChartGenerator {
         linechart.applyCss();
         //Color Top Series
         ((Group) topSeries.getNode()).getChildren().get(1).setVisible(false);
-        ((Group) topSeries.getNode()).getChildren().get(0).setVisible(false);
-        ((Path)((Group) topSeries.getNode()).getChildren().get(0)).setStroke(Color.ORANGE);
+        ((Group) topSeries.getNode()).getChildren().get(0).setVisible(true);
+        ((Path)((Group) topSeries.getNode()).getChildren().get(0)).setStroke(Color.TRANSPARENT);
         ((Path)((Group) topSeries.getNode()).getChildren().get(0)).setFill(Color.LIGHTSALMON);
         
         //Color Middle Series
         ((Group) midSeries.getNode()).getChildren().get(0).setVisible(false);
         ((Path)((Group) midSeries.getNode()).getChildren().get(1)).setStroke(Color.RED);
         
-        //Color Top Series
+        //Color Bottom Series
         ((Group) botSeries.getNode()).getChildren().get(1).setVisible(false);
-         ((Group) botSeries.getNode()).getChildren().get(0).setVisible(false);
-        ((Path)((Group) botSeries.getNode()).getChildren().get(0)).setStroke(Color.ORANGE);
+         ((Group) botSeries.getNode()).getChildren().get(0).setVisible(true);
+        ((Path)((Group) botSeries.getNode()).getChildren().get(0)).setStroke(Color.TRANSPARENT);
         ((Path)((Group) botSeries.getNode()).getChildren().get(0)).setFill(Color.color(0.95, 0.95, 0.95));
         
 //                    ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.color(1,0.5,0.5));
@@ -1602,8 +1602,10 @@ public class ChartGenerator {
         yAxis.setAutoRanging(false);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(40);
-        yAxis.setLowerBound(-80);
-        yAxis.setUpperBound(80);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(session.getResolution());
+        yAxis.setOpacity(0);
+        xAxis.setOpacity(0);
         return linechart;
     } 
      
@@ -1774,8 +1776,9 @@ public class ChartGenerator {
         xAxis.setAutoRanging(false);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(40);
-        yAxis.setLowerBound(-80);
-        yAxis.setUpperBound(80);
+        yAxis.setLowerBound(session.getRTTolerance()*-60);
+        yAxis.setUpperBound(session.getRTTolerance()*60);
+       
 //        xAxis.setLowerBound(session.getStart().floatValue()-5.0f);
 //        xAxis.setUpperBound(session.getEnd().floatValue()+5.0f);
         return scatterchart;

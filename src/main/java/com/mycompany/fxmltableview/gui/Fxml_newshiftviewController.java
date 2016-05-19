@@ -423,6 +423,7 @@ public class Fxml_newshiftviewController implements Initializable {
 
       
              areachart = chartGenerator.generateNewShift(list); 
+             areachart.setAnimated(true);
              
         
         Platform.runLater(new Runnable() {
@@ -517,8 +518,8 @@ public class Fxml_newshiftviewController implements Initializable {
                                 gravity(1000,100);
                            
                                 
-                                gravity(100,5);
-                               gravity(10,2);
+                                gravity(100,10);
+                               gravity(10,4);
                                 gravity(1,1);
                                 //gravity(1,5);
                                 
@@ -1309,6 +1310,22 @@ float[] weights = new float[centroids.length];
     }
     
     public void gravity(int xrange, int yrange) throws InterruptedException {
+        
+        Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                   
+        for (int i = 0; i<centroids.length; i++) {
+            ((XYChart.Data)topSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+yrange);
+            ((XYChart.Data)botSeries.getData().get(i)).YValueProperty().setValue(centroids[i]-yrange);
+        }
+        
+            
+
+                                    }
+                                });
+        Thread.sleep(3000);
+        
          float[] ncentroids = new float[centroids.length];
         for (int i = 0; i<centroids.length; i++) {
             ncentroids[i]=centroids[i];
@@ -1358,13 +1375,13 @@ float[] weights = new float[centroids.length];
             }
             }
         }
-        
+       
         Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
                                    
         for (int i = 0; i<centroids.length; i++) {
-            ((XYChart.Data)midSeries.getData().get(i)).YValueProperty().setValue((ncentroids[i]-50)*1.8);
+            ((XYChart.Data)midSeries.getData().get(i)).YValueProperty().setValue(ncentroids[i]);
         }
             
 
