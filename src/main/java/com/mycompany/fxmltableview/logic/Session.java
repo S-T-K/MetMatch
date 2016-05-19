@@ -68,12 +68,13 @@ public class Session {
     private List<Float> listofadductmasses;
     
     private PropArrayCalculator proparraycalculator;
+    private GravityCalculator gravitycalculator;
     
     public Session() {
         
         
         startIOThread();
-       
+       this.gravitycalculator=new GravityCalculator(this);
         
         
         this.reference= new Reference();
@@ -745,6 +746,20 @@ public class Session {
      */
     public void setPeakschanged(boolean peakschanged) {
         this.peakschanged = peakschanged;
+    }
+
+    /**
+     * @return the gravitycalculator
+     */
+    public GravityCalculator getGravitycalculator() {
+        return gravitycalculator;
+    }
+
+    /**
+     * @param gravitycalculator the gravitycalculator to set
+     */
+    public void setGravitycalculator(GravityCalculator gravitycalculator) {
+        this.gravitycalculator = gravitycalculator;
     }
     
 }

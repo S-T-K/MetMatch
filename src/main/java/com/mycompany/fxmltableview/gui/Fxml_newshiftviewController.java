@@ -10,6 +10,7 @@ import com.mycompany.fxmltableview.datamodel.Peak;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Slice;
 import com.mycompany.fxmltableview.logic.CertaintyCalculator;
+import com.mycompany.fxmltableview.logic.GravityCalculator;
 import com.mycompany.fxmltableview.logic.Session;
 import java.io.IOException;
 
@@ -86,10 +87,10 @@ public class Fxml_newshiftviewController implements Initializable {
     //Gridpane holding all the graphs
     @FXML
     StackPane stackpane;
-    
+
     @FXML
     ToggleButton paramToggle;
-            
+
     @FXML
     ChoiceBox shiftOpacity;
 
@@ -98,26 +99,23 @@ public class Fxml_newshiftviewController implements Initializable {
 
     @FXML
     ToggleButton togglePenaltySelectionButton;
-    
+
     @FXML
     AnchorPane anchorPane;
-    
+
     @FXML
     Pane paramPane;
-    
+
     @FXML
-    TextField x1,x2,x3,x4,x5,x6,x7,x8,x9,y1,y2,y3,y4,y5,y6,y7,y8,y9;
-    
+    TextField x1, x2, x3, x4, x5, x6, x7, x8, x9, y1, y2, y3, y4, y5, y6, y7, y8, y9;
+
     @FXML
     Slider speed;
-    
+
 //    @FXML
 //    ProgressBar progress;
-    
 //    @FXML
 //    ProgressIndicator calculating;
-    
-            
     private boolean penSelection = false;
     private Rectangle select;
     ObjectProperty<Point2D> anchor;
@@ -137,15 +135,14 @@ public class Fxml_newshiftviewController implements Initializable {
     private HashMap<Ellipse, TreeItem<Entry>> nodetoogroup;
     private DropShadow hover = new DropShadow();
     private String OpacityMode;
-    private int[] xRanges;
-    private int[] yRanges;
-    
+
     //newShift
     private XYChart.Series topSeries;
     private XYChart.Series midSeries;
     private XYChart.Series botSeries;
-    float [][]matrix;
+    float[][] matrix;
     float[] centroids;
+    private GravityCalculator grav;
 
     /**
      * Initializes the controller class.
@@ -154,19 +151,11 @@ public class Fxml_newshiftviewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         paramToggle.setSelected(true);
-        xRanges = new int[9];
-        yRanges = new int[9];
         paramPane.setVisible(true);
         stackpane.setVisible(false);
-        x1.setText("1000");
-        y1.setText("100");
-        x2.setText("100");
-        y2.setText("10");
-        x3.setText("10");
-        y3.setText("4");
-        x4.setText("1");
-        y4.setText("1");
+
         
+
         //Load Image
         Image image = new Image("file:PenSelectionImage.png", true);
         PenSelectionImage.setImage(image);
@@ -199,130 +188,106 @@ public class Fxml_newshiftviewController implements Initializable {
 
         });
         shiftOpacity.getSelectionModel().select(0);
-       
+
     }
 
     //method that generates the graphs
     public void print(ObservableList<Entry> list) throws InterruptedException, IOException {
-       //progress.setVisible(true);
+        //progress.setVisible(true);
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
 
-        
-        
-        //CountDownLatch latch = new CountDownLatch(1);
-        
-        //supercontroller.calculate(latch, progress);
-        //latch.await();
-        
-        setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
-        setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
-        setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
+                //CountDownLatch latch = new CountDownLatch(1);
+                //supercontroller.calculate(latch, progress);
+                //latch.await();
+                setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
+                setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
+                setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
 
-        Collections.sort(list, new Entry.orderbyRT());
+                Collections.sort(list, new Entry.orderbyRT());
                 setOlist(list);
-        //get selected Entry
+                //get selected Entry
 
-      
-             areachart = chartGenerator.generateNewShift(list); 
-             areachart.setAnimated(true);
-             //scatterchart = chartGenerator.generateNewPeak(null);
-        
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                stackpane.getChildren().add(areachart);
-                //stackpane.getChildren().add(scatterchart);
+                areachart = chartGenerator.generateNewShift(list);
+                areachart.setAnimated(true);
+                //scatterchart = chartGenerator.generateNewPeak(null);
 
-            }
-        });
-        
-        RawDataFile file = session.getAllFiles().get(0);
-        //Peak picking
-        CountDownLatch latchpeak = new CountDownLatch(1);
-                                Task task = new Task<Void>() {
-                                    @Override
-                                    public Void call() throws IOException, InterruptedException {
-                                        session.getIothread().lockFile(file, true);
-                                        double start = System.currentTimeMillis();
-                                        LinkedList<Integer> queue = new LinkedList<Integer>();
-                                        //go trough and check if all are ready
-                                        for (int i = 0; i < list.size(); i++) {
-                                            //if not ready, add to queue
-                                            if (list.get(i).isStored(file)) {
-                                                queue.add(i);
-                                                session.getIothread().readOGroup(list.get(i), file);
-                                                //if ready calculate
-                                            } else {
-                                                list.get(i).peakpickOGroup(file);
-                                                System.out.println(i+" of " + list.size() + " OGroups calculated");
-                                            }
-                                        }
-                                        System.out.println("Size of Queue: " + queue.size());
-                                        //go through queue until it is empty
-                                        double picktime = 0;
-                                        while (queue.size() > 0) {
-                                            int size = queue.size();
-                                            for (int j = 0; j<size; j++) {
-                                            Integer current = queue.pop();
-                                            if (list.get(current).isStored(file)) {
-                                                queue.add(current);
-                                            } else {
-                                                double pick = System.currentTimeMillis();
-                                                list.get(current).peakpickOGroup(file);
-                                                picktime+=System.currentTimeMillis()-pick;
-                                               
-                                            }}
-                                        System.out.println("Size of Queue: " + queue.size());
-                                        }
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        stackpane.getChildren().add(areachart);
+                        //stackpane.getChildren().add(scatterchart);
 
-                                        latchpeak.countDown();
-                                        System.out.println("Total peak picking time: " + picktime);
-                                        System.out.println("Total time: " + (System.currentTimeMillis()-start));
-                                        session.getIothread().lockFile(file, false);
-                                        return null;
-                                    }
+                    }
+                });
 
-                                };
+                RawDataFile file = session.getAllFiles().get(0);
+                //Peak picking
+                CountDownLatch latchpeak = new CountDownLatch(1);
+                Task task = new Task<Void>() {
+                    @Override
+                    public Void call() throws IOException, InterruptedException {
+                        session.getIothread().lockFile(file, true);
+                        double start = System.currentTimeMillis();
+                        LinkedList<Integer> queue = new LinkedList<Integer>();
+                        //go trough and check if all are ready
+                        for (int i = 0; i < list.size(); i++) {
+                            //if not ready, add to queue
+                            if (list.get(i).isStored(file)) {
+                                queue.add(i);
+                                session.getIothread().readOGroup(list.get(i), file);
+                                //if ready calculate
+                            } else {
+                                list.get(i).peakpickOGroup(file);
+                                System.out.println(i + " of " + list.size() + " OGroups calculated");
+                            }
+                        }
+                        System.out.println("Size of Queue: " + queue.size());
+                        //go through queue until it is empty
+                        double picktime = 0;
+                        while (queue.size() > 0) {
+                            int size = queue.size();
+                            for (int j = 0; j < size; j++) {
+                                Integer current = queue.pop();
+                                if (list.get(current).isStored(file)) {
+                                    queue.add(current);
+                                } else {
+                                    double pick = System.currentTimeMillis();
+                                    list.get(current).peakpickOGroup(file);
+                                    picktime += System.currentTimeMillis() - pick;
 
-                                //new thread that executes task
-                                new Thread(task).start();
-                                latchpeak.await();
-        
-        
-        
-        
-        int iterations = 10;
-        
-        //calculate initial centroids
-       //int[][] windows = calculateWindows(list);
-       //float[] centroids = new float[list.size()];
-       //TODO: peak weights
-       
-      //calculateCentroids(file, windows, list, centroids, true);
-      //calculateAreas(file,list);
-       
-       
-       
-       
-       
-       //iterate
-       for (int i = 0; i<iterations; i++) {
-           
-           
-           
-           
-           
-           
-       }
-        
-               
-        
-        
-        
-        
-       
+                                }
+                            }
+                            System.out.println("Size of Queue: " + queue.size());
+                        }
+
+                        latchpeak.countDown();
+                        System.out.println("Total peak picking time: " + picktime);
+                        System.out.println("Total time: " + (System.currentTimeMillis() - start));
+                        session.getIothread().lockFile(file, false);
+                        return null;
+                    }
+
+                };
+
+                //new thread that executes task
+                new Thread(task).start();
+                latchpeak.await();
+
+                int iterations = 10;
+
+                //calculate initial centroids
+                //int[][] windows = calculateWindows(list);
+                //float[] centroids = new float[list.size()];
+                //TODO: peak weights
+                //calculateCentroids(file, windows, list, centroids, true);
+                //calculateAreas(file,list);
+                //iterate
+                for (int i = 0; i < iterations; i++) {
+
+                }
+
 //                for (int j = 0; j<midSeries.getData().size(); j++) {
 //                    ((XYChart.Data)midSeries.getData().get(j)).YValueProperty().setValue(centroids[j]);
 //                    
@@ -330,9 +295,8 @@ public class Fxml_newshiftviewController implements Initializable {
 //                    //((XYChart.Data)botSeries.getData().get(j)).YValueProperty().setValue(centroids[j]);
 //                }
                 Thread.sleep(300);
-            
 
-        //add listener to every color property, to show changes instantly
+                //add listener to every color property, to show changes instantly
 //        for (int i = 0; i < filetoseries.size(); i++) {
 //            Set<RawDataFile> files = filetoseries.keySet();
 //            for (RawDataFile file : files) {
@@ -367,7 +331,7 @@ public class Fxml_newshiftviewController implements Initializable {
 //        }
 //        progress.setVisible(false);
 //        calculating.setVisible(false);
-        return null;
+                return null;
             }
 
         };
@@ -430,48 +394,42 @@ public class Fxml_newshiftviewController implements Initializable {
 //        //new thread that executes task
 //        new Thread(task).start();
 //    }
-    
-     public void calculate(ObservableList<Entry> list) throws IOException, InterruptedException {
+    public void calculate(ObservableList<Entry> list) throws IOException, InterruptedException {
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
 
-       
         olist = list;
         //get selected Entry
 
-      if (areachart==null) {
-             areachart = chartGenerator.generateNewShift(list); 
-             areachart.setAnimated(true);
-      
-        
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                stackpane.getChildren().add(areachart);
+        if (areachart == null) {
+            areachart = chartGenerator.generateNewShift(list);
+            areachart.setAnimated(true);
 
-            }
-        });
-      }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    stackpane.getChildren().add(areachart);
+
+                }
+            });
+        }
 
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
-                
+
                 for (int d = 0; d < session.getListofDatasets().size(); d++) {
                     if (session.getListofDatasets().get(d).getActive()) {
                         for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
                             RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
                             if (currentfile.getActive().booleanValue()) {
-                                
-
-                                
 
                                 CountDownLatch latchpeak = new CountDownLatch(1);
                                 Task task = new Task<Void>() {
                                     @Override
                                     public Void call() throws IOException, InterruptedException {
-                                        
+
                                         matrix = new float[list.size()][session.getResolution()];
                                         session.getIothread().lockFile(currentfile, true);
                                         double start = System.currentTimeMillis();
@@ -486,7 +444,7 @@ public class Fxml_newshiftviewController implements Initializable {
                                             } else {
                                                 list.get(i).peakpickOGroup(currentfile);
                                                 list.get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
-                                                System.out.println(i+" of " + list.size() + " OGroups calculated");
+                                                System.out.println(i + " of " + list.size() + " OGroups calculated");
                                             }
                                         }
                                         System.out.println("Size of Queue: " + queue.size());
@@ -494,63 +452,89 @@ public class Fxml_newshiftviewController implements Initializable {
                                         double picktime = 0;
                                         while (queue.size() > 0) {
                                             int size = queue.size();
-                                            for (int j = 0; j<size; j++) {
-                                            Integer current = queue.pop();
-                                            if (list.get(current).isStored(currentfile)) {
-                                                queue.add(current);
-                                            } else {
-                                                double pick = System.currentTimeMillis();
-                                                list.get(current).peakpickOGroup(currentfile);
-                                                picktime+=System.currentTimeMillis()-pick;
-                                                list.get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
-                                               
-                                            }}
-                                        System.out.println("Size of Queue: " + queue.size());
+                                            for (int j = 0; j < size; j++) {
+                                                Integer current = queue.pop();
+                                                if (list.get(current).isStored(currentfile)) {
+                                                    queue.add(current);
+                                                } else {
+                                                    double pick = System.currentTimeMillis();
+                                                    list.get(current).peakpickOGroup(currentfile);
+                                                    picktime += System.currentTimeMillis() - pick;
+                                                    list.get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
+
+                                                }
+                                            }
+                                            System.out.println("Size of Queue: " + queue.size());
                                         }
 
                                         latchpeak.countDown();
                                         System.out.println("Total peak picking time: " + picktime);
-                                        System.out.println("Total time: " + (System.currentTimeMillis()-start));
+                                        System.out.println("Total time: " + (System.currentTimeMillis() - start));
                                         session.getIothread().lockFile(currentfile, false);
-                                        
+
                                         return null;
                                     }
-                                    
+
                                 };
 
                                 //new thread that executes task
-                              if (scatterchart==null) {
-                                new Thread(task).start();
-                                latchpeak.await();
-                              
-                              
-                               scatterchart = chartGenerator.generateNewPeak(list);
-                               
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        stackpane.getChildren().add(scatterchart);
+                                if (scatterchart == null) {
+                                    new Thread(task).start();
+                                    latchpeak.await();
 
-                                    }
-                                });
-                              }
+                                    scatterchart = chartGenerator.generateNewPeak(list);
+
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            stackpane.getChildren().add(scatterchart);
+
+                                        }
+                                    });
+                                }
                                 //calculation
                                 //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
                                 centroids = new float[list.size()];
-                                
-                                
+
                                 if (!getParameters()) {
                                     System.out.println("Error while parsing Parameters!!!!");
                                     System.out.println("Please check Parameters, all have to be Integers.");
                                     return null;
                                 }
                                 int count = 0;
-                                while (xRanges[count]!=0) {
-                                    gravity(xRanges[count],yRanges[count]);
+                                while (grav.getxRanges()[count] != 0) {
+                                    //draw new borders
+                                    int yrange = grav.getyRanges()[count];
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            for (int i = 0; i < centroids.length; i++) {
+                                                ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(centroids[i] + yrange);
+                                                ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(centroids[i] - yrange);
+                                            }
+                                        }
+                                    });
+
+                                    Thread.sleep((long) speed.getValue());
+
+                                    centroids = grav.gravity(count, matrix, centroids);
+
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            for (int i = 0; i < centroids.length; i++) {
+                                                ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
+                                            }
+
+                                        }
+                                    });
+
+                                    Thread.sleep((long) speed.getValue());
+
                                     count++;
+
                                 }
-     
-                              
+
                             }
                         }
                     }
@@ -558,8 +542,7 @@ public class Fxml_newshiftviewController implements Initializable {
 
                 //don't recalculate unless something changes
                 session.setPeakPickchanged(false);
-               
-                
+
                 paramToggle.setDisable(false);
                 return null;
             }
@@ -583,7 +566,6 @@ public class Fxml_newshiftviewController implements Initializable {
      */
     public void setSupercontroller(FXMLTableViewController supercontroller) {
         this.supercontroller = supercontroller;
-      
 
         //Colors selected files in Shiftview, reacts to selection
         ListChangeListener<RawDataFile> listener = new ListChangeListener<RawDataFile>() {
@@ -599,32 +581,34 @@ public class Fxml_newshiftviewController implements Initializable {
                         for (int i = 0; i < completeList.size(); i++) {
                             if (completeList.get(i).isselected()) {
                                 List<XYChart.Series> list = filetoseries.get(completeList.get(i));
-                                if (list!=null) {
-                                for (int j = 0; j < list.size(); j++) {
-                                    for (int k = 0; k < list.get(j).getData().size(); k++) {
+                                if (list != null) {
+                                    for (int j = 0; j < list.size(); j++) {
+                                        for (int k = 0; k < list.get(j).getData().size(); k++) {
 
-                                        Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
-                                        //node.setEffect(hover);
+                                            Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
+                                            //node.setEffect(hover);
 
-                                        ((Ellipse) node).setFill(Color.RED);
-                                        node.toFront();
+                                            ((Ellipse) node).setFill(Color.RED);
+                                            node.toFront();
+                                        }
                                     }
-                                }}
+                                }
                             } else {
                                 List<XYChart.Series> list = filetoseries.get(completeList.get(i));
-                                if (list!=null){
-                                for (int j = 0; j < list.size(); j++) {
-                                    for (int k = 0; k < list.get(j).getData().size(); k++) {
+                                if (list != null) {
+                                    for (int j = 0; j < list.size(); j++) {
+                                        for (int k = 0; k < list.get(j).getData().size(); k++) {
 
-                                        Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
-                                        //node.setEffect(hover);
+                                            Node node = ((XYChart.Data) list.get(j).getData().get(k)).getNode();
+                                            //node.setEffect(hover);
 
-                                        ((Ellipse) node).setFill(completeList.get(i).getColor());
+                                            ((Ellipse) node).setFill(completeList.get(i).getColor());
+                                        }
+
                                     }
 
                                 }
-
-                            }}
+                            }
                         }
 
                     }
@@ -850,7 +834,6 @@ public class Fxml_newshiftviewController implements Initializable {
 //        for (Map.Entry<ListChangeListener, ObservableList> lis : listlisteners.entrySet()) {
 //            lis.getValue().removeListener(lis.getKey());
 //        }
-  
     }
 
     public Session getSession() {
@@ -863,6 +846,8 @@ public class Fxml_newshiftviewController implements Initializable {
     public void setSession(Session session) {
         this.session = session;
         this.chartGenerator.setSession(session);
+        this.grav = session.getGravitycalculator();
+        initializeparams();
     }
 
     /**
@@ -959,21 +944,19 @@ public class Fxml_newshiftviewController implements Initializable {
 //        }
 //
 //    }
-
     public void showPeakView() throws IOException {
-        
-         Stage stage = new Stage();
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_peakview.fxml"));
-                        Pane myPane = (Pane) loader.load();
-                        Scene myScene = new Scene(myPane);
-                        stage.setScene(myScene);
-                        Fxml_peakviewController controller = loader.<Fxml_peakviewController>getController();
-                        controller.setOlist(olist);
-                        controller.setSession(session);
-                        controller.print();
-                        stage.show();
-        
-        
+
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_peakview.fxml"));
+        Pane myPane = (Pane) loader.load();
+        Scene myScene = new Scene(myPane);
+        stage.setScene(myScene);
+        Fxml_peakviewController controller = loader.<Fxml_peakviewController>getController();
+        controller.setOlist(olist);
+        controller.setSession(session);
+        controller.print();
+        stage.show();
+
     }
 
     /**
@@ -1018,33 +1001,32 @@ public class Fxml_newshiftviewController implements Initializable {
     public void setBotSeries(XYChart.Series botSeries) {
         this.botSeries = botSeries;
     }
-    
-    
+
     public int[][] calculateWindows(ObservableList<Entry> list) {
         float range = 3f;
-         //windows[0] holds the start OGroup of each window, windows[1] holds the end
+        //windows[0] holds the start OGroup of each window, windows[1] holds the end
         int[][] windows = new int[list.size()][2];
-        
+
         //for all Ogroups
-        for (int i = 0; i<list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             //get start
             int start = i;
-            while (start>0&&list.get(i).getRT()-list.get(start-1).getRT()<=range) {
+            while (start > 0 && list.get(i).getRT() - list.get(start - 1).getRT() <= range) {
                 start--;
             }
             int end = i;
-            while (end<list.size()-1&&list.get(end+1).getRT()-list.get(i).getRT()<=range) {
+            while (end < list.size() - 1 && list.get(end + 1).getRT() - list.get(i).getRT() <= range) {
                 end++;
             }
-            
+
             windows[i][0] = start;
             windows[i][1] = end;
-            
+
         }
-        
+
         return windows;
     }
-   
+
     //windows holds start and end, centroids holds the centroid for each OGroup, intitialize is true if it is the first iteration
     public void calculateCentroids(RawDataFile file, int[][] windows, ObservableList<Entry> list, float[] centroids, boolean initialize) throws InterruptedException {
 //        for (int i = 0; i<list.size(); i++) {
@@ -1072,8 +1054,7 @@ public class Fxml_newshiftviewController implements Initializable {
 //            }
 //            
 //        }
-       
-        
+
 //          for (int i = 0; i<list.size(); i++) {
 //            float weights = 0;
 //            float peaks = 0;
@@ -1131,291 +1112,287 @@ public class Fxml_newshiftviewController implements Initializable {
 //                            System.out.println(-60+10*maxint);
 //            
 //        }
+        float[] weights = new float[centroids.length];
 
-float[] weights = new float[centroids.length];
-            
-           ArrayList<Peak>[] allpeaks = (ArrayList<Peak>[])new ArrayList[list.size()];
-           for (int i = 0; i<list.size(); i++) {
-            
+        ArrayList<Peak>[] allpeaks = (ArrayList<Peak>[]) new ArrayList[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+
             ArrayList<Peak> peaks = new ArrayList<Peak>();
-            for (int w = windows[i][0]; w<=windows[i][1]; w++) {
-                for (int j = 0; j<list.get(w).getListofAdducts().size(); j++) {
+            for (int w = windows[i][0]; w <= windows[i][1]; w++) {
+                for (int j = 0; j < list.get(w).getListofAdducts().size(); j++) {
                     if (list.get(w).getListofAdducts().get(j).getListofSlices().containsKey(file)) {
                         Slice slice = list.get(w).getListofAdducts().get(j).getListofSlices().get(file);
-                        if (slice.getListofPeaks()!=null){
+                        if (slice.getListofPeaks() != null) {
                             peaks.addAll(slice.getListofPeaks());
-                    }
+                        }
                     }
 
                 }
-        }
+            }
             Collections.sort(peaks, new Peak.orderbyIndexShift());
-            allpeaks[i]=peaks;
-           }
-             System.out.println("Peak lists created");
-           
-           //initial calculations
-           float dist = 3;
-           for (int i = 0; i<list.size(); i++) {
-                if (allpeaks[i].size()>0) {
-           
-           float max = 0; 
-            int maxint = 0;
-           
-            for (int b = 0; b< allpeaks[i].size(); b++) {
-            float max2 = 1;
-            int start = b-1;
-            while (start>0&&(allpeaks[i].get(b).getIndexshift()*60-allpeaks[i].get(start-1).getIndexshift()*60)<=dist) {
-                max2+=1;
-                start--;
-            }
-            int end = b+1;
-            while (end<allpeaks[i].size()-2&&(allpeaks[i].get(end+1).getIndexshift()*60-allpeaks[i].get(b).getIndexshift()*60)<=dist) {
-                max2+=1;
-                end++;
-            }
-                
-            
-            if (max2>max) {
-                max = max2;
-                maxint = b;
-            }
-                
-            }
-            centroids[i] = allpeaks[i].get(maxint).getIndexshift()*60;
-            weights[i] = max;
-            ((XYChart.Data)midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
+            allpeaks[i] = peaks;
         }
-                System.out.println(i);
-           }
-           
-           //iterate
-           for (int t = 0; t<50; t++) {
-               dist = dist-0.05f;
-            
-           float[] ncentroids = new float[centroids.length];
-           float[] nweights = new float[centroids.length];
-           
-             for (int i = 0; i<list.size(); i++) {
-                if (allpeaks[i].size()>0) {
-           
-           float max = 0; 
-            int maxint = 0;
-           
-            for (int b = 0; b< allpeaks[i].size(); b++) {
-            float max2 = 1;
-            int start = b-1;
-            while (start>0&&(allpeaks[i].get(b).getIndexshift()*60-allpeaks[i].get(start-1).getIndexshift()*60)<=dist) {
-                max2+=1;
-                start--;
+        System.out.println("Peak lists created");
+
+        //initial calculations
+        float dist = 3;
+        for (int i = 0; i < list.size(); i++) {
+            if (allpeaks[i].size() > 0) {
+
+                float max = 0;
+                int maxint = 0;
+
+                for (int b = 0; b < allpeaks[i].size(); b++) {
+                    float max2 = 1;
+                    int start = b - 1;
+                    while (start > 0 && (allpeaks[i].get(b).getIndexshift() * 60 - allpeaks[i].get(start - 1).getIndexshift() * 60) <= dist) {
+                        max2 += 1;
+                        start--;
+                    }
+                    int end = b + 1;
+                    while (end < allpeaks[i].size() - 2 && (allpeaks[i].get(end + 1).getIndexshift() * 60 - allpeaks[i].get(b).getIndexshift() * 60) <= dist) {
+                        max2 += 1;
+                        end++;
+                    }
+
+                    if (max2 > max) {
+                        max = max2;
+                        maxint = b;
+                    }
+
+                }
+                centroids[i] = allpeaks[i].get(maxint).getIndexshift() * 60;
+                weights[i] = max;
+                ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
             }
-            int end = b+1;
-            while (end<allpeaks[i].size()-2&&(allpeaks[i].get(end+1).getIndexshift()*60-allpeaks[i].get(b).getIndexshift()*60)<=dist) {
-                max2+=1;
-                end++;
-            }
-                
-            if (i>0&&Math.abs(allpeaks[i].get(b).getIndexshift()*60-centroids[i-1])<=dist) {
-                max2+=weights[i-1];
-            }
-            
-            if (i<list.size()-2&&Math.abs(allpeaks[i].get(b).getIndexshift()*60-centroids[i+1])<=dist) {
-                max2+=weights[i+1];
-            }
-            
-            if (max2>max) {
-                max = max2;
-                maxint = b;
-            }
-                
-            }
-            ncentroids[i] = allpeaks[i].get(maxint).getIndexshift()*60;
-            nweights[i] = max;
-            ((XYChart.Data)midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
+            System.out.println(i);
         }
+
+        //iterate
+        for (int t = 0; t < 50; t++) {
+            dist = dist - 0.05f;
+
+            float[] ncentroids = new float[centroids.length];
+            float[] nweights = new float[centroids.length];
+
+            for (int i = 0; i < list.size(); i++) {
+                if (allpeaks[i].size() > 0) {
+
+                    float max = 0;
+                    int maxint = 0;
+
+                    for (int b = 0; b < allpeaks[i].size(); b++) {
+                        float max2 = 1;
+                        int start = b - 1;
+                        while (start > 0 && (allpeaks[i].get(b).getIndexshift() * 60 - allpeaks[i].get(start - 1).getIndexshift() * 60) <= dist) {
+                            max2 += 1;
+                            start--;
+                        }
+                        int end = b + 1;
+                        while (end < allpeaks[i].size() - 2 && (allpeaks[i].get(end + 1).getIndexshift() * 60 - allpeaks[i].get(b).getIndexshift() * 60) <= dist) {
+                            max2 += 1;
+                            end++;
+                        }
+
+                        if (i > 0 && Math.abs(allpeaks[i].get(b).getIndexshift() * 60 - centroids[i - 1]) <= dist) {
+                            max2 += weights[i - 1];
+                        }
+
+                        if (i < list.size() - 2 && Math.abs(allpeaks[i].get(b).getIndexshift() * 60 - centroids[i + 1]) <= dist) {
+                            max2 += weights[i + 1];
+                        }
+
+                        if (max2 > max) {
+                            max = max2;
+                            maxint = b;
+                        }
+
+                    }
+                    ncentroids[i] = allpeaks[i].get(maxint).getIndexshift() * 60;
+                    nweights[i] = max;
+                    ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
+                }
                 System.out.println(i);
-           }
-           
-         centroids=ncentroids;
-         weights=nweights;
-        
-           }
-           
+            }
+
+            centroids = ncentroids;
+            weights = nweights;
+
+        }
+
     }
-    
+
     //calculates the area with max peak weigts, iteratively for thinner and narrower windows
     //start is RTstart, end is RTend, range is Shiftrange, windowsize is size in one direction
     public void calculateAreas(float[][] matrix, int start, int end, int range, int windowsize, int centroid) {
-       
-        float[] window = new float[windowsize*2+1];
+
+        float[] window = new float[windowsize * 2 + 1];
         //if even number
-        if (window.length%2==0) {
-            float dif = 1/window.length;
-            float val = 1-dif;
-            for (int i = 0; i<window.length/2; i++) {
-                window[window.length/2+i] = val;
-                window[window.length/2-(i+1)] = val;
-                val = val-2*dif;
+        if (window.length % 2 == 0) {
+            float dif = 1 / window.length;
+            float val = 1 - dif;
+            for (int i = 0; i < window.length / 2; i++) {
+                window[window.length / 2 + i] = val;
+                window[window.length / 2 - (i + 1)] = val;
+                val = val - 2 * dif;
             }
         } else {
-            float dif = 1.0f/((float)window.length/2.0f);
-            float val = 1-dif;
-            int middle = (window.length-1)/2;
-            window[middle]=1;
-            for (int i = 1; i<=middle; i++) {
-                window[middle-i]=val;
-                window[middle+i]=val;
-                val-=dif;
+            float dif = 1.0f / ((float) window.length / 2.0f);
+            float val = 1 - dif;
+            int middle = (window.length - 1) / 2;
+            window[middle] = 1;
+            for (int i = 1; i <= middle; i++) {
+                window[middle - i] = val;
+                window[middle + i] = val;
+                val -= dif;
             }
         }
-       
+
         //get max window
         int upperanchor = centroid + range;
         int maxint = centroid;
         float max = 0;
-        
+
         int i = 0;
-        while (upperanchor-i-window.length+1>=centroid-range) {
+        while (upperanchor - i - window.length + 1 >= centroid - range) {
             float nmax = 0;
             //calculate tops and bottoms
             int top = 0;
-            if (upperanchor-i>=session.getResolution()) {
-                top = upperanchor-i-session.getResolution()+1;
+            if (upperanchor - i >= session.getResolution()) {
+                top = upperanchor - i - session.getResolution() + 1;
             }
-            int bottom = window.length-1;
-            if (upperanchor-i-window.length+1<0) {
-                bottom = window.length-1+(upperanchor-i-window.length);
+            int bottom = window.length - 1;
+            if (upperanchor - i - window.length + 1 < 0) {
+                bottom = window.length - 1 + (upperanchor - i - window.length);
             }
-            
-                    
-            
-            for (int j = start; j<=end; j++) {
-                
-                for (int k = top; k<=bottom; k++) {
-                 
-                    nmax+=window[k]*matrix[j][upperanchor-i-k];
-                    
+
+            for (int j = start; j <= end; j++) {
+
+                for (int k = top; k <= bottom; k++) {
+
+                    nmax += window[k] * matrix[j][upperanchor - i - k];
+
                 }
             }
-           
-            if (nmax>max) {
+
+            if (nmax > max) {
                 max = nmax;
-                maxint = upperanchor-i-windowsize;
+                maxint = upperanchor - i - windowsize;
             }
-            
+
             i++;
-            
+
         }
-        
-        
+
 //        System.out.println ("finished");
 //        System.out.println ("start: " +  start + ", end: " +end);
 //        System.out.println ("maxint: " + maxint);
-        
-      
-        if (start-end==0) {
-            System.out.println (start+ ":      maxint: " + maxint);
-            ((XYChart.Data)midSeries.getData().get(start)).YValueProperty().setValue((maxint-49)*1.8);
+        if (start - end == 0) {
+            System.out.println(start + ":      maxint: " + maxint);
+            ((XYChart.Data) midSeries.getData().get(start)).YValueProperty().setValue((maxint - 49) * 1.8);
         } else {
-        
-        //divide
-        int middle = (start+end)/2;
-        int size = (int) (windowsize*0.6);
-        if (size<0) {
-            size = 0;
-        }
-        int r = (int) (range*0.5);
+
+            //divide
+            int middle = (start + end) / 2;
+            int size = (int) (windowsize * 0.6);
+            if (size < 0) {
+                size = 0;
+            }
+            int r = (int) (range * 0.5);
 //        if (r<3) {
 //            r = 3;
 //        }
-        calculateAreas(matrix,start,middle,r,size,maxint);
-        calculateAreas(matrix,middle+1,end,r,size,maxint);
+            calculateAreas(matrix, start, middle, r, size, maxint);
+            calculateAreas(matrix, middle + 1, end, r, size, maxint);
         }
     }
-    
-    public void gravity(int xrange, int yrange) throws InterruptedException {
-        
-        Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                   
-        for (int i = 0; i<centroids.length; i++) {
-            ((XYChart.Data)topSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+yrange);
-            ((XYChart.Data)botSeries.getData().get(i)).YValueProperty().setValue(centroids[i]-yrange);
-        }
-        
-            
 
-                                    }
-                                });
-        Thread.sleep((long) speed.getValue());
-        
-         float[] ncentroids = new float[centroids.length];
-        for (int i = 0; i<centroids.length; i++) {
-            ncentroids[i]=centroids[i];
+    public void gravity(int xrange, int yrange) throws InterruptedException {
+
+        float[] counts = new float[centroids.length];
+        for (int i = 0; i < counts.length; i++) {
+            counts[i] = 1;
         }
-      int step = (int) ((double)xrange/10.0);
-      if (step<1) {
-          step=1;
-      }
-        for (int i = 0; i<centroids.length; i=i+step) {
-            
-            int xstart = i-xrange;
-            if (xstart<0) {
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                for (int i = 0; i < centroids.length; i++) {
+                    ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(centroids[i] + yrange);
+                    ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(centroids[i] - yrange);
+                }
+
+            }
+        });
+        Thread.sleep((long) speed.getValue());
+
+        float[] ncentroids = new float[centroids.length];
+        for (int i = 0; i < centroids.length; i++) {
+            ncentroids[i] = centroids[i];
+        }
+        int step = (int) ((double) xrange / 10.0);
+        if (step < 1) {
+            step = 1;
+        }
+        for (int i = 0; i < centroids.length; i = i + step) {
+
+            int xstart = i - xrange;
+            if (xstart < 0) {
                 xstart = 0;
             }
-            int xend = i+xrange;
-            if (xend>centroids.length-1) {
-                xend = centroids.length-1;
+            int xend = i + xrange;
+            if (xend > centroids.length - 1) {
+                xend = centroids.length - 1;
             }
-            int ystart = (int) centroids[i]-yrange;
-            if (ystart<0) {
+            int ystart = (int) centroids[i] - yrange;
+            if (ystart < 0) {
                 ystart = 0;
             }
-            int yend = (int) centroids[i]+yrange;
-            if (yend>session.getResolution()-1) {
-                yend = session.getResolution()-1;
+            int yend = (int) centroids[i] + yrange;
+            if (yend > session.getResolution() - 1) {
+                yend = session.getResolution() - 1;
             }
-            
+
             int maxint = -1;
             float max = 0;
-            for (int l = ystart; l<=yend; l++) {
+            for (int l = ystart; l <= yend; l++) {
                 float nmax = 0;
-            for (int j = xstart; j<=xend; j++) {
-                for (int k = ystart; k<=yend; k++) {
-                    float distance = Math.abs(k-l)+1;
-                    nmax+=matrix[j][k]*(1/(distance*distance));
+                for (int j = xstart; j <= xend; j++) {
+                    for (int k = ystart; k <= yend; k++) {
+                        float distance = Math.abs(k - l) + 1;
+                        nmax += matrix[j][k] * (1 / (distance * distance));
+                    }
+                }
+                if (nmax > max) {
+                    max = nmax;
+                    maxint = l;
+                }
+                System.out.println(ystart);
+            }
+            if (maxint > -1) {
+                for (int l = xstart; l <= xend; l++) {
+                    ncentroids[l] = (ncentroids[l] * counts[l] + maxint * 1) / (counts[l] + 1);
+                    counts[l]++;
                 }
             }
-            if (nmax>max) {
-                max =nmax;
-                maxint = l;
-            }
-            System.out.println(ystart);
-            }
-            if (maxint>-1) {
-            for (int l = xstart; l<=xend; l++) {
-                ncentroids[l] = (ncentroids[l]*1+maxint*1)/2;
-            }
-            }
         }
-       
-        Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                   
-        for (int i = 0; i<centroids.length; i++) {
-            ((XYChart.Data)midSeries.getData().get(i)).YValueProperty().setValue(ncentroids[i]);
-        }
-            
 
-                                    }
-                                });
-       
-        centroids=ncentroids;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                for (int i = 0; i < centroids.length; i++) {
+                    ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(ncentroids[i]);
+                }
+
+            }
+        });
+
+        centroids = ncentroids;
         Thread.sleep((long) speed.getValue());
     }
-   
+
     public void showhideparam() throws IOException, InterruptedException {
         paramPane.setVisible(paramToggle.selectedProperty().get());
         stackpane.setVisible(!paramToggle.selectedProperty().get());
@@ -1424,93 +1401,93 @@ float[] weights = new float[centroids.length];
             paramToggle.setDisable(true);
         }
     }
-    
-    public boolean getParameters () {
+
+    public boolean getParameters() {
         int count = 0;
-        xRanges=new int[9];
-        yRanges=new int[9];
-        if (!x1.getText().isEmpty()&&!y1.getText().isEmpty()) {
+        grav.setxRanges(new int[9]);
+        grav.setyRanges(new int[9]);
+        if (!x1.getText().isEmpty() && !y1.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x1.getText());
-                yRanges[count]=Integer.parseInt(y1.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x1.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y1.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-         if (!x2.getText().isEmpty()&&!y2.getText().isEmpty()) {
+        if (!x2.getText().isEmpty() && !y2.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x2.getText());
-                yRanges[count]=Integer.parseInt(y2.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x2.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y2.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-         if (!x3.getText().isEmpty()&&!y3.getText().isEmpty()) {
+        if (!x3.getText().isEmpty() && !y3.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x3.getText());
-                yRanges[count]=Integer.parseInt(y3.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x3.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y3.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-          if (!x4.getText().isEmpty()&&!y4.getText().isEmpty()) {
+        if (!x4.getText().isEmpty() && !y4.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x4.getText());
-                yRanges[count]=Integer.parseInt(y4.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x4.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y4.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-       if (!x5.getText().isEmpty()&&!y5.getText().isEmpty()) {
+        if (!x5.getText().isEmpty() && !y5.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x5.getText());
-                yRanges[count]=Integer.parseInt(y5.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x5.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y5.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-             if (!x6.getText().isEmpty()&&!y6.getText().isEmpty()) {
+        if (!x6.getText().isEmpty() && !y6.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x6.getText());
-                yRanges[count]=Integer.parseInt(y6.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x6.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y6.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-              if (!x7.getText().isEmpty()&&!y7.getText().isEmpty()) {
+        if (!x7.getText().isEmpty() && !y7.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x7.getText());
-                yRanges[count]=Integer.parseInt(y7.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x7.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y7.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-              if (!x8.getText().isEmpty()&&!y8.getText().isEmpty()) {
+        if (!x8.getText().isEmpty() && !y8.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x8.getText());
-                yRanges[count]=Integer.parseInt(y8.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x8.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y8.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-                if (!x9.getText().isEmpty()&&!y9.getText().isEmpty()) {
+        if (!x9.getText().isEmpty() && !y9.getText().isEmpty()) {
             try {
-                xRanges[count]=Integer.parseInt(x9.getText());
-                yRanges[count]=Integer.parseInt(y9.getText());
+                grav.getxRanges()[count] = Integer.parseInt(x9.getText());
+                grav.getyRanges()[count] = Integer.parseInt(y9.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
             }
         }
-                return true;
+        return true;
     }
 
     /**
@@ -1525,7 +1502,49 @@ float[] weights = new float[centroids.length];
      */
     public void setOlist(ObservableList<Entry> olist) {
         this.olist = olist;
-         Collections.sort(olist, new Entry.orderbyRT());
+        Collections.sort(olist, new Entry.orderbyRT());
     }
-    
+
+    public void initializeparams() {
+
+        if (grav.getxRanges()[0] > 0) {
+            x1.setText(String.valueOf(grav.getxRanges()[0]));
+            y1.setText(String.valueOf(grav.getyRanges()[0]));
+        }
+
+        if (grav.getxRanges()[1] > 0) {
+            x2.setText(String.valueOf(grav.getxRanges()[1]));
+            y2.setText(String.valueOf(grav.getyRanges()[1]));
+        }
+        if (grav.getxRanges()[2] > 0) {
+            x3.setText(String.valueOf(grav.getxRanges()[2]));
+            y3.setText(String.valueOf(grav.getyRanges()[2]));
+        }
+        if (grav.getxRanges()[3] > 0) {
+            x4.setText(String.valueOf(grav.getxRanges()[3]));
+            y4.setText(String.valueOf(grav.getyRanges()[3]));
+        }
+        if (grav.getxRanges()[4] > 0) {
+            x5.setText(String.valueOf(grav.getxRanges()[4]));
+            y5.setText(String.valueOf(grav.getyRanges()[4]));
+        }
+        if (grav.getxRanges()[5] > 0) {
+            x6.setText(String.valueOf(grav.getxRanges()[5]));
+            y6.setText(String.valueOf(grav.getyRanges()[5]));
+        }
+        if (grav.getxRanges()[6] > 0) {
+            x7.setText(String.valueOf(grav.getxRanges()[6]));
+            y7.setText(String.valueOf(grav.getyRanges()[6]));
+        }
+        if (grav.getxRanges()[7] > 0) {
+            x8.setText(String.valueOf(grav.getxRanges()[7]));
+            y8.setText(String.valueOf(grav.getyRanges()[7]));
+        }
+        if (grav.getxRanges()[8] > 0) {
+            x9.setText(String.valueOf(grav.getxRanges()[8]));
+            y9.setText(String.valueOf(grav.getyRanges()[8]));
+        }
+
+    }
+
 }
