@@ -14,7 +14,6 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_gravityshiftviewController">
    <children>
-      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
       <StackPane fx:id="stackpane" layoutY="35.0" prefHeight="365.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
       <ToolBar prefHeight="27.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -49,7 +48,7 @@
             <TextField fx:id="y9" layoutX="124.0" layoutY="320.0" prefHeight="25.0" prefWidth="110.0" />
          </children>
       </Pane>
-      <MenuBar layoutY="5.0" prefHeight="33.0" prefWidth="174.0" AnchorPane.bottomAnchor="362.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+      <MenuBar layoutY="5.0" prefHeight="33.0" prefWidth="174.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
         <menus>
           <Menu fx:id="menu" mnemonicParsing="false" text="Use these parameters on...">
             <items>
@@ -62,5 +61,6 @@
             <Insets />
          </opaqueInsets>
       </MenuBar>
+      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
    </children>
 </AnchorPane>

@@ -588,6 +588,7 @@ if (listofSlices.containsKey(file)) {
         float shiftintime = session.getProparraycalculator().getshiftintime(shift);
         
         this.OgroupShift.put(file, shiftintime);
+        System.out.println("New shift added");
         
         
         

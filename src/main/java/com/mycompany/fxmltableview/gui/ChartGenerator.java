@@ -1064,6 +1064,142 @@ public class ChartGenerator {
         return scatterchart;
     }
     
+    public ScatterChart generateScatterShiftChartnew(ObservableList<Entry> list) {
+
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Shift [seconds]");
+        ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
+
+        float upper = 0;
+        float lower = 0;
+        float shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
+        int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
+        
+        
+        //draw penalty Area
+        XYChart.Series backSeries = new XYChart.Series();
+        
+        
+        List<RawDataFile> sellist =  session.getSelectedFiles();
+        List<XYChart.Data> points = new ArrayList<XYChart.Data>();
+        //draw background
+        for (int i = 0;i<list.size(); i=i+3) {
+            for (int j = 0; j< session.getResolution(); j++) {
+                boolean penalty = false;
+               for (int s = 0; s<sellist.size(); s++) {
+                   if (sellist.get(s).getActive()) {
+                       if (list.get(i).getPenArray()!=null){
+                           if (list.get(i).getPenArray().containsKey(sellist.get(s))) {
+                       if (list.get(i).getPenArray().get(sellist.get(s))[j]<0) {
+                           penalty = true;
+                           break;
+                           
+                       }
+                       }
+                       }
+                   }
+               }
+                if (penalty) {
+                    XYChart.Data data = new XYChart.Data(list.get(i).getRT(), (j-middleint)*60*shiftiter);
+                    Rectangle rect = new Rectangle(5,5);
+                    rect.setFill(Color.PINK);
+                    data.setNode(rect);
+                    points.add(data);
+                }
+               
+            }
+        }
+        backSeries.getData().addAll(points);
+        scatterchart.getData().add(backSeries);
+            
+            
+            
+ 
+        
+ for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = list.get(0).getSession().getListofDatasets().get(d).getListofFiles().get(f);
+            if (currentfile.getActive().booleanValue()) {
+                shiftiter=1.0f/currentfile.getScanspersecond();
+               
+                
+                XYChart.Series newSeries = new XYChart.Series();
+                
+                newshiftcontroller.getSeriestofile().put(newSeries, currentfile);
+                if (newshiftcontroller.getFiletoseries().containsKey(currentfile)){
+                    newshiftcontroller.getFiletoseries().get(currentfile).add(newSeries);
+                } else {
+                ArrayList array = new ArrayList();
+                array.add(newSeries);
+                newshiftcontroller.getFiletoseries().put(currentfile, array);
+                        }
+                
+                
+                
+                
+
+                
+                
+                for (int i = 1; i < list.size()-1; i++) {
+                    
+                    float shift = (list.get(i).getOgroupShift().get(currentfile))*60;
+                    XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
+                    
+                    Ellipse cir = new Ellipse(1.5,4);
+                    
+                    TreeItem<Entry> item = null;
+                    for (int e = 0; e<newshiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().size(); e++) {
+                        if (newshiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().get(e).getValue().equals(list.get(i)))  {
+                            item = newshiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().get(e);
+                            break;
+                        }
+                    }
+                    newshiftcontroller.getNodetoogroup().put(cir, item);
+                    if (currentfile.isselected()) {
+                    cir.setFill(Color.RED);
+                }else {
+                cir.setFill(currentfile.getColor());
+                }
+                    data.setNode(cir);
+//                    if (newshiftcontroller.getOpacityMode().equals("Peak found")) {
+//                        data.getNode().setOpacity(list.get(i).getmaxScorepeakfound(currentfile)+0.02); 
+//                    } else if (newshiftcontroller.getOpacityMode().equals("Peak close")) {
+//                        data.getNode().setOpacity(list.get(i).getminScorepeakclose(currentfile)+0.02); 
+//                    }
+                    
+                    
+                    
+                    
+                    newSeries.getData().add(data);
+                    if (shift > upper) {
+                        upper = shift;
+                    } else if (shift < lower) {
+                        lower = shift;
+                    }
+                }
+                scatterchart.getData().add(newSeries);
+              
+                
+
+//TODO: number
+                System.out.println("Charts " + (f + 1) + "of " + list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size() + " drawn");
+            }
+        }}}
+
+        scatterchart.setMaxSize(2000, 2000);
+        scatterchart.setLegendVisible(false);
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(lower - 30);
+        yAxis.setUpperBound(upper + 30);
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(session.getStart().floatValue()-5.0f);
+        xAxis.setUpperBound(session.getEnd().floatValue()+5.0f);
+        return scatterchart;
+    }
+    
     //Peak Chart for peak view (context menu in Shiftview)
     public ScatterChart generateScatterPeakChart(ObservableList<Entry> list) {
 
