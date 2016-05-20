@@ -19,6 +19,7 @@ import javafx.concurrent.Task;
 import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
@@ -30,16 +31,16 @@ public class IOThread implements Runnable{
     boolean run;
     
     private Session session;
-    private LinkedList<Slice> write;
-    private LinkedList<Slice> read;
-    private LinkedList<Slice> nextread;
+    private LinkedBlockingQueue<Slice> write;
+    private LinkedBlockingQueue<Slice> read;
+    private LinkedBlockingQueue<Slice> nextread;
     
     public IOThread(Session session) {
         this.run = true;
         this.session = session;
-        this.write = new LinkedList();
-        this.read = new LinkedList();
-        this.nextread = new LinkedList();
+        this.write = new LinkedBlockingQueue();
+        this.read = new LinkedBlockingQueue();
+        this.nextread = new LinkedBlockingQueue();
     }    
     
     public void run() {
@@ -51,21 +52,25 @@ public class IOThread implements Runnable{
            
                //check if new Slices to write higher than crit
              while (count1 < 10000 && write.size()>2000000) {
-                 Slice slice = write.pop();
                  try {
-                    
-                     if (!slice.isLocked()) {
-                     slice.writeData();
-                     
-                     
+                     Slice slice = write.take();
+                     try {
+                         
+                         if (!slice.isLocked()) {
+                             slice.writeData();
+                             
+                             
+                         }
+                         else {
+                             writeslice(slice);
+                             //System.out.println("can't write, is locked");
+                         }
+                         count1++;
+                     } catch (IOException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                     } catch (InterruptedException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                      }
-                 else {
-                     writeslice(slice);
-                     //System.out.println("can't write, is locked");
-                     }
-                        count1++; 
-                 } catch (IOException ex) {
-                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  } catch (InterruptedException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
@@ -73,14 +78,20 @@ public class IOThread implements Runnable{
             
              //then check if new Slices to read
              while (count2 < 10000 && read.size()>0) {
-                 Slice slice = read.pop();
                  try {
-                     slice.readData();
-                     writeslice(slice);
-                     count2++;
-                    
-                 } catch (IOException ex) {
-                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                     Slice slice = read.take();
+                     try {
+                         slice.readData();
+                         writeslice(slice);
+                         count2++;
+                         
+                     } catch (IOException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                     } catch (InterruptedException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                     
+                     
                  } catch (InterruptedException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
@@ -93,20 +104,24 @@ public class IOThread implements Runnable{
              if (count2==0){
              //check if new Slices to write not crit
              while (count3 < 100 && write.size()>0) {
-                 Slice slice = write.pop();
                  try {
-                     if (!slice.isLocked()) {
-                     slice.writeData();
-                     
-                    
+                     Slice slice = write.take();
+                     try {
+                         if (!slice.isLocked()) {
+                             slice.writeData();
+                             
+                             
+                         }
+                         else {
+                             writeslice(slice);
+                             //System.out.println("can't write, is locked");
+                         }
+                         count3++;
+                     } catch (IOException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                     } catch (InterruptedException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                      }
-                 else {
-                     writeslice(slice);
-                      //System.out.println("can't write, is locked");
-                     }
-                     count3++;
-                 } catch (IOException ex) {
-                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  } catch (InterruptedException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
@@ -114,14 +129,20 @@ public class IOThread implements Runnable{
             
              //then check if next Slices to read
              while (count4 < 1000 && nextread.size()>0) {
-                 Slice slice = nextread.pop();
                  try {
-                     slice.readData();
-                     writeslice(slice);
-                     count4++;
+                     Slice slice = nextread.take();
+                     try {
+                         slice.readData();
+                         writeslice(slice);
+                         count4++;
+                         
+                     } catch (IOException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                     } catch (InterruptedException ex) {
+                         Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+                     }
                      
-                 } catch (IOException ex) {
-                     Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
+
                  } catch (InterruptedException ex) {
                      Logger.getLogger(IOThread.class.getName()).log(Level.SEVERE, null, ex);
                  }
@@ -250,6 +271,12 @@ public class IOThread implements Runnable{
             if (entry.getKey().getActive()) {
                 lockSlice(entry.getValue(),lock);
             }
+        }
+    }
+    
+    public void checkStatus() {
+        if (!t.isAlive()) {
+            
         }
     }
 }

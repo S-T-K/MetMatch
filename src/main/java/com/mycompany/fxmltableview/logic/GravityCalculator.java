@@ -108,7 +108,6 @@ public class GravityCalculator {
                 max =nmax;
                 maxint = l;
             }
-            System.out.println(ystart);
             }
             if (maxint>-1) {
             for (int l = xstart; l<=xend; l++) {

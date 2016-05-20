@@ -609,8 +609,26 @@ public class Session {
 
    public void uncaughtException(Thread t, Throwable e) {
    System.out.println("Uncaught IOThread exception, trying to restart IOThread....");
-   iothread.terminate();
-   startIOThread();
+   //iothread.terminate();
+   restartIOThread();
+   }
+   });
+        // this will call run() function
+        t.start();
+        iothread.t=t;
+        t.setPriority(1);
+        System.out.println("New IOThread started");
+        
+    }
+    
+    public void restartIOThread() {
+        Thread t = new Thread(getIothread());
+         t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+   public void uncaughtException(Thread t, Throwable e) {
+   System.out.println("Uncaught IOThread exception, trying to restart IOThread....");
+   //iothread.terminate();
+   restartIOThread();
    }
    });
         // this will call run() function

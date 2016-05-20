@@ -5,6 +5,7 @@ package com.mycompany.fxmltableview.gui;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Peak;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
@@ -46,6 +47,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
@@ -53,6 +55,8 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Slider;
@@ -82,7 +86,7 @@ import javafx.util.converter.NumberStringConverter;
  *
  * @author stefankoch
  */
-public class Fxml_newshiftviewController implements Initializable {
+public class Fxml_gravityshiftviewController implements Initializable {
 
     //Gridpane holding all the graphs
     @FXML
@@ -90,15 +94,6 @@ public class Fxml_newshiftviewController implements Initializable {
 
     @FXML
     ToggleButton paramToggle;
-
-    @FXML
-    ChoiceBox shiftOpacity;
-
-    @FXML
-    ImageView PenSelectionImage;
-
-    @FXML
-    ToggleButton togglePenaltySelectionButton;
 
     @FXML
     AnchorPane anchorPane;
@@ -111,17 +106,24 @@ public class Fxml_newshiftviewController implements Initializable {
 
     @FXML
     Slider speed;
+            
+    @FXML 
+    Menu menu;
+    
+    @FXML
+    MenuItem item1, item2;
+    
 
 //    @FXML
 //    ProgressBar progress;
 //    @FXML
 //    ProgressIndicator calculating;
-    private boolean penSelection = false;
-    private Rectangle select;
-    ObjectProperty<Point2D> anchor;
+
+
+
     private AreaChart<Number, Number> areachart;
     private ScatterChart<Number, Number> scatterchart;
-    private float startX, startY, endX, endY;
+   
 
     //Keep references to Properties and Listeners to be able to delete them
     private HashMap<ChangeListener, Property> listeners;
@@ -133,15 +135,13 @@ public class Fxml_newshiftviewController implements Initializable {
     private HashMap<RawDataFile, List<XYChart.Series>> filetoseries;
     private HashMap<XYChart.Series, RawDataFile> seriestofile;
     private HashMap<Ellipse, TreeItem<Entry>> nodetoogroup;
-    private DropShadow hover = new DropShadow();
+
     private String OpacityMode;
 
     //newShift
     private XYChart.Series topSeries;
     private XYChart.Series midSeries;
     private XYChart.Series botSeries;
-    float[][] matrix;
-    float[] centroids;
     private GravityCalculator grav;
 
     /**
@@ -151,43 +151,23 @@ public class Fxml_newshiftviewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         paramToggle.setSelected(true);
+        paramToggle.setText("Click to Start");
         paramPane.setVisible(true);
         stackpane.setVisible(false);
+        menu.setDisable(true);
 
         
 
-        //Load Image
-        Image image = new Image("file:PenSelectionImage.png", true);
-        PenSelectionImage.setImage(image);
-        //Rectangle and Anchor Point
-        select = new Rectangle();
-        select.setFill(Color.RED);
-        select.setOpacity(0.2);
-        anchor = new SimpleObjectProperty<>();
-        anchorPane.getChildren().add(select);
+    
 
+        
         //add ChartGenerator
         chartGenerator = new ChartGenerator(null, null, this);
-        hover.setColor(Color.LIME);
-        hover.setSpread(1);
-        hover.setRadius(2);
+       
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
-        shiftOpacity.setItems(FXCollections.observableArrayList("Peak found", "Peak close", "distance", "certainty"));
-        shiftOpacity.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue ov, Number value, Number newVal) {
-                setOpacityMode(shiftOpacity.getItems().get(newVal.intValue()).toString());
-                //Fire Event to change Opacity immediately
-                if (filetoseries != null) {
-                    for (RawDataFile file : filetoseries.keySet()) {
-                        Node node = ((XYChart.Data) filetoseries.get(file).get(0).getData().get(0)).getNode();
-                        Event.fireEvent((EventTarget) node, new MouseEvent(MouseEvent.MOUSE_EXITED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true, true, true, true, true, true, true, null));
-                    }
-                }
-            }
-
-        });
-        shiftOpacity.getSelectionModel().select(0);
+       
+            
 
     }
 
@@ -199,7 +179,7 @@ public class Fxml_newshiftviewController implements Initializable {
             public Void call() throws IOException, InterruptedException {
 
                 //CountDownLatch latch = new CountDownLatch(1);
-                //supercontroller.calculate(latch, progress);
+                //supercontroller.animate(latch, progress);
                 //latch.await();
                 setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
                 setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
@@ -237,7 +217,7 @@ public class Fxml_newshiftviewController implements Initializable {
                             if (list.get(i).isStored(file)) {
                                 queue.add(i);
                                 session.getIothread().readOGroup(list.get(i), file);
-                                //if ready calculate
+                                //if ready animate
                             } else {
                                 list.get(i).peakpickOGroup(file);
                                 System.out.println(i + " of " + list.size() + " OGroups calculated");
@@ -353,7 +333,7 @@ public class Fxml_newshiftviewController implements Initializable {
 //        
 //        CountDownLatch latch = new CountDownLatch(1);
 //
-//                supercontroller.calculate(latch, progress);
+//                supercontroller.animate(latch, progress);
 //
 //        latch.await();
 //        
@@ -394,11 +374,11 @@ public class Fxml_newshiftviewController implements Initializable {
 //        //new thread that executes task
 //        new Thread(task).start();
 //    }
-    public void calculate(ObservableList<Entry> list) throws IOException, InterruptedException {
+    public void animate(ObservableList<Entry> list) throws IOException, InterruptedException {
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
-
+        
         olist = list;
         //get selected Entry
 
@@ -414,23 +394,27 @@ public class Fxml_newshiftviewController implements Initializable {
                 }
             });
         }
+        ((Group) topSeries.getNode()).getChildren().get(0).setVisible(true);
+        ((Group) botSeries.getNode()).getChildren().get(0).setVisible(true);
 
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
-
+        float[][] matrix = new float[list.size()][session.getResolution()];
+        float[] centroids = new float[list.size()];
                 for (int d = 0; d < session.getListofDatasets().size(); d++) {
                     if (session.getListofDatasets().get(d).getActive()) {
                         for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
                             RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
                             if (currentfile.getActive().booleanValue()) {
+                                if (currentfile.isselected()) {
 
                                 CountDownLatch latchpeak = new CountDownLatch(1);
                                 Task task = new Task<Void>() {
                                     @Override
                                     public Void call() throws IOException, InterruptedException {
 
-                                        matrix = new float[list.size()][session.getResolution()];
+                                        
                                         session.getIothread().lockFile(currentfile, true);
                                         double start = System.currentTimeMillis();
                                         LinkedList<Integer> queue = new LinkedList<Integer>();
@@ -440,7 +424,7 @@ public class Fxml_newshiftviewController implements Initializable {
                                             if (list.get(i).isStored(currentfile)) {
                                                 queue.add(i);
                                                 session.getIothread().readOGroup(list.get(i), currentfile);
-                                                //if ready calculate
+                                                //if ready animate
                                             } else {
                                                 list.get(i).peakpickOGroup(currentfile);
                                                 list.get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
@@ -494,7 +478,7 @@ public class Fxml_newshiftviewController implements Initializable {
                                 }
                                 //calculation
                                 //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
-                                centroids = new float[list.size()];
+                               
 
                                 if (!getParameters()) {
                                     System.out.println("Error while parsing Parameters!!!!");
@@ -502,32 +486,26 @@ public class Fxml_newshiftviewController implements Initializable {
                                     return null;
                                 }
                                 int count = 0;
-                                while (grav.getxRanges()[count] != 0) {
+                                while (count<9&&grav.getxRanges()[count] != 0) {
                                     //draw new borders
                                     int yrange = grav.getyRanges()[count];
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
+                                  
                                             for (int i = 0; i < centroids.length; i++) {
                                                 ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(centroids[i] + yrange);
                                                 ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(centroids[i] - yrange);
                                             }
-                                        }
-                                    });
+                                        
 
                                     Thread.sleep((long) speed.getValue());
 
                                     centroids = grav.gravity(count, matrix, centroids);
 
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
+                                   
                                             for (int i = 0; i < centroids.length; i++) {
                                                 ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
                                             }
 
-                                        }
-                                    });
+                                        
 
                                     Thread.sleep((long) speed.getValue());
 
@@ -535,24 +513,29 @@ public class Fxml_newshiftviewController implements Initializable {
 
                                 }
                                 
+                             ((Group) topSeries.getNode()).getChildren().get(0).setVisible(false);
+                             ((Group) botSeries.getNode()).getChildren().get(0).setVisible(false);
+
+                                
 //set fitted peak
-                for (int i = 0; i<olist.size(); i++) {
-                olist.get(i).setFittedShift(currentfile, (short) centroids[i]);
-                }
-                
-                
+//                for (int i = 0; i<olist.size(); i++) {
+//                olist.get(i).setFittedShift(currentfile, (short) centroids[i]);
+//                }
+//                paramToggle.setDisable(false);
+menu.setDisable(false);
+                return null;
+                            }
                             }
                         }
                     }
                 }
 
-                //don't recalculate unless something changes
-                session.setPeakPickchanged(false);
+//                don't recalculate unless something changes
+//                session.setPeakPickchanged(false);
                 
                 
-                paramToggle.setDisable(false);
-                return null;
-                
+                System.out.println("Error: No file in Dataset selected");
+             return null;   
             }
 
         };
@@ -689,7 +672,6 @@ public class Fxml_newshiftviewController implements Initializable {
                         } else {
 
                             Node node = list.get(i).getNode();
-                            node.setEffect(hover);
                             node.toFront();
                             node.setCursor(Cursor.HAND);
                             //((Path) node).setStroke(Color.RED);
@@ -1315,98 +1297,18 @@ public class Fxml_newshiftviewController implements Initializable {
         }
     }
 
-    public void gravity(int xrange, int yrange) throws InterruptedException {
-
-        float[] counts = new float[centroids.length];
-        for (int i = 0; i < counts.length; i++) {
-            counts[i] = 1;
-        }
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                for (int i = 0; i < centroids.length; i++) {
-                    ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(centroids[i] + yrange);
-                    ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(centroids[i] - yrange);
-                }
-
-            }
-        });
-        Thread.sleep((long) speed.getValue());
-
-        float[] ncentroids = new float[centroids.length];
-        for (int i = 0; i < centroids.length; i++) {
-            ncentroids[i] = centroids[i];
-        }
-        int step = (int) ((double) xrange / 10.0);
-        if (step < 1) {
-            step = 1;
-        }
-        for (int i = 0; i < centroids.length; i = i + step) {
-
-            int xstart = i - xrange;
-            if (xstart < 0) {
-                xstart = 0;
-            }
-            int xend = i + xrange;
-            if (xend > centroids.length - 1) {
-                xend = centroids.length - 1;
-            }
-            int ystart = (int) centroids[i] - yrange;
-            if (ystart < 0) {
-                ystart = 0;
-            }
-            int yend = (int) centroids[i] + yrange;
-            if (yend > session.getResolution() - 1) {
-                yend = session.getResolution() - 1;
-            }
-
-            int maxint = -1;
-            float max = 0;
-            for (int l = ystart; l <= yend; l++) {
-                float nmax = 0;
-                for (int j = xstart; j <= xend; j++) {
-                    for (int k = ystart; k <= yend; k++) {
-                        float distance = Math.abs(k - l) + 1;
-                        nmax += matrix[j][k] * (1 / (distance * distance));
-                    }
-                }
-                if (nmax > max) {
-                    max = nmax;
-                    maxint = l;
-                }
-                System.out.println(ystart);
-            }
-            if (maxint > -1) {
-                for (int l = xstart; l <= xend; l++) {
-                    ncentroids[l] = (ncentroids[l] * counts[l] + maxint * 1) / (counts[l] + 1);
-                    counts[l]++;
-                }
-            }
-        }
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                for (int i = 0; i < centroids.length; i++) {
-                    ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(ncentroids[i]);
-                }
-
-            }
-        });
-
-        centroids = ncentroids;
-        Thread.sleep((long) speed.getValue());
-    }
+   
 
     public void showhideparam() throws IOException, InterruptedException {
         paramPane.setVisible(paramToggle.selectedProperty().get());
         stackpane.setVisible(!paramToggle.selectedProperty().get());
         if (!paramToggle.selectedProperty().get()) {
-            calculate(olist);
+            paramToggle.setText("Change Parameters");
+            animate(olist);
             paramToggle.setDisable(true);
+        } else {
+            paramToggle.setText("Click to Start");
+            menu.setDisable(true);
         }
     }
 
@@ -1554,5 +1456,130 @@ public class Fxml_newshiftviewController implements Initializable {
         }
 
     }
+    
+   public void calculateAllFiles() throws InterruptedException {
+        setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
+        setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
+        setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
 
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
+
+                for (int d = 0; d < session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+                        for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
+                            RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
+                            if (currentfile.getActive().booleanValue()) {
+                                
+
+                                CountDownLatch latchpeak = new CountDownLatch(1);
+                                Task task = new Task<Void>() {
+                                    @Override
+                                    public Void call() throws IOException, InterruptedException {
+
+                                        float[][] matrix = new float[olist.size()][session.getResolution()];
+                                        session.getIothread().lockFile(currentfile, true);
+                                        double start = System.currentTimeMillis();
+                                        LinkedList<Integer> queue = new LinkedList<Integer>();
+                                        //go trough and check if all are ready
+                                        for (int i = 0; i < olist.size(); i++) {
+                                            //if not ready, add to queue
+                                            if (olist.get(i).isStored(currentfile)) {
+                                                queue.add(i);
+                                                session.getIothread().readOGroup(olist.get(i), currentfile);
+                                                //if ready animate
+                                            } else {
+                                                olist.get(i).peakpickOGroup(currentfile);
+                                                olist.get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
+                                                System.out.println(i + " of " + olist.size() + " OGroups calculated");
+                                            }
+                                        }
+                                        System.out.println("Size of Queue: " + queue.size());
+                                        //go through queue until it is empty
+                                        double picktime = 0;
+                                        while (queue.size() > 0) {
+                                            int size = queue.size();
+                                            for (int j = 0; j < size; j++) {
+                                                Integer current = queue.pop();
+                                                if (olist.get(current).isStored(currentfile)) {
+                                                    
+                                                    queue.add(current);
+                                                } else {
+                                                    double pick = System.currentTimeMillis();
+                                                    olist.get(current).peakpickOGroup(currentfile);
+                                                    picktime += System.currentTimeMillis() - pick;
+                                                    olist.get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
+
+                                                }
+                                            }
+                                            System.out.println("Size of Queue: " + queue.size());
+                                        }
+
+                                        latchpeak.countDown();
+                                        System.out.println("Total peak picking time: " + picktime);
+                                        System.out.println("Total time: " + (System.currentTimeMillis() - start));
+                                        session.getIothread().lockFile(currentfile, false);
+
+                                        
+                                         //calculation
+                                //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
+                                float[] centroids = new float[olist.size()];
+                                
+                                int count = 0;
+                                while (count<9&&grav.getxRanges()[count] != 0) {
+                                    centroids = grav.gravity(count, matrix, centroids);
+
+
+                                    count++;
+
+                                }
+                          
+//set fitted peak
+                for (int i = 0; i<olist.size(); i++) {
+                olist.get(i).setFittedShift(currentfile, (short) centroids[i]);
+                }
+                
+                                        return null;
+                                    }
+
+                                };
+
+                         
+
+                               
+                            new Thread(task).start();
+                            }
+                        }
+                    }
+                }
+
+//                don't recalculate unless something changes
+//                session.setPeakPickchanged(false);
+                
+                
+                System.out.println("Fitted all Files");
+             return null;   
+            }
+
+        };
+
+        //new thread that executes task
+        new Thread(task).start();
+
+       
+   }
+   
+   public void calculateBatch() throws InterruptedException {
+       //disable all other Files
+       Dataset current = session.getSelectedFiles().get(0).getDataset();
+       
+       for (int i =0; i<session.getListofDatasets().size(); i++) {
+           if (session.getListofDatasets().get(i)!=current) {
+               session.getListofDatasets().get(i).setActive(false);
+           }
+       }
+       calculateAllFiles();
+       
+   }
 }

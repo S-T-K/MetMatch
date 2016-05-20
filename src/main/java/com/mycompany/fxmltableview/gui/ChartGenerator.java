@@ -43,14 +43,14 @@ import javafx.scene.shape.Ellipse;
 public class ChartGenerator {
     
     private Fxml_adductviewController adductcontroller;
-    private Fxml_shiftviewController shiftcontroller;
-    private Fxml_newshiftviewController newshiftcontroller;
+    private Fxml_pathshiftviewController shiftcontroller;
+    private Fxml_gravityshiftviewController newshiftcontroller;
     
 
     private Session session;
     
 
-    public ChartGenerator(Fxml_adductviewController controller, Fxml_shiftviewController shiftcontroller, Fxml_newshiftviewController newshiftcontroller) {
+    public ChartGenerator(Fxml_adductviewController controller, Fxml_pathshiftviewController shiftcontroller, Fxml_gravityshiftviewController newshiftcontroller) {
         this.session = session;
         this.adductcontroller = controller;
         this.shiftcontroller = shiftcontroller;
@@ -1617,7 +1617,7 @@ public class ChartGenerator {
         yAxis.setLabel("Intensity");
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
         XYChart.Series backSeries = new XYChart.Series();
-        RawDataFile file = session.getAllFiles().get(0);
+        RawDataFile file = session.getSelectedFiles().get(0);
         for (int i = 0; i<list.size(); i++) {
             for (int j = 0; j<list.get(i).getListofAdducts().size(); j++) {
                 Entry adduct = list.get(i).getListofAdducts().get(j);

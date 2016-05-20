@@ -71,7 +71,7 @@ import javafx.util.converter.NumberStringConverter;
  *
  * @author stefankoch
  */
-public class Fxml_shiftviewController implements Initializable {
+public class Fxml_pathshiftviewController implements Initializable {
 
     //Gridpane holding all the graphs
     @FXML

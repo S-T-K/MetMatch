@@ -407,11 +407,11 @@ session.setNumberofadducts(numberofadducts);
         output.setDisable(false);
         //open new window
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_shiftview.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_pathshiftview.fxml"));
         Pane myPane = (Pane) loader.load();
         Scene myScene = new Scene(myPane);
         stage.setScene(myScene);
-        Fxml_shiftviewController controller = loader.<Fxml_shiftviewController>getController();
+        Fxml_pathshiftviewController controller = loader.<Fxml_pathshiftviewController>getController();
         controller.setSupercontroller(this);
         controller.setSession(session);
 
@@ -461,7 +461,7 @@ session.setNumberofadducts(numberofadducts);
                                             if (getMasterListofOGroups().get(i).isStored(currentfile)) {
                                                 queue.add(i);
                                                 session.getIothread().readOGroup(getMasterListofOGroups().get(i), currentfile);
-                                                //if ready calculate
+                                                //if ready animate
                                             } else {
                                                 getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
                                                 getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
@@ -553,7 +553,7 @@ session.setNumberofadducts(numberofadducts);
 
                                 getMasterListofOGroups().get(getMasterListofOGroups().size() - 1).setFittedShift(currentfile, (short) maxint);
 
-                                //TODO: calculate range as function of time
+                                //TODO: animate range as function of time
                                 for (int i = getMasterListofOGroups().size() - 1; i > -1; i--) {
                                     max = 0;
 
@@ -617,16 +617,16 @@ session.setNumberofadducts(numberofadducts);
         output.setDisable(false);
         //open new window
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_newshiftview.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_gravityshiftview.fxml"));
         Pane myPane = (Pane) loader.load();
         Scene myScene = new Scene(myPane);
         stage.setScene(myScene);
-        Fxml_newshiftviewController controller = loader.<Fxml_newshiftviewController>getController();
+        Fxml_gravityshiftviewController controller = loader.<Fxml_gravityshiftviewController>getController();
         controller.setSupercontroller(this);
         controller.setSession(session);
 
         //print graphs
-        //controller.calculate(getMasterListofOGroups());
+        //controller.animate(getMasterListofOGroups());
         controller.setOlist(MasterListofOGroups);
         System.out.println("PRINTNEW");
         stage.show();
