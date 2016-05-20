@@ -196,6 +196,8 @@ listofSlices=newlist;
 //
 if (listofSlices.containsKey(file)) {
         Slice currentSlice = listofSlices.get(file);
+        
+        if (session.isPeakPickchanged()||currentSlice.getListofPeaks()==null){
 //        
         if (session.getPeackPick().equals("Naïve (Gauss)")) {
             currentSlice.NaivePeakPicking();
@@ -226,7 +228,7 @@ if (listofSlices.containsKey(file)) {
 //        
 //        
 //        
-    }}
+    }}}
     
     //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?

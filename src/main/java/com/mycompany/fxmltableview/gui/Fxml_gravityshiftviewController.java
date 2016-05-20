@@ -490,7 +490,15 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                     
                                     new Thread(task).start();
                                     latchpeak.await();
-progress.setVisible(false);
+                                     Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                           progress.progressProperty().unbind();
+                                           progress.setProgress(-1d);
+
+                                        }
+                                    });
+
                                     scatterchart = chartGenerator.generateNewPeak(list);
 
                                     Platform.runLater(new Runnable() {
@@ -501,6 +509,7 @@ progress.setVisible(false);
                                         }
                                     });
                                 }
+                                progress.setVisible(false);
                                 //calculation
                                 //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
                                
@@ -556,7 +565,7 @@ menu.setDisable(false);
                 }
 
 //                don't recalculate unless something changes
-//                session.setPeakPickchanged(false);
+               session.setPeakPickchanged(false);
                 
                 
                 System.out.println("Error: No file in Dataset selected");
@@ -886,7 +895,7 @@ menu.setDisable(false);
             applyMouseEvents(series);
         
         }
-        //progress.setVisible(false);
+        progress.setVisible(false);
         //calculating.setVisible(false);
         return null;
             }
@@ -1557,7 +1566,10 @@ menu.setDisable(false);
 
     }
     
-   public void calculateAllFiles() throws InterruptedException, IOException {
+   public void calculateFiles(List<RawDataFile> filelist) throws InterruptedException, IOException {
+       
+  
+       int files = filelist.size();
        
        progress.setVisible(true);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
@@ -1568,21 +1580,15 @@ menu.setDisable(false);
             @Override
             public Void call() throws IOException, InterruptedException {
 
-                int files = 0;
-                for (int d = 0; d<session.getAllFiles().size(); d++) {
-                    if (session.getAllFiles().get(d).getActive()) {
-                        files++;
-                    }
-                }
+                
                 System.out.println("Files: " + files);
                 int filesdone= 0;
                 
                 
-                for (int d = 0; d < session.getListofDatasets().size(); d++) {
-                    if (session.getListofDatasets().get(d).getActive()) {
-                        for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
-                            RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
-                            if (currentfile.getActive().booleanValue()) {
+                for (int d = 0; d < filelist.size(); d++) {
+                    RawDataFile currentfile=filelist.get(d);
+                    
+                    
 
                                 
                                
@@ -1656,20 +1662,26 @@ done++;
                                       
                                      filesdone++;  
                             
-                            }
-                        }
-                    }
+                      
                 }
 
 //                don't recalculate unless something changes
 //                session.setPeakPickchanged(false);
                 
 
-            
+            Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                           progress.progressProperty().unbind();
+                                           progress.setProgress(-1d);
+
+                                        }
+                                    });
             
           
-             showShift(olist);
-            progress.setVisible(false);
+            showShift(olist);
+            
+            session.setPeakPickchanged(false);
              return null;   
             }
 
@@ -1687,14 +1699,20 @@ done++;
    public void calculateBatch() throws InterruptedException, IOException {
        //disable all other Files
        Dataset current = session.getSelectedFiles().get(0).getDataset();
+       List<RawDataFile> filelist = current.getListofFiles();
        
-       for (int i =0; i<session.getListofDatasets().size(); i++) {
-           if (session.getListofDatasets().get(i)!=current) {
-               session.getListofDatasets().get(i).setActive(false);
+       for (int i = 0; i<session.getAllFiles().size(); i++) {
+           if (!filelist.contains(session.getAllFiles().get(i))) {
+               session.getAllFiles().get(i).setActive(false);
            }
        }
-       calculateAllFiles();
+
+       calculateFiles(filelist);
        
+   }
+   
+   public void calculateAllFiles() throws InterruptedException, IOException {
+        calculateFiles(session.getAllFiles());
    }
    
    
