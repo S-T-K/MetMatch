@@ -1657,7 +1657,7 @@ done++;
                           
 //set fitted peak
                 for (int i = 0; i<olist.size(); i++) {
-                olist.get(i).setFittedShift(currentfile, (short) centroids[i]);
+                olist.get(i).setFittedShift(currentfile, centroids[i]);
                 }
                                         
                                       

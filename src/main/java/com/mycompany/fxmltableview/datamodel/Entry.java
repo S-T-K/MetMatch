@@ -585,8 +585,8 @@ if (listofSlices.containsKey(file)) {
     /**
      * @param fittedShift the OGroupfittedShift to set
      */
-    public void setFittedShift(RawDataFile file, short shift) {
-        this.Interpolatedshift.put(file,shift);
+    public void setFittedShift(RawDataFile file, float shift) {
+        this.Interpolatedshift.put(file,(short)shift);
         float shiftintime = session.getProparraycalculator().getshiftintime(shift);
         
         this.OgroupShift.put(file, shiftintime);
@@ -601,6 +601,8 @@ if (listofSlices.containsKey(file)) {
     }
         }
     }
+    
+     
 
 //    /**
 //     * @return the AdductPropArray

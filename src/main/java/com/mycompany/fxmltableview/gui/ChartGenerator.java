@@ -1148,7 +1148,7 @@ public class ChartGenerator {
                     float shift = (list.get(i).getOgroupShift().get(currentfile))*60;
                     XYChart.Data data = new XYChart.Data(list.get(i).getRT(), shift);
                     
-                    Ellipse cir = new Ellipse(1.5,4);
+                    Ellipse cir = new Ellipse(1.5,2);
                     
                     TreeItem<Entry> item = null;
                     for (int e = 0; e<newshiftcontroller.getSupercontroller().getMetTable().getRoot().getChildren().size(); e++) {

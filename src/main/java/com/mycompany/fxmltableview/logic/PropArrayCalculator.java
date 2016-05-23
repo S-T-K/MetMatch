@@ -50,7 +50,7 @@ public class PropArrayCalculator {
     
 }
     
-    public float getshiftintime(int index)  {
+    public float getshiftintime(float index)  {
         return (index-middle)*step;
         
     }
