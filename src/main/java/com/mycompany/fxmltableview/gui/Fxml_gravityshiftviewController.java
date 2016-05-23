@@ -147,6 +147,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
     private XYChart.Series botSeries;
     private GravityCalculator grav;
     private float[][] samplematrix;
+    private RawDataFile samplefile;
+    private float[] samplecentroids;
 
     /**
      * Initializes the controller class.
@@ -429,6 +431,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                         
                                         int done = 0;
                                         samplematrix = new float[list.size()][session.getResolution()];
+                                        samplefile = currentfile;
                                         session.getIothread().lockFile(currentfile, true);
                                         double start = System.currentTimeMillis();
                                         LinkedList<Integer> queue = new LinkedList<Integer>();
@@ -534,6 +537,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                     Thread.sleep((long) speed.getValue());
 
                                     centroids = grav.gravity(count, samplematrix, centroids);
+                                    samplecentroids = centroids;
 
                                    
                                             for (int i = 0; i < centroids.length; i++) {
@@ -1659,6 +1663,8 @@ done++;
                 for (int i = 0; i<olist.size(); i++) {
                 olist.get(i).setFittedShift(currentfile, centroids[i]);
                 }
+                
+                currentfile.calculateScorenew();
                                         
                                       
                                      filesdone++;  
@@ -1713,12 +1719,26 @@ done++;
        //reactivate selected file (gets deactivated because of selection)
        session.getSelectedFiles().get(0).setActive(true);
        
+       //remove sample file and fit file
+       filelist.remove(samplefile);
+       for (int i = 0; i<olist.size(); i++) {
+                olist.get(i).setFittedShift(samplefile, samplecentroids[i]);
+                }
+       samplefile.calculateScorenew();
+       
        calculateFiles(filelist);
        
    }
    
    public void calculateAllFiles() throws InterruptedException, IOException {
-        calculateFiles(session.getAllFiles());
+       List<RawDataFile> filelist = session.getAllFiles();
+       //remove sample file and fit file
+       filelist.remove(samplefile);
+       for (int i = 0; i<olist.size(); i++) {
+                olist.get(i).setFittedShift(samplefile, samplecentroids[i]);
+                }
+       samplefile.calculateScorenew();
+        calculateFiles(filelist);
    }
    
    

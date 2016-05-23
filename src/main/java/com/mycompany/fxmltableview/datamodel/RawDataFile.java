@@ -492,6 +492,22 @@ session.getIothread().writefile(this);
         
     }
     
+    public void calculateScorenew() {
+        
+        
+        int found = 0;
+        for (int i = 0; i< session.getListofOGroups().size(); i++) {
+            found += session.getListofOGroups().get(i).getPeakfound(this);
+        }
+        float sum = 0.0f;
+    
+    pfound=new SimpleFloatProperty((float)found/(float)session.getListofOGroups().size()*100);
+  
+    getDataset().getController().getBatchFileView().refresh();
+        
+        
+    }
+    
     public void initializeFile(int bytecount) throws FileNotFoundException, IOException, InterruptedException {
         RandomAccessFile memoryMappedFile = new RandomAccessFile("C:\\Users\\stefankoch\\Documents\\tmp2\\" + this.toString() + ".out", "rw");
         MMFile = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, bytecount);
