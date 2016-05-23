@@ -70,6 +70,8 @@ public class Session {
     private PropArrayCalculator proparraycalculator;
     private GravityCalculator gravitycalculator;
     
+    private String[] labels;
+    
     public Session() {
         
         
@@ -145,6 +147,12 @@ public class Session {
         
         //get Headers
         List<String> headers = Arrays.asList(allRows.get(0));
+        //get Labels
+        parseLables(headers);
+        int[] indexLabelsXn = new int[this.labels.length];
+        for (int i = 0; i<labels.length; i++) {
+            indexLabelsXn[i] = headers.indexOf(labels[i].concat("_Xn"));
+        }
         int indexNum = headers.indexOf("Num");
         int indexMZ = headers.indexOf("MZ");
         int indexRT = headers.indexOf("RT");
@@ -156,6 +164,7 @@ public class Session {
         int indexEvent = headers.indexOf("ScanEvent");
         int indexIonisation = headers.indexOf("Ionisation_Mode");
         int Num;
+        int[] labeledXn = new int[labels.length];
         float MZ;
         float RT;
         int Xn;
@@ -170,6 +179,12 @@ public class Session {
         String lastOGroup = "-1";
         Entry ogroup = null;
         for (int i = 1; i < allRows.size(); i++) {
+            for (int j = 0; j<labels.length; j++) {
+               try { labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]]); }
+               catch(NullPointerException e) {
+                   labeledXn[j] = 0;
+               }
+            }
             Num = Integer.parseInt(allRows.get(i)[indexNum]);
             MZ = Float.parseFloat(allRows.get(i)[indexMZ]);
             RT = Float.parseFloat(allRows.get(i)[indexRT]);
@@ -192,9 +207,9 @@ public class Session {
                 obsList.add(ogroup);
             }
             //add Adduct to current Ogroup
-            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,Charge,ScanEvent,Ionisation,this,ogroup);
+            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,Charge,ScanEvent,Ionisation, labeledXn, this,ogroup);
             ogroup.addAdduct(adduct);
-            
+            //System.out.println(labeledXn[0]+ "   " + labeledXn[1]);
             
             } 
         }
@@ -778,6 +793,24 @@ public class Session {
      */
     public void setGravitycalculator(GravityCalculator gravitycalculator) {
         this.gravitycalculator = gravitycalculator;
+    }
+    
+    public void parseLables(List<String> headers) {
+        
+        List<String> lab = new ArrayList<>();
+        for (int i = 0; i< headers.size(); i++) {
+            if (headers.get(i).matches("(.*)_Xn")) {
+                lab.add(headers.get(i).split("_")[0]);
+            }
+        }
+        
+        this.labels = lab.toArray(new String[0]);
+        
+        for (String label : labels) {
+            System.out.println("Label detected: " + label + "     Added to list of Labels");
+        }
+       
+        
     }
     
 }

@@ -47,6 +47,7 @@ public class Entry {
     private StringProperty Ion;
     private SimpleFloatProperty M;
     private int Charge;
+    private int[] LabeledXn;
     private String ScanEvent;
     private String Ionisation;
     private Entry OGroupObject;
@@ -78,7 +79,7 @@ public class Entry {
     }
 
     //constructor for Adduct
-    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, int Charge, String scanEvent, String Ionisation, Session session, Entry ogroup) {
+    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, int Charge, String scanEvent, String Ionisation, int[] labeledXn, Session session, Entry ogroup) {
         this.Num = new SimpleIntegerProperty(Num);
         this.MZ = new SimpleFloatProperty((float) MZ);
         this.RT = new SimpleFloatProperty((float) RT);
@@ -89,6 +90,7 @@ public class Entry {
         this.Charge=Charge;
         this.ScanEvent=scanEvent;
         this.Ionisation=Ionisation;
+        this.LabeledXn=labeledXn;
         this.Score = new SimpleFloatProperty(0);
         this.Scorepeakclose = new SimpleFloatProperty(0);
         this.Scorepeakfound = new SimpleFloatProperty(0);
@@ -103,7 +105,7 @@ public class Entry {
      
     }
     //constructor for generated Adduct
-    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, Session session, Entry ogroup, Entry orig) {
+    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, int[] labeledXn , Session session, Entry ogroup, Entry orig) {
         this.Num = new SimpleIntegerProperty(Num);
         this.MZ = new SimpleFloatProperty((float) MZ);
         this.RT = new SimpleFloatProperty((float) RT);
@@ -111,6 +113,7 @@ public class Entry {
         this.OGroup = new SimpleIntegerProperty(OGroup);
         this.Ion = new SimpleStringProperty(Ion);
         this.M = new SimpleFloatProperty((float) M);
+        this.LabeledXn=labeledXn;
         this.Score = new SimpleFloatProperty(0);
         this.Scorepeakclose = new SimpleFloatProperty(0);
         this.Scorepeakfound = new SimpleFloatProperty(0);
@@ -800,6 +803,20 @@ if (listofSlices.containsKey(file)) {
 
     public int getInterpolatedshift(RawDataFile currentfile) {
         return Interpolatedshift.get(currentfile);
+    }
+
+    /**
+     * @return the LabeledXn
+     */
+    public int[] getLabeledXn() {
+        return LabeledXn;
+    }
+
+    /**
+     * @param LabeledXn the LabeledXn to set
+     */
+    public void setLabeledXn(int[] LabeledXn) {
+        this.LabeledXn = LabeledXn;
     }
 
     
