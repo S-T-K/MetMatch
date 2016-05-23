@@ -86,7 +86,10 @@ public class Slice {
     //returns the length of information in bytes
      public void newbinaryExtractSlicefromScans(List<Scan> listofScans, float[] ScanRTs) {
          
-        
+        if (this.adduct.getNum()==44) {
+            System.gc();
+        }
+         
        //generateBins();
          //for all Scans
        float minMZ = getMinMZ();
@@ -111,7 +114,7 @@ public class Slice {
             setMZArray(new float[getRTend()-getRTstart()+1]);
      
        
-       float max = Float.MIN_VALUE;
+      
        for (int i = getRTstart(); i<=getRTend(); i++) {
            float[] mz = listofScans.get(i).getMassovercharge();
            float[] intensity = listofScans.get(i).getIntensity();
@@ -131,9 +134,7 @@ public class Slice {
                             MZArray[i-getRTstart()] = mz[minM];
                             IntArray[i-getRTstart()] = intensity[minM];
                             numberofsignals++;
-                            if (intensity[minM]>max) {
-                                max=intensity[minM];
-                            }
+                            
                        }
                    
                    minM++;
@@ -144,7 +145,7 @@ public class Slice {
           }
           
           
-          maxIntensity = max;
+         
        }
        
        
@@ -1312,12 +1313,16 @@ public class Slice {
         float maxMZ = newMZ+dif;
         float minMZ = newMZ-dif;
         empty = true;
+        float max = Float.MIN_VALUE;
         for (int i = 0; i<MZArray.length; i++) {
             if (MZArray[i]==0||MZArray[i]<minMZ||MZArray[i]>maxMZ) {
                 MZArray[i] = 0;
                 IntArray[i] = 0;
               
             } else {
+                if (IntArray[i]>max) {
+                    max = IntArray[i];
+                }
                 empty = false;
             }
         }
@@ -1325,6 +1330,7 @@ public class Slice {
         if (!empty) {
             adduct.getListofSlices().put(file, this);
         }
+        maxIntensity = max;
 return empty;
     }
 

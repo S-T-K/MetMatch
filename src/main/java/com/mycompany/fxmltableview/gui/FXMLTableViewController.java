@@ -862,6 +862,145 @@ session.setNumberofadducts(numberofadducts);
         getMetTable().getSortOrder().add(rtColumn);
 
     }
+    
+     public void generateOutputnew() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+
+         //list of OGroups
+         List<Entry> ogroups = MasterListofOGroups;
+         int[] indices = session.getIndices();
+         
+          //parse Input Matrix again
+        TsvParserSettings settings = new TsvParserSettings();
+        settings.getFormat().setLineSeparator("\n");
+
+        TsvParser parser = new TsvParser(settings);
+        FileReader reader = new FileReader(session.getReferenceTsv());
+        List<String[]> InallRows = parser.parseAll(reader);
+        String[] Inheader = InallRows.get(0);
+
+        //generate new Matrix, with all files and all adducts
+        List<String[]> OutallRows = new ArrayList<>();
+        //get first file column
+        int ffc = 0;
+        for (int i = 0; i<Inheader.length; i++) {
+            System.out.println(Inheader[i]);
+            if (Inheader[i].startsWith("_")) {
+            ffc=i;
+            break;
+            }
+        }
+        
+        //get first non file information
+        int fnfi = 0;
+        for (int i = ffc+1; i<Inheader.length; i++) {
+            if (!Inheader[i].startsWith("_")) {
+            fnfi=i;
+            break;
+            }
+        }
+        
+        //number of new columns
+        int nof = session.getAllFiles().size();
+        
+        //new header
+        String[] Outheader = new String[Inheader.length+nof*4];
+        for (int i = 0; i<ffc; i++) {
+            Outheader[i]=Inheader[i];
+        }
+        //current column
+        int cc = ffc;
+        //write new headers
+        for (int i = 0; i<nof; i++) {
+            RawDataFile file = session.getAllFiles().get(i);
+            file.setColumn(cc);
+            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_Area";
+            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_2";
+            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_3";
+            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_4";
+        }
+        
+        //write old information after files
+        for (int i = ffc; i<Inheader.length; i++) {
+            Outheader[cc++]=Inheader[i];
+        }
+        
+        //new number of columns
+        int noc = Inheader.length+nof*4;
+        
+        //start on adducts
+        List<String[]> Outrows = new ArrayList<>();
+        List<Boolean> hasdata = new ArrayList<>();
+        for (int o = 0; o<ogroups.size(); o++) {
+            for (int a = 0; a<ogroups.get(o).getListofAdducts().size(); a++) {
+                Entry adduct = ogroups.get(o).getListofAdducts().get(a);
+            //generate basic information including any relevant old info
+            String[] info = new String[noc];
+            //if old adduct
+            if (adduct.getOriginalAdduct()==null) {
+                for (int i = 0; i<ffc; i++) {
+                    info[i]=InallRows.get(adduct.getInline())[i];
+                }
+                cc=ffc+nof*4;
+                for (int i = ffc; i<Inheader.length; i++) {
+                info[cc++]=InallRows.get(adduct.getInline())[i];
+        }
+                hasdata.add(Boolean.TRUE);
+                //if new adduct
+            } else {
+                info[indices[0]]=String.valueOf(adduct.getNum());
+                info[indices[1]]=String.valueOf(adduct.getMZ());
+                info[indices[2]]=String.valueOf(adduct.getRT());
+                info[indices[3]]=String.valueOf(adduct.getXn());
+                info[indices[4]]=String.valueOf(adduct.getOGroup());
+                info[indices[5]]=String.valueOf(adduct.getIon());
+                info[indices[6]]=String.valueOf(adduct.getM());
+                info[indices[7]]=String.valueOf(adduct.getCharge());
+                info[indices[8]]=String.valueOf(adduct.getScanEvent());
+                info[indices[9]]=String.valueOf(adduct.getIonisation());
+                hasdata.add(Boolean.FALSE);
+            }
+            
+            //write Data
+            for (int i = 0; i<session.getAllFiles().size(); i++) {
+                RawDataFile file = session.getAllFiles().get(i);
+                if (adduct.getListofSlices().containsKey(file)) {
+                    if (adduct.getListofSlices().get(file).getFittedPeak()!=null) {
+                        info[file.getColumn()]=String.valueOf(adduct.getListofSlices().get(file).getFittedPeak().getArea());
+                        hasdata.set(hasdata.size()-1, Boolean.TRUE);
+                    }
+                }
+                
+            }
+            
+            Outrows.add(info);
+            adduct.setOutline(Outrows.size()-1);
+            
+            }
+            
+            
+        }
+        
+        //delete empty 
+        for(int i = Outrows.size()-1; i>=0; i--) {
+            if (!hasdata.get(i)) {
+                Outrows.remove(i);
+            }
+        }
+        
+        
+        PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
+        TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
+        writer.writeHeaders(Outheader);
+        for (int i = 0; i < Outrows.size(); i++) {
+            writer.writeRow(Outrows.get(i));
+        }
+
+        writer.close();
+        Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
+         
+        System.out.println("Done");
+         
+    }
 
     public void generateAdducts() {
         if (toggleadductgeneration.selectedProperty().get()){

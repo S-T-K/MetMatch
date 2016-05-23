@@ -71,6 +71,7 @@ public class Session {
     private GravityCalculator gravitycalculator;
     
     private String[] labels;
+    private int[] indices;
     
     public Session() {
         
@@ -163,6 +164,7 @@ public class Session {
         int indexCharge = headers.indexOf("Charge");
         int indexEvent = headers.indexOf("ScanEvent");
         int indexIonisation = headers.indexOf("Ionisation_Mode");
+        indices = new int[] {indexNum,indexMZ,indexRT,indexXn,indexOGroup,indexIon,indexM,indexCharge,indexEvent,indexIonisation};
         int Num;
         int[] labeledXn = new int[labels.length];
         float MZ;
@@ -183,6 +185,12 @@ public class Session {
                try { labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]]); }
                catch(NullPointerException e) {
                    labeledXn[j] = 0;
+               }
+               //if "Several" take first one
+               //TODO: change
+               catch (NumberFormatException e) {
+                   int end = allRows.get(i)[indexLabelsXn[j]].indexOf(',');
+                   labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]].substring(9,end));
                }
             }
             Num = Integer.parseInt(allRows.get(i)[indexNum]);
@@ -207,7 +215,7 @@ public class Session {
                 obsList.add(ogroup);
             }
             //add Adduct to current Ogroup
-            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,Charge,ScanEvent,Ionisation, labeledXn, this,ogroup);
+            Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,Charge,ScanEvent,Ionisation, labeledXn, i, this,ogroup);
             ogroup.addAdduct(adduct);
             //System.out.println(labeledXn[0]+ "   " + labeledXn[1]);
             
@@ -811,6 +819,20 @@ public class Session {
         }
        
         
+    }
+
+    /**
+     * @return the indices
+     */
+    public int[] getIndices() {
+        return indices;
+    }
+
+    /**
+     * @param indices the indices to set
+     */
+    public void setIndices(int[] indices) {
+        this.indices = indices;
     }
     
 }

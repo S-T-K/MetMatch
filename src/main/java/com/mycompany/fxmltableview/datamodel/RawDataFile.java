@@ -69,6 +69,8 @@ public class RawDataFile {
     
     private int maxPeakLengthInt;
     private int peakRTTolerance;
+    
+    private int column;
 
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file, Session session) {
@@ -618,6 +620,20 @@ session.getIothread().writefile(this);
      */
     public void setFactor(float factor) {
         this.factor = factor;
+    }
+
+    /**
+     * @return the column
+     */
+    public int getColumn() {
+        return column;
+    }
+
+    /**
+     * @param column the column to set
+     */
+    public void setColumn(int column) {
+        this.column = column;
     }
     
     

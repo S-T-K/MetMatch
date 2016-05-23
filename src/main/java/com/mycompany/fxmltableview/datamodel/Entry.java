@@ -58,6 +58,8 @@ public class Entry {
     private HashMap<RawDataFile, Float> Certainties;
     private Entry originalAdduct;
     private boolean empty;
+    private int Inline;
+    private int Outline;
 
     
     
@@ -79,7 +81,7 @@ public class Entry {
     }
 
     //constructor for Adduct
-    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, int Charge, String scanEvent, String Ionisation, int[] labeledXn, Session session, Entry ogroup) {
+    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, int Charge, String scanEvent, String Ionisation, int[] labeledXn, int line, Session session, Entry ogroup) {
         this.Num = new SimpleIntegerProperty(Num);
         this.MZ = new SimpleFloatProperty((float) MZ);
         this.RT = new SimpleFloatProperty((float) RT);
@@ -91,6 +93,7 @@ public class Entry {
         this.ScanEvent=scanEvent;
         this.Ionisation=Ionisation;
         this.LabeledXn=labeledXn;
+        this.Inline = line;
         this.Score = new SimpleFloatProperty(0);
         this.Scorepeakclose = new SimpleFloatProperty(0);
         this.Scorepeakfound = new SimpleFloatProperty(0);
@@ -817,6 +820,34 @@ if (listofSlices.containsKey(file)) {
      */
     public void setLabeledXn(int[] LabeledXn) {
         this.LabeledXn = LabeledXn;
+    }
+
+    /**
+     * @return the Inline
+     */
+    public int getInline() {
+        return Inline;
+    }
+
+    /**
+     * @param Inline the Inline to set
+     */
+    public void setInline(int Inline) {
+        this.Inline = Inline;
+    }
+
+    /**
+     * @return the Outline
+     */
+    public int getOutline() {
+        return Outline;
+    }
+
+    /**
+     * @param Outline the Outline to set
+     */
+    public void setOutline(int Outline) {
+        this.Outline = Outline;
     }
 
     
