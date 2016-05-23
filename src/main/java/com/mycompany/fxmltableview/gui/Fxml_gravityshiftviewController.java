@@ -387,6 +387,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 //        new Thread(maintask).start();
 //    }
     public void animate(ObservableList<Entry> list) throws IOException, InterruptedException {
+        session.setPeakPickchanged(true);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
@@ -565,7 +566,7 @@ menu.setDisable(false);
                 }
 
 //                don't recalculate unless something changes
-               session.setPeakPickchanged(false);
+
                 
                 
                 System.out.println("Error: No file in Dataset selected");
@@ -1701,12 +1702,17 @@ done++;
        Dataset current = session.getSelectedFiles().get(0).getDataset();
        List<RawDataFile> filelist = current.getListofFiles();
        
+      
+       //inactivate all other files (don't draw them)
        for (int i = 0; i<session.getAllFiles().size(); i++) {
            if (!filelist.contains(session.getAllFiles().get(i))) {
                session.getAllFiles().get(i).setActive(false);
            }
        }
 
+       //reactivate selected file (gets deactivated because of selection)
+       session.getSelectedFiles().get(0).setActive(true);
+       
        calculateFiles(filelist);
        
    }
