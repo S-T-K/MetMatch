@@ -653,7 +653,7 @@ if (listofSlices.containsKey(file)) {
         if (slice!=null) {
             if (slice.getListofPeaks()!=null){
         for (int i = 0; i<slice.getListofPeaks().size(); i++) {
-        session.getProparraycalculator().calculate(slice.getListofPeaks().get(i).getIndexRT(), RT.floatValue(), matrix, row);
+        session.getProparraycalculator().calculate(slice.getListofPeaks().get(i).getIndexRT(), slice.getListofPeaks().get(i).getWeight(), RT.floatValue(), matrix, row);
                 }
         }}
         }

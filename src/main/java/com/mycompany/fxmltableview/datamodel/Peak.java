@@ -23,9 +23,11 @@ public class Peak {
     private Slice slice;
     private boolean manual;
     private float indexshift;
+    private float weight;
     
     
     public Peak(short index, float scale, float SNR, float area, Slice slice) throws InterruptedException {
+        this.weight = 1;
         this.index = index;
         this.scale = scale;
         this.SNR = SNR;
@@ -45,6 +47,7 @@ public class Peak {
     }
 
     public Peak(short index, short start, short end, Slice slice) throws InterruptedException {
+        this.weight = 1;
         this.index = index;
         this.start = start;
         this.end = end;
@@ -56,6 +59,7 @@ public class Peak {
     }
     
     public Peak(boolean manual, short index, short start, short end, Slice slice, int non) throws InterruptedException {
+        this.weight = 100000;
         this.index = index;
         this.start = start;
         this.end = end;
@@ -259,6 +263,20 @@ public class Peak {
         length[0] = RTArray[index+slice.getRTstart()]-RTArray[start+slice.getRTstart()];
         length[1] = RTArray[end+slice.getRTstart()]-RTArray[index+slice.getRTstart()];
         return length;  
+    }
+
+    /**
+     * @return the weight
+     */
+    public float getWeight() {
+        return weight;
+    }
+
+    /**
+     * @param weight the weight to set
+     */
+    public void setWeight(float weight) {
+        this.weight = weight;
     }
     
     //Comparator to sort List of Entries
