@@ -64,6 +64,8 @@ public class Session {
     
     private List<SimpleStringProperty> listofadductnameproperties;
     private List<SimpleFloatProperty> listofadductmassproperties;
+    private List<SimpleStringProperty> listofadductchargeproperties;
+    private List<SimpleIntegerProperty> listofadductmproperties;
     private List<String> listofadductnames;
     private List<Float> listofadductmasses;
     
@@ -89,7 +91,7 @@ public class Session {
         MZTolerance = new SimpleFloatProperty(11.0f);
         PeakRTTolerance = new SimpleFloatProperty(0.15f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
-        minPeakLength = new SimpleFloatProperty(0.2f);
+        minPeakLength = new SimpleFloatProperty(0.1f);
         engine = new Rengine(new String[] { "--no-save" }, false, null);
         engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
         peakPickchanged = true;
@@ -115,6 +117,22 @@ public class Session {
         listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
         listofadductmassproperties.add(new SimpleFloatProperty());
         listofadductmassproperties.add(new SimpleFloatProperty());
+        listofadductchargeproperties= new ArrayList<>();
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty(""));
+        listofadductchargeproperties.add(new SimpleStringProperty(""));
+        listofadductmproperties= new ArrayList<>();
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty());
+        listofadductmproperties.add(new SimpleIntegerProperty());
         
     }
 
@@ -833,6 +851,34 @@ public class Session {
      */
     public void setIndices(int[] indices) {
         this.indices = indices;
+    }
+
+    /**
+     * @return the listofadductchargeproperties
+     */
+    public List<SimpleStringProperty> getListofadductchargeproperties() {
+        return listofadductchargeproperties;
+    }
+
+    /**
+     * @param listofadductchargeproperties the listofadductchargeproperties to set
+     */
+    public void setListofadductchargeproperties(List<SimpleStringProperty> listofadductchargeproperties) {
+        this.listofadductchargeproperties = listofadductchargeproperties;
+    }
+
+    /**
+     * @return the listofadductmproperties
+     */
+    public List<SimpleIntegerProperty> getListofadductmproperties() {
+        return listofadductmproperties;
+    }
+
+    /**
+     * @param listofadductmproperties the listofadductmproperties to set
+     */
+    public void setListofadductmproperties(List<SimpleIntegerProperty> listofadductmproperties) {
+        this.listofadductmproperties = listofadductmproperties;
     }
     
 }

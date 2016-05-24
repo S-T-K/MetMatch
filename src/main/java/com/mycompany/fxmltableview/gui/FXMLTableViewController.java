@@ -29,8 +29,12 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -58,6 +62,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -99,10 +104,10 @@ public class FXMLTableViewController implements Initializable {
     ProgressBar progressbar;
 
     @FXML
-    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7;
+    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7;
 
     @FXML
-    Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
+    Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7;
 
     @FXML
     Rectangle box1, box2, box3, box4;
@@ -118,6 +123,9 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     TabPane TabPane;
+    
+    @FXML
+    AnchorPane AdductAnchor;
 
     //Check for changed parameters
     String oldPick;
@@ -180,6 +188,52 @@ public class FXMLTableViewController implements Initializable {
         AdMass5.textProperty().bindBidirectional(session.getListofadductmassproperties().get(4), new NumberStringConverter());
         AdMass6.textProperty().bindBidirectional(session.getListofadductmassproperties().get(5), new NumberStringConverter());
         AdMass7.textProperty().bindBidirectional(session.getListofadductmassproperties().get(6), new NumberStringConverter());
+        AdM1.textProperty().bindBidirectional(session.getListofadductmproperties().get(0), new NumberStringConverter());
+        AdM2.textProperty().bindBidirectional(session.getListofadductmproperties().get(1), new NumberStringConverter());
+        AdM3.textProperty().bindBidirectional(session.getListofadductmproperties().get(2), new NumberStringConverter());
+        AdM4.textProperty().bindBidirectional(session.getListofadductmproperties().get(3), new NumberStringConverter());
+        AdM5.textProperty().bindBidirectional(session.getListofadductmproperties().get(4), new NumberStringConverter());
+        AdM6.textProperty().bindBidirectional(session.getListofadductmproperties().get(5), new NumberStringConverter());
+        AdM7.textProperty().bindBidirectional(session.getListofadductmproperties().get(6), new NumberStringConverter());
+        AdC1.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(0));
+        AdC2.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(1));
+        AdC3.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(2));
+        AdC4.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(3));
+        AdC5.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(4));
+        AdC6.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(5));
+        AdC7.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(6));
+        
+        Adlabel1.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(0));}
+      @Override
+      protected String computeValue() {
+      return makeString(session.getListofadductmproperties().get(0).intValue());}});
+        Adlabel2.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(1));}
+      @Override
+      protected String computeValue() {
+      return makeString(session.getListofadductmproperties().get(1).intValue());}});
+        Adlabel3.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(2));}
+      @Override
+      protected String computeValue() {
+      return makeString(session.getListofadductmproperties().get(2).intValue());}});
+        Adlabel4.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(3));}
+      @Override
+      protected String computeValue() {
+      return makeString(session.getListofadductmproperties().get(3).intValue());}});
+        Adlabel5.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(4));}
+      @Override
+      protected String computeValue() {
+      return makeString(session.getListofadductmproperties().get(4).intValue());}});
+        Adlabel6.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(5));}
+      @Override
+      protected String computeValue() {
+      return makeString(session.getListofadductmproperties().get(5).intValue());}});
+        Adlabel7.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(6));}
+      @Override
+      protected String computeValue() {
+      return makeString(session.getListofadductmproperties().get(6).intValue());}});
+
+        
+        
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
         Start.textProperty().bindBidirectional(session.getStart(), new NumberStringConverter());
         End.textProperty().bindBidirectional(session.getEnd(), new NumberStringConverter());
@@ -288,20 +342,6 @@ session.setNumberofadducts(numberofadducts);
         Start.setDisable(true);
         End.setDisable(true);
         paramMenu.setDisable(false);
-        AdName1.setDisable(true);
-        AdName2.setDisable(true);
-        AdName3.setDisable(true);
-        AdName4.setDisable(true);
-        AdName5.setDisable(true);
-        AdName6.setDisable(true);
-        AdName7.setDisable(true);
-        AdMass1.setDisable(true);
-        AdMass2.setDisable(true);
-        AdMass3.setDisable(true);
-        AdMass4.setDisable(true);
-        AdMass5.setDisable(true);
-        AdMass6.setDisable(true);
-        AdMass7.setDisable(true);
         toggleadductgeneration.setDisable(true);
 
         session.prepare();
@@ -1158,20 +1198,15 @@ session.setNumberofadducts(numberofadducts);
 
     public void toggleAdductGeneration() {
         boolean toggle = !toggleadductgeneration.selectedProperty().get();
-        AdName1.setDisable(toggle);
-        AdName2.setDisable(toggle);
-        AdName3.setDisable(toggle);
-        AdName4.setDisable(toggle);
-        AdName5.setDisable(toggle);
-        AdName6.setDisable(toggle);
-        AdName7.setDisable(toggle);
-        AdMass1.setDisable(toggle);
-        AdMass2.setDisable(toggle);
-        AdMass3.setDisable(toggle);
-        AdMass4.setDisable(toggle);
-        AdMass5.setDisable(toggle);
-        AdMass6.setDisable(toggle);
-        AdMass7.setDisable(toggle);
+        AdductAnchor.setDisable(toggle);
+    }
+   
+    public String makeString(int m) {
+        if (m>1) {
+            return "M/" + m + " +";
+        } else {
+            return "M +";
+        }
     }
     
     
