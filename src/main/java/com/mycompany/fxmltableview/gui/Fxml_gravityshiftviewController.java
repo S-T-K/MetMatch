@@ -529,8 +529,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                     int yrange = grav.getyRanges()[count];
                                   
                                             for (int i = 0; i < centroids.length; i++) {
-                                                ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(centroids[i] + yrange);
-                                                ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(centroids[i] - yrange);
+                                                ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+1 + yrange);
+                                                ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+1 - yrange);
                                             }
                                         
 
@@ -541,7 +541,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 
                                    
                                             for (int i = 0; i < centroids.length; i++) {
-                                                ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
+                                                ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+1);
                                             }
 
                                         
