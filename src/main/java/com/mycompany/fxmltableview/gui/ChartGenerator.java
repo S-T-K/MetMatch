@@ -1912,8 +1912,8 @@ public class ChartGenerator {
         xAxis.setAutoRanging(false);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(40);
-        yAxis.setLowerBound(session.getRTTolerance()*-60);
-        yAxis.setUpperBound(session.getRTTolerance()*60);
+        yAxis.setLowerBound(session.getRTTolerance()*-55);
+        yAxis.setUpperBound(session.getRTTolerance()*55);
        
 //        xAxis.setLowerBound(session.getStart().floatValue()-5.0f);
 //        xAxis.setUpperBound(session.getEnd().floatValue()+5.0f);

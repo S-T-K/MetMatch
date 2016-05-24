@@ -90,7 +90,7 @@ public class Slice {
             System.gc();
         }
          
-       //generateBins();
+       
          //for all Scans
        float minMZ = getMinMZ();
        float maxMZ = getMaxMZ();
@@ -1314,18 +1314,29 @@ public class Slice {
         float minMZ = newMZ-dif;
         empty = true;
         float max = Float.MIN_VALUE;
+        //number of consecutive signals
+        int nocs = 0;
+        int minnocs = (int) (file.getSession().getMinPeakLength().floatValue()*60*file.getScanspersecond());
         for (int i = 0; i<MZArray.length; i++) {
             if (MZArray[i]==0||MZArray[i]<minMZ||MZArray[i]>maxMZ) {
                 MZArray[i] = 0;
                 IntArray[i] = 0;
+                
+                if (nocs>=minnocs) {
+                    empty = false;
+                }
+                nocs=0;
               
             } else {
                 if (IntArray[i]>max) {
                     max = IntArray[i];
                 }
-                empty = false;
+                nocs++;
             }
         }
+        if (nocs>=minnocs) {
+                    empty = false;
+                }
         
         if (!empty) {
             adduct.getListofSlices().put(file, this);
