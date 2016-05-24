@@ -68,6 +68,8 @@ public class Session {
     private List<SimpleIntegerProperty> listofadductmproperties;
     private List<String> listofadductnames;
     private List<Float> listofadductmasses;
+    private List<Integer> listofadductcharges;
+    private List<Integer> listofadductms;
     
     private PropArrayCalculator proparraycalculator;
     private GravityCalculator gravitycalculator;
@@ -684,10 +686,16 @@ public class Session {
     public void finalizeAdducts() {
         listofadductnames = new ArrayList<String>();
         listofadductmasses = new ArrayList<Float>();
+        listofadductcharges = new ArrayList<Integer>();
+        listofadductms = new ArrayList<Integer>();
         for (int i = 0; i<listofadductnameproperties.size(); i++) {
-            if (!listofadductnameproperties.get(i).get().isEmpty()&&listofadductmassproperties.get(i).floatValue()>0) {
+            if (!listofadductnameproperties.get(i).get().isEmpty()&&listofadductmassproperties.get(i).floatValue()>0&&listofadductmproperties.get(i).getValue()>0&&!listofadductchargeproperties.get(i).get().isEmpty()) {
                 listofadductnames.add(listofadductnameproperties.get(i).get());
                 listofadductmasses.add(listofadductmassproperties.get(i).floatValue());
+                listofadductms.add(listofadductmproperties.get(i).get());
+                String charge = listofadductchargeproperties.get(i).get();
+                charge = charge.substring(0, charge.length()-1);
+                listofadductcharges.add(Integer.parseInt(charge));
             }
             
         }
@@ -879,6 +887,34 @@ public class Session {
      */
     public void setListofadductmproperties(List<SimpleIntegerProperty> listofadductmproperties) {
         this.listofadductmproperties = listofadductmproperties;
+    }
+
+    /**
+     * @return the listofadductcharges
+     */
+    public List<Integer> getListofadductcharges() {
+        return listofadductcharges;
+    }
+
+    /**
+     * @param listofadductcharges the listofadductcharges to set
+     */
+    public void setListofadductcharges(List<Integer> listofadductcharges) {
+        this.listofadductcharges = listofadductcharges;
+    }
+
+    /**
+     * @return the listofadductms
+     */
+    public List<Integer> getListofadductms() {
+        return listofadductms;
+    }
+
+    /**
+     * @param listofadductms the listofadductms to set
+     */
+    public void setListofadductms(List<Integer> listofadductms) {
+        this.listofadductms = listofadductms;
     }
     
 }

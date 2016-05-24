@@ -206,31 +206,31 @@ public class FXMLTableViewController implements Initializable {
         Adlabel1.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(0));}
       @Override
       protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(0).intValue());}});
+      return makeString(session.getListofadductmproperties().get(0).intValue(),session.getListofadductchargeproperties().get(0).get());}});
         Adlabel2.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(1));}
       @Override
       protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(1).intValue());}});
+      return makeString(session.getListofadductmproperties().get(1).intValue(),session.getListofadductchargeproperties().get(1).get());}});
         Adlabel3.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(2));}
       @Override
       protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(2).intValue());}});
+      return makeString(session.getListofadductmproperties().get(2).intValue(),session.getListofadductchargeproperties().get(2).get());}});
         Adlabel4.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(3));}
       @Override
       protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(3).intValue());}});
+      return makeString(session.getListofadductmproperties().get(3).intValue(),session.getListofadductchargeproperties().get(3).get());}});
         Adlabel5.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(4));}
       @Override
       protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(4).intValue());}});
+      return makeString(session.getListofadductmproperties().get(4).intValue(),session.getListofadductchargeproperties().get(4).get());}});
         Adlabel6.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(5));}
       @Override
       protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(5).intValue());}});
+      return makeString(session.getListofadductmproperties().get(5).intValue(),session.getListofadductchargeproperties().get(5).get());}});
         Adlabel7.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(6));}
       @Override
       protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(6).intValue());}});
+      return makeString(session.getListofadductmproperties().get(6).intValue(),session.getListofadductchargeproperties().get(6).get());}});
 
         
         
@@ -306,7 +306,7 @@ public class FXMLTableViewController implements Initializable {
 
         //generate additional adducts
         session.finalizeAdducts();
-        generateAdducts();
+        generateAdductsnew();
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
 
@@ -1129,6 +1129,115 @@ session.setNumberofadducts(numberofadducts);
 
     }
     }
+    
+     public void generateAdductsnew() {
+        if (toggleadductgeneration.selectedProperty().get()){
+
+        //get highest num of Adduct
+        int max = 0;
+        for (int i = 0; i < MasterListofOGroups.size(); i++) {
+            for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                if (MasterListofOGroups.get(i).getListofAdducts().get(j).getNum() > max) {
+                    max = MasterListofOGroups.get(i).getListofAdducts().get(j).getNum();
+                }
+            }
+        }
+        this.maxnumber = max;
+        max++;
+        
+
+
+        for (int o = 0; o < MasterListofOGroups.size(); o++) {
+            int size = MasterListofOGroups.get(o).getListofAdducts().size();
+            for (int a = 0; a < size; a++) {
+                Entry adduct = MasterListofOGroups.get(o).getListofAdducts().get(a);
+                //for every adduct, check if ion specified
+                if (adduct.getIon() == null) {
+                    //if not
+                    for (int j = 0; j < session.getListofadductnames().size(); j++) {
+                        //add every possible adduct
+                        for (int k = 0; k < session.getListofadductnames().size(); k++) {
+                            //to every hypothetical adduct
+                            if (j != k) {
+                                //don't add the same value
+                                //get original mass
+                                Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
+                                mass*=session.getListofadductcharges().get(k);
+                                mass/=session.getListofadductms().get(k);
+                                //get new mass
+                                mass*=session.getListofadductms().get(j);
+                                mass/=session.getListofadductcharges().get(j);
+                                mass+=session.getListofadductmasses().get(j);
+                                
+                                Float ppm = mass / 1000000 * session.getMZTolerance();
+                                boolean duplicate = false;
+                                for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                    if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
+                                        duplicate = true;
+                                       // System.out.println("Duplicate generated");
+                                        break;
+                                    }
+                                }
+                                if (!duplicate) {
+                                    String Ion = "[(" + adduct.getNum() + "-(" + session.getListofadductnames().get(k) + "))+" + session.getListofadductnames().get(j) + "]";
+                                    String charge = session.getListofadductchargeproperties().get(j).get();
+                                    char sign = charge.charAt(charge.length()-1);
+                                    for (int c = 0; c<session.getListofadductcharges().get(j); c++) {
+                                        Ion = Ion.concat(String.valueOf(sign));
+                                    }
+                                    MasterListofOGroups.get(o).addAdduct(new Entry(max,mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
+                                    max++;
+                                }
+                            }
+                        }
+
+                    }
+
+                    //if ion specified
+                } else //if multiple Ions specified
+                if (adduct.getIon().indexOf(',') > 0) {
+                    //do something
+                } else {
+                 
+                        for (int j = 0; j < session.getListofadductnames().size(); j++) {
+                            //and add every possible adduct
+   
+                                Float mass = adduct.getM();
+                                //get new mass
+                                mass*=session.getListofadductms().get(j);
+                                mass/=session.getListofadductcharges().get(j);
+                                mass+=session.getListofadductmasses().get(j);
+                                
+                                Float ppm = mass / 1000000 * session.getMZTolerance();
+                                boolean duplicate = false;
+                                for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                    if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
+                                        duplicate = true;
+                                        //System.out.println("Duplicate generated");
+                                        break;
+                                    }
+                                }
+                                if (!duplicate) {
+                                    String Ion = "[M(" + adduct.getNum() + ")+" + session.getListofadductnames().get(j) + "]";
+                                    String charge = session.getListofadductchargeproperties().get(j).get();
+                                    char sign = charge.charAt(charge.length()-1);
+                                    for (int c = 0; c<session.getListofadductcharges().get(j); c++) {
+                                        Ion = Ion.concat(String.valueOf(sign));
+                                    }
+                                    MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
+                                    max++;
+                                }
+                            
+                        }
+
+                    
+                }
+
+            }
+        }
+
+    }
+    }
 
     public void showParameters() {
         setParameterPane(true);
@@ -1201,13 +1310,19 @@ session.setNumberofadducts(numberofadducts);
         AdductAnchor.setDisable(toggle);
     }
    
-    public String makeString(int m) {
-        if (m>1) {
-            return "M/" + m + " +";
+    public String makeString(int m, String charge) {
+        if (charge.length()>0) {
+        int c = Integer.parseInt(charge.substring(0, charge.length()-1));
+        
+        if (c>1) {
+            return m+ "M/" + c + " +";
         } else {
-            return "M +";
+            return m+ "M +";
         }
+    } else {
+            return "";
+        }
+        
     }
-    
     
 }
