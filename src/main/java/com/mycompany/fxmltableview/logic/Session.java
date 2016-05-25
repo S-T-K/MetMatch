@@ -104,11 +104,11 @@ public class Session {
         proparraycalculator=new PropArrayCalculator(this);
         
         listofadductnameproperties= new ArrayList<>();
-        listofadductnameproperties.add(new SimpleStringProperty("H"));
-        listofadductnameproperties.add(new SimpleStringProperty("NH4"));
-        listofadductnameproperties.add(new SimpleStringProperty("Na"));
-        listofadductnameproperties.add(new SimpleStringProperty("CH3OH+H"));
-        listofadductnameproperties.add(new SimpleStringProperty("K"));
+        listofadductnameproperties.add(new SimpleStringProperty("+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+NH4"));
+        listofadductnameproperties.add(new SimpleStringProperty("+Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+CH3OH+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+K"));
         listofadductnameproperties.add(new SimpleStringProperty(""));
         listofadductnameproperties.add(new SimpleStringProperty(""));
         listofadductmassproperties= new ArrayList<>();

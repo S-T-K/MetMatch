@@ -29,11 +29,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,10 +42,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -67,7 +61,6 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -1233,6 +1226,7 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
                                     Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
                                     mass *= session.getListofadductcharges().get(k);
                                     mass /= session.getListofadductms().get(k);
+                                    float M = mass;
                                     //get new mass
                                     mass *= session.getListofadductms().get(j);
                                     mass /= session.getListofadductcharges().get(j);
@@ -1248,13 +1242,19 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
                                         }
                                     }
                                     if (!duplicate) {
-                                        String Ion = "[(" + adduct.getNum() + "-(" + session.getListofadductnames().get(k) + "))+" + session.getListofadductnames().get(j) + "]";
-                                        String charge = session.getListofadductchargeproperties().get(j).get();
+                                        String Ion = "[M(" + adduct.getNum() + ":[M" + session.getListofadductnames().get(k) + "]";
+                                        String charge = session.getListofadductchargeproperties().get(k).get();
                                         char sign = charge.charAt(charge.length() - 1);
+                                        for (int c = 0; c < session.getListofadductcharges().get(k); c++) {
+                                            Ion = Ion.concat(String.valueOf(sign));
+                                        }
+                                        Ion = Ion.concat(")" + session.getListofadductnames().get(j)+"]");
+                                        charge = session.getListofadductchargeproperties().get(j).get();
+                                        sign = charge.charAt(charge.length() - 1);
                                         for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
                                             Ion = Ion.concat(String.valueOf(sign));
                                         }
-                                        MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
+                                        MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, M, adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
                                         max++;
                                     }
                                 }
