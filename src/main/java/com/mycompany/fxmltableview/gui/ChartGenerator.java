@@ -1316,6 +1316,10 @@ public class ChartGenerator {
         
     }
     void generateShiftmarkerArea(Entry adduct, RawDataFile currentfile, AreaChart areachart) {
+        
+        float width = session.getRTTolerance()*(1.0f/30.0f);
+        
+        
         if (adduct.getOGroupObject().getOgroupShift().containsKey(currentfile)) {
         
           if (adduct.getListofSlices().get(currentfile).getFittedpeak()!=null) {
@@ -1323,17 +1327,21 @@ public class ChartGenerator {
                     adductcontroller.getSeriestochart().put(newSeries2, areachart);
                     float[] RTArray = currentfile.getRTArray();
                     float RT = RTArray[adduct.getListofSlices().get(currentfile).getListofPeaks().get(adduct.getListofSlices().get(currentfile).getFittedpeak()).getIndex()+adduct.getListofSlices().get(currentfile).getRTstart()];
-                    newSeries2.getData().add(new XYChart.Data(RT, 0));
+                    newSeries2.getData().add(new XYChart.Data(RT-width, 0));
+                    newSeries2.getData().add(new XYChart.Data(RT, -0.05));
                     newSeries2.getData().add(new XYChart.Data(RT, 1));
+                    newSeries2.getData().add(new XYChart.Data(RT, -0.05));
+                    newSeries2.getData().add(new XYChart.Data(RT+width, 0));
                     areachart.getData().add(newSeries2);
                     areachart.applyCss();
                     if (currentfile.isselected()) {
                      paintselectedLine(((Group) newSeries2.getNode()).getChildren().get(1));
+                     ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setFill(Color.RED);
                 }else {
                 ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setStroke(currentfile.getColor()); 
                 }
                     ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setStrokeWidth(currentfile.getWidth());
-                    ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).getStrokeDashArray().setAll(4d, 4d, 4d, 4d, 4d);
+                    ((Path) ((Group) newSeries2.getNode()).getChildren().get(1)).setFill(currentfile.getColor());
                     adductcontroller.getSeriestofile().put(newSeries2, currentfile);
                     adductcontroller.getFiletoseries().get(currentfile).add(newSeries2);
 
@@ -1342,7 +1350,7 @@ public class ChartGenerator {
                     adductcontroller.getSeriestochart().put(newSeries2, areachart);
                     //float[] RTArray = currentfile.getRTArray();
                     float RT = adduct.getOGroupObject().getOgroupShift().get(currentfile)+adduct.getOGroupObject().getRT();
-                    newSeries2.getData().add(new XYChart.Data(RT, 0));
+                    newSeries2.getData().add(new XYChart.Data(RT, -0.05));
                     newSeries2.getData().add(new XYChart.Data(RT, 1));
                     areachart.getData().add(newSeries2);
                     areachart.applyCss();
@@ -1441,13 +1449,13 @@ public class ChartGenerator {
                 
                 if (currentfile.isselected()) {
                      paintselectedLine(((Group) newSeries.getNode()).getChildren().get(0));
-                    ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.color(1,0.5,0.5));
+                    ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.RED.deriveColor(1, 1, 1, 0.15));
                 }else {
                 ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStroke(currentSlice.getFile().getColor());
                 ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setStroke(currentSlice.getFile().getColor());
-                double[] color = new double[] {currentSlice.getFile().getColor().getRed(),currentSlice.getFile().getColor().getGreen(),currentSlice.getFile().getColor().getBlue()};
-                color = brightencolor(color);
-                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(Color.color(color[0],color[1],color[2]));
+                //double[] color = new double[] {currentSlice.getFile().getColor().getRed(),currentSlice.getFile().getColor().getGreen(),currentSlice.getFile().getColor().getBlue()};
+                //color = brightencolor(color);
+                ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setFill(currentSlice.getFile().getColor().deriveColor(1, 1, 1, 0.15));
                 }
                 ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setVisible(false);
                 ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());

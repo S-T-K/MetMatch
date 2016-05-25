@@ -13,6 +13,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_adductviewController">
    <children>
+      <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
       <ScrollPane fx:id="scrollPane" layoutY="32.0" prefHeight="368.0" prefViewportHeight="400.0" prefViewportWidth="600.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
          <content>
             <GridPane fx:id="gridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -47,6 +48,11 @@
           </Menu>
         </menus>
       </MenuBar>
+      <ToggleButton fx:id="weighttoggle" contentDisplay="RIGHT" mnemonicParsing="false" text="Set Weight to:" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="2.0">
+         <graphic>
+            <TextField fx:id="weightfield" maxHeight="17.0" minHeight="17.0" onMouseClicked="#showSlider" prefHeight="17.0" prefWidth="62.0" />
+         </graphic>
+      </ToggleButton>
       <ToggleButton fx:id="EICMode" layoutX="86.0" mnemonicParsing="false" onAction="#togglePeak" prefHeight="25.0" prefWidth="77.0" text="EIC Mode" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="2.0" />
       <ToggleButton fx:id="addPeak" disable="true" layoutX="258.0" mnemonicParsing="false" onAction="#peakPickMode" prefHeight="25.0" prefWidth="25.0" text="+" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="2.0">
          <tooltip>
@@ -54,11 +60,11 @@
          </tooltip>
       </ToggleButton>
       <ToggleButton fx:id="PeakMode" layoutX="167.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleEIC" prefHeight="25.0" prefWidth="77.0" text="Peak Mode" AnchorPane.leftAnchor="167.0" AnchorPane.topAnchor="2.0" />
-      <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
       <Label fx:id="nodatalabel" alignment="CENTER" contentDisplay="CENTER" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" text="No Data" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
+      <Slider fx:id="weightslider" blockIncrement="1000.0" layoutY="-6.0" majorTickUnit="100000.0" max="1000000.0" minorTickCount="1000000" onMouseReleased="#hideSlider" prefHeight="40.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
    </children>
 </AnchorPane>
