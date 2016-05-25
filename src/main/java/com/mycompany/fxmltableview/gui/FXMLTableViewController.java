@@ -45,7 +45,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -64,6 +67,7 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -79,48 +83,46 @@ public class FXMLTableViewController implements Initializable {
     //link fxml information to controller
     @FXML
     private TreeTableView<Entry> metTable;
-
+    
     @FXML
     TreeTableColumn nameColumn;
-
+    
     @FXML
     TreeTableColumn numColumn, scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn, scorecertaintyColumn;
-
+    
     @FXML
     TreeTableColumn rtColumn;
-
+    
     @FXML
     TreeTableColumn mzColumn;
-
- 
-
+    
     @FXML
     private Accordion accordion;
-
+    
     @FXML
     Button addBatchButton, paramButton;
-
+    
     @FXML
     ProgressBar progressbar;
-
+    
     @FXML
     TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7;
-
+    
     @FXML
     Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7;
-
+    
     @FXML
     Rectangle box1, box2, box3, box4;
-
+    
     @FXML
     ChoiceBox PeakPick;
     
     @FXML
     CheckBox toggleadductgeneration;
-
+    
     @FXML
     MenuItem paramMenu, shift, shift2, output;
-
+    
     @FXML
     TabPane TabPane;
     
@@ -147,6 +149,11 @@ public class FXMLTableViewController implements Initializable {
     //max number of adducts in Input Matrix
     int maxnumber;
 
+    //adducts
+    List<StringProperty> AdMs = new ArrayList<>();
+    List<StringProperty> AdCs = new ArrayList<>();
+    List<Label> AdLs = new ArrayList<>();
+
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -161,7 +168,6 @@ public class FXMLTableViewController implements Initializable {
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("MZ"));
 
-
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
@@ -173,6 +179,79 @@ public class FXMLTableViewController implements Initializable {
 //        }
 //        new File("C:\\Users\\stefankoch\\Documents\\tmp2").mkdirs();
 
+AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textProperty(), AdM4.textProperty(), AdM5.textProperty(), AdM6.textProperty(), AdM7.textProperty()));
+        AdCs.addAll(Arrays.asList(AdC1.textProperty(), AdC2.textProperty(), AdC3.textProperty(), AdC4.textProperty(), AdC5.textProperty(), AdC6.textProperty(), AdC7.textProperty()));
+        AdLs.addAll(Arrays.asList(Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7));
+
+        //listener for adduct parameter list
+        ChangeListener listener = new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal, Object newVal) {
+                //get index of value
+                int index = AdMs.indexOf((StringProperty) o);
+                if (index < 0) {
+                    index = AdCs.indexOf((StringProperty) o);
+                }
+                //get numbers
+                String string = AdCs.get(index).get();
+                int c;
+                try{
+                c = Integer.parseInt(string.substring(0, string.length() - 1));}
+                catch (NumberFormatException e) {
+                    c = 0;
+                } catch (StringIndexOutOfBoundsException e) {
+                    c = 0;
+                }
+                int m;
+                try{
+                m = Integer.parseInt(AdMs.get(index).get());}
+                catch (NumberFormatException e) {
+                    m = 0;
+                }
+
+                //make string
+                if (m<1||c<1) {
+                    string = "";
+                } else {
+                    //test if division possible
+                    if (m%c==0) {
+                        m=m/c;
+                        c=1;
+                    } else if (c%m==0) {
+                        c=c/m;
+                        m=1;
+                    }                   
+                    
+                    
+                if (c > 1) {
+                    if (m > 1) {
+                        if (m == c) {
+                            string = "M + ";
+                        } else {
+                            string = m + "M/" + c + " +";
+                        }
+                    } else {
+                        string = "M/" + c + " +";
+                    }
+                } else if (m > 1) {
+                    string = m + "M +";
+                } else {
+                    string = "M +";
+                }
+                }
+                AdLs.get(index).setText(string);
+                
+            
+            }
+        };
+        
+        for (int i = 0; i < AdMs.size(); i++) {
+            AdMs.get(i).addListener(listener);
+        }        
+        for (int i = 0; i < AdCs.size(); i++) {
+            AdCs.get(i).addListener(listener);
+        }
+        
         //Parameters
         AdName1.textProperty().bindBidirectional(session.getListofadductnameproperties().get(0));
         AdName2.textProperty().bindBidirectional(session.getListofadductnameproperties().get(1));
@@ -203,37 +282,35 @@ public class FXMLTableViewController implements Initializable {
         AdC6.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(5));
         AdC7.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(6));
         
-        Adlabel1.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(0));}
-      @Override
-      protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(0).intValue(),session.getListofadductchargeproperties().get(0).get());}});
-        Adlabel2.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(1));}
-      @Override
-      protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(1).intValue(),session.getListofadductchargeproperties().get(1).get());}});
-        Adlabel3.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(2));}
-      @Override
-      protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(2).intValue(),session.getListofadductchargeproperties().get(2).get());}});
-        Adlabel4.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(3));}
-      @Override
-      protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(3).intValue(),session.getListofadductchargeproperties().get(3).get());}});
-        Adlabel5.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(4));}
-      @Override
-      protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(4).intValue(),session.getListofadductchargeproperties().get(4).get());}});
-        Adlabel6.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(5));}
-      @Override
-      protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(5).intValue(),session.getListofadductchargeproperties().get(5).get());}});
-        Adlabel7.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(6));}
-      @Override
-      protected String computeValue() {
-      return makeString(session.getListofadductmproperties().get(6).intValue(),session.getListofadductchargeproperties().get(6).get());}});
 
-        
-        
+//        Adlabel1.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(0));}
+//      @Override
+//      protected String computeValue() {
+//      return makeString(session.getListofadductmproperties().get(0).intValue(),session.getListofadductchargeproperties().get(0).get());}});
+//        Adlabel2.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(1));}
+//      @Override
+//      protected String computeValue() {
+//      return makeString(session.getListofadductmproperties().get(1).intValue(),session.getListofadductchargeproperties().get(1).get());}});
+//        Adlabel3.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(2));}
+//      @Override
+//      protected String computeValue() {
+//      return makeString(session.getListofadductmproperties().get(2).intValue(),session.getListofadductchargeproperties().get(2).get());}});
+//        Adlabel4.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(3));}
+//      @Override
+//      protected String computeValue() {
+//      return makeString(session.getListofadductmproperties().get(3).intValue(),session.getListofadductchargeproperties().get(3).get());}});
+//        Adlabel5.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(4));}
+//      @Override
+//      protected String computeValue() {
+//      return makeString(session.getListofadductmproperties().get(4).intValue(),session.getListofadductchargeproperties().get(4).get());}});
+//        Adlabel6.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(5));}
+//      @Override
+//      protected String computeValue() {
+//      return makeString(session.getListofadductmproperties().get(5).intValue(),session.getListofadductchargeproperties().get(5).get());}});
+//        Adlabel7.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(6));}
+//      @Override
+//      protected String computeValue() {
+//      return makeString(session.getListofadductmproperties().get(6).intValue(),session.getListofadductchargeproperties().get(6).get());}});
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
         Start.textProperty().bindBidirectional(session.getStart(), new NumberStringConverter());
         End.textProperty().bindBidirectional(session.getEnd(), new NumberStringConverter());
@@ -245,12 +322,12 @@ public class FXMLTableViewController implements Initializable {
         PeakPick.setItems(FXCollections.observableArrayList(
                 "Naïve (Gauss)", "MassSpecWavelet", "Naïve (Savitzky-Golay)")
         );
-
+        
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 session.setPeackPick(PeakPick.getItems().get(newVal.intValue()).toString());
             }
-
+            
         });
         PeakPick.getSelectionModel().select(0);
         panelink = new HashMap<>();
@@ -264,28 +341,28 @@ public class FXMLTableViewController implements Initializable {
         label.setMinHeight(500);
         label.setMinWidth(500);
         label.setTextAlignment(TextAlignment.CENTER);
-        label.setFont(Font.font ("Verdana", 14));
+        label.setFont(Font.font("Verdana", 14));
         label.setOnMouseClicked((MouseEvent event) -> {
             try {
-               
+                
                 ProgressIndicator prog = new ProgressIndicator();
                 prog.setMaxHeight(50);
-               
+                
                 metTable.setPlaceholder(prog);
                 prog.setOnMouseClicked((MouseEvent event2) -> {
-            try {
-                openReferenceDataMatrixChooser();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+                    try {
+                        openReferenceDataMatrixChooser();
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
                 openReferenceDataMatrixChooser();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         metTable.setPlaceholder(label);
-
+        
     }
 
     //Open File Chooser for Data Matrix
@@ -301,30 +378,28 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         setMasterListofOGroups(session.parseReferenceTsv());
-        
-        
 
         //generate additional adducts
         session.finalizeAdducts();
         generateAdductsnew();
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
-
-        int numberofadducts=0;
+        
+        int numberofadducts = 0;
         //for all OGroups
         for (int i = 0; i < getMasterListofOGroups().size(); i++) {
             TreeItem<Entry> root = new TreeItem<>(getMasterListofOGroups().get(i));
             root.setExpanded(false);
             superroot.getChildren().add(root);
-
+            
             for (int j = 0; j < getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                 TreeItem<Entry> childNode1 = new TreeItem<>(getMasterListofOGroups().get(i).getListofAdducts().get(j));
                 root.getChildren().add(childNode1);
-            numberofadducts++;
+                numberofadducts++;
             }
-
+            
         }
-session.setNumberofadducts(numberofadducts);
+        session.setNumberofadducts(numberofadducts);
         
         getMetTable().setRoot(superroot);
         getMetTable().setShowRoot(false);
@@ -343,17 +418,16 @@ session.setNumberofadducts(numberofadducts);
         End.setDisable(true);
         paramMenu.setDisable(false);
         toggleadductgeneration.setDisable(true);
-
+        
         session.prepare();
         
-
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
-
+        
         try {
             TitledPane tps = new TitledPane();
-
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             //loader.setRoot(tps);
             Reference reference = new Reference();
@@ -368,7 +442,7 @@ session.setNumberofadducts(numberofadducts);
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
-
+            
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -378,7 +452,7 @@ session.setNumberofadducts(numberofadducts);
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-
+                    
                     try {
 
                         //create new window
@@ -398,28 +472,28 @@ session.setNumberofadducts(numberofadducts);
                         controller.print();
                         stage.show();
                         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
+                            
                             public void handle(WindowEvent we) {
                                 controller.close();
                             }
                         });
-
+                        
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                 }
             }
         });
-
+        
     }
 
     //add a new batch
     public void addBatch() {
-
+        
         try {
             TitledPane tps = new TitledPane();
-
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             //loader.setRoot(tps);
             Batch batch = new Batch(batchcount);
@@ -434,16 +508,16 @@ session.setNumberofadducts(numberofadducts);
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
-
+            
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
 
     //calculates Shift and opens a new window
     public void newwindowcalculate() throws IOException, InterruptedException {
-
+        
         output.setDisable(false);
         //open new window
         Stage stage = new Stage();
@@ -459,21 +533,21 @@ session.setNumberofadducts(numberofadducts);
         controller.print(getMasterListofOGroups());
         System.out.println("PRINTNEW");
         stage.show();
-
+        
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 controller.close();
             }
         });
-
+        
     }
 
     //does the Shift calculation
     public void calculate(CountDownLatch latch, ProgressBar prog) throws IOException, InterruptedException {
-
+        
         FloatProperty progress = new SimpleFloatProperty(0.0f);
         prog.progressProperty().bind(progress);
-
+        
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
@@ -484,10 +558,9 @@ session.setNumberofadducts(numberofadducts);
                             RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
                             if (currentfile.getActive().booleanValue()) {
                                 
-
                                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
                                 float[][] matrix = new float[getMasterListofOGroups().size()][session.getResolution()];
-
+                                
                                 CountDownLatch latchpeak = new CountDownLatch(1);
                                 Task task = new Task<Void>() {
                                     @Override
@@ -505,7 +578,7 @@ session.setNumberofadducts(numberofadducts);
                                             } else {
                                                 getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
                                                 getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
-                                                System.out.println(i+" of " + getMasterListofOGroups().size() + " OGroups calculated");
+                                                System.out.println(i + " of " + getMasterListofOGroups().size() + " OGroups calculated");
                                             }
                                         }
                                         System.out.println("Size of Queue: " + queue.size());
@@ -513,27 +586,28 @@ session.setNumberofadducts(numberofadducts);
                                         double picktime = 0;
                                         while (queue.size() > 0) {
                                             int size = queue.size();
-                                            for (int j = 0; j<size; j++) {
-                                            Integer current = queue.pop();
-                                            if (getMasterListofOGroups().get(current).isStored(currentfile)) {
-                                                queue.add(current);
-                                            } else {
-                                                double pick = System.currentTimeMillis();
-                                                getMasterListofOGroups().get(current).peakpickOGroup(currentfile);
-                                                picktime+=System.currentTimeMillis()-pick;
-                                                getMasterListofOGroups().get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
-                                               
-                                            }}
-                                        System.out.println("Size of Queue: " + queue.size());
+                                            for (int j = 0; j < size; j++) {
+                                                Integer current = queue.pop();
+                                                if (getMasterListofOGroups().get(current).isStored(currentfile)) {
+                                                    queue.add(current);
+                                                } else {
+                                                    double pick = System.currentTimeMillis();
+                                                    getMasterListofOGroups().get(current).peakpickOGroup(currentfile);
+                                                    picktime += System.currentTimeMillis() - pick;
+                                                    getMasterListofOGroups().get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
+                                                    
+                                                }
+                                            }
+                                            System.out.println("Size of Queue: " + queue.size());
                                         }
-
+                                        
                                         latchpeak.countDown();
                                         System.out.println("Total peak picking time: " + picktime);
-                                        System.out.println("Total time: " + (System.currentTimeMillis()-start));
+                                        System.out.println("Total time: " + (System.currentTimeMillis() - start));
                                         session.getIothread().lockFile(currentfile, false);
                                         return null;
                                     }
-
+                                    
                                 };
 
                                 //new thread that executes task
@@ -559,7 +633,7 @@ session.setNumberofadducts(numberofadducts);
                                 //fill first row
                                 for (int j = 0; j < session.getResolution(); j++) {
                                     weights[0][j] = matrix[0][j];
-
+                                    
                                 }
                                 //TODO: Penalty for change in j
                                 //fill rest of weights matrix
@@ -571,15 +645,15 @@ session.setNumberofadducts(numberofadducts);
                                             max = weights[i - 1][j] + matrix[i][j];
                                         }
                                         if ((j - 1) > 0 && weights[i - 1][j - 1] + matrix[i][j] > max) {
-                                            max = weights[i - 1][j - 1] + matrix[i][j] ;
+                                            max = weights[i - 1][j - 1] + matrix[i][j];
                                         }
-                                        if ((j + 1) < session.getResolution() && weights[i - 1][j + 1] + matrix[i][j]  > max) {
-                                            max = weights[i - 1][j + 1] + matrix[i][j] ;
+                                        if ((j + 1) < session.getResolution() && weights[i - 1][j + 1] + matrix[i][j] > max) {
+                                            max = weights[i - 1][j + 1] + matrix[i][j];
                                         }
                                         weights[i][j] = max;
-
+                                        
                                     }
-
+                                    
                                 }
                                 //get max in last row
                                 float max = 0;
@@ -590,42 +664,39 @@ session.setNumberofadducts(numberofadducts);
                                         max = weights[getMasterListofOGroups().size() - 1][j];
                                     }
                                 }
-
+                                
                                 getMasterListofOGroups().get(getMasterListofOGroups().size() - 1).setFittedShift(currentfile, (short) maxint);
 
                                 //TODO: animate range as function of time
                                 for (int i = getMasterListofOGroups().size() - 1; i > -1; i--) {
                                     max = 0;
-
                                     
                                     int j = maxint;
-                                     if (weights[i][j] > max) {
+                                    if (weights[i][j] > max) {
                                         max = weights[i][j];
                                         maxint = j;
                                     }
-                                    if ((j - 1) > 0 && weights[i][j - 1]-penalty > max) {
-                                        max = weights[i][j - 1]-penalty;
+                                    if ((j - 1) > 0 && weights[i][j - 1] - penalty > max) {
+                                        max = weights[i][j - 1] - penalty;
                                         maxint = j - 1;
                                     }
-                                   
-                                    if ((j + 1) < session.getResolution() && weights[i][j + 1]-penalty > max) {
+                                    
+                                    if ((j + 1) < session.getResolution() && weights[i][j + 1] - penalty > max) {
                                         //max = weights[i][j+1];
                                         maxint = j + 1;
                                     }
-
-                                   
+                                    
                                     getMasterListofOGroups().get(i).setFittedShift(currentfile, (short) maxint);
 
                                     //set score for OPGroup
                                     //getMasterListofOGroups().get(i).addScore(currentfile, (getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
-
                                     //set score for every addact
                                     for (int a = 0; a < getMasterListofOGroups().get(i).getListofAdducts().size(); a++) {
                                         //getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile, (getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
                                     }
-
+                                    
                                     getMetTable().refresh();
-
+                                    
                                 }
                                 //TODO number of active files
 
@@ -643,17 +714,17 @@ session.setNumberofadducts(numberofadducts);
                 latch.countDown();
                 return null;
             }
-
+            
         };
 
         //new thread that executes task
         new Thread(task).start();
-
+        
     }
-    
+
     //calculates Shift and opens a new window
     public void newWindowShiftFitting() throws IOException, InterruptedException {
-
+        
         output.setDisable(false);
         //open new window
         Stage stage = new Stage();
@@ -670,25 +741,25 @@ session.setNumberofadducts(numberofadducts);
         controller.setOlist(MasterListofOGroups);
         System.out.println("PRINTNEW");
         stage.show();
-
+        
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 controller.close();
             }
         });
-
+        
     }
-
+    
     public float getmaxofrange(float[][] weights, int row, int col, int range) {
         float max = 0;
-
+        
         for (int i = (col - range); i <= (col + range); i++) {
             if (i < session.getResolution() && i >= 0 && weights[row][i] > max) {
                 max += weights[row][i];
             }
-
+            
         }
-
+        
         return max;
     }
 
@@ -698,7 +769,7 @@ session.setNumberofadducts(numberofadducts);
     public TreeTableView<Entry> getMetTable() {
         return metTable;
     }
-
+    
     public FXMLTableViewController getController() {
         return this;
     }
@@ -751,7 +822,7 @@ session.setNumberofadducts(numberofadducts);
     public void setDatasettocontroller(HashMap<Dataset, BatchController> datasettocontroller) {
         this.datasettocontroller = datasettocontroller;
     }
-
+    
     public void generateOutput() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 
         //sort by OGroup and Num, to get order of Input
@@ -763,7 +834,7 @@ session.setNumberofadducts(numberofadducts);
         //generate sorted List
         List<Entry> list = new ArrayList<Entry>();
         TreeItem<Entry> root = getMetTable().getRoot();
-
+        
         for (int i = 0; i < root.getChildren().size(); i++) {
             list.add(root.getChildren().get(i).getValue());
         }
@@ -784,7 +855,7 @@ session.setNumberofadducts(numberofadducts);
         //parse Input Matrix again
         TsvParserSettings settings = new TsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
-
+        
         TsvParser parser = new TsvParser(settings);
         FileReader reader = new FileReader(session.getReferenceTsv());
         List<String[]> allRows = parser.parseAll(reader);
@@ -798,7 +869,7 @@ session.setNumberofadducts(numberofadducts);
         for (int i = 0; i < allRows.size(); i++) {
             rows.add(new ArrayList<>(Arrays.asList(allRows.get(i))));
         }
-
+        
         PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
 
@@ -808,10 +879,10 @@ session.setNumberofadducts(numberofadducts);
             for (int s = 0; s < list.get(o).getListofAdducts().size(); s++) {
                 Entry adduct = list.get(o).getListofAdducts().get(s);
                 //while not included
-                while (list.get(o).getOGroup()!=Integer.parseInt(rows.get(currentline).get(10))) {
+                while (list.get(o).getOGroup() != Integer.parseInt(rows.get(currentline).get(10))) {
                     currentline++;
                 }
-                
+
                 //if old
                 if (list.get(o).getListofAdducts().get(s).getNum() <= maxnumber) {
                     currentline++;
@@ -828,9 +899,9 @@ session.setNumberofadducts(numberofadducts);
                             }
                         }
                     }
-
+                    
                     adduct.setEmpty(empty);
-
+                    
                     if (!empty) {
                         List<String> newline = new ArrayList<String>();
                         newline.add(String.valueOf(adduct.getNum()));
@@ -877,9 +948,9 @@ session.setNumberofadducts(numberofadducts);
                         }
                     }
                 }
-
+                
             }
-
+            
         }
 
         //back to arrays...
@@ -889,30 +960,30 @@ session.setNumberofadducts(numberofadducts);
             row = rows.get(i).toArray(row);
             allRows.add(row);
         }
-
+        
         writer.writeHeaders(headers);
         for (int i = 1; i < rows.size(); i++) {
             writer.writeRow(rows.get(i).toArray());
         }
-
+        
         writer.close();
         Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
-
+        
     }
     
-     public void generateOutputnew() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+    public void generateOutputnew() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 
-         //list of OGroups
-         List<Entry> ogroups = MasterListofOGroups;
-         int[] indices = session.getIndices();
-         
-          //parse Input Matrix again
+        //list of OGroups
+        List<Entry> ogroups = MasterListofOGroups;
+        int[] indices = session.getIndices();
+
+        //parse Input Matrix again
         TsvParserSettings settings = new TsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
-
+        
         TsvParser parser = new TsvParser(settings);
         FileReader reader = new FileReader(session.getReferenceTsv());
         List<String[]> InallRows = parser.parseAll(reader);
@@ -922,111 +993,109 @@ session.setNumberofadducts(numberofadducts);
         List<String[]> OutallRows = new ArrayList<>();
         //get first file column
         int ffc = 0;
-        for (int i = 0; i<Inheader.length; i++) {
+        for (int i = 0; i < Inheader.length; i++) {
             System.out.println(Inheader[i]);
             if (Inheader[i].startsWith("_")) {
-            ffc=i;
-            break;
+                ffc = i;
+                break;
             }
         }
-        
+
         //get first non file information
         int fnfi = 0;
-        for (int i = ffc+1; i<Inheader.length; i++) {
+        for (int i = ffc + 1; i < Inheader.length; i++) {
             if (!Inheader[i].startsWith("_")) {
-            fnfi=i;
-            break;
+                fnfi = i;
+                break;
             }
         }
-        
+
         //number of new columns
         int nof = session.getAllFiles().size();
-        
+
         //new header
-        String[] Outheader = new String[Inheader.length+nof*4];
-        for (int i = 0; i<ffc; i++) {
-            Outheader[i]=Inheader[i];
+        String[] Outheader = new String[Inheader.length + nof * 4];
+        for (int i = 0; i < ffc; i++) {
+            Outheader[i] = Inheader[i];
         }
         //current column
         int cc = ffc;
         //write new headers
-        for (int i = 0; i<nof; i++) {
+        for (int i = 0; i < nof; i++) {
             RawDataFile file = session.getAllFiles().get(i);
             file.setColumn(cc);
-            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_Area";
-            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_2";
-            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_3";
-            Outheader[cc++]=file.getName().substring(0, file.getName().length() - 6) + "_Test_4";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_Area";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_2";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_3";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_4";
         }
-        
+
         //write old information after files
-        for (int i = ffc; i<Inheader.length; i++) {
-            Outheader[cc++]=Inheader[i];
+        for (int i = ffc; i < Inheader.length; i++) {
+            Outheader[cc++] = Inheader[i];
         }
-        
+
         //new number of columns
-        int noc = Inheader.length+nof*4;
-        
+        int noc = Inheader.length + nof * 4;
+
         //start on adducts
         List<String[]> Outrows = new ArrayList<>();
         List<Boolean> hasdata = new ArrayList<>();
-        for (int o = 0; o<ogroups.size(); o++) {
-            for (int a = 0; a<ogroups.get(o).getListofAdducts().size(); a++) {
+        for (int o = 0; o < ogroups.size(); o++) {
+            for (int a = 0; a < ogroups.get(o).getListofAdducts().size(); a++) {
                 Entry adduct = ogroups.get(o).getListofAdducts().get(a);
-            //generate basic information including any relevant old info
-            String[] info = new String[noc];
-            //if old adduct
-            if (adduct.getOriginalAdduct()==null) {
-                for (int i = 0; i<ffc; i++) {
-                    info[i]=InallRows.get(adduct.getInline())[i];
-                }
-                cc=ffc+nof*4;
-                for (int i = ffc; i<Inheader.length; i++) {
-                info[cc++]=InallRows.get(adduct.getInline())[i];
-        }
-                hasdata.add(Boolean.TRUE);
-                //if new adduct
-            } else {
-                info[indices[0]]=String.valueOf(adduct.getNum());
-                info[indices[1]]=String.valueOf(adduct.getMZ());
-                info[indices[2]]=String.valueOf(adduct.getRT());
-                info[indices[3]]=String.valueOf(adduct.getXn());
-                info[indices[4]]=String.valueOf(adduct.getOGroup());
-                info[indices[5]]=String.valueOf(adduct.getIon());
-                info[indices[6]]=String.valueOf(adduct.getM());
-                info[indices[7]]=String.valueOf(adduct.getCharge());
-                info[indices[8]]=String.valueOf(adduct.getScanEvent());
-                info[indices[9]]=String.valueOf(adduct.getIonisation());
-                hasdata.add(Boolean.FALSE);
-            }
-            
-            //write Data
-            for (int i = 0; i<session.getAllFiles().size(); i++) {
-                RawDataFile file = session.getAllFiles().get(i);
-                if (adduct.getListofSlices().containsKey(file)) {
-                    if (adduct.getListofSlices().get(file).getFittedPeak()!=null) {
-                        info[file.getColumn()]=String.valueOf(adduct.getListofSlices().get(file).getFittedPeak().getArea());
-                        hasdata.set(hasdata.size()-1, Boolean.TRUE);
+                //generate basic information including any relevant old info
+                String[] info = new String[noc];
+                //if old adduct
+                if (adduct.getOriginalAdduct() == null) {
+                    for (int i = 0; i < ffc; i++) {
+                        info[i] = InallRows.get(adduct.getInline())[i];
                     }
+                    cc = ffc + nof * 4;
+                    for (int i = ffc; i < Inheader.length; i++) {
+                        info[cc++] = InallRows.get(adduct.getInline())[i];
+                    }
+                    hasdata.add(Boolean.TRUE);
+                    //if new adduct
+                } else {
+                    info[indices[0]] = String.valueOf(adduct.getNum());
+                    info[indices[1]] = String.valueOf(adduct.getMZ());
+                    info[indices[2]] = String.valueOf(adduct.getRT());
+                    info[indices[3]] = String.valueOf(adduct.getXn());
+                    info[indices[4]] = String.valueOf(adduct.getOGroup());
+                    info[indices[5]] = String.valueOf(adduct.getIon());
+                    info[indices[6]] = String.valueOf(adduct.getM());
+                    info[indices[7]] = String.valueOf(adduct.getCharge());
+                    info[indices[8]] = String.valueOf(adduct.getScanEvent());
+                    info[indices[9]] = String.valueOf(adduct.getIonisation());
+                    hasdata.add(Boolean.FALSE);
                 }
+
+                //write Data
+                for (int i = 0; i < session.getAllFiles().size(); i++) {
+                    RawDataFile file = session.getAllFiles().get(i);
+                    if (adduct.getListofSlices().containsKey(file)) {
+                        if (adduct.getListofSlices().get(file).getFittedPeak() != null) {
+                            info[file.getColumn()] = String.valueOf(adduct.getListofSlices().get(file).getFittedPeak().getArea());
+                            hasdata.set(hasdata.size() - 1, Boolean.TRUE);
+                        }
+                    }
+                    
+                }
+                
+                Outrows.add(info);
+                adduct.setOutline(Outrows.size() - 1);
                 
             }
             
-            Outrows.add(info);
-            adduct.setOutline(Outrows.size()-1);
-            
-            }
-            
-            
         }
-        
+
         //delete empty 
-        for(int i = Outrows.size()-1; i>=0; i--) {
+        for (int i = Outrows.size() - 1; i >= 0; i--) {
             if (!hasdata.get(i)) {
                 Outrows.remove(i);
             }
         }
-        
         
         PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
@@ -1034,179 +1103,180 @@ session.setNumberofadducts(numberofadducts);
         for (int i = 0; i < Outrows.size(); i++) {
             writer.writeRow(Outrows.get(i));
         }
-
+        
         writer.close();
         Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
-         
+        
         System.out.println("Done");
-         
-    }
-
-    public void generateAdducts() {
-        if (toggleadductgeneration.selectedProperty().get()){
-
-        //get highest num of Adduct
-        int max = 0;
-        for (int i = 0; i < MasterListofOGroups.size(); i++) {
-            for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
-                if (MasterListofOGroups.get(i).getListofAdducts().get(j).getNum() > max) {
-                    max = MasterListofOGroups.get(i).getListofAdducts().get(j).getNum();
-                }
-            }
-        }
-        this.maxnumber = max;
-        max++;
-
-        for (int o = 0; o < MasterListofOGroups.size(); o++) {
-            int size = MasterListofOGroups.get(o).getListofAdducts().size();
-            for (int a = 0; a < size; a++) {
-                Entry adduct = MasterListofOGroups.get(o).getListofAdducts().get(a);
-                //for every adduct, check if ion specified
-                if (adduct.getIon() == null) {
-                    //if not
-                    for (int j = 0; j < session.getListofadductnames().size(); j++) {
-                        //subtract every possible adduct
-                        for (int k = 0; k < session.getListofadductnames().size(); k++) {
-                            //and add every possible adduct
-                            if (j != k) {
-                                //don't add the same value
-                                Float mass = adduct.getMZ() + session.getListofadductmasses().get(j) - session.getListofadductmasses().get(k);
-                                Float ppm = mass / 1000000 * session.getMZTolerance();
-                                boolean duplicate = false;
-                                for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
-                                    if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
-                                        duplicate = true;
-                                       // System.out.println("Duplicate generated");
-                                        break;
-                                    }
-                                }
-                                if (!duplicate) {
-                                    String Ion = "[(" + adduct.getNum() + "-" + session.getListofadductnames().get(k) + ")+" + session.getListofadductnames().get(j) + "]+";
-                                    MasterListofOGroups.get(o).addAdduct(new Entry(max,mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
-                                    max++;
-                                }
-                            }
-                        }
-
-                    }
-
-                    //if ion specified
-                } else //if multiple Ions specified
-                if (adduct.getIon().indexOf(',') > 0) {
-                    //do something
-                } else {
-                    String Ion = adduct.getIon().substring(adduct.getIon().indexOf('+') + 1, adduct.getIon().indexOf(']', 3));
-                    int k = session.getListofadductnames().indexOf(Ion);
-                    //if specified Ion in List
-                    if (k > 0) {
-                        for (int j = 0; j < session.getListofadductnames().size(); j++) {
-                            //and add every possible adduct
-                            if (j != k) {
-                                //don't add the same value
-                                Float mass = adduct.getMZ() + session.getListofadductmasses().get(j) - session.getListofadductmasses().get(k);
-                                Float ppm = mass / 1000000 * session.getMZTolerance();
-                                boolean duplicate = false;
-                                for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
-                                    if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
-                                        duplicate = true;
-                                        //System.out.println("Duplicate generated");
-                                        break;
-                                    }
-                                }
-                                if (!duplicate) {
-                                    Ion = "[M+" + session.getListofadductnameproperties().get(j).get() + "]+";
-                                    MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
-                                    max++;
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        }
-
-    }
+        
     }
     
-     public void generateAdductsnew() {
-        if (toggleadductgeneration.selectedProperty().get()){
+    public void generateAdducts() {
+        if (toggleadductgeneration.selectedProperty().get()) {
 
-        //get highest num of Adduct
-        int max = 0;
-        for (int i = 0; i < MasterListofOGroups.size(); i++) {
-            for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
-                if (MasterListofOGroups.get(i).getListofAdducts().get(j).getNum() > max) {
-                    max = MasterListofOGroups.get(i).getListofAdducts().get(j).getNum();
+            //get highest num of Adduct
+            int max = 0;
+            for (int i = 0; i < MasterListofOGroups.size(); i++) {
+                for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                    if (MasterListofOGroups.get(i).getListofAdducts().get(j).getNum() > max) {
+                        max = MasterListofOGroups.get(i).getListofAdducts().get(j).getNum();
+                    }
                 }
             }
-        }
-        this.maxnumber = max;
-        max++;
-        
-
-
-        for (int o = 0; o < MasterListofOGroups.size(); o++) {
-            int size = MasterListofOGroups.get(o).getListofAdducts().size();
-            for (int a = 0; a < size; a++) {
-                Entry adduct = MasterListofOGroups.get(o).getListofAdducts().get(a);
-                //for every adduct, check if ion specified
-                if (adduct.getIon() == null) {
-                    //if not
-                    for (int j = 0; j < session.getListofadductnames().size(); j++) {
-                        //add every possible adduct
-                        for (int k = 0; k < session.getListofadductnames().size(); k++) {
-                            //to every hypothetical adduct
-                            if (j != k) {
-                                //don't add the same value
-                                //get original mass
-                                Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
-                                mass*=session.getListofadductcharges().get(k);
-                                mass/=session.getListofadductms().get(k);
-                                //get new mass
-                                mass*=session.getListofadductms().get(j);
-                                mass/=session.getListofadductcharges().get(j);
-                                mass+=session.getListofadductmasses().get(j);
-                                
-                                Float ppm = mass / 1000000 * session.getMZTolerance();
-                                boolean duplicate = false;
-                                for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
-                                    if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
-                                        duplicate = true;
-                                       // System.out.println("Duplicate generated");
-                                        break;
+            this.maxnumber = max;
+            max++;
+            
+            for (int o = 0; o < MasterListofOGroups.size(); o++) {
+                int size = MasterListofOGroups.get(o).getListofAdducts().size();
+                for (int a = 0; a < size; a++) {
+                    Entry adduct = MasterListofOGroups.get(o).getListofAdducts().get(a);
+                    //for every adduct, check if ion specified
+                    if (adduct.getIon() == null) {
+                        //if not
+                        for (int j = 0; j < session.getListofadductnames().size(); j++) {
+                            //subtract every possible adduct
+                            for (int k = 0; k < session.getListofadductnames().size(); k++) {
+                                //and add every possible adduct
+                                if (j != k) {
+                                    //don't add the same value
+                                    Float mass = adduct.getMZ() + session.getListofadductmasses().get(j) - session.getListofadductmasses().get(k);
+                                    Float ppm = mass / 1000000 * session.getMZTolerance();
+                                    boolean duplicate = false;
+                                    for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                        if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
+                                            duplicate = true;
+                                            // System.out.println("Duplicate generated");
+                                            break;
+                                        }
                                     }
-                                }
-                                if (!duplicate) {
-                                    String Ion = "[(" + adduct.getNum() + "-(" + session.getListofadductnames().get(k) + "))+" + session.getListofadductnames().get(j) + "]";
-                                    String charge = session.getListofadductchargeproperties().get(j).get();
-                                    char sign = charge.charAt(charge.length()-1);
-                                    for (int c = 0; c<session.getListofadductcharges().get(j); c++) {
-                                        Ion = Ion.concat(String.valueOf(sign));
+                                    if (!duplicate) {
+                                        String Ion = "[(" + adduct.getNum() + "-" + session.getListofadductnames().get(k) + ")+" + session.getListofadductnames().get(j) + "]+";
+                                        MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
+                                        max++;
                                     }
-                                    MasterListofOGroups.get(o).addAdduct(new Entry(max,mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
-                                    max++;
                                 }
                             }
+                            
                         }
 
+                        //if ion specified
+                    } else //if multiple Ions specified
+                    {
+                        if (adduct.getIon().indexOf(',') > 0) {
+                            //do something
+                        } else {
+                            String Ion = adduct.getIon().substring(adduct.getIon().indexOf('+') + 1, adduct.getIon().indexOf(']', 3));
+                            int k = session.getListofadductnames().indexOf(Ion);
+                            //if specified Ion in List
+                            if (k > 0) {
+                                for (int j = 0; j < session.getListofadductnames().size(); j++) {
+                                    //and add every possible adduct
+                                    if (j != k) {
+                                        //don't add the same value
+                                        Float mass = adduct.getMZ() + session.getListofadductmasses().get(j) - session.getListofadductmasses().get(k);
+                                        Float ppm = mass / 1000000 * session.getMZTolerance();
+                                        boolean duplicate = false;
+                                        for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                            if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
+                                                duplicate = true;
+                                                //System.out.println("Duplicate generated");
+                                                break;
+                                            }
+                                        }
+                                        if (!duplicate) {
+                                            Ion = "[M+" + session.getListofadductnameproperties().get(j).get() + "]+";
+                                            MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
+                                            max++;
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
                     }
+                    
+                }
+            }
+            
+        }
+    }
+    
+    public void generateAdductsnew() {
+        if (toggleadductgeneration.selectedProperty().get()) {
 
-                    //if ion specified
-                } else //if multiple Ions specified
-                if (adduct.getIon().indexOf(',') > 0) {
-                    //do something
-                } else {
-                 
+            //get highest num of Adduct
+            int max = 0;
+            for (int i = 0; i < MasterListofOGroups.size(); i++) {
+                for (int j = 0; j < MasterListofOGroups.get(i).getListofAdducts().size(); j++) {
+                    if (MasterListofOGroups.get(i).getListofAdducts().get(j).getNum() > max) {
+                        max = MasterListofOGroups.get(i).getListofAdducts().get(j).getNum();
+                    }
+                }
+            }
+            this.maxnumber = max;
+            max++;
+            
+            for (int o = 0; o < MasterListofOGroups.size(); o++) {
+                int size = MasterListofOGroups.get(o).getListofAdducts().size();
+                for (int a = 0; a < size; a++) {
+                    Entry adduct = MasterListofOGroups.get(o).getListofAdducts().get(a);
+                    //for every adduct, check if ion specified
+                    if (adduct.getIon() == null) {
+                        //if not
                         for (int j = 0; j < session.getListofadductnames().size(); j++) {
-                            //and add every possible adduct
-   
+                            //add every possible adduct
+                            for (int k = 0; k < session.getListofadductnames().size(); k++) {
+                                //to every hypothetical adduct
+                                if (j != k) {
+                                    //don't add the same value
+                                    //get original mass
+                                    Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
+                                    mass *= session.getListofadductcharges().get(k);
+                                    mass /= session.getListofadductms().get(k);
+                                    //get new mass
+                                    mass *= session.getListofadductms().get(j);
+                                    mass /= session.getListofadductcharges().get(j);
+                                    mass += session.getListofadductmasses().get(j);
+                                    
+                                    Float ppm = mass / 1000000 * session.getMZTolerance();
+                                    boolean duplicate = false;
+                                    for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                        if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
+                                            duplicate = true;
+                                            // System.out.println("Duplicate generated");
+                                            break;
+                                        }
+                                    }
+                                    if (!duplicate) {
+                                        String Ion = "[(" + adduct.getNum() + "-(" + session.getListofadductnames().get(k) + "))+" + session.getListofadductnames().get(j) + "]";
+                                        String charge = session.getListofadductchargeproperties().get(j).get();
+                                        char sign = charge.charAt(charge.length() - 1);
+                                        for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
+                                            Ion = Ion.concat(String.valueOf(sign));
+                                        }
+                                        MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
+                                        max++;
+                                    }
+                                }
+                            }
+                            
+                        }
+
+                        //if ion specified
+                    } else //if multiple Ions specified
+                    {
+                        if (adduct.getIon().indexOf(',') > 0) {
+                            //do something
+                        } else {
+                            
+                            for (int j = 0; j < session.getListofadductnames().size(); j++) {
+                                //and add every possible adduct
+                                
                                 Float mass = adduct.getM();
                                 //get new mass
-                                mass*=session.getListofadductms().get(j);
-                                mass/=session.getListofadductcharges().get(j);
-                                mass+=session.getListofadductmasses().get(j);
+                                mass *= session.getListofadductms().get(j);
+                                mass /= session.getListofadductcharges().get(j);
+                                mass += session.getListofadductmasses().get(j);
                                 
                                 Float ppm = mass / 1000000 * session.getMZTolerance();
                                 boolean duplicate = false;
@@ -1220,25 +1290,25 @@ session.setNumberofadducts(numberofadducts);
                                 if (!duplicate) {
                                     String Ion = "[M(" + adduct.getNum() + ")+" + session.getListofadductnames().get(j) + "]";
                                     String charge = session.getListofadductchargeproperties().get(j).get();
-                                    char sign = charge.charAt(charge.length()-1);
-                                    for (int c = 0; c<session.getListofadductcharges().get(j); c++) {
+                                    char sign = charge.charAt(charge.length() - 1);
+                                    for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
                                         Ion = Ion.concat(String.valueOf(sign));
                                     }
                                     MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
                                     max++;
                                 }
+                                
+                            }
                             
                         }
-
+                    }
                     
                 }
-
             }
+            
         }
-
     }
-    }
-
+    
     public void showParameters() {
         setParameterPane(true);
         TabPane.setVisible(true);
@@ -1247,9 +1317,9 @@ session.setNumberofadducts(numberofadducts);
         oldPick = PeakPick.getSelectionModel().getSelectedItem().toString();
         oldBase = Base.getText();
         oldRT = RTTolShift.getText();
-
+        
     }
-
+    
     public void hideParameters() {
         setParameterPane(false);
         TabPane.setVisible(false);
@@ -1264,13 +1334,13 @@ session.setNumberofadducts(numberofadducts);
         if (!oldBase.equals(Base.getText())) {
             session.setPeakPickchanged(true);
         }
-
+        
         if (!oldRT.equals(RTTolShift.getText())) {
             session.setPeakPickchanged(true);
         }
-
+        
     }
-
+    
     public void setParameterPane(boolean bool) {
 //        label1.setVisible(bool);
 //        label2.setVisible(bool);
@@ -1295,34 +1365,19 @@ session.setNumberofadducts(numberofadducts);
 //        Base.setVisible(bool);
 //        PeakPick.setVisible(bool);
         paramButton.setVisible(bool);
-
+        
     }
 
     //when closing the window, end all running processes, such as Rengine
     public void close() {
         session.getEngine().end();
         session.getIothread().terminate();
-
+        
     }
-
+    
     public void toggleAdductGeneration() {
         boolean toggle = !toggleadductgeneration.selectedProperty().get();
         AdductAnchor.setDisable(toggle);
-    }
-   
-    public String makeString(int m, String charge) {
-        if (charge.length()>0) {
-        int c = Integer.parseInt(charge.substring(0, charge.length()-1));
-        
-        if (c>1) {
-            return m+ "M/" + c + " +";
-        } else {
-            return m+ "M +";
-        }
-    } else {
-            return "";
-        }
-        
     }
     
 }
