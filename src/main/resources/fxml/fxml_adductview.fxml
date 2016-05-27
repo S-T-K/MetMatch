@@ -65,6 +65,6 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Slider fx:id="weightslider" blockIncrement="1000.0" layoutY="-6.0" majorTickUnit="100000.0" max="1000000.0" min="-1000000.0" minorTickCount="1000000" onMouseReleased="#hideSlider" prefHeight="40.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
+      <Slider fx:id="weightslider" blockIncrement="500.0" layoutY="-6.0" majorTickUnit="250.0" max="1000.0" min="-1000.0" minorTickCount="4" onMouseReleased="#hideSlider" prefHeight="29.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" value="1.0" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
    </children>
 </AnchorPane>

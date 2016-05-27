@@ -1062,6 +1062,12 @@ public class Slice {
             Thread.sleep(10);
         }
         
+        if (start<0) {
+            start=0;
+        }
+        if (end>=IntArray.length) {
+            end = (short) (IntArray.length-1);
+        }
         //Peak picking
         //takes intensity at start and end as a "baseline", subtracts the value of a line between those points from every intensity
         float delta = (IntArray[end]-IntArray[start])/(end-start);

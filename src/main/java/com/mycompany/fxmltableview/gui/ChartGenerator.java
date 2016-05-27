@@ -1772,21 +1772,22 @@ public class ChartGenerator {
                          XYChart.Data data = new XYChart.Data(list.get(i).getRT(),slice.getListofPeaks().get(p).getIndexshift()*60);
                          float weight = slice.getListofPeaks().get(p).getWeight();
                          //get size, max 5
-                         float size = Math.abs(weight)/1000000f;
-                         size*=5;
-                         if (size<1.5) {
-                             size = 1.5f;
-                         }
-                          Rectangle rect = new Rectangle(size,size);
+                         
+                         
+                          Rectangle rect;
                           
                           if (weight>1) {
+                              rect = new Rectangle(5,5);
                               rect.setFill(Color.GREEN);
                           }else if (weight<0) {
+                              rect = new Rectangle(5,5);
                               rect.setFill(Color.RED);
                           } else {
+                              rect = new Rectangle(1.5,1.5);
                               rect.setFill(Color.BLACK);
+                              rect.setOpacity(0.5);
                           }
-                    rect.setOpacity(0.5);
+                    
                     data.setNode(rect);
                          backSeries.getData().add(data);
                     }

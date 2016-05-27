@@ -404,6 +404,13 @@ public class Fxml_adductviewController implements Initializable {
                 } else {
                     peakModeactivated();
                 }
+                if (weighttoggle.selectedProperty().get()) {
+                    peakWeightMode();
+                }
+                
+                if (addPeak.selectedProperty().get()) {
+                peakPickMode();
+                }
                 
                 progress.setVisible(false);
                Platform.runLater(new Runnable() {

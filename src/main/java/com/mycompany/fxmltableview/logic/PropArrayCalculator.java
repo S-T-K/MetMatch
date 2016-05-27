@@ -26,12 +26,17 @@ public class PropArrayCalculator {
     
     //gets RT of peak
     public void calculate(float peak, float weight, float ogroupRT, float[][] matrix, int row) {
+        
+        if (weight>100) {
+            System.out.println();
+        }
         //calculate the index
         int index = middle+(int) ((peak-ogroupRT)/step);
         int tol = session.getIntPeakRTTol();
         
         if (index>0&&index<session.getResolution()) {
-            matrix[row][index] = weight;
+            if (matrix[row][index]<weight) {
+            matrix[row][index] = weight;}
         }
         
         for (int k = 1; k<=tol; k++) {

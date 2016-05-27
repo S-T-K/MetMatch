@@ -59,7 +59,7 @@ public class Peak {
     }
     
     public Peak(boolean manual, short index, short start, short end, Slice slice, int non) throws InterruptedException {
-        this.weight = 100000;
+        this.weight = 1;
         this.index = index;
         this.start = start;
         this.end = end;
