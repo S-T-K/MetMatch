@@ -109,9 +109,34 @@ public class Session {
         listofadductnameproperties.add(new SimpleStringProperty("+Na"));
         listofadductnameproperties.add(new SimpleStringProperty("+CH3OH+H"));
         listofadductnameproperties.add(new SimpleStringProperty("+K"));
-        listofadductnameproperties.add(new SimpleStringProperty(""));
-        listofadductnameproperties.add(new SimpleStringProperty(""));
-        for (int i = 8; i<43; i++) {
+        listofadductnameproperties.add(new SimpleStringProperty("+3H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+2H+Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+H+2Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+3Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+2H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+H+NH4"));
+        listofadductnameproperties.add(new SimpleStringProperty("+H+Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+H+K"));
+        listofadductnameproperties.add(new SimpleStringProperty("+ACN+2H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+2Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+2ACN+2H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+3ACN+2H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+ACN+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+2Na-H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+IsoProp+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+ACN+Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+2K-H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+DMSO+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+2ACN+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+IsoProp+Na+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+NH4"));
+        listofadductnameproperties.add(new SimpleStringProperty("+Na"));
+        listofadductnameproperties.add(new SimpleStringProperty("+3H2O+2H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+K"));
+        listofadductnameproperties.add(new SimpleStringProperty("+ACN+H"));
+        listofadductnameproperties.add(new SimpleStringProperty("+ACN+Na"));
+        for (int i = 33; i<43; i++) {
             listofadductnameproperties.add(new SimpleStringProperty(""));
         }
         listofadductmassproperties= new ArrayList<>();
@@ -120,9 +145,34 @@ public class Session {
         listofadductmassproperties.add(new SimpleFloatProperty(22.989218f));
         listofadductmassproperties.add(new SimpleFloatProperty(33.033489f));
         listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
-        listofadductmassproperties.add(new SimpleFloatProperty());
-        listofadductmassproperties.add(new SimpleFloatProperty());
-        for (int i = 8; i<43; i++) {
+        listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
+        listofadductmassproperties.add(new SimpleFloatProperty(8.33459f));
+        listofadductmassproperties.add(new SimpleFloatProperty(15.7661904f));
+        listofadductmassproperties.add(new SimpleFloatProperty(22.989218f));
+        listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
+        listofadductmassproperties.add(new SimpleFloatProperty(9.520550f));
+        listofadductmassproperties.add(new SimpleFloatProperty(11.998218f));
+        listofadductmassproperties.add(new SimpleFloatProperty(19.985217f));
+        listofadductmassproperties.add(new SimpleFloatProperty(21.520550f));
+        listofadductmassproperties.add(new SimpleFloatProperty(22.989218f));
+        listofadductmassproperties.add(new SimpleFloatProperty(42.033823f));
+        listofadductmassproperties.add(new SimpleFloatProperty(62.547097f));
+        listofadductmassproperties.add(new SimpleFloatProperty(42.033823f));
+        listofadductmassproperties.add(new SimpleFloatProperty(44.971160f));
+        listofadductmassproperties.add(new SimpleFloatProperty(61.06534f));
+        listofadductmassproperties.add(new SimpleFloatProperty(64.015765f));
+        listofadductmassproperties.add(new SimpleFloatProperty(76.919040f));
+        listofadductmassproperties.add(new SimpleFloatProperty(79.02122f));
+        listofadductmassproperties.add(new SimpleFloatProperty(83.060370f));
+        listofadductmassproperties.add(new SimpleFloatProperty(84.05511f));
+        listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
+        listofadductmassproperties.add(new SimpleFloatProperty(18.033823f));
+        listofadductmassproperties.add(new SimpleFloatProperty(22.989218f));
+        listofadductmassproperties.add(new SimpleFloatProperty(28.02312f));
+        listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
+        listofadductmassproperties.add(new SimpleFloatProperty(42.033823f));
+        listofadductmassproperties.add(new SimpleFloatProperty(64.015765f));
+        for (int i = 33; i<43; i++) {
             listofadductmassproperties.add(new SimpleFloatProperty());
         }
         listofadductchargeproperties= new ArrayList<>();
@@ -131,9 +181,34 @@ public class Session {
         listofadductchargeproperties.add(new SimpleStringProperty("1+"));
         listofadductchargeproperties.add(new SimpleStringProperty("1+"));
         listofadductchargeproperties.add(new SimpleStringProperty("1+"));
-        listofadductchargeproperties.add(new SimpleStringProperty(""));
-        listofadductchargeproperties.add(new SimpleStringProperty(""));
-        for (int i = 8; i<43; i++) {
+        listofadductchargeproperties.add(new SimpleStringProperty("3+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("3+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("3+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("3+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("2+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+        for (int i = 33; i<43; i++) {
             listofadductchargeproperties.add(new SimpleStringProperty(""));
         }
         listofadductmproperties= new ArrayList<>();
@@ -142,9 +217,34 @@ public class Session {
         listofadductmproperties.add(new SimpleIntegerProperty(1));
         listofadductmproperties.add(new SimpleIntegerProperty(1));
         listofadductmproperties.add(new SimpleIntegerProperty(1));
-        listofadductmproperties.add(new SimpleIntegerProperty());
-        listofadductmproperties.add(new SimpleIntegerProperty());
-        for (int i = 8; i<43; i++) {
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(1));
+        listofadductmproperties.add(new SimpleIntegerProperty(2));
+        listofadductmproperties.add(new SimpleIntegerProperty(2));
+        listofadductmproperties.add(new SimpleIntegerProperty(2));
+        listofadductmproperties.add(new SimpleIntegerProperty(2));
+        listofadductmproperties.add(new SimpleIntegerProperty(2));
+        listofadductmproperties.add(new SimpleIntegerProperty(2));
+        listofadductmproperties.add(new SimpleIntegerProperty(2));
+        for (int i = 33; i<43; i++) {
             listofadductmproperties.add(new SimpleIntegerProperty());
         }
         
