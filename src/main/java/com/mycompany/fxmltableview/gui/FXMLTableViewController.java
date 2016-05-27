@@ -1349,6 +1349,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             this.maxnumber = max;
             max++;
             
+            double start = System.currentTimeMillis();
             for (int o = 0; o < MasterListofOGroups.size(); o++) {
                 int size = MasterListofOGroups.get(o).getListofAdducts().size();
                 for (int a = 0; a < size; a++) {
@@ -1356,9 +1357,14 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                     //for every adduct, check if ion specified
                     if (adduct.getIon() == null) {
                         //if not
-                        for (int j = 0; j < session.getListofadductnames().size(); j++) {
+                        int j = 0;
+                        for (String namen : session.getListofadductnames()) {
+                        
+                            
                             //add every possible adduct
-                            for (int k = 0; k < session.getListofadductnames().size(); k++) {
+                            int k = 0;
+                            for (String nameo : session.getListofadductnames()) {
+                            
                                 //to every hypothetical adduct
                                 if (j != k) {
                                     //don't add the same value
@@ -1382,13 +1388,13 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                         }
                                     }
                                     if (!duplicate) {
-                                        String Ion = "[M(" + adduct.getNum() + ":[M" + session.getListofadductnames().get(k) + "]";
+                                        String Ion = "[M(" + adduct.getNum() + ":[M" + nameo + "]";
                                         String charge = session.getListofadductchargeproperties().get(k).get();
                                         char sign = charge.charAt(charge.length() - 1);
                                         for (int c = 0; c < session.getListofadductcharges().get(k); c++) {
                                             Ion = Ion.concat(String.valueOf(sign));
                                         }
-                                        Ion = Ion.concat(")" + session.getListofadductnames().get(j)+"]");
+                                        Ion = Ion.concat(")" + namen+"]");
                                         charge = session.getListofadductchargeproperties().get(j).get();
                                         sign = charge.charAt(charge.length() - 1);
                                         for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
@@ -1398,8 +1404,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                         max++;
                                     }
                                 }
+                                k++;
                             }
-                            
+                            j++;
                         }
 
                         //if ion specified
@@ -1408,8 +1415,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                         if (adduct.getIon().indexOf(',') > 0) {
                             //do something
                         } else {
+                            int j = 0;
+                            for (String namen : session.getListofadductnames()) {
                             
-                            for (int j = 0; j < session.getListofadductnames().size(); j++) {
                                 //and add every possible adduct
                                 
                                 Float mass = adduct.getM();
@@ -1428,7 +1436,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                     }
                                 }
                                 if (!duplicate) {
-                                    String Ion = "[M(" + adduct.getNum() + ")+" + session.getListofadductnames().get(j) + "]";
+                                    String Ion = "[M(" + adduct.getNum() + ")+" + namen + "]";
                                     String charge = session.getListofadductchargeproperties().get(j).get();
                                     char sign = charge.charAt(charge.length() - 1);
                                     for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
@@ -1437,7 +1445,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                     MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
                                     max++;
                                 }
-                                
+                                j++;
                             }
                             
                         }
@@ -1446,6 +1454,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                 }
             }
             
+            System.out.println("Total time: " + (System.currentTimeMillis()-start));
         }
     }
     

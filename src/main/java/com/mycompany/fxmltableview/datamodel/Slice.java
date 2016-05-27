@@ -292,9 +292,9 @@ public class Slice {
  public void SavitzkyGolayPeakPicking() throws InterruptedException {
       //baseline correct IntensityArray
          
-         //if (adduct.getNum()==4031) {
-            // System.out.println("Starting on Slice: " + adduct.getNum()) ;
-        // }
+         if (adduct.getNum()==84823) {
+             System.out.println("Starting on Slice: " + adduct.getNum()) ;
+         }
             double[] correctedIntArray = new double[IntArray.length];
             for ( int j = 0; j<IntArray.length; j++)  {
                 if (IntArray[j]>=adduct.getSession().getBaseline()) {
@@ -304,14 +304,14 @@ public class Slice {
             }
      
             CurveSmooth csm = new CurveSmooth(correctedIntArray);
-            csm.savitzkyGolay(50);
+            csm.savitzkyGolay(40);
             
            
             double[] max = csm.getMaximaSavitzkyGolay()[0];
      double[] minima = csm.getMinimaSavitzkyGolay()[0];
      
      //create max and min, min holding the starts/ends of the peaks, and max holding the index
-     double[]min = new double[max.length+2];
+     double[]min = new double[max.length+1];
      int offsetmin;
      if (max.length>0) {
      if (minima.length==0||minima[0]>max[0]) {
@@ -321,15 +321,16 @@ public class Slice {
          min[0]=minima[0];
          offsetmin = 0;
      }
-     for (int i = 0; i<max.length-1; i++) {
+     for (int i = 0; i<minima.length; i++) {
         min[i+offsetmin]=minima[i];
      }
      //if last min specified
-     if (minima.length-(1-offsetmin)==max.length) {
-          min[max.length+1]=minima[minima.length-1];
+      if (minima.length>0&&minima[minima.length-1]>max[max.length-1]) {
+//          min[min.length-1]=minima[minima.length-1];
      } else {
-         min[max.length+1]=(short)size-1;
+         min[min.length-1]=(short)IntArray.length-1;
      }
+     
      
     
      
@@ -414,7 +415,9 @@ public class Slice {
 //         }
 //         
 //     }
-
+if (adduct.getNum()==4716) {
+             System.out.println("Starting on Slice: " + adduct.getNum()) ;
+         }
 
      CurveSmooth csm = new CurveSmooth(PropArray);
     csm.movingAverage(3);
@@ -423,8 +426,8 @@ public class Slice {
      double[] max = csm.getMaximaMovingAverage()[0];
      double[] minima = csm.getMinimaMovingAverage()[0];
      
-     //create max and min, min holding the starts/ends of the peaks, and max holding the index
-     double[]min = new double[max.length+2];
+      //create max and min, min holding the starts/ends of the peaks, and max holding the index
+     double[]min = new double[max.length+1];
      int offsetmin;
      if (max.length>0) {
      if (minima.length==0||minima[0]>max[0]) {
@@ -434,14 +437,14 @@ public class Slice {
          min[0]=minima[0];
          offsetmin = 0;
      }
-     for (int i = 0; i<max.length-1; i++) {
+     for (int i = 0; i<minima.length; i++) {
         min[i+offsetmin]=minima[i];
      }
      //if last min specified
-     if (minima.length-(1-offsetmin)==max.length) {
-          min[max.length+1]=minima[minima.length-1];
+     if (minima.length>0&&minima[minima.length-1]>max[max.length-1]) {
+//          min[min.length-1]=minima[minima.length-1];
      } else {
-         min[max.length+1]=(short)size-1;
+         min[min.length-1]=(short)IntArray.length-1;
      }
      
     
@@ -455,7 +458,7 @@ public class Slice {
    for (int i = 0; i<max.length; i++) {
        short end = (short) min[i+1];
        short index = (short)max[i];
-       if (PropArray[index]>0.3){
+       if (PropArray[index]>0.2){
        addPeak(new Peak((short)max[i],start,end,this)); }
        start = end;
    }
@@ -1322,7 +1325,7 @@ public class Slice {
         float max = Float.MIN_VALUE;
         //number of consecutive signals
         int nocs = 0;
-        long sum = 0;
+        //long sum = 0;
         int minnocs = (int) (file.getSession().getMinPeakLength().floatValue()*60*file.getScanspersecond());
         for (int i = 0; i<MZArray.length; i++) {
             if (MZArray[i]==0||MZArray[i]<minMZ||MZArray[i]>maxMZ) {
@@ -1338,7 +1341,7 @@ public class Slice {
                 if (IntArray[i]>max) {
                     max = IntArray[i];
                 }
-                sum+=IntArray[i];
+                //sum+=IntArray[i];
                 nocs++;
             }
         }
@@ -1346,11 +1349,11 @@ public class Slice {
                     empty = false;
                 }
         //rough baseline calculation
-        sum/=IntArray.length;
-        if (max-sum<file.getSession().getBaseline()) {
-            System.out.println("noise deleted");
-            empty = true;
-        }
+        //sum/=IntArray.length;
+//        if (max-sum<file.getSession().getBaseline()) {
+//            System.out.println("noise deleted");
+//            empty = true;
+//        }
         
         if (!empty) {
             adduct.getListofSlices().put(file, this);
