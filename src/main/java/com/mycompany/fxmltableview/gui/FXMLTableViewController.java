@@ -99,10 +99,10 @@ public class FXMLTableViewController implements Initializable {
     ProgressBar progressbar;
     
     @FXML
-    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7;
+    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdName8, AdName9, AdName10, AdName11, AdName12, AdName13, AdName14, AdName15, AdName16, AdName17, AdName18, AdName19, AdName20, AdName21, AdName22, AdName23, AdName24, AdName25, AdName26, AdName27, AdName28, AdName29, AdName30, AdName31, AdName32, AdName33, AdName34, AdName35, AdName36, AdName37, AdName38, AdName39, AdName40, AdName41, AdName42, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdMass8, AdMass9, AdMass10, AdMass11, AdMass12, AdMass13, AdMass14, AdMass15, AdMass16, AdMass17, AdMass18, AdMass19, AdMass20, AdMass21, AdMass22, AdMass23, AdMass24, AdMass25, AdMass26, AdMass27, AdMass28, AdMass29, AdMass30, AdMass31, AdMass32, AdMass33, AdMass34, AdMass35, AdMass36, AdMass37, AdMass38, AdMass39, AdMass40, AdMass41, AdMass42, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdM8, AdM9, AdM10, AdM11, AdM12, AdM13, AdM14, AdM15, AdM16, AdM17, AdM18, AdM19, AdM20, AdM21, AdM22, AdM23, AdM24, AdM25, AdM26, AdM27, AdM28, AdM29, AdM30, AdM31, AdM32, AdM33, AdM34, AdM35, AdM36, AdM37, AdM38, AdM39, AdM40, AdM41, AdM42,  AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7, AdC8, AdC9, AdC10, AdC11, AdC12, AdC13, AdC14, AdC15, AdC16, AdC17, AdC18, AdC19, AdC20, AdC21, AdC22, AdC23, AdC24, AdC25, AdC26, AdC27, AdC28, AdC29, AdC30, AdC31, AdC32, AdC33, AdC34, AdC35, AdC36, AdC37, AdC38, AdC39, AdC40, AdC41, AdC42;
     
     @FXML
-    Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7;
+    Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7, Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42;
     
     @FXML
     Rectangle box1, box2, box3, box4;
@@ -172,9 +172,9 @@ public class FXMLTableViewController implements Initializable {
 //        }
 //        new File("C:\\Users\\stefankoch\\Documents\\tmp2").mkdirs();
 
-AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textProperty(), AdM4.textProperty(), AdM5.textProperty(), AdM6.textProperty(), AdM7.textProperty()));
-        AdCs.addAll(Arrays.asList(AdC1.textProperty(), AdC2.textProperty(), AdC3.textProperty(), AdC4.textProperty(), AdC5.textProperty(), AdC6.textProperty(), AdC7.textProperty()));
-        AdLs.addAll(Arrays.asList(Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7));
+AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textProperty(), AdM4.textProperty(), AdM5.textProperty(), AdM6.textProperty(), AdM7.textProperty(), AdM8.textProperty(), AdM9.textProperty(), AdM10.textProperty(), AdM11.textProperty(), AdM12.textProperty(), AdM13.textProperty(), AdM14.textProperty(), AdM15.textProperty(), AdM16.textProperty(), AdM17.textProperty(), AdM18.textProperty(), AdM19.textProperty(), AdM20.textProperty(), AdM21.textProperty(), AdM22.textProperty(), AdM23.textProperty(), AdM24.textProperty(), AdM25.textProperty(), AdM26.textProperty(), AdM27.textProperty(), AdM28.textProperty(), AdM29.textProperty(), AdM30.textProperty(), AdM31.textProperty(), AdM32.textProperty(), AdM33.textProperty(), AdM34.textProperty(), AdM35.textProperty(), AdM36.textProperty(), AdM37.textProperty(), AdM38.textProperty(), AdM39.textProperty(), AdM40.textProperty(), AdM41.textProperty(), AdM42.textProperty()));
+        AdCs.addAll(Arrays.asList(AdC1.textProperty(), AdC2.textProperty(), AdC3.textProperty(), AdC4.textProperty(), AdC5.textProperty(), AdC6.textProperty(), AdC7.textProperty(), AdC8.textProperty(), AdC9.textProperty(), AdC10.textProperty(), AdC11.textProperty(), AdC12.textProperty(), AdC13.textProperty(), AdC14.textProperty(), AdC15.textProperty(), AdC16.textProperty(), AdC17.textProperty(), AdC18.textProperty(), AdC19.textProperty(), AdC20.textProperty(), AdC21.textProperty(), AdC22.textProperty(), AdC23.textProperty(), AdC24.textProperty(), AdC25.textProperty(), AdC26.textProperty(), AdC27.textProperty(), AdC28.textProperty(), AdC29.textProperty(), AdC30.textProperty(), AdC31.textProperty(), AdC32.textProperty(), AdC33.textProperty(), AdC34.textProperty(), AdC35.textProperty(), AdC36.textProperty(), AdC37.textProperty(), AdC38.textProperty(), AdC39.textProperty(), AdC40.textProperty(), AdC41.textProperty(), AdC42.textProperty()));
+        AdLs.addAll(Arrays.asList(Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7,Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42));
 
         //listener for adduct parameter list
         ChangeListener listener = new ChangeListener() {
@@ -253,6 +253,41 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
         AdName5.textProperty().bindBidirectional(session.getListofadductnameproperties().get(4));
         AdName6.textProperty().bindBidirectional(session.getListofadductnameproperties().get(5));
         AdName7.textProperty().bindBidirectional(session.getListofadductnameproperties().get(6));
+        AdName8.textProperty().bindBidirectional(session.getListofadductnameproperties().get(7));
+AdName9.textProperty().bindBidirectional(session.getListofadductnameproperties().get(8));
+AdName10.textProperty().bindBidirectional(session.getListofadductnameproperties().get(9));
+AdName11.textProperty().bindBidirectional(session.getListofadductnameproperties().get(10));
+AdName12.textProperty().bindBidirectional(session.getListofadductnameproperties().get(11));
+AdName13.textProperty().bindBidirectional(session.getListofadductnameproperties().get(12));
+AdName14.textProperty().bindBidirectional(session.getListofadductnameproperties().get(13));
+AdName15.textProperty().bindBidirectional(session.getListofadductnameproperties().get(14));
+AdName16.textProperty().bindBidirectional(session.getListofadductnameproperties().get(15));
+AdName17.textProperty().bindBidirectional(session.getListofadductnameproperties().get(16));
+AdName18.textProperty().bindBidirectional(session.getListofadductnameproperties().get(17));
+AdName19.textProperty().bindBidirectional(session.getListofadductnameproperties().get(18));
+AdName20.textProperty().bindBidirectional(session.getListofadductnameproperties().get(19));
+AdName21.textProperty().bindBidirectional(session.getListofadductnameproperties().get(20));
+AdName22.textProperty().bindBidirectional(session.getListofadductnameproperties().get(21));
+AdName23.textProperty().bindBidirectional(session.getListofadductnameproperties().get(22));
+AdName24.textProperty().bindBidirectional(session.getListofadductnameproperties().get(23));
+AdName25.textProperty().bindBidirectional(session.getListofadductnameproperties().get(24));
+AdName26.textProperty().bindBidirectional(session.getListofadductnameproperties().get(25));
+AdName27.textProperty().bindBidirectional(session.getListofadductnameproperties().get(26));
+AdName28.textProperty().bindBidirectional(session.getListofadductnameproperties().get(27));
+AdName29.textProperty().bindBidirectional(session.getListofadductnameproperties().get(28));
+AdName30.textProperty().bindBidirectional(session.getListofadductnameproperties().get(29));
+AdName31.textProperty().bindBidirectional(session.getListofadductnameproperties().get(30));
+AdName32.textProperty().bindBidirectional(session.getListofadductnameproperties().get(31));
+AdName33.textProperty().bindBidirectional(session.getListofadductnameproperties().get(32));
+AdName34.textProperty().bindBidirectional(session.getListofadductnameproperties().get(33));
+AdName35.textProperty().bindBidirectional(session.getListofadductnameproperties().get(34));
+AdName36.textProperty().bindBidirectional(session.getListofadductnameproperties().get(35));
+AdName37.textProperty().bindBidirectional(session.getListofadductnameproperties().get(36));
+AdName38.textProperty().bindBidirectional(session.getListofadductnameproperties().get(37));
+AdName39.textProperty().bindBidirectional(session.getListofadductnameproperties().get(38));
+AdName40.textProperty().bindBidirectional(session.getListofadductnameproperties().get(39));
+AdName41.textProperty().bindBidirectional(session.getListofadductnameproperties().get(40));
+AdName42.textProperty().bindBidirectional(session.getListofadductnameproperties().get(41));
         AdMass1.textProperty().bindBidirectional(session.getListofadductmassproperties().get(0), new NumberStringConverter());
         AdMass2.textProperty().bindBidirectional(session.getListofadductmassproperties().get(1), new NumberStringConverter());
         AdMass3.textProperty().bindBidirectional(session.getListofadductmassproperties().get(2), new NumberStringConverter());
@@ -260,6 +295,41 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
         AdMass5.textProperty().bindBidirectional(session.getListofadductmassproperties().get(4), new NumberStringConverter());
         AdMass6.textProperty().bindBidirectional(session.getListofadductmassproperties().get(5), new NumberStringConverter());
         AdMass7.textProperty().bindBidirectional(session.getListofadductmassproperties().get(6), new NumberStringConverter());
+        AdMass8.textProperty().bindBidirectional(session.getListofadductmassproperties().get(7), new NumberStringConverter());
+AdMass9.textProperty().bindBidirectional(session.getListofadductmassproperties().get(8), new NumberStringConverter());
+AdMass10.textProperty().bindBidirectional(session.getListofadductmassproperties().get(9), new NumberStringConverter());
+AdMass11.textProperty().bindBidirectional(session.getListofadductmassproperties().get(10), new NumberStringConverter());
+AdMass12.textProperty().bindBidirectional(session.getListofadductmassproperties().get(11), new NumberStringConverter());
+AdMass13.textProperty().bindBidirectional(session.getListofadductmassproperties().get(12), new NumberStringConverter());
+AdMass14.textProperty().bindBidirectional(session.getListofadductmassproperties().get(13), new NumberStringConverter());
+AdMass15.textProperty().bindBidirectional(session.getListofadductmassproperties().get(14), new NumberStringConverter());
+AdMass16.textProperty().bindBidirectional(session.getListofadductmassproperties().get(15), new NumberStringConverter());
+AdMass17.textProperty().bindBidirectional(session.getListofadductmassproperties().get(16), new NumberStringConverter());
+AdMass18.textProperty().bindBidirectional(session.getListofadductmassproperties().get(17), new NumberStringConverter());
+AdMass19.textProperty().bindBidirectional(session.getListofadductmassproperties().get(18), new NumberStringConverter());
+AdMass20.textProperty().bindBidirectional(session.getListofadductmassproperties().get(19), new NumberStringConverter());
+AdMass21.textProperty().bindBidirectional(session.getListofadductmassproperties().get(20), new NumberStringConverter());
+AdMass22.textProperty().bindBidirectional(session.getListofadductmassproperties().get(21), new NumberStringConverter());
+AdMass23.textProperty().bindBidirectional(session.getListofadductmassproperties().get(22), new NumberStringConverter());
+AdMass24.textProperty().bindBidirectional(session.getListofadductmassproperties().get(23), new NumberStringConverter());
+AdMass25.textProperty().bindBidirectional(session.getListofadductmassproperties().get(24), new NumberStringConverter());
+AdMass26.textProperty().bindBidirectional(session.getListofadductmassproperties().get(25), new NumberStringConverter());
+AdMass27.textProperty().bindBidirectional(session.getListofadductmassproperties().get(26), new NumberStringConverter());
+AdMass28.textProperty().bindBidirectional(session.getListofadductmassproperties().get(27), new NumberStringConverter());
+AdMass29.textProperty().bindBidirectional(session.getListofadductmassproperties().get(28), new NumberStringConverter());
+AdMass30.textProperty().bindBidirectional(session.getListofadductmassproperties().get(29), new NumberStringConverter());
+AdMass31.textProperty().bindBidirectional(session.getListofadductmassproperties().get(30), new NumberStringConverter());
+AdMass32.textProperty().bindBidirectional(session.getListofadductmassproperties().get(31), new NumberStringConverter());
+AdMass33.textProperty().bindBidirectional(session.getListofadductmassproperties().get(32), new NumberStringConverter());
+AdMass34.textProperty().bindBidirectional(session.getListofadductmassproperties().get(33), new NumberStringConverter());
+AdMass35.textProperty().bindBidirectional(session.getListofadductmassproperties().get(34), new NumberStringConverter());
+AdMass36.textProperty().bindBidirectional(session.getListofadductmassproperties().get(35), new NumberStringConverter());
+AdMass37.textProperty().bindBidirectional(session.getListofadductmassproperties().get(36), new NumberStringConverter());
+AdMass38.textProperty().bindBidirectional(session.getListofadductmassproperties().get(37), new NumberStringConverter());
+AdMass39.textProperty().bindBidirectional(session.getListofadductmassproperties().get(38), new NumberStringConverter());
+AdMass40.textProperty().bindBidirectional(session.getListofadductmassproperties().get(39), new NumberStringConverter());
+AdMass41.textProperty().bindBidirectional(session.getListofadductmassproperties().get(40), new NumberStringConverter());
+AdMass42.textProperty().bindBidirectional(session.getListofadductmassproperties().get(41), new NumberStringConverter());
         AdM1.textProperty().bindBidirectional(session.getListofadductmproperties().get(0), new NumberStringConverter());
         AdM2.textProperty().bindBidirectional(session.getListofadductmproperties().get(1), new NumberStringConverter());
         AdM3.textProperty().bindBidirectional(session.getListofadductmproperties().get(2), new NumberStringConverter());
@@ -267,6 +337,41 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
         AdM5.textProperty().bindBidirectional(session.getListofadductmproperties().get(4), new NumberStringConverter());
         AdM6.textProperty().bindBidirectional(session.getListofadductmproperties().get(5), new NumberStringConverter());
         AdM7.textProperty().bindBidirectional(session.getListofadductmproperties().get(6), new NumberStringConverter());
+        AdM8.textProperty().bindBidirectional(session.getListofadductmproperties().get(7), new NumberStringConverter());
+AdM9.textProperty().bindBidirectional(session.getListofadductmproperties().get(8), new NumberStringConverter());
+AdM10.textProperty().bindBidirectional(session.getListofadductmproperties().get(9), new NumberStringConverter());
+AdM11.textProperty().bindBidirectional(session.getListofadductmproperties().get(10), new NumberStringConverter());
+AdM12.textProperty().bindBidirectional(session.getListofadductmproperties().get(11), new NumberStringConverter());
+AdM13.textProperty().bindBidirectional(session.getListofadductmproperties().get(12), new NumberStringConverter());
+AdM14.textProperty().bindBidirectional(session.getListofadductmproperties().get(13), new NumberStringConverter());
+AdM15.textProperty().bindBidirectional(session.getListofadductmproperties().get(14), new NumberStringConverter());
+AdM16.textProperty().bindBidirectional(session.getListofadductmproperties().get(15), new NumberStringConverter());
+AdM17.textProperty().bindBidirectional(session.getListofadductmproperties().get(16), new NumberStringConverter());
+AdM18.textProperty().bindBidirectional(session.getListofadductmproperties().get(17), new NumberStringConverter());
+AdM19.textProperty().bindBidirectional(session.getListofadductmproperties().get(18), new NumberStringConverter());
+AdM20.textProperty().bindBidirectional(session.getListofadductmproperties().get(19), new NumberStringConverter());
+AdM21.textProperty().bindBidirectional(session.getListofadductmproperties().get(20), new NumberStringConverter());
+AdM22.textProperty().bindBidirectional(session.getListofadductmproperties().get(21), new NumberStringConverter());
+AdM23.textProperty().bindBidirectional(session.getListofadductmproperties().get(22), new NumberStringConverter());
+AdM24.textProperty().bindBidirectional(session.getListofadductmproperties().get(23), new NumberStringConverter());
+AdM25.textProperty().bindBidirectional(session.getListofadductmproperties().get(24), new NumberStringConverter());
+AdM26.textProperty().bindBidirectional(session.getListofadductmproperties().get(25), new NumberStringConverter());
+AdM27.textProperty().bindBidirectional(session.getListofadductmproperties().get(26), new NumberStringConverter());
+AdM28.textProperty().bindBidirectional(session.getListofadductmproperties().get(27), new NumberStringConverter());
+AdM29.textProperty().bindBidirectional(session.getListofadductmproperties().get(28), new NumberStringConverter());
+AdM30.textProperty().bindBidirectional(session.getListofadductmproperties().get(29), new NumberStringConverter());
+AdM31.textProperty().bindBidirectional(session.getListofadductmproperties().get(30), new NumberStringConverter());
+AdM32.textProperty().bindBidirectional(session.getListofadductmproperties().get(31), new NumberStringConverter());
+AdM33.textProperty().bindBidirectional(session.getListofadductmproperties().get(32), new NumberStringConverter());
+AdM34.textProperty().bindBidirectional(session.getListofadductmproperties().get(33), new NumberStringConverter());
+AdM35.textProperty().bindBidirectional(session.getListofadductmproperties().get(34), new NumberStringConverter());
+AdM36.textProperty().bindBidirectional(session.getListofadductmproperties().get(35), new NumberStringConverter());
+AdM37.textProperty().bindBidirectional(session.getListofadductmproperties().get(36), new NumberStringConverter());
+AdM38.textProperty().bindBidirectional(session.getListofadductmproperties().get(37), new NumberStringConverter());
+AdM39.textProperty().bindBidirectional(session.getListofadductmproperties().get(38), new NumberStringConverter());
+AdM40.textProperty().bindBidirectional(session.getListofadductmproperties().get(39), new NumberStringConverter());
+AdM41.textProperty().bindBidirectional(session.getListofadductmproperties().get(40), new NumberStringConverter());
+AdM42.textProperty().bindBidirectional(session.getListofadductmproperties().get(41), new NumberStringConverter());
         AdC1.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(0));
         AdC2.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(1));
         AdC3.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(2));
@@ -274,6 +379,41 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
         AdC5.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(4));
         AdC6.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(5));
         AdC7.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(6));
+        AdC8.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(7));
+AdC9.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(8));
+AdC10.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(9));
+AdC11.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(10));
+AdC12.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(11));
+AdC13.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(12));
+AdC14.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(13));
+AdC15.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(14));
+AdC16.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(15));
+AdC17.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(16));
+AdC18.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(17));
+AdC19.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(18));
+AdC20.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(19));
+AdC21.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(20));
+AdC22.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(21));
+AdC23.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(22));
+AdC24.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(23));
+AdC25.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(24));
+AdC26.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(25));
+AdC27.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(26));
+AdC28.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(27));
+AdC29.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(28));
+AdC30.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(29));
+AdC31.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(30));
+AdC32.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(31));
+AdC33.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(32));
+AdC34.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(33));
+AdC35.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(34));
+AdC36.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(35));
+AdC37.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(36));
+AdC38.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(37));
+AdC39.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(38));
+AdC40.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(39));
+AdC41.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(40));
+AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(41));
         
 
 //        Adlabel1.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(0));}

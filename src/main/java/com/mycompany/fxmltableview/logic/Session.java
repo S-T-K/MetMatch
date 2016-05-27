@@ -111,6 +111,9 @@ public class Session {
         listofadductnameproperties.add(new SimpleStringProperty("+K"));
         listofadductnameproperties.add(new SimpleStringProperty(""));
         listofadductnameproperties.add(new SimpleStringProperty(""));
+        for (int i = 8; i<43; i++) {
+            listofadductnameproperties.add(new SimpleStringProperty(""));
+        }
         listofadductmassproperties= new ArrayList<>();
         listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
         listofadductmassproperties.add(new SimpleFloatProperty(18.033823f));
@@ -119,6 +122,9 @@ public class Session {
         listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
         listofadductmassproperties.add(new SimpleFloatProperty());
         listofadductmassproperties.add(new SimpleFloatProperty());
+        for (int i = 8; i<43; i++) {
+            listofadductmassproperties.add(new SimpleFloatProperty());
+        }
         listofadductchargeproperties= new ArrayList<>();
         listofadductchargeproperties.add(new SimpleStringProperty("1+"));
         listofadductchargeproperties.add(new SimpleStringProperty("1+"));
@@ -127,6 +133,9 @@ public class Session {
         listofadductchargeproperties.add(new SimpleStringProperty("1+"));
         listofadductchargeproperties.add(new SimpleStringProperty(""));
         listofadductchargeproperties.add(new SimpleStringProperty(""));
+        for (int i = 8; i<43; i++) {
+            listofadductchargeproperties.add(new SimpleStringProperty(""));
+        }
         listofadductmproperties= new ArrayList<>();
         listofadductmproperties.add(new SimpleIntegerProperty(1));
         listofadductmproperties.add(new SimpleIntegerProperty(1));
@@ -135,6 +144,9 @@ public class Session {
         listofadductmproperties.add(new SimpleIntegerProperty(1));
         listofadductmproperties.add(new SimpleIntegerProperty());
         listofadductmproperties.add(new SimpleIntegerProperty());
+        for (int i = 8; i<43; i++) {
+            listofadductmproperties.add(new SimpleIntegerProperty());
+        }
         
     }
 

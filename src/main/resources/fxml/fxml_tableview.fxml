@@ -15,7 +15,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.collections.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="826.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.FXMLTableViewController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="910.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.FXMLTableViewController">
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="826.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
@@ -89,64 +89,295 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <AnchorPane fx:id="AdductAnchor" layoutX="-4.0" layoutY="36.0">
-                                       <children>
-                                          <TextField fx:id="AdC7" layoutX="174.0" layoutY="211.0" prefHeight="25.0" prefWidth="30.0" />
-                                          <TextField fx:id="AdName1" layoutX="65.0" layoutY="23.0" prefHeight="25.0" prefWidth="80.0" text="Test">
-                                             <opaqueInsets>
-                                                <Insets />
-                                             </opaqueInsets></TextField>
-                                          <Label fx:id="label21211111" alignment="CENTER" layoutX="44.0" layoutY="178.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
-                                          <Separator layoutX="155.0" orientation="VERTICAL" prefHeight="239.0" prefWidth="11.0" />
-                                          <Separator layoutX="9.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="239.0" prefWidth="11.0" />
-                                          <Label fx:id="Adlabel4" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="234.0" layoutY="121.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
-                                          <TextField fx:id="AdM3" layoutX="25.0" layoutY="86.0" prefHeight="25.0" prefWidth="25.0" />
-                                          <TextField fx:id="AdMass2" layoutX="273.0" layoutY="54.0" prefHeight="25.0" prefWidth="110.0" />
-                                          <TextField fx:id="AdM6" layoutX="25.0" layoutY="179.0" prefHeight="25.0" prefWidth="25.0" />
-                                          <Label fx:id="Adlabel3" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="234.0" layoutY="90.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
-                                          <Label fx:id="label21" alignment="CENTER" layoutX="65.0" layoutY="4.0" prefHeight="17.0" prefWidth="80.0" text="Ion Name" textAlignment="CENTER" />
-                                          <TextField fx:id="AdMass3" layoutX="273.0" layoutY="85.0" prefHeight="25.0" prefWidth="110.0" />
-                                          <TextField fx:id="AdM5" layoutX="25.0" layoutY="148.0" prefHeight="25.0" prefWidth="25.0" />
-                                          <TextField fx:id="AdM4" layoutX="25.0" layoutY="117.0" prefHeight="25.0" prefWidth="25.0" />
-                                          <TextField fx:id="AdName6" layoutX="65.0" layoutY="179.0" prefHeight="25.0" prefWidth="80.0" />
-                                          <TextField fx:id="AdName7" layoutX="65.0" layoutY="210.0" prefHeight="25.0" prefWidth="80.0" />
-                                          <Label fx:id="Adlabel6" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="234.0" layoutY="183.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
-                                          <TextField fx:id="AdName3" layoutX="65.0" layoutY="86.0" prefHeight="25.0" prefWidth="80.0" />
-                                          <Label fx:id="label212" alignment="CENTER" layoutX="44.0" layoutY="26.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
-                                          <Separator layoutX="12.0" prefHeight="3.0" prefWidth="387.0" />
-                                          <TextField fx:id="AdName2" layoutX="65.0" layoutY="55.0" prefHeight="25.0" prefWidth="80.0" />
-                                          <TextField fx:id="AdName4" layoutX="65.0" layoutY="117.0" prefHeight="25.0" prefWidth="80.0" />
-                                          <Label fx:id="label212111111" alignment="CENTER" layoutX="44.0" layoutY="209.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
-                                          <Label fx:id="label2121111" alignment="CENTER" layoutX="44.0" layoutY="147.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
-                                          <Label fx:id="Adlabel1" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="234.0" layoutY="27.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
-                                          <Separator layoutX="216.0" layoutY="1.0" orientation="VERTICAL" prefHeight="239.0" prefWidth="11.0" />
-                                          <TextField fx:id="AdMass5" layoutX="273.0" layoutY="147.0" prefHeight="25.0" prefWidth="110.0" />
-                                          <Label fx:id="label2111" alignment="CENTER" layoutX="138.0" layoutY="4.0" prefHeight="17.0" prefWidth="102.0" text="Charge" />
-                                          <Label fx:id="label2121" alignment="CENTER" layoutX="44.0" layoutY="58.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
-                                          <TextField fx:id="AdC3" layoutX="174.0" layoutY="87.0" prefHeight="25.0" prefWidth="30.0" />
-                                          <Label fx:id="Adlabel7" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="234.0" layoutY="214.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
-                                          <Label fx:id="Adlabel2" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="234.0" layoutY="59.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
-                                          <TextField fx:id="AdC1" layoutX="174.0" layoutY="24.0" prefHeight="25.0" prefWidth="30.0" />
-                                          <TextField fx:id="AdC4" layoutX="174.0" layoutY="118.0" prefHeight="25.0" prefWidth="30.0" />
-                                          <TextField fx:id="AdMass7" layoutX="273.0" layoutY="209.0" prefHeight="25.0" prefWidth="110.0" />
-                                          <Label fx:id="Adlabel5" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="234.0" layoutY="152.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
-                                          <TextField fx:id="AdName5" layoutX="65.0" layoutY="148.0" prefHeight="25.0" prefWidth="80.0" />
-                                          <TextField fx:id="AdMass4" layoutX="273.0" layoutY="116.0" prefHeight="25.0" prefWidth="110.0" />
-                                          <Label fx:id="label21211" alignment="CENTER" layoutX="44.0" layoutY="85.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
-                                          <Label fx:id="label211" alignment="CENTER" layoutX="234.0" layoutY="2.0" prefHeight="18.0" prefWidth="149.0" text="Ion Mass" />
-                                          <TextField fx:id="AdMass6" layoutX="273.0" layoutY="178.0" prefHeight="25.0" prefWidth="110.0" />
-                                          <TextField fx:id="AdM1" layoutX="25.0" layoutY="23.0" prefHeight="25.0" prefWidth="25.0" />
-                                          <Label fx:id="label212111" alignment="CENTER" layoutX="44.0" layoutY="116.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
-                                          <TextField fx:id="AdMass1" layoutX="273.0" layoutY="22.0" prefHeight="25.0" prefWidth="110.0" />
-                                          <Separator layoutX="14.0" layoutY="239.0" prefHeight="3.0" prefWidth="385.0" />
-                                          <TextField fx:id="AdC2" layoutX="174.0" layoutY="56.0" prefHeight="25.0" prefWidth="30.0" />
-                                          <TextField fx:id="AdC6" layoutX="174.0" layoutY="180.0" prefHeight="25.0" prefWidth="30.0" />
-                                          <TextField fx:id="AdC5" layoutX="174.0" layoutY="149.0" prefHeight="25.0" prefWidth="30.0" />
-                                          <TextField fx:id="AdM7" layoutX="25.0" layoutY="210.0" prefHeight="25.0" prefWidth="25.0" />
-                                          <TextField fx:id="AdM2" layoutX="25.0" layoutY="55.0" prefHeight="25.0" prefWidth="25.0" />
-                                          <Separator layoutX="394.0" layoutY="1.0" orientation="VERTICAL" prefHeight="239.0" prefWidth="11.0" />
-                                       </children>
-                                    </AnchorPane>
+                                    <ScrollPane layoutX="-4.0" layoutY="35.0" prefViewportHeight="673.0" prefViewportWidth="396.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                                       <content>
+                                          <AnchorPane>
+                                             <children>
+                                                <TextField fx:id="AdMass11" layoutX="264.0" layoutY="333.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName19" layoutX="56.0" layoutY="585.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label21212" alignment="CENTER" layoutX="35.0" layoutY="275.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM18" layoutX="16.0" layoutY="554.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdC3" layoutX="165.0" layoutY="86.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC6" layoutX="165.0" layoutY="179.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName10" layoutX="56.0" layoutY="303.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdM2" layoutX="16.0" layoutY="54.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label212111" alignment="CENTER" layoutX="35.0" layoutY="115.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="Adlabel10" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="307.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM9" layoutX="16.0" layoutY="272.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdMass2" layoutX="264.0" layoutY="53.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdC5" layoutX="165.0" layoutY="148.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName3" layoutX="56.0" layoutY="85.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC13" layoutX="165.0" layoutY="397.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="Adlabel19" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="589.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM20" layoutX="16.0" layoutY="616.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdM10" layoutX="16.0" layoutY="303.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel21" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="651.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel9" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="276.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel20" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="620.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel6" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="182.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdName8" layoutX="56.0" layoutY="240.0" prefHeight="25.0" prefWidth="80.0" text="Test">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </TextField>
+                                                <Label fx:id="label212111111" alignment="CENTER" layoutX="35.0" layoutY="208.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="label2121113" alignment="CENTER" layoutX="35.0" layoutY="553.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdC10" layoutX="165.0" layoutY="304.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName20" layoutX="56.0" layoutY="616.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdM3" layoutX="16.0" layoutY="85.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label21211113" alignment="CENTER" layoutX="35.0" layoutY="584.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="Adlabel13" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="400.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM1" layoutX="16.0" layoutY="22.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Separator layoutX="207.0" orientation="VERTICAL" prefHeight="239.0" prefWidth="11.0" AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="1.0" />
+                                                <Label fx:id="label21211112" alignment="CENTER" layoutX="35.0" layoutY="364.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName7" layoutX="56.0" layoutY="209.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label2111" alignment="CENTER" layoutX="129.0" layoutY="3.0" prefHeight="17.0" prefWidth="102.0" text="Charge" />
+                                                <TextField fx:id="AdName5" layoutX="56.0" layoutY="147.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass7" layoutX="264.0" layoutY="208.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="Adlabel18" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="558.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM6" layoutX="16.0" layoutY="178.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdC12" layoutX="165.0" layoutY="366.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="Adlabel15" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="464.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdC2" layoutX="165.0" layoutY="55.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC15" layoutX="165.0" layoutY="461.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName4" layoutX="56.0" layoutY="116.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label2123" alignment="CENTER" layoutX="35.0" layoutY="463.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName11" layoutX="56.0" layoutY="334.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="Adlabel14" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="431.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM11" layoutX="16.0" layoutY="334.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel4" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="120.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="label21" alignment="CENTER" layoutX="56.0" layoutY="3.0" prefHeight="17.0" prefWidth="80.0" text="Ion Name" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM4" layoutX="16.0" layoutY="116.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdM12" layoutX="16.0" layoutY="365.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdC16" layoutX="165.0" layoutY="493.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName17" layoutX="56.0" layoutY="523.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label21211" alignment="CENTER" layoutX="35.0" layoutY="84.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="Adlabel12" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="369.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="label2121111111" alignment="CENTER" layoutX="35.0" layoutY="426.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM21" layoutX="16.0" layoutY="647.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label2121111112" alignment="CENTER" layoutX="35.0" layoutY="646.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM17" layoutX="16.0" layoutY="523.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label2121112" alignment="CENTER" layoutX="35.0" layoutY="333.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdMass9" layoutX="264.0" layoutY="271.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass10" layoutX="264.0" layoutY="302.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass21" layoutX="264.0" layoutY="646.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdC20" layoutX="165.0" layoutY="617.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="label2122" alignment="CENTER" layoutX="35.0" layoutY="243.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdMass13" layoutX="264.0" layoutY="395.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName14" layoutX="56.0" layoutY="427.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdM15" layoutX="16.0" layoutY="460.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label212112" alignment="CENTER" layoutX="35.0" layoutY="302.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM8" layoutX="16.0" layoutY="240.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdC19" layoutX="165.0" layoutY="586.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC21" layoutX="165.0" layoutY="648.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="Adlabel17" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="527.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel3" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="89.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdMass18" layoutX="264.0" layoutY="553.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName16" layoutX="56.0" layoutY="492.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass4" layoutX="264.0" layoutY="115.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="Adlabel5" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="151.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel2" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="58.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdName6" layoutX="56.0" layoutY="178.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC11" layoutX="165.0" layoutY="335.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdMass5" layoutX="264.0" layoutY="146.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdM19" layoutX="16.0" layoutY="585.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdM14" layoutX="16.0" layoutY="427.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdName2" layoutX="56.0" layoutY="54.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdName13" layoutX="56.0" layoutY="396.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label2121111" alignment="CENTER" layoutX="35.0" layoutY="146.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="Adlabel11" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="338.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdMass20" layoutX="264.0" layoutY="615.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdM16" layoutX="16.0" layoutY="492.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel16" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="496.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="label212113" alignment="CENTER" layoutX="35.0" layoutY="522.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdMass16" layoutX="264.0" layoutY="492.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdC14" layoutX="165.0" layoutY="428.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="Adlabel7" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="213.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Separator layoutX="146.0" orientation="VERTICAL" prefHeight="239.0" prefWidth="11.0" AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="1.0" />
+                                                <Label fx:id="label212111113" alignment="CENTER" layoutX="35.0" layoutY="615.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdMass14" layoutX="264.0" layoutY="426.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName18" layoutX="56.0" layoutY="554.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="Adlabel1" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="26.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdMass3" layoutX="264.0" layoutY="84.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass8" layoutX="264.0" layoutY="239.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName1" layoutX="56.0" layoutY="22.0" prefHeight="25.0" prefWidth="80.0" text="Test">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </TextField>
+                                                <Label fx:id="label21213" alignment="CENTER" layoutX="35.0" layoutY="495.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdC7" layoutX="165.0" layoutY="210.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName9" layoutX="56.0" layoutY="272.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass12" layoutX="264.0" layoutY="364.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="label211" alignment="CENTER" layoutX="225.0" layoutY="1.0" prefHeight="18.0" prefWidth="149.0" text="Ion Mass" />
+                                                <Label fx:id="label21211111" alignment="CENTER" layoutX="35.0" layoutY="177.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="label2121" alignment="CENTER" layoutX="35.0" layoutY="57.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM7" layoutX="16.0" layoutY="209.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdName15" layoutX="56.0" layoutY="460.0" prefHeight="25.0" prefWidth="80.0" text="Test">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </TextField>
+                                                <TextField fx:id="AdM13" layoutX="16.0" layoutY="396.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdMass6" layoutX="264.0" layoutY="177.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdC9" layoutX="165.0" layoutY="273.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdMass17" layoutX="264.0" layoutY="522.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass1" layoutX="264.0" layoutY="21.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName12" layoutX="56.0" layoutY="365.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC4" layoutX="165.0" layoutY="117.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdMass15" layoutX="264.0" layoutY="459.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass19" layoutX="264.0" layoutY="584.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="label212111112" alignment="CENTER" layoutX="35.0" layoutY="395.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM5" layoutX="16.0" layoutY="147.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label212" alignment="CENTER" layoutX="35.0" layoutY="25.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName21" layoutX="56.0" layoutY="647.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC18" layoutX="165.0" layoutY="555.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC1" layoutX="165.0" layoutY="23.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="Adlabel8" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="244.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdC17" layoutX="165.0" layoutY="524.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC8" layoutX="165.0" layoutY="241.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC29" layoutX="165.0" layoutY="899.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC38" layoutX="165.0" layoutY="1182.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="Adlabel29" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="902.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdC22" layoutX="165.0" layoutY="681.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC39" layoutX="165.0" layoutY="1213.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName42" layoutX="56.0" layoutY="1305.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label2124" alignment="CENTER" layoutX="35.0" layoutY="683.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM26" layoutX="16.0" layoutY="805.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label2121111121" alignment="CENTER" layoutX="35.0" layoutY="1053.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdMass40" layoutX="264.0" layoutY="1242.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass36" layoutX="264.0" layoutY="1117.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdC25" layoutX="165.0" layoutY="775.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName33" layoutX="56.0" layoutY="1023.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass22" layoutX="264.0" layoutY="679.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass38" layoutX="264.0" layoutY="1180.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdC30" layoutX="165.0" layoutY="931.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdMass27" layoutX="264.0" layoutY="835.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdM34" layoutX="16.0" layoutY="1054.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdName36" layoutX="56.0" layoutY="1118.0" prefHeight="25.0" prefWidth="80.0" text="Test">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </TextField>
+                                                <TextField fx:id="AdM28" layoutX="16.0" layoutY="867.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label21214" alignment="CENTER" layoutX="35.0" layoutY="715.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="label212111114" alignment="CENTER" layoutX="35.0" layoutY="835.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdMass33" layoutX="264.0" layoutY="1022.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName30" layoutX="56.0" layoutY="930.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC28" layoutX="165.0" layoutY="868.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="label212131" alignment="CENTER" layoutX="35.0" layoutY="1153.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName22" layoutX="56.0" layoutY="680.0" prefHeight="25.0" prefWidth="80.0" text="Test">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </TextField>
+                                                <TextField fx:id="AdMass29" layoutX="264.0" layoutY="897.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass24" layoutX="264.0" layoutY="742.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="Adlabel22" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="684.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdName39" layoutX="56.0" layoutY="1212.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass35" layoutX="264.0" layoutY="1084.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="label2121111131" alignment="CENTER" layoutX="35.0" layoutY="1273.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="Adlabel28" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="871.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdC35" layoutX="165.0" layoutY="1086.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdMass37" layoutX="264.0" layoutY="1150.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="label2121131" alignment="CENTER" layoutX="35.0" layoutY="1180.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="Adlabel37" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1154.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM37" layoutX="16.0" layoutY="1150.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdMass41" layoutX="264.0" layoutY="1273.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="Adlabel32" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="996.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="label21211114" alignment="CENTER" layoutX="35.0" layoutY="804.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName34" layoutX="56.0" layoutY="1054.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdName23" layoutX="56.0" layoutY="712.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdM35" layoutX="16.0" layoutY="1085.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdM40" layoutX="16.0" layoutY="1243.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdMass26" layoutX="264.0" layoutY="804.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdC32" layoutX="165.0" layoutY="993.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName27" layoutX="56.0" layoutY="836.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="Adlabel23" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="716.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel26" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="809.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdMass25" layoutX="264.0" layoutY="773.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName37" layoutX="56.0" layoutY="1150.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass39" layoutX="264.0" layoutY="1211.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="Adlabel24" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="747.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel38" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1185.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdC42" layoutX="165.0" layoutY="1306.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC40" layoutX="165.0" layoutY="1244.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdM29" layoutX="16.0" layoutY="898.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label2121121" alignment="CENTER" layoutX="35.0" layoutY="960.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM36" layoutX="16.0" layoutY="1118.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdName35" layoutX="56.0" layoutY="1085.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass34" layoutX="264.0" layoutY="1053.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="label21221" alignment="CENTER" layoutX="35.0" layoutY="901.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdC41" layoutX="165.0" layoutY="1275.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdMass42" layoutX="264.0" layoutY="1304.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass31" layoutX="264.0" layoutY="960.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdMass30" layoutX="264.0" layoutY="929.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <Label fx:id="label21211121" alignment="CENTER" layoutX="35.0" layoutY="991.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM38" layoutX="16.0" layoutY="1181.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label21211111121" alignment="CENTER" layoutX="35.0" layoutY="1304.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM42" layoutX="16.0" layoutY="1305.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label21211111111" alignment="CENTER" layoutX="35.0" layoutY="1084.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="Adlabel33" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1027.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="label212114" alignment="CENTER" layoutX="35.0" layoutY="742.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName38" layoutX="56.0" layoutY="1181.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC37" layoutX="165.0" layoutY="1151.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdM33" layoutX="16.0" layoutY="1023.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdM25" layoutX="16.0" layoutY="774.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel25" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="778.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM32" layoutX="16.0" layoutY="992.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel35" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1089.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdName32" layoutX="56.0" layoutY="992.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label21231" alignment="CENTER" layoutX="35.0" layoutY="1121.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName25" layoutX="56.0" layoutY="774.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC36" layoutX="165.0" layoutY="1119.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC23" layoutX="165.0" layoutY="713.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="Adlabel36" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1122.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdC33" layoutX="165.0" layoutY="1024.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdM27" layoutX="16.0" layoutY="836.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel39" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1216.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdMass28" layoutX="264.0" layoutY="866.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdName26" layoutX="56.0" layoutY="805.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdName28" layoutX="56.0" layoutY="867.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <Label fx:id="label212111121" alignment="CENTER" layoutX="35.0" layoutY="1022.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM22" layoutX="16.0" layoutY="680.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel34" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1058.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="label212111131" alignment="CENTER" layoutX="35.0" layoutY="1242.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM24" layoutX="16.0" layoutY="743.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdName41" layoutX="56.0" layoutY="1274.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC31" layoutX="165.0" layoutY="962.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <Label fx:id="label21211131" alignment="CENTER" layoutX="35.0" layoutY="1211.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <Label fx:id="label2121111113" alignment="CENTER" layoutX="35.0" layoutY="866.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName29" layoutX="56.0" layoutY="898.0" prefHeight="25.0" prefWidth="80.0" text="Test">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </TextField>
+                                                <Label fx:id="Adlabel27" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="840.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel41" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1278.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel30" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="934.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="Adlabel42" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1309.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdM31" layoutX="16.0" layoutY="961.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdM41" layoutX="16.0" layoutY="1274.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel40" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="1247.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <TextField fx:id="AdC34" layoutX="165.0" layoutY="1055.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdName24" layoutX="56.0" layoutY="743.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC26" layoutX="165.0" layoutY="806.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdMass23" layoutX="264.0" layoutY="711.0" prefHeight="25.0" prefWidth="110.0" />
+                                                <TextField fx:id="AdM30" layoutX="16.0" layoutY="930.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="Adlabel31" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="225.0" layoutY="965.0" prefHeight="17.0" prefWidth="40.0" text="M +" textAlignment="RIGHT" />
+                                                <Label fx:id="label2121114" alignment="CENTER" layoutX="35.0" layoutY="773.0" prefHeight="25.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdM23" layoutX="16.0" layoutY="712.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <TextField fx:id="AdName31" layoutX="56.0" layoutY="961.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdC27" layoutX="165.0" layoutY="837.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdC24" layoutX="165.0" layoutY="744.0" prefHeight="25.0" prefWidth="30.0" />
+                                                <TextField fx:id="AdM39" layoutX="16.0" layoutY="1212.0" prefHeight="25.0" prefWidth="25.0" />
+                                                <Label fx:id="label212121" alignment="CENTER" layoutX="35.0" layoutY="933.0" prefHeight="17.0" prefWidth="27.0" text="M" textAlignment="CENTER" />
+                                                <TextField fx:id="AdName40" layoutX="56.0" layoutY="1243.0" prefHeight="25.0" prefWidth="80.0" />
+                                                <TextField fx:id="AdMass32" layoutX="264.0" layoutY="991.0" prefHeight="25.0" prefWidth="110.0" />
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </ScrollPane>
                                     <CheckBox fx:id="toggleadductgeneration" layoutX="18.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleAdductGeneration" selected="true" text="Generate additional adducts" />
                                  </children>
                               </AnchorPane>
