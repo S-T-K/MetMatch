@@ -1322,6 +1322,7 @@ public class Slice {
         float max = Float.MIN_VALUE;
         //number of consecutive signals
         int nocs = 0;
+        long sum = 0;
         int minnocs = (int) (file.getSession().getMinPeakLength().floatValue()*60*file.getScanspersecond());
         for (int i = 0; i<MZArray.length; i++) {
             if (MZArray[i]==0||MZArray[i]<minMZ||MZArray[i]>maxMZ) {
@@ -1337,12 +1338,19 @@ public class Slice {
                 if (IntArray[i]>max) {
                     max = IntArray[i];
                 }
+                sum+=IntArray[i];
                 nocs++;
             }
         }
         if (nocs>=minnocs) {
                     empty = false;
                 }
+        //rough baseline calculation
+        sum/=IntArray.length;
+        if (max-sum<file.getSession().getBaseline()) {
+            System.out.println("noise deleted");
+            empty = true;
+        }
         
         if (!empty) {
             adduct.getListofSlices().put(file, this);
