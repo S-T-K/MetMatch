@@ -96,7 +96,7 @@ public class Fxml_adductviewController implements Initializable {
     CheckMenuItem EICToggle, NEICToggle, MZToggle, ShiftToggle;
     
     @FXML
-    ToggleButton EICMode, PeakMode, addPeak;
+    ToggleButton EICMode, PeakMode, addPeak, weighttoggle;
     
     @FXML
     ContextMenu contextMenu;
@@ -1093,6 +1093,84 @@ chart.setOnMouseReleased((MouseEvent event) -> {
         
     }
     
+    public void addChartWeightEvents(XYChart chart) {
+        chart.setOnMousePressed((MouseEvent event) -> {
+if (event.isPrimaryButtonDown()) {
+    Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
+    double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
+    double y = chart.getYAxis().sceneToLocal(mouseSceneCoords).getY();
+
+    System.out.println("" +
+        chart.getXAxis().getValueForDisplay(x) + ",  " +
+        chart.getYAxis().getValueForDisplay(y)
+    );
+   
+    line = new XYChart.Series();
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
+    chart.getData().add(line);
+    chart.applyCss();
+    
+    Group group = (Group) line.getNode();
+    Path area = (Path) group.getChildren().get(0);
+    Path invisible = (Path) group.getChildren().get(1);
+    area.setStroke(Color.GREEN);
+    area.setFill(Color.LIGHTGREEN.deriveColor(1, 1, 1, 0.3));
+    area.setStrokeWidth(1.0);
+    invisible.setVisible(false);
+    
+}});
+        
+chart.setOnMouseDragged((MouseEvent event) -> {
+    if (event.isPrimaryButtonDown()) {
+
+    Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
+    double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
+    double y = chart.getYAxis().sceneToLocal(mouseSceneCoords).getY();
+
+    System.out.println("" +
+        chart.getXAxis().getValueForDisplay(x) + ",  " +
+        chart.getYAxis().getValueForDisplay(y)
+    );
+   
+    
+    
+    ((XYChart.Data)line.getData().get(1)).setXValue(chart.getXAxis().getValueForDisplay(x));
+    ((XYChart.Data)line.getData().get(1)).setYValue(chart.getYAxis().getValueForDisplay(y));
+    
+    
+}});
+       
+chart.setOnMouseReleased((MouseEvent event) -> {
+
+    
+    
+    double x1 = (double) ((XYChart.Data)line.getData().get(0)).getXValue();
+    double x2 = (double) ((XYChart.Data)line.getData().get(1)).getXValue();
+    
+    if (x1!=x2) {
+   
+    Entry adduct = charttoadduct(chart);
+    List<RawDataFile> list = session.getSelectedFiles();
+    for (int i = 0; i<list.size(); i++) {
+        adduct.setPeakWeight(list.get(i),weightslider.getValue(), (float)x1, (float)x2);
+    }
+   
+    
+ 
+    chart.getData().remove(line);
+    line = null;
+    
+}
+    else  {
+        chart.getData().remove(line);
+    line = null;
+        
+    }});
+        
+        
+    }
+    
     public void clearChartMouseEvents(XYChart chart) {
         chart.setOnMousePressed(null);
         
@@ -1117,9 +1195,28 @@ chart.setOnMouseReleased(null);
     
     public void peakPickMode() {
         if (addPeak.selectedProperty().get()) {
+            weighttoggle.selectedProperty().set(false);
         for (XYChart chart:charts) {
            
              addChartMouseEvents(chart);
+            
+         }
+        } else {
+            for (XYChart chart:charts) {
+           
+             clearChartMouseEvents(chart);
+            
+         }
+        }
+        
+    }
+    
+    public void peakWeightMode() {
+        if (weighttoggle.selectedProperty().get()) {
+            addPeak.selectedProperty().set(false);
+        for (XYChart chart:charts) {
+           
+             addChartWeightEvents(chart);
             
          }
         } else {

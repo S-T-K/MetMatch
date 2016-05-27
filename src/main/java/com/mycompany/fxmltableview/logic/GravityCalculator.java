@@ -61,7 +61,7 @@ public class GravityCalculator {
     
      public float[] gravity(int count, float[][] matrix, float[] centroids) throws InterruptedException {
         
-        float[] counts = new float[centroids.length];
+        long[] counts = new long[centroids.length];
         for (int i = 0; i<counts.length; i++) {
             counts[i]=1;
         }
@@ -111,8 +111,8 @@ public class GravityCalculator {
             }
             if (maxint>-1) {
             for (int l = xstart; l<=xend; l++) {
-                ncentroids[l] = (ncentroids[l]*counts[l]+maxint*1)/(counts[l]+1);
-                counts[l]++;
+                ncentroids[l] = (ncentroids[l]*counts[l]+maxint*max)/(counts[l]+max);
+                counts[l]+=max;
             }
             }
         }

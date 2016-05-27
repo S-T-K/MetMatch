@@ -1770,8 +1770,22 @@ public class ChartGenerator {
                     if (slice.getListofPeaks()!=null){
                     for (int p = 0; p<slice.getListofPeaks().size(); p++) {
                          XYChart.Data data = new XYChart.Data(list.get(i).getRT(),slice.getListofPeaks().get(p).getIndexshift()*60);
-                          Rectangle rect = new Rectangle(1.5,1.5);
-                    rect.setFill(Color.BLACK);
+                         float weight = slice.getListofPeaks().get(p).getWeight();
+                         //get size, max 5
+                         float size = Math.abs(weight)/1000000f;
+                         size*=5;
+                         if (size<1.5) {
+                             size = 1.5f;
+                         }
+                          Rectangle rect = new Rectangle(size,size);
+                          
+                          if (weight>1) {
+                              rect.setFill(Color.GREEN);
+                          }else if (weight<0) {
+                              rect.setFill(Color.RED);
+                          } else {
+                              rect.setFill(Color.BLACK);
+                          }
                     rect.setOpacity(0.5);
                     data.setNode(rect);
                          backSeries.getData().add(data);
