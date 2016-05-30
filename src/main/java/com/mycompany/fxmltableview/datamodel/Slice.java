@@ -294,9 +294,9 @@ public class Slice {
  public void SavitzkyGolayPeakPicking() throws InterruptedException {
       //baseline correct IntensityArray
          
-         if (adduct.getNum()==84823) {
-             System.out.println("Starting on Slice: " + adduct.getNum()) ;
-         }
+//         if (adduct.getNum()==84823) {
+//             System.out.println("Starting on Slice: " + adduct.getNum()) ;
+//         }
             double[] correctedIntArray = new double[IntArray.length];
             for ( int j = 0; j<IntArray.length; j++)  {
                 if (IntArray[j]>=adduct.getSession().getBaseline()) {
@@ -305,13 +305,22 @@ public class Slice {
                 
             }
      
+            
             CurveSmooth csm = new CurveSmooth(correctedIntArray);
-            csm.savitzkyGolay(40);
+            csm.savitzkyGolay(30);
+           
             
            
             double[] max = csm.getMaximaSavitzkyGolay()[0];
      double[] minima = csm.getMinimaSavitzkyGolay()[0];
-     
+
+//CurveSmooth csm = new CurveSmooth(correctedIntArray);
+//csm.movingAverage(30);
+//
+//        double[] max = csm.getMaximaMovingAverage()[0];
+//     double[] minima = csm.getMinimaMovingAverage()[0];
+
+    
      //create max and min, min holding the starts/ends of the peaks, and max holding the index
      double[]min = new double[max.length+1];
      int offsetmin;
@@ -334,7 +343,8 @@ public class Slice {
      }
      
      
-    
+    //System.out.println(this + "Max: " + Arrays.toString(max));
+    //System.out.println(this + "Min: " + Arrays.toString(min));
      
      if (listofPeaks==null) {
          listofPeaks = new ArrayList<Peak>();
@@ -417,9 +427,9 @@ public class Slice {
 //         }
 //         
 //     }
-if (adduct.getNum()==4716) {
-             System.out.println("Starting on Slice: " + adduct.getNum()) ;
-         }
+//if (adduct.getNum()==4716) {
+//             System.out.println("Starting on Slice: " + adduct.getNum()) ;
+//         }
 
      CurveSmooth csm = new CurveSmooth(PropArray);
     csm.movingAverage(3);
@@ -993,14 +1003,14 @@ if (adduct.getNum()==4716) {
         
         
         
-        System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
+        //System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
 //        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  getScorepeakfound());
         }
         
         if (fittedpeak==null){
             int RTindex = Math.abs(Arrays.binarySearch(file.getRTArray(), shift+adduct.getRT()));
             fitabove = (IntArray[RTindex-RTstart]-file.getSession().getBaseline())/avgInt;
-            System.out.println("Fit Above = " + fitabove);
+            //System.out.println("Fit Above = " + fitabove);
         }
         
     }
@@ -1359,7 +1369,7 @@ if (adduct.getNum()==4716) {
         sum/=IntArray.length;
         avgInt=sum;
         if (max-sum<file.getSession().getBaseline()) {
-            System.out.println("noise deleted");
+            //System.out.println("noise deleted");
             empty = true;
         }
         

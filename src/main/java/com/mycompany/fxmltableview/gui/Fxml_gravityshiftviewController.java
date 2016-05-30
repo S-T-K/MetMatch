@@ -233,12 +233,12 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                 //if ready animate
                             } else {
                                 list.get(i).peakpickOGroup(file);
-                                System.out.println(i + " of " + list.size() + " OGroups calculated");
+                                //System.out.println(i + " of " + list.size() + " OGroups calculated");
                                 done++;
                                 this.updateProgress(done, list.size());
                             }
                         }
-                        System.out.println("Size of Queue: " + queue.size());
+                        //System.out.println("Size of Queue: " + queue.size());
                         //go through queue until it is empty
                         double picktime = 0;
                         while (queue.size() > 0) {
@@ -256,7 +256,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 
                                 }
                             }
-                            System.out.println("Size of Queue: " + queue.size());
+                            //System.out.println("Size of Queue: " + queue.size());
                         }
 
                         latchpeak.countDown();
@@ -421,6 +421,11 @@ public class Fxml_gravityshiftviewController implements Initializable {
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
+                
+                if (session.getSelectedFiles().size()<1) {
+                    session.getAllFiles().get(0).getDataset().getController().getBatchFileView().getSelectionModel().select(session.getAllFiles().get(0));
+                }
+                
         
         float[] centroids = new float[list.size()];
                 for (int d = 0; d < session.getListofDatasets().size(); d++) {
@@ -451,12 +456,12 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                             } else {
                                                 list.get(i).peakpickOGroup(currentfile);
                                                 list.get(i).getOGroupPropArraySmooth(currentfile, samplematrix, i);
-                                                System.out.println(i + " of " + list.size() + " OGroups calculated");
+                                                //System.out.println(i + " of " + list.size() + " OGroups calculated");
                                                 done++;
                                                 updateProgress(done, list.size());
                                             }
                                         }
-                                        System.out.println("Size of Queue: " + queue.size());
+                                        //System.out.println("Size of Queue: " + queue.size());
                                         //go through queue until it is empty
                                         double picktime = 0;
                                         while (queue.size() > 0) {
@@ -475,7 +480,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                                    
                                                 }
                                             }
-                                            System.out.println("Size of Queue: " + queue.size());
+                                            //System.out.println("Size of Queue: " + queue.size());
                                         }
 
                                         latchpeak.countDown();
@@ -1270,7 +1275,7 @@ menu.setDisable(false);
                 weights[i] = max;
                 ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
             }
-            System.out.println(i);
+            //System.out.println(i);
         }
 
         //iterate
@@ -1317,7 +1322,7 @@ menu.setDisable(false);
                     nweights[i] = max;
                     ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]);
                 }
-                System.out.println(i);
+//                System.out.println(i);
             }
 
             centroids = ncentroids;
@@ -1393,7 +1398,7 @@ menu.setDisable(false);
 //        System.out.println ("start: " +  start + ", end: " +end);
 //        System.out.println ("maxint: " + maxint);
         if (start - end == 0) {
-            System.out.println(start + ":      maxint: " + maxint);
+//            System.out.println(start + ":      maxint: " + maxint);
             ((XYChart.Data) midSeries.getData().get(start)).YValueProperty().setValue((maxint - 49) * 1.8);
         } else {
 
@@ -1589,7 +1594,7 @@ menu.setDisable(false);
             public Void call() throws IOException, InterruptedException {
 
                 
-                System.out.println("Files: " + files);
+//                System.out.println("Files: " + files);
                 int filesdone= 0;
                 
                 
@@ -1615,12 +1620,12 @@ menu.setDisable(false);
                                             } else {
                                                 olist.get(i).peakpickOGroup(currentfile);
                                                 olist.get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
-                                                System.out.println(i + " of " + olist.size() + " OGroups calculated");
+//                                                System.out.println(i + " of " + olist.size() + " OGroups calculated");
        done++;
        this.updateProgress(done+filesdone*olist.size(), olist.size()*files);
                                             }
                                         }
-                                        System.out.println("Size of Queue: " + queue.size());
+//                                        System.out.println("Size of Queue: " + queue.size());
                                         //go through queue until it is empty
                                         double picktime = 0;
                                         while (queue.size() > 0) {
@@ -1639,7 +1644,7 @@ done++;
        this.updateProgress(done+filesdone*olist.size(), olist.size()*files);
                                                 }
                                             }
-                                            System.out.println("Size of Queue: " + queue.size());
+//                                            System.out.println("Size of Queue: " + queue.size());
                                         }
 
                                        

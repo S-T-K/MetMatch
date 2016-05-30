@@ -82,7 +82,7 @@ public class RawDataFile {
         this.session = session;
        
         mzshift = new SimpleFloatProperty();
-        pfound = new SimpleFloatProperty();
+        pfound = new SimpleFloatProperty(Float.NaN);
         avgcertainty = new SimpleFloatProperty();
         active = new SimpleBooleanProperty(true);
         pointer = 0;

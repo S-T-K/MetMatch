@@ -189,7 +189,7 @@ public class Fxml_adductviewController implements Initializable {
             TreeItem<Entry> AdductItem = metTable.getSelectionModel().getSelectedItem();
             OGroupItem = metTable.getSelectionModel().getSelectedItem().getParent();
             adductnumber = OGroupItem.getChildren().indexOf(AdductItem);
-            System.out.println(adductnumber);
+            //System.out.println(adductnumber);
         } else {
             entry = metTable.getSelectionModel().getSelectedItem().getValue();
             OGroupItem = metTable.getSelectionModel().getSelectedItem();
@@ -534,7 +534,7 @@ public class Fxml_adductviewController implements Initializable {
                                     node.toFront();
 
                                 }
-                                System.out.println("Scatter colored Red");
+                                //System.out.println("Scatter colored Red");
                             } else if (list.get(j).getNode().getClass().equals(Group.class)){
                                 ((Path)((Group) list.get(j).getNode()).getChildren().get(0)).setStroke(Color.RED);
                                 ((Path)((Group) list.get(j).getNode()).getChildren().get(0)).setFill(Color.RED.deriveColor(1, 1, 1, 0.15));
@@ -546,7 +546,7 @@ public class Fxml_adductviewController implements Initializable {
                                 node.toFront();
                                
                                 ((Path) node).setStroke(Color.RED);
-                                System.out.println("Line colored Red");
+                                //System.out.println("Line colored Red");
                             }
                         }}
                     } else {
@@ -560,7 +560,7 @@ public class Fxml_adductviewController implements Initializable {
                                     ((Rectangle) node).setFill(completeList.get(i).getColor());
 
                                 }
-                                System.out.println("Scatter colored normal");
+                                //System.out.println("Scatter colored normal");
                             } else if (list.get(j).getNode().getClass().equals(Group.class)){
 //                                Color c = completeList.get(i).getColor();
 //                                double[] color = new double[] {c.getRed(), c.getGreen(), c.getBlue()};
@@ -573,7 +573,7 @@ public class Fxml_adductviewController implements Initializable {
                                 //node.setEffect(hover);
                                 
                                 ((Path) node).setStroke(completeList.get(i).getColor());
-                                System.out.println("Line colored normal");
+                                //System.out.println("Line colored normal");
                             }}
                         }
 
@@ -891,7 +891,7 @@ public class Fxml_adductviewController implements Initializable {
                         @Override
                         public void run() {
                             scrollPane.setVvalue(scroll);
-                            System.out.println("Set to " + scroll);
+                            //System.out.println("Set to " + scroll);
                         }});
                             
                        
@@ -1286,7 +1286,9 @@ chart.setOnMouseReleased(null);
     }
     
     public void hideSlider() {
+        weighttoggle.setSelected(true);
         weightslider.setVisible(false);
+        peakWeightMode();
     }
     
 }

@@ -121,7 +121,7 @@ public class FXMLTableViewController implements Initializable {
     TabPane TabPane;
     
     @FXML
-    AnchorPane AdductAnchor;
+    AnchorPane adductanchor;
 
     //Check for changed parameters
     String oldPick;
@@ -554,6 +554,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         End.setDisable(true);
         paramMenu.setDisable(false);
         toggleadductgeneration.setDisable(true);
+        adductanchor.setDisable(true);
         
         session.prepare();
         
@@ -714,10 +715,10 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                             } else {
                                                 getMasterListofOGroups().get(i).peakpickOGroup(currentfile);
                                                 getMasterListofOGroups().get(i).getOGroupPropArraySmooth(currentfile, matrix, i);
-                                                System.out.println(i + " of " + getMasterListofOGroups().size() + " OGroups calculated");
+                                                //System.out.println(i + " of " + getMasterListofOGroups().size() + " OGroups calculated");
                                             }
                                         }
-                                        System.out.println("Size of Queue: " + queue.size());
+                                        //System.out.println("Size of Queue: " + queue.size());
                                         //go through queue until it is empty
                                         double picktime = 0;
                                         while (queue.size() > 0) {
@@ -734,7 +735,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                                     
                                                 }
                                             }
-                                            System.out.println("Size of Queue: " + queue.size());
+                                            //System.out.println("Size of Queue: " + queue.size());
                                         }
                                         
                                         latchpeak.countDown();
@@ -1532,7 +1533,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
     
     public void toggleAdductGeneration() {
         boolean toggle = !toggleadductgeneration.selectedProperty().get();
-        AdductAnchor.setDisable(toggle);
+        adductanchor.setDisable(toggle);
     }
     
 }

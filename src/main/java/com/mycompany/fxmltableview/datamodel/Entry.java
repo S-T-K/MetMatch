@@ -640,7 +640,7 @@ if (listofSlices.containsKey(file)) {
         float shiftintime = session.getProparraycalculator().getshiftintime(shift);
         
         this.OgroupShift.put(file, shiftintime);
-        System.out.println("New shift added");
+        //System.out.println("New shift added");
         
         
         
@@ -679,7 +679,7 @@ if (listofSlices.containsKey(file)) {
     }
     if (number>1)  {
         Ranges.put(file, (max-min));
-        System.out.println("Range: " + (max-min));
+        //System.out.println("Range: " + (max-min));
     }
         Scorefitabove.set(maxfitabove);
     

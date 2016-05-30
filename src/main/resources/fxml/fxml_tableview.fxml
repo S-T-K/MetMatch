@@ -91,7 +91,7 @@
                                  <children>
                                     <ScrollPane layoutX="-4.0" layoutY="35.0" prefViewportHeight="673.0" prefViewportWidth="396.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                                        <content>
-                                          <AnchorPane>
+                                          <AnchorPane fx:id="adductanchor">
                                              <children>
                                                 <TextField fx:id="AdMass11" layoutX="264.0" layoutY="333.0" prefHeight="25.0" prefWidth="110.0" />
                                                 <TextField fx:id="AdName19" layoutX="56.0" layoutY="585.0" prefHeight="25.0" prefWidth="80.0" />
@@ -385,7 +385,7 @@
                       </Tab>
                     </tabs>
                   </TabPane>
-                  <Button fx:id="paramButton" layoutX="40.0" layoutY="490.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#hideParameters" prefHeight="25.0" prefWidth="154.0" text="Apply" visible="false" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="480.0" />
+                  <Button fx:id="paramButton" layoutX="40.0" layoutY="490.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#hideParameters" prefHeight="25.0" prefWidth="154.0" text="Apply" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="0.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">
