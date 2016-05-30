@@ -55,6 +55,7 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
@@ -115,6 +116,9 @@ public class Fxml_gravityshiftviewController implements Initializable {
     
     @FXML
     MenuItem item1, item2;
+    
+    @FXML
+    Label processinglabel;
     
 
 //    @FXML
@@ -394,6 +398,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
         progress.setVisible(true);
+        processinglabel.setText("Picking Peaks... (Step 1 of 2)");
+        processinglabel.setVisible(true);
         olist = list;
         //get selected Entry
 
@@ -498,6 +504,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                         @Override
                                         public void run() {
                                            progress.progressProperty().unbind();
+                                            processinglabel.setText("Drawing Peaks... (Step 2 of 2)");
                                            progress.setProgress(-1d);
 
                                         }
@@ -514,6 +521,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                     });
                                 }
                                 progress.setVisible(false);
+                                processinglabel.setVisible(false);
                                 //calculation
                                 //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
                                
@@ -893,6 +901,7 @@ menu.setDisable(false);
         
         }
         progress.setVisible(false);
+        processinglabel.setVisible(false);
         //calculating.setVisible(false);
         return null;
             }
@@ -1569,6 +1578,8 @@ menu.setDisable(false);
        int files = filelist.size();
        
        progress.setVisible(true);
+        processinglabel.setText("Peak Picking... (Step 1 of 2)");
+        processinglabel.setVisible(true);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
@@ -1673,6 +1684,7 @@ done++;
                                         public void run() {
                                            progress.progressProperty().unbind();
                                            progress.setProgress(-1d);
+                                           processinglabel.setText("Drawing Charts... (Step 2 of 2)");
 
                                         }
                                     });
@@ -1681,6 +1693,8 @@ done++;
             showShift(olist);
             
             session.setPeakPickchanged(false);
+            paramToggle.setDisable(true);
+            menu.setDisable(true);
              return null;   
             }
 

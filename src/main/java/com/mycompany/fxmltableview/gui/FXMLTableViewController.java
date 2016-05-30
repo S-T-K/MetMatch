@@ -4,6 +4,7 @@ import com.mycompany.fxmltableview.datamodel.Batch;
 import com.mycompany.fxmltableview.datamodel.Dataset;
 import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.Entry.orderbyRT;
+import com.mycompany.fxmltableview.datamodel.Peak;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
 import com.mycompany.fxmltableview.logic.CertaintyCalculator;
@@ -1158,8 +1159,8 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             RawDataFile file = session.getAllFiles().get(i);
             file.setColumn(cc);
             Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_Area";
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_2";
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_3";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_RT";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_MZ";
             Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_4";
         }
 
@@ -1208,8 +1209,11 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                 for (int i = 0; i < session.getAllFiles().size(); i++) {
                     RawDataFile file = session.getAllFiles().get(i);
                     if (adduct.getListofSlices().containsKey(file)) {
-                        if (adduct.getListofSlices().get(file).getFittedPeak() != null) {
-                            info[file.getColumn()] = String.valueOf(adduct.getListofSlices().get(file).getFittedPeak().getArea());
+                        Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
+                        if (peak != null) {
+                            info[file.getColumn()] = String.valueOf(peak.getArea());
+                            info[file.getColumn()+1] = String.valueOf((peak.getIndexRT()));
+                            info[file.getColumn()+2] = String.valueOf(peak.getMZ());
                             hasdata.set(hasdata.size() - 1, Boolean.TRUE);
                         }
                     }

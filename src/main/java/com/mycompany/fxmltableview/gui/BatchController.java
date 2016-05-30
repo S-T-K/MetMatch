@@ -117,6 +117,8 @@ public class BatchController implements Initializable {
   
     @FXML
     private CheckBox batact;
+    
+    
  
   
   

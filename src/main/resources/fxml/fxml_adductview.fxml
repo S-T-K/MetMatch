@@ -13,7 +13,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_adductviewController">
    <children>
-      <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
       <ScrollPane fx:id="scrollPane" layoutY="32.0" prefHeight="368.0" prefViewportHeight="400.0" prefViewportWidth="600.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
          <content>
             <GridPane fx:id="gridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -66,5 +65,6 @@
          </font>
       </Label>
       <Slider fx:id="weightslider" blockIncrement="500.0" layoutY="-6.0" majorTickUnit="250.0" max="1000.0" min="-1000.0" minorTickCount="4" onMouseReleased="#hideSlider" prefHeight="29.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" value="1.0" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
+      <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
    </children>
 </AnchorPane>

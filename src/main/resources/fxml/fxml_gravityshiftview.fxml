@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.paint.*?>
@@ -38,10 +39,10 @@
             <TextField layoutX="14.0" layoutY="71.0" prefHeight="25.0" prefWidth="110.0" fx:id="x1" />
             <TextField fx:id="y6" layoutX="124.0" layoutY="227.0" prefHeight="25.0" prefWidth="110.0" />
             <TextField layoutX="14.0" layoutY="227.0" prefHeight="25.0" prefWidth="110.0" fx:id="x6" />
-            <Slider fx:id="speed" layoutX="54.0" layoutY="31.0" majorTickUnit="1000.0" max="6000.0" minorTickCount="2" prefHeight="14.0" prefWidth="147.0" showTickMarks="true" value="3000.0" />
+            <Slider fx:id="speed" layoutX="54.0" layoutY="31.0" majorTickUnit="1000.0" max="6000.0" minorTickCount="2" nodeOrientation="RIGHT_TO_LEFT" prefHeight="14.0" prefWidth="147.0" showTickMarks="true" value="3000.0" />
             <Label fx:id="label212" alignment="CENTER" layoutX="69.0" layoutY="6.0" prefHeight="17.0" prefWidth="109.0" text="Animation Speed" textAlignment="CENTER" />
-            <Label fx:id="label213" alignment="CENTER" layoutX="190.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Slow" textAlignment="CENTER" />
-            <Label fx:id="label2131" alignment="CENTER" layoutX="14.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Fast" textAlignment="CENTER" />
+            <Label fx:id="label213" alignment="CENTER" layoutX="190.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Fast" textAlignment="CENTER" />
+            <Label fx:id="label2131" alignment="CENTER" layoutX="14.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Slow" textAlignment="CENTER" />
             <TextField fx:id="y8" layoutX="124.0" layoutY="289.0" prefHeight="25.0" prefWidth="110.0" />
             <TextField layoutX="14.0" layoutY="289.0" prefHeight="25.0" prefWidth="110.0" fx:id="x8" />
             <TextField layoutX="14.0" layoutY="320.0" prefHeight="25.0" prefWidth="110.0" fx:id="x9" />
@@ -62,5 +63,10 @@
          </opaqueInsets>
       </MenuBar>
       <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
+      <Label fx:id="processinglabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="38.0" prefWidth="1020.0" text="Label" textAlignment="CENTER" textFill="#005eff" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

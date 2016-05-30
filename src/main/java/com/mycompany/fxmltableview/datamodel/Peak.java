@@ -24,6 +24,7 @@ public class Peak {
     private boolean manual;
     private float indexshift;
     private float weight;
+    private float MZ;
     
     
     public Peak(short index, float scale, float SNR, float area, Slice slice) throws InterruptedException {
@@ -44,6 +45,7 @@ public class Peak {
         }
         //calculateArea();
         indexshift = (getIndexRT()-slice.getAdduct().getOGroupObject().getRT());
+        MZ = slice.getMZArray()[index];
     }
 
     public Peak(short index, short start, short end, Slice slice) throws InterruptedException {
@@ -56,6 +58,7 @@ public class Peak {
         trimPeak();
         calculateArea();
      indexshift = (getIndexRT()-slice.getAdduct().getOGroupObject().getRT());
+     MZ = slice.getMZArray()[index];
     }
     
     public Peak(boolean manual, short index, short start, short end, Slice slice, int non) throws InterruptedException {
@@ -68,6 +71,7 @@ public class Peak {
         //trimPeak();
         calculateArea();
        indexshift = (getIndexRT()-slice.getAdduct().getOGroupObject().getRT());
+       MZ = slice.getMZArray()[index];
     }
     
     
@@ -277,6 +281,20 @@ public class Peak {
      */
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    /**
+     * @return the MZ
+     */
+    public float getMZ() {
+        return MZ;
+    }
+
+    /**
+     * @param MZ the MZ to set
+     */
+    public void setMZ(float MZ) {
+        this.MZ = MZ;
     }
     
     //Comparator to sort List of Entries
