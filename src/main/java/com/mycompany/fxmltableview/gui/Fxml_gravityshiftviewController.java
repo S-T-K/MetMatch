@@ -528,23 +528,15 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                     //draw new borders
                                     int yrange = grav.getyRanges()[count];
                                   
-                                            for (int i = 0; i < centroids.length; i++) {
-                                                ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+1 + yrange);
-                                                ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+1 - yrange);
-                                            }
+                                    drawRange(centroids,yrange);        
                                         
-
                                     Thread.sleep((long) speed.getValue());
 
                                     centroids = grav.gravity(count, samplematrix, centroids);
                                     samplecentroids = centroids;
 
                                    
-                                            for (int i = 0; i < centroids.length; i++) {
-                                                ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(centroids[i]+1);
-                                            }
-
-                                        
+                                    drawFit(centroids);
 
                                     Thread.sleep((long) speed.getValue());
 
@@ -1739,6 +1731,34 @@ done++;
                 }
        samplefile.calculateScorenew();
         calculateFiles(filelist);
+   }
+   
+   
+   public void drawRange(float[] data, int range) {
+       Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                             for (int i = 0; i < data.length; i++) {
+                                                ((XYChart.Data) topSeries.getData().get(i)).YValueProperty().setValue(data[i]+1 + range);
+                                                ((XYChart.Data) botSeries.getData().get(i)).YValueProperty().setValue(data[i]+1 - range);
+                                            }
+                                        }
+                                    });
+       
+       
+   }
+   
+   public void drawFit(float[] data) {
+       Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                             for (int i = 0; i < data.length; i++) {
+                                                ((XYChart.Data) midSeries.getData().get(i)).YValueProperty().setValue(data[i]+1);
+                                            }
+                                        }
+                                    });
+       
+       
    }
    
    
