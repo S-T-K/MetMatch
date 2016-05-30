@@ -482,7 +482,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                         
                                         System.out.println("Total peak picking time: " + picktime);
                                         System.out.println("Total time: " + (System.currentTimeMillis() - start));
-                                        session.getIothread().lockFile(currentfile, false);
+                                        
 
                                         return null;
                                     }
@@ -1646,7 +1646,7 @@ done++;
                                         System.out.println("Count down");
                                         System.out.println("Total peak picking time: " + picktime);
                                         System.out.println("Total time: " + (System.currentTimeMillis() - start));
-                                        session.getIothread().lockFile(currentfile, false);
+                                        
 
                                         
                                          //calculation
@@ -1668,6 +1668,7 @@ done++;
                 }
                 
                 currentfile.calculateScorenew();
+                session.getIothread().lockFile(currentfile, false);
                                         
                                       
                                      filesdone++;  
@@ -1731,7 +1732,7 @@ done++;
                 olist.get(i).setFittedShift(samplefile, samplecentroids[i]);
                 }
        samplefile.calculateScorenew();
-       
+       session.getIothread().lockFile(samplefile, false);
        calculateFiles(filelist);
        
    }
@@ -1744,6 +1745,7 @@ done++;
                 olist.get(i).setFittedShift(samplefile, samplecentroids[i]);
                 }
        samplefile.calculateScorenew();
+       session.getIothread().lockFile(samplefile, false);
         calculateFiles(filelist);
    }
    

@@ -39,6 +39,8 @@ public class Entry {
     private SimpleFloatProperty Score;
     private SimpleFloatProperty Scorepeakfound;
     private SimpleFloatProperty Scorepeakclose;
+    private SimpleFloatProperty Scorefitabove;
+    private SimpleFloatProperty Scorepeakrange;
     private SimpleFloatProperty Scorecertainty;
     private IntegerProperty Num;
     private SimpleFloatProperty MZ;
@@ -55,6 +57,7 @@ public class Entry {
     private HashMap<RawDataFile, Slice> listofSlices;   //stores all slices
     private Session session;
     private HashMap<RawDataFile, Float> Scores;
+    private HashMap<RawDataFile, Float> Ranges;
     private HashMap<RawDataFile, Float> Certainties;
     private Entry originalAdduct;
     private boolean empty;
@@ -94,9 +97,11 @@ public class Entry {
         this.Ionisation=Ionisation;
         this.LabeledXn=labeledXn;
         this.Inline = line;
-        this.Score = new SimpleFloatProperty(0);
-        this.Scorepeakclose = new SimpleFloatProperty(0);
-        this.Scorepeakfound = new SimpleFloatProperty(0);
+        this.Score = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakclose = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakrange = new SimpleFloatProperty(Float.NaN);
+        this.Scorefitabove = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakfound = new SimpleFloatProperty(Float.NaN);
         this.Scorecertainty = new SimpleFloatProperty(Float.NaN);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
 
@@ -117,10 +122,12 @@ public class Entry {
         this.Ion = new SimpleStringProperty(Ion);
         this.M = new SimpleFloatProperty((float) M);
         this.LabeledXn=labeledXn;
-        this.Score = new SimpleFloatProperty(0);
-        this.Scorepeakclose = new SimpleFloatProperty(0);
-        this.Scorepeakfound = new SimpleFloatProperty(0);
-        this.Scorecertainty = new SimpleFloatProperty(1.0f);
+        this.Score = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakclose = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakfound = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakrange = new SimpleFloatProperty(Float.NaN);
+        this.Scorefitabove = new SimpleFloatProperty(Float.NaN);
+        this.Scorecertainty = new SimpleFloatProperty(Float.NaN);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
 
         this.Scores = new HashMap<RawDataFile, Float>();
@@ -138,15 +145,18 @@ public class Entry {
         this.listofAdducts= new ArrayList<>();
         this.RT = new SimpleFloatProperty(0);
         this.OGroup = new SimpleIntegerProperty(OGroup);
-        this.Score = new SimpleFloatProperty(0);
-        this.Scorepeakclose = new SimpleFloatProperty(0);
-        this.Scorepeakfound = new SimpleFloatProperty(0);
-        this.Scorecertainty = new SimpleFloatProperty((float) 1.0);
+        this.Score = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakclose = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakfound = new SimpleFloatProperty(Float.NaN);
+        this.Scorefitabove = new SimpleFloatProperty(Float.NaN);
+        this.Scorepeakrange = new SimpleFloatProperty(Float.NaN);
+        this.Scorecertainty = new SimpleFloatProperty(Float.NaN);
         this.session = session;
         this.OGroupObject=null;
 
         Interpolatedshift = new HashMap<>();
         OgroupShift = new HashMap<>();
+        Ranges = new HashMap<>();
         this.Scores = new HashMap<RawDataFile, Float>();
         this.Certainties = new HashMap<RawDataFile, Float>();
         PenArray = new HashMap<RawDataFile, short[]>();
@@ -368,6 +378,40 @@ if (listofSlices.containsKey(file)) {
      */
     public void setScorepeakclose(SimpleFloatProperty score) {
         this.Scorepeakclose = score;
+    }
+    
+     /**
+     * @return the Score
+     */
+    public float getScorefitabove() {
+        return Scorefitabove.get();
+    }
+
+    public SimpleFloatProperty ScorefitaboveProperty() {
+        return Scorefitabove;
+    }
+    /**
+     * @param Score the Score to set
+     */
+    public void setScorefitabove(SimpleFloatProperty score) {
+        this.Scorefitabove = score;
+    }
+    
+     /**
+     * @return the Score
+     */
+    public float getScorepeakrange() {
+        return Scorepeakrange.get();
+    }
+
+    public SimpleFloatProperty ScorepeakrangeProperty() {
+        return Scorepeakrange;
+    }
+    /**
+     * @param Score the Score to set
+     */
+    public void setScorepeakrange(SimpleFloatProperty score) {
+        this.Scorepeakrange = score;
     }
         /**
      * @return the Num
@@ -606,9 +650,42 @@ if (listofSlices.containsKey(file)) {
         listofAdducts.get(i).getListofSlices().get(file).setFittedPeak(shiftintime);
     }
         }
+    
+    
+    //calculate PeakRange
+    float min = Float.MAX_VALUE;
+    float max = Float.MIN_VALUE;
+    short number = 0;
+    float maxfitabove = 0;
+    for (int i = 0; i<listofAdducts.size(); i++) {
+        if (listofAdducts.get(i).getListofSlices().containsKey(file)) {
+            Slice slice = listofAdducts.get(i).getListofSlices().get(file);
+        Peak peak = slice.getFittedPeak();
+    if (peak!=null) {
+        number++;
+        if (peak.getIndexRT()<min) {
+            min = peak.getIndexRT();
+        }
+        if (peak.getIndexRT()>max) {
+            max = peak.getIndexRT();
+        }
+    } else {
+        //calculate fitabove
+        if (slice.getFitabove()>maxfitabove) {
+            maxfitabove = slice.getFitabove();
+        }
+    }
+    }
+    }
+    if (number>1)  {
+        Ranges.put(file, (max-min));
+        System.out.println("Range: " + (max-min));
+    }
+        Scorefitabove.set(maxfitabove);
+    
+    
     }
     
-     
 
 //    /**
 //     * @return the AdductPropArray
@@ -848,6 +925,20 @@ if (listofSlices.containsKey(file)) {
      */
     public void setOutline(int Outline) {
         this.Outline = Outline;
+    }
+
+    /**
+     * @return the Ranges
+     */
+    public HashMap<RawDataFile, Float> getRanges() {
+        return Ranges;
+    }
+
+    /**
+     * @param Ranges the Ranges to set
+     */
+    public void setRanges(HashMap<RawDataFile, Float> Ranges) {
+        this.Ranges = Ranges;
     }
 
     

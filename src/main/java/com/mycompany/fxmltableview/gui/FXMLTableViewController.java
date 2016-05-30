@@ -82,7 +82,7 @@ public class FXMLTableViewController implements Initializable {
     TreeTableColumn nameColumn;
     
     @FXML
-    TreeTableColumn numColumn, scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn, scorecertaintyColumn;
+    TreeTableColumn numColumn, scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn, scorecertaintyColumn, scorepeakrangeColumn, scorefitaboveColumn;
     
     @FXML
     TreeTableColumn rtColumn;
@@ -158,6 +158,8 @@ public class FXMLTableViewController implements Initializable {
         scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakfound"));
         scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakclose"));
         scorecertaintyColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorecertainty"));
+        scorepeakrangeColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakrange"));
+        scorefitaboveColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorefitabove"));
         numColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("Num"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("MZ"));

@@ -58,8 +58,10 @@ public class Slice {
     private float maxIntensity;
     private List<Peak> listofPeaks;
     private Short fittedpeak;
+    private float avgInt;
     
     private float scorepeakclose = 1;
+    private float fitabove;
    
     private Entry adduct;
     private Dataset dataset;
@@ -980,20 +982,25 @@ if (adduct.getNum()==4716) {
         
         //calc score for close peaks, if within range, small score
         float range = file.getSession().getPeakRTTolerance().floatValue()*2;
-        min = file.getSession().getPeakRTTolerance().floatValue()+range;
+        scorepeakclose = file.getSession().getRTTolerance();
         for (int i = 0; i<listofPeaks.size(); i++) {
             if (fittedpeak==null||i!=fittedpeak) {
-                if (Math.abs(listofPeaks.get(i).getIndexshift()-shift)<=min) {
-                    min = Math.abs(listofPeaks.get(i).getIndexshift()-shift);
-                        setScorepeakclose((1.0f/(float)(file.getSession().getPeakRTTolerance().floatValue()+range+1))*min);
+                if (Math.abs(listofPeaks.get(i).getIndexshift()-shift)<scorepeakclose) {
+                    scorepeakclose = Math.abs(listofPeaks.get(i).getIndexshift()-shift);
                 }
             }
         }
         
         
         
-//        System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
+        System.out.println(adduct.getOGroup() + ":  Score peak close: " +  scorepeakclose);
 //        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  getScorepeakfound());
+        }
+        
+        if (fittedpeak==null){
+            int RTindex = Math.abs(Arrays.binarySearch(file.getRTArray(), shift+adduct.getRT()));
+            fitabove = (IntArray[RTindex-RTstart]-file.getSession().getBaseline())/avgInt;
+            System.out.println("Fit Above = " + fitabove);
         }
         
     }
@@ -1325,7 +1332,7 @@ if (adduct.getNum()==4716) {
         float max = Float.MIN_VALUE;
         //number of consecutive signals
         int nocs = 0;
-        //long sum = 0;
+        long sum = 0;
         int minnocs = (int) (file.getSession().getMinPeakLength().floatValue()*60*file.getScanspersecond());
         for (int i = 0; i<MZArray.length; i++) {
             if (MZArray[i]==0||MZArray[i]<minMZ||MZArray[i]>maxMZ) {
@@ -1341,7 +1348,7 @@ if (adduct.getNum()==4716) {
                 if (IntArray[i]>max) {
                     max = IntArray[i];
                 }
-                //sum+=IntArray[i];
+                sum+=IntArray[i];
                 nocs++;
             }
         }
@@ -1349,11 +1356,12 @@ if (adduct.getNum()==4716) {
                     empty = false;
                 }
         //rough baseline calculation
-        //sum/=IntArray.length;
-//        if (max-sum<file.getSession().getBaseline()) {
-//            System.out.println("noise deleted");
-//            empty = true;
-//        }
+        sum/=IntArray.length;
+        avgInt=sum;
+        if (max-sum<file.getSession().getBaseline()) {
+            System.out.println("noise deleted");
+            empty = true;
+        }
         
         if (!empty) {
             adduct.getListofSlices().put(file, this);
@@ -1454,6 +1462,34 @@ return empty;
      */
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    /**
+     * @return the avgInt
+     */
+    public float getAvgInt() {
+        return avgInt;
+    }
+
+    /**
+     * @param avgInt the avgInt to set
+     */
+    public void setAvgInt(float avgInt) {
+        this.avgInt = avgInt;
+    }
+
+    /**
+     * @return the fitabove
+     */
+    public float getFitabove() {
+        return fitabove;
+    }
+
+    /**
+     * @param fitabove the fitabove to set
+     */
+    public void setFitabove(float fitabove) {
+        this.fitabove = fitabove;
     }
     
     

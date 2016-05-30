@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
@@ -372,11 +373,14 @@ public void newwindowcalculate() throws IOException, InterruptedException {
 //                   float omaxScore = 0;
                        float ominScorepeakclose = 1;
                        float omaxScorepeakfound = 0;
+                       float omaxScorefitabove = 0;
+                       float omaxrange = 0f;
                    
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
 //                       float maxScore = 0;
-                       float minScorepeakclose = 1;
+                       float minScorepeakclose = session.getRTTolerance();
                        float maxScorepeakfound = 0;
+                       float maxScorefitabove = 0;
                    for (int f = 0; f<completeList.size(); f++) {
                        RawDataFile file = completeList.get(f);
 //                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {
@@ -385,17 +389,21 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().containsKey(file)) {
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound()>maxScorepeakfound) {
                            maxScorepeakfound=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakfound();
-                       }}
-                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().containsKey(file)) {
+                       }
+                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getFitabove()>maxScorefitabove) {
+                           maxScorefitabove=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getFitabove();
+                       }
+                  
                        if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose()<minScorepeakclose) {
                        minScorepeakclose=TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getListofSlices().get(file).getScorepeakclose();
                        }}
+                       
                        
                    }
 //                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScore(new SimpleFloatProperty(maxScore));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakclose(new SimpleFloatProperty(minScorepeakclose));
                    TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorepeakfound(new SimpleFloatProperty(maxScorepeakfound));
-                   
+                   TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).setScorefitabove(new SimpleFloatProperty(maxScorefitabove));
                    
 //                   if (maxScore>omaxScore) {
 //                       omaxScore = maxScore;
@@ -406,26 +414,40 @@ public void newwindowcalculate() throws IOException, InterruptedException {
                    if (maxScorepeakfound>omaxScorepeakfound) {
                        omaxScorepeakfound=maxScorepeakfound;
                    }
+                   if (maxScorefitabove>omaxScorefitabove) {
+                       omaxScorefitabove=maxScorefitabove;
+                   }
                    
 //                   TVcontroller.getMasterListofOGroups().get(i).setScore(new SimpleFloatProperty(omaxScore));
                    TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleFloatProperty(ominScorepeakclose));
                    TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleFloatProperty(omaxScorepeakfound));
+                   TVcontroller.getMasterListofOGroups().get(i).setScorefitabove(new SimpleFloatProperty(omaxScorefitabove));
                    
                    }
                    
                     for (int f = 0; f<completeList.size(); f++) {
                         float omincertainty = Float.NaN;
+                       
                         if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().containsKey(completeList.get(f))) {
                             omincertainty=Float.MAX_VALUE;
                         if (TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f))<omincertainty) {
                             omincertainty=TVcontroller.getMasterListofOGroups().get(i).getCertainties().get(completeList.get(f));
-                        }}
+                        }
+                        }
+                        if (TVcontroller.getMasterListofOGroups().get(i).getRanges().containsKey(completeList.get(f))) {
+                        HashMap<RawDataFile,Float> Ranges = TVcontroller.getMasterListofOGroups().get(i).getRanges();
+                        if (TVcontroller.getMasterListofOGroups().get(i).getRanges().get(completeList.get(f))>omaxrange) {
+                            omaxrange=TVcontroller.getMasterListofOGroups().get(i).getRanges().get(completeList.get(f));
+                        }
+                        
+                        }
                         TVcontroller.getMasterListofOGroups().get(i).setScorecertainty(new SimpleFloatProperty(omincertainty));
+                       
                         
                         
                     }
                    
-                   
+                    TVcontroller.getMasterListofOGroups().get(i).setScorepeakrange(new SimpleFloatProperty(omaxrange));
                    
                    
                }
