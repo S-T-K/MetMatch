@@ -122,6 +122,8 @@ public class Entry {
         this.Ion = new SimpleStringProperty(Ion);
         this.M = new SimpleFloatProperty((float) M);
         this.LabeledXn=labeledXn;
+        this.ScanEvent=orig.ScanEvent;
+        this.Ionisation=orig.Ionisation;
         this.Score = new SimpleFloatProperty(Float.NaN);
         this.Scorepeakclose = new SimpleFloatProperty(Float.NaN);
         this.Scorepeakfound = new SimpleFloatProperty(Float.NaN);
@@ -129,6 +131,7 @@ public class Entry {
         this.Scorefitabove = new SimpleFloatProperty(Float.NaN);
         this.Scorecertainty = new SimpleFloatProperty(Float.NaN);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
+        
 
         this.Scores = new HashMap<RawDataFile, Float>();
         
