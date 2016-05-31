@@ -1162,9 +1162,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             RawDataFile file = session.getAllFiles().get(i);
             file.setColumn(cc);
             Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_Area";
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_RT";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_RT-Shift";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_MZ-Shift";
             Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_MZ";
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_4";
         }
 
         //write old information after files
@@ -1215,8 +1215,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                         Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
                         if (peak != null) {
                             info[file.getColumn()] = String.valueOf(peak.getArea());
-                            info[file.getColumn()+1] = String.valueOf((peak.getIndexRT()));
-                            info[file.getColumn()+2] = String.valueOf(peak.getMZ());
+                            info[file.getColumn()+1] = String.valueOf((peak.getIndexRT()-adduct.getRT()));
+                            info[file.getColumn()+2] = String.valueOf((peak.getMZ()-adduct.getMZ())/((adduct.getMZ()/1000000f)));
+                            info[file.getColumn()+3] = String.valueOf(peak.getMZ());
                             hasdata.set(hasdata.size() - 1, Boolean.TRUE);
                         }
                     }
