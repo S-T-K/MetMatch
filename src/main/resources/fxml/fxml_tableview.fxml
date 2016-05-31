@@ -43,6 +43,20 @@
                         <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" disable="true" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch" textOverrun="WORD_ELLIPSIS" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <TabPane fx:id="TabPane" prefHeight="200.0" prefWidth="200.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <tabs>
+                        <Tab text="Input">
+                           <content>
+                              <AnchorPane fx:id="Tab11" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="InputTable" layoutX="51.0" layoutY="74.0" prefHeight="423.0" prefWidth="318.0">
+                                      <columns>
+                                        <TableColumn fx:id="infocol" editable="false" prefWidth="157.0" sortable="false" text="Information" />
+                                        <TableColumn fx:id="headcol" prefWidth="160.0" sortable="false" text="Header" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
                       <Tab text="General">
                         <content>
                           <AnchorPane fx:id="Tab1" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -50,7 +64,6 @@
                                     <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="36.0" layoutX="16.0" layoutY="322.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="322.0" />
                                     <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="327.0" prefHeight="25.0" prefWidth="80.0" />
                                     <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="222.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="222.0" />
-                                    <ChoiceBox fx:id="PeakPick" layoutX="105.0" layoutY="257.0" prefHeight="25.0" prefWidth="129.0" />
                                     <Rectangle fx:id="box1" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="27.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="27.0" />
                                     <TextField fx:id="RTTol" layoutX="125.0" layoutY="32.0" prefHeight="25.0" prefWidth="80.0" />
                                     <Rectangle fx:id="box2" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="122.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="122.0" />
@@ -81,6 +94,7 @@
                                     <Label layoutX="209.0" layoutY="399.0" text="min" />
                                     <TextField fx:id="End" layoutX="125.0" layoutY="425.0" prefHeight="25.0" prefWidth="80.0" />
                                     <TextField fx:id="Start" layoutX="125.0" layoutY="395.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <ChoiceBox fx:id="PeakPick" layoutX="125.0" layoutY="257.0" prefHeight="25.0" prefWidth="80.0" />
                                  </children>
                               </AnchorPane>
                         </content>
@@ -91,7 +105,7 @@
                                  <children>
                                     <ScrollPane layoutX="-4.0" layoutY="35.0" prefViewportHeight="673.0" prefViewportWidth="396.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                                        <content>
-                                          <AnchorPane fx:id="adductanchor">
+                                          <AnchorPane fx:id="adductanchor" prefHeight="1367.0" prefWidth="374.0">
                                              <children>
                                                 <TextField fx:id="AdMass11" layoutX="264.0" layoutY="333.0" prefHeight="25.0" prefWidth="110.0" />
                                                 <TextField fx:id="AdName19" layoutX="56.0" layoutY="585.0" prefHeight="25.0" prefWidth="80.0" />
@@ -383,6 +397,24 @@
                               </AnchorPane>
                         </content>
                       </Tab>
+                        <Tab text="Output">
+                           <content>
+                              <AnchorPane fx:id="Tab111" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <ScrollPane layoutX="54.0" layoutY="53.0" prefHeight="197.0" prefWidth="384.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                       <content>
+                                          <TableView prefHeight="194.0" prefWidth="1141.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <columns>
+                                                <TableColumn prefWidth="75.0" sortable="false" text="C1" />
+                                                <TableColumn prefWidth="75.0" sortable="false" text="C2" />
+                                             </columns>
+                                          </TableView>
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
                     </tabs>
                   </TabPane>
                   <Button fx:id="paramButton" layoutX="40.0" layoutY="490.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#hideParameters" prefHeight="25.0" prefWidth="154.0" text="Apply" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="0.0" />

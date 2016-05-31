@@ -53,11 +53,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -68,6 +74,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 import org.jfree.fx.FXGraphics2D;
 
@@ -122,6 +129,12 @@ public class FXMLTableViewController implements Initializable {
     
     @FXML
     AnchorPane adductanchor;
+    
+    @FXML
+    TableView<Information> InputTable;
+    
+    @FXML
+    TableColumn infocol, headcol;
 
     //Check for changed parameters
     String oldPick;
@@ -499,6 +512,39 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         });
         metTable.setPlaceholder(label);
         
+        final ObservableList<Information> infos = FXCollections.observableArrayList(
+    new Information("Info1", "Header1"),
+    new Information("Info2","Header2"),
+    new Information("Info3","Header3"),
+    new Information("Info4","Header4"),
+    new Information("Info5","Header5"),
+    new Information("Info6","Header6")
+);
+         
+         
+        
+        Callback<TableColumn<Information, String>, 
+            TableCell<Information, String>> cellFactory
+                = (TableColumn<Information, String> p) -> new EditingCell();
+         
+        infocol.setCellValueFactory(
+    new PropertyValueFactory<Information,String>("information")
+);
+ 
+ headcol.setCellFactory(cellFactory);
+        headcol.setOnEditCommit(
+            new EventHandler<CellEditEvent<Information, String>>() {
+                @Override
+                public void handle(CellEditEvent<Information, String> t) {
+                    ((Information) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())
+                        ).setHeader(t.getNewValue());
+                }
+             }
+        );
+       
+        InputTable.setItems(infos);
+         InputTable.setEditable(true);
     }
 
     //Open File Chooser for Data Matrix
@@ -1535,6 +1581,70 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
     public void toggleAdductGeneration() {
         boolean toggle = !toggleadductgeneration.selectedProperty().get();
         adductanchor.setDisable(toggle);
+    }
+    
+        class EditingCell extends TableCell<Information, String> {
+ 
+        private TextField textField;
+ 
+        public EditingCell() {
+        }
+ 
+        @Override
+        public void startEdit() {
+            if (!isEmpty()) {
+                super.startEdit();
+                createTextField();
+                setText(null);
+                setGraphic(textField);
+                textField.selectAll();
+            }
+        }
+ 
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+ 
+            setText((String) getItem());
+            setGraphic(null);
+        }
+ 
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+ 
+            if (empty) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                if (isEditing()) {
+                    if (textField != null) {
+                        textField.setText(getString());
+                    }
+                    setText(null);
+                    setGraphic(textField);
+                } else {
+                    setText(getString());
+                    setGraphic(null);
+                }
+            }
+        }
+ 
+        private void createTextField() {
+            textField = new TextField(getString());
+            textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()* 2);
+            textField.focusedProperty().addListener(
+                (ObservableValue<? extends Boolean> arg0, 
+                Boolean arg1, Boolean arg2) -> {
+                    if (!arg2) {
+                        commitEdit(textField.getText());
+                    }
+            });
+        }
+ 
+        private String getString() {
+            return getItem() == null ? "" : getItem().toString();
+        }
     }
     
 }
