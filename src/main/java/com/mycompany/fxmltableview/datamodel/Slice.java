@@ -212,9 +212,9 @@ public class Slice {
             //baseline correct IntensityArray
             float[] correctedIntArray = new float[IntArray.length];
             for ( int j = 0; j<IntArray.length; j++)  {
-                if (IntArray[j]>=adduct.getSession().getBaseline()) {
-                    correctedIntArray[j]=IntArray[j]-adduct.getSession().getBaseline();
-                }
+                
+                    correctedIntArray[j]=IntArray[j];
+                
                 
             }
 

@@ -1601,7 +1601,7 @@ public class ChartGenerator {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
-        yAxis.setLabel("Intensity");
+        yAxis.setLabel("RT-Shift [sec]");
         AreaChart<Number, Number> linechart = new AreaChart(xAxis, yAxis);
         XYChart.Series topSeries = new XYChart.Series();
         linechart.getData().add(topSeries);
@@ -1758,7 +1758,7 @@ public class ChartGenerator {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
-        yAxis.setLabel("Intensity");
+        yAxis.setLabel("RT-Shift [sec]");
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
         XYChart.Series backSeries = new XYChart.Series();
         RawDataFile file = session.getSelectedFiles().get(0);
