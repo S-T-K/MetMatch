@@ -19,7 +19,7 @@ public class Information {
     private final SimpleStringProperty header;
     private final String tooltip;
  
-    Information(String info, String header, String tip) {
+   public Information(String info, String header, String tip) {
         this.information = new SimpleStringProperty(info);
         this.header = new SimpleStringProperty(header);
         this.tooltip = tip;
@@ -48,6 +48,13 @@ public class Information {
      */
     public String getTooltip() {
         return tooltip;
+    }
+    
+    public boolean isspecified() {
+        if (header.get().isEmpty()) {
+            return false;
+        }
+        return true;
     }
     
         

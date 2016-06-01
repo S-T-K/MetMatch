@@ -48,7 +48,7 @@ public class Entry {
     private IntegerProperty OGroup;
     private StringProperty Ion;
     private SimpleFloatProperty M;
-    private int Charge;
+    private Integer Charge;
     private int[] LabeledXn;
     private String ScanEvent;
     private String Ionisation;
@@ -84,15 +84,23 @@ public class Entry {
     }
 
     //constructor for Adduct
-    public Entry(int Num, float MZ, float RT, int Xn, int OGroup, String Ion, float M, int Charge, String scanEvent, String Ionisation, int[] labeledXn, int line, Session session, Entry ogroup) {
+    public Entry(int Num, float MZ, float RT, Integer Xn, int OGroup, String Ion, Float M, Integer Charge, String scanEvent, String Ionisation, int[] labeledXn, int line, Session session, Entry ogroup) {
         this.Num = new SimpleIntegerProperty(Num);
         this.MZ = new SimpleFloatProperty((float) MZ);
         this.RT = new SimpleFloatProperty((float) RT);
-        this.Xn = new SimpleIntegerProperty(Xn);
         this.OGroup = new SimpleIntegerProperty(OGroup);
-        this.Ion = new SimpleStringProperty(Ion);
-        this.M = new SimpleFloatProperty((float) M);
-        this.Charge=Charge;
+        
+        if (Xn!=null) {
+        this.Xn = new SimpleIntegerProperty(Xn);}
+        else {this.Xn = new SimpleIntegerProperty();}
+        if (Ion!=null) {
+        this.Ion = new SimpleStringProperty(Ion); }
+        else {this.Ion= new SimpleStringProperty();}
+        if (M!=null) {
+        this.M = new SimpleFloatProperty((float) M);}
+        else {this.M = new SimpleFloatProperty();}
+        
+        this.Charge=Charge; 
         this.ScanEvent=scanEvent;
         this.Ionisation=Ionisation;
         this.LabeledXn=labeledXn;

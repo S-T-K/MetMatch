@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.canvas.*?>
@@ -47,12 +48,22 @@
                            <content>
                               <AnchorPane fx:id="Tab11" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="InputTable" layoutX="51.0" layoutY="74.0" prefHeight="423.0" prefWidth="318.0">
+                                    <TableView fx:id="InputTable" layoutX="51.0" layoutY="74.0" prefHeight="423.0" prefWidth="318.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="51.0" AnchorPane.topAnchor="74.0">
                                       <columns>
-                                        <TableColumn fx:id="infocol" editable="false" prefWidth="157.0" sortable="false" text="Information" />
-                                        <TableColumn fx:id="headcol" prefWidth="160.0" sortable="false" text="Header" />
+                                        <TableColumn fx:id="infocol" editable="false" prefWidth="171.0" sortable="false" text="Information" />
+                                        <TableColumn fx:id="headcol" prefWidth="146.0" sortable="false" text="Header" />
                                       </columns>
                                     </TableView>
+                                    <Rectangle arcWidth="5.0" height="123.0" layoutX="52.0" layoutY="99.0" opacity="0.27" stroke="RED" strokeType="INSIDE" strokeWidth="0.0" width="36.0">
+                                       <fill>
+                                          <LinearGradient endX="1.0" endY="0.5" startY="0.5047619047619047">
+                                             <stops>
+                                                <Stop color="RED" />
+                                                <Stop color="WHITE" offset="1.0" />
+                                             </stops>
+                                          </LinearGradient>
+                                       </fill></Rectangle>
+                                    <Label layoutX="11.0" layoutY="152.0" opacity="0.56" rotate="-90.0" text="Required" textFill="RED" />
                                  </children>
                               </AnchorPane>
                            </content>

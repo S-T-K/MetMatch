@@ -516,19 +516,8 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         });
         metTable.setPlaceholder(label);
         
-        final ObservableList<Information> infos = FXCollections.observableArrayList(
-    new Information("Retention Time", "RT", "Expected Retention Time of the Ion"),
-    new Information("Mass/Charge","MZ", "Expected Mass/Charge Ration of the Ion"),
-    new Information("Ion ID","Num","Each Ion has to hava a unique number"),
-    new Information("Metabolite ID","OGroup","Each Metabolite has to have a unique number"),
-    new Information("Number of Carbon Atoms","Xn", "Number of Carbon Atoms of the Ion"),
-    new Information("Ion Form","Ion","Annotated Ion Form, e.g. [M+H]+"),
-    new Information("Uncharged Ion Mass", "M", "Mass of uncharged, intact Ion"),
-    new Information("Ion Charge", "Charge", "Charge of the Ion"),
-    new Information("Scan Event", "ScanEvent", "Scan Event"),
-    new Information("Ionisation Mode", "Ionisation_Mode", "Ionisation Mode")
-);
-                InputTable.setItems(infos);
+        
+                InputTable.setItems(session.getInfos());
          
          
          
@@ -1254,13 +1243,19 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                     info[indices[0]] = String.valueOf(adduct.getNum());
                     info[indices[1]] = String.valueOf(adduct.getMZ());
                     info[indices[2]] = String.valueOf(adduct.getRT());
-                    info[indices[3]] = String.valueOf(adduct.getXn());
+                    if (indices[3]>-1) {
+                    info[indices[3]] = String.valueOf(adduct.getXn());}
                     info[indices[4]] = String.valueOf(adduct.getOGroup());
-                    info[indices[5]] = String.valueOf(adduct.getIon());
-                    info[indices[6]] = String.valueOf(adduct.getM());
-                    info[indices[7]] = String.valueOf(adduct.getCharge());
-                    info[indices[8]] = String.valueOf(adduct.getScanEvent());
-                    info[indices[9]] = String.valueOf(adduct.getIonisation());
+                    if (indices[5]>-1) {
+                    info[indices[5]] = String.valueOf(adduct.getIon());}
+                    if (indices[6]>-1) {
+                    info[indices[6]] = String.valueOf(adduct.getM());}
+                    if (indices[7]>-1) {
+                    info[indices[7]] = String.valueOf(adduct.getCharge());}
+                    if (indices[8]>-1) {
+                    info[indices[8]] = String.valueOf(adduct.getScanEvent());}
+                    if (indices[9]>-1) {
+                    info[indices[9]] = String.valueOf(adduct.getIonisation());}
                     hasdata.add(Boolean.FALSE);
                 }
 
@@ -1659,6 +1654,8 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
 
     }
   }
+          
+         
   }
     
 

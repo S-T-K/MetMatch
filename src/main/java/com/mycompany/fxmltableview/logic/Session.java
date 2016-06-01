@@ -11,6 +11,7 @@ import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
 import com.mycompany.fxmltableview.datamodel.Slice;
+import com.mycompany.fxmltableview.gui.Information;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
@@ -77,6 +78,8 @@ public class Session {
     private String[] labels;
     private int[] indices;
     
+    private ObservableList<Information> infos;
+    
     public Session() {
         
         
@@ -102,6 +105,21 @@ public class Session {
         end = new SimpleFloatProperty (30.0f);
         
         proparraycalculator=new PropArrayCalculator(this);
+        
+        
+    infos = FXCollections.observableArrayList(
+    new Information("Retention Time", "RT", "Expected Retention Time of the Ion"),
+    new Information("Mass/Charge","MZ", "Expected Mass/Charge Ratio of the Ion"),
+    new Information("Ion ID","Num","Each Ion has to hava a unique number"),
+    new Information("Metabolite ID","OGroup","Each Metabolite has to have a unique number"),
+    new Information("Number of Carbon Atoms","Xn", "Number of Carbon Atoms of the Ion"),
+    new Information("Ion Form","Ion","Annotated Ion Form, e.g. [M+H]+"),
+    new Information("Uncharged Ion Mass", "M", "Mass of uncharged, intact Ion"),
+    new Information("Ion Charge", "Charge", "Charge of the Ion"),
+    new Information("Scan Event", "ScanEvent", "Scan Event"),
+    new Information("Ionisation Mode", "Ionisation_Mode", "Ionisation Mode")
+);
+    
         
         listofadductnameproperties= new ArrayList<>();
         listofadductnameproperties.add(new SimpleStringProperty("+H"));
@@ -286,28 +304,44 @@ public class Session {
         for (int i = 0; i<labels.length; i++) {
             indexLabelsXn[i] = headers.indexOf(labels[i].concat("_Xn"));
         }
-        int indexNum = headers.indexOf("Num");
-        int indexMZ = headers.indexOf("MZ");
-        int indexRT = headers.indexOf("RT");
-        int indexXn = headers.indexOf("Xn");
-        int indexOGroup = headers.indexOf("OGroup");
-        int indexIon = headers.indexOf("Ion");
-        int indexM = headers.indexOf("M");
-        int indexCharge = headers.indexOf("Charge");
-        int indexEvent = headers.indexOf("ScanEvent");
-        int indexIonisation = headers.indexOf("Ionisation_Mode");
+        int indexNum = headers.indexOf(infos.get(2).getHeader()); 
+        int indexMZ = headers.indexOf(infos.get(1).getHeader());
+        int indexRT = headers.indexOf(infos.get(0).getHeader());
+        int indexXn = -1;
+        int indexOGroup = headers.indexOf(infos.get(3).getHeader());
+        int indexIon =-1;
+        int indexM =-1;
+        int indexCharge =-1;
+        int indexEvent =-1;
+        int indexIonisation =-1;
+        
+        
+        
+        
+        if (infos.get(4).isspecified()) {
+        indexXn = headers.indexOf(infos.get(4).getHeader());}
+        if (infos.get(5).isspecified()) {
+        indexIon = headers.indexOf(infos.get(5).getHeader());}
+        if (infos.get(6).isspecified()) {
+        indexM = headers.indexOf(infos.get(6).getHeader());}
+        if (infos.get(7).isspecified()) {
+        indexCharge = headers.indexOf(infos.get(7).getHeader());}
+        if (infos.get(8).isspecified()) {
+        indexEvent = headers.indexOf(infos.get(8).getHeader());}
+        if (infos.get(9).isspecified()) {
+        indexIonisation = headers.indexOf(infos.get(9).getHeader()); }
         indices = new int[] {indexNum,indexMZ,indexRT,indexXn,indexOGroup,indexIon,indexM,indexCharge,indexEvent,indexIonisation};
         int Num;
         int[] labeledXn = new int[labels.length];
         float MZ;
         float RT;
-        int Xn;
+        Integer Xn = null;
         int OGroup;
-        String Ion;
-        float M;
-        int Charge;
-        String ScanEvent;
-        String Ionisation;
+        String Ion = null;
+        Float M = null;
+        Integer Charge = null;
+        String ScanEvent = null;
+        String Ionisation = null;
         
         
         String lastOGroup = "-1";
@@ -325,16 +359,25 @@ public class Session {
                    labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]].substring(9,end));
                }
             }
+            //required information
             Num = Integer.parseInt(allRows.get(i)[indexNum]);
             MZ = Float.parseFloat(allRows.get(i)[indexMZ]);
             RT = Float.parseFloat(allRows.get(i)[indexRT]);
-            Xn = Integer.parseInt(allRows.get(i)[indexXn]);
             OGroup = Integer.parseInt(allRows.get(i)[indexOGroup]);
-            Ion = allRows.get(i)[indexIon];
-            M = parseFloatSafely(allRows.get(i)[indexM]);
-            Charge = Integer.parseInt(allRows.get(i)[indexCharge]);
-            ScanEvent = allRows.get(i)[indexEvent];
-            Ionisation = allRows.get(i)[indexIonisation];
+            
+            //no required
+            if (infos.get(4).isspecified()) {
+            Xn = Integer.parseInt(allRows.get(i)[indexXn]);}
+            if (infos.get(5).isspecified()) {
+            Ion = allRows.get(i)[indexIon];}
+            if (infos.get(6).isspecified()) {
+            M = parseFloatSafely(allRows.get(i)[indexM]);}
+            if (infos.get(7).isspecified()) {
+            Charge = Integer.parseInt(allRows.get(i)[indexCharge]);}
+            if (infos.get(8).isspecified()) {
+            ScanEvent = allRows.get(i)[indexEvent];}
+            if (infos.get(9).isspecified()) {
+            Ionisation = allRows.get(i)[indexIonisation];}
             
             if (RT>=start.floatValue()&&RT<=end.floatValue()) {
             //if new Ogroup, make new Ogroup
@@ -1027,6 +1070,13 @@ public class Session {
      */
     public void setListofadductms(List<Integer> listofadductms) {
         this.listofadductms = listofadductms;
+    }
+
+    /**
+     * @return the infos
+     */
+    public ObservableList<Information> getInfos() {
+        return infos;
     }
     
 }
