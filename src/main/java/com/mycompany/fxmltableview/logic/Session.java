@@ -79,6 +79,7 @@ public class Session {
     private int[] indices;
     
     private ObservableList<Information> infos;
+    private ArrayList<String> outputoptions;
     
     public Session() {
         
@@ -119,7 +120,15 @@ public class Session {
     new Information("Scan Event", "ScanEvent", "Scan Event"),
     new Information("Ionisation Mode", "Ionisation_Mode", "Ionisation Mode")
 );
+    outputoptions = new ArrayList<>();
+    outputoptions.add("Retention Time of Ion");
+    outputoptions.add("File: Retention Time of Peak");
+    outputoptions.add("Mass/Charge (MZ) of Ion");
+    outputoptions.add("File: Mass/Charge (MZ) of Peak");
+    outputoptions.add("File: Peak Area");
     
+            
+        
         
         listofadductnameproperties= new ArrayList<>();
         listofadductnameproperties.add(new SimpleStringProperty("+H"));
@@ -1077,6 +1086,20 @@ public class Session {
      */
     public ObservableList<Information> getInfos() {
         return infos;
+    }
+
+    /**
+     * @return the outputoptions
+     */
+    public ArrayList<String> getOutputoptions() {
+        return outputoptions;
+    }
+
+    /**
+     * @param outputoptions the outputoptions to set
+     */
+    public void setOutputoptions(ArrayList<String> outputoptions) {
+        this.outputoptions = outputoptions;
     }
     
 }

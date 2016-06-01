@@ -24,7 +24,7 @@
                     <items>
                   <MenuItem fx:id="shift" disable="true" mnemonicParsing="false" onAction="#newwindowcalculate" text="Calculate Shift" />
                   <MenuItem fx:id="shift2" disable="true" mnemonicParsing="false" onAction="#newWindowShiftFitting" text="new Shift (experimental)" />
-                        <MenuItem fx:id="output" disable="true" mnemonicParsing="false" onAction="#generateOutputnew" text="Generate Output Matrix" />
+                        <MenuItem fx:id="output" disable="true" mnemonicParsing="false" onAction="#generateOutputExtended" text="Generate Output Matrix" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Parameters">
@@ -48,7 +48,7 @@
                            <content>
                               <AnchorPane fx:id="Tab11" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="InputTable" layoutX="51.0" layoutY="74.0" prefHeight="423.0" prefWidth="318.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="51.0" AnchorPane.topAnchor="74.0">
+                                    <TableView fx:id="InputTable" layoutX="51.0" layoutY="74.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="423.0" prefWidth="318.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="51.0" AnchorPane.topAnchor="74.0">
                                       <columns>
                                         <TableColumn fx:id="infocol" editable="false" prefWidth="171.0" sortable="false" text="Information" />
                                         <TableColumn fx:id="headcol" prefWidth="146.0" sortable="false" text="Header" />
@@ -412,16 +412,27 @@
                            <content>
                               <AnchorPane fx:id="Tab111" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <ScrollPane layoutX="54.0" layoutY="53.0" prefHeight="197.0" prefWidth="384.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                    <ScrollPane layoutX="21.0" layoutY="77.0" prefHeight="197.0" prefWidth="395.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="23.0">
                                        <content>
-                                          <TableView prefHeight="194.0" prefWidth="1141.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TableView fx:id="option2table" prefHeight="207.0" prefWidth="1141.0" translateY="-25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <columns>
-                                                <TableColumn prefWidth="75.0" sortable="false" text="C1" />
-                                                <TableColumn prefWidth="75.0" sortable="false" text="C2" />
+                                                <TableColumn fx:id="C1" prefWidth="75.0" sortable="false" text="C1" />
+                                                <TableColumn fx:id="C2" prefWidth="75.0" sortable="false" text="C2" />
+                                                <TableColumn fx:id="C3" prefWidth="75.0" sortable="false" text="C3" />
+                                                <TableColumn fx:id="C4" prefWidth="75.0" sortable="false" text="C4" />
+                                                <TableColumn fx:id="C5" prefWidth="75.0" sortable="false" text="C5" />
+                                                <TableColumn fx:id="C6" prefWidth="75.0" sortable="false" text="C6" />
+                                                <TableColumn fx:id="C7" prefWidth="75.0" sortable="false" text="C7" />
+                                                <TableColumn fx:id="C8" prefWidth="75.0" sortable="false" text="C8" />
+                                                <TableColumn fx:id="C9" prefWidth="75.0" sortable="false" text="C9" />
+                                                <TableColumn fx:id="C10" prefWidth="75.0" sortable="false" text="C10" />
                                              </columns>
                                           </TableView>
                                        </content>
                                     </ScrollPane>
+                                    <RadioButton fx:id="option1" layoutX="21.0" layoutY="14.0" mnemonicParsing="false" onAction="#option1changed" prefHeight="17.0" prefWidth="199.0" text="Option 1: Extend Input Matrix" />
+                                    <RadioButton fx:id="option2" layoutX="21.0" layoutY="50.0" mnemonicParsing="false" onAction="#option2changed" prefHeight="17.0" prefWidth="253.0" text="Option 2: Only write specific Information" />
+                                    <Separator layoutY="40.0" prefHeight="3.0" prefWidth="438.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -433,7 +444,7 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="317.0">
                     <children>
-                        <TreeTableView fx:id="metTable" maxWidth="1.7976931348623157E308" prefHeight="542.0" prefWidth="575.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TreeTableView fx:id="metTable" maxWidth="1.7976931348623157E308" prefHeight="542.0" prefWidth="575.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <columns>
                                 <TreeTableColumn fx:id="nameColumn" maxWidth="400.0" minWidth="50.0" prefWidth="88.0" text="OGroup">
                                     <cellValueFactory>

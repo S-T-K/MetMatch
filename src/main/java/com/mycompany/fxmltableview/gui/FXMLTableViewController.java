@@ -31,6 +31,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -54,10 +55,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -80,6 +83,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
+import org.controlsfx.control.textfield.TextFields;
 import org.jfree.fx.FXGraphics2D;
 
 //this is the Controller for the Main GUI
@@ -138,7 +142,15 @@ public class FXMLTableViewController implements Initializable {
     TableView<Information> InputTable;
     
     @FXML
-    TableColumn infocol, headcol;
+    TableView<OutputFormat> option2table;
+    
+    @FXML
+    TableColumn infocol, headcol, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10;
+    
+    @FXML
+    RadioButton option1,option2;
+    
+    private ObservableList<OutputFormat> outputformat;
 
     //Check for changed parameters
     String oldPick;
@@ -543,6 +555,34 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             }
         });
 
+      outputformat = FXCollections.observableArrayList(
+    new OutputFormat()
+);
+       C1.setCellValueFactory(new PropertyValueFactory<Information,String>("C1"));
+    C1.setCellFactory(new AutoTextFieldCellFactory());
+    C2.setCellValueFactory(new PropertyValueFactory<Information,String>("C2"));
+    C2.setCellFactory(new AutoTextFieldCellFactory());
+    C3.setCellValueFactory(new PropertyValueFactory<Information,String>("C3"));
+    C3.setCellFactory(new AutoTextFieldCellFactory());
+    C4.setCellValueFactory(new PropertyValueFactory<Information,String>("C4"));
+    C4.setCellFactory(new AutoTextFieldCellFactory());
+    C5.setCellValueFactory(new PropertyValueFactory<Information,String>("C5"));
+    C5.setCellFactory(new AutoTextFieldCellFactory());
+    C6.setCellValueFactory(new PropertyValueFactory<Information,String>("C6"));
+    C6.setCellFactory(new AutoTextFieldCellFactory());
+    C7.setCellValueFactory(new PropertyValueFactory<Information,String>("C7"));
+    C7.setCellFactory(new AutoTextFieldCellFactory());
+    C8.setCellValueFactory(new PropertyValueFactory<Information,String>("C8"));
+    C8.setCellFactory(new AutoTextFieldCellFactory());
+    C9.setCellValueFactory(new PropertyValueFactory<Information,String>("C9"));
+    C9.setCellFactory(new AutoTextFieldCellFactory());
+    C10.setCellValueFactory(new PropertyValueFactory<Information,String>("C10"));
+    C10.setCellFactory(new AutoTextFieldCellFactory());
+      
+    option2table.setItems(outputformat);
+    option1.selectedProperty().set(true);
+    option1changed();
+    
          
     }
 
@@ -1156,7 +1196,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         
     }
     
-    public void generateOutputnew() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+    public void generateOutputExtended() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 
         //list of OGroups
         List<Entry> ogroups = MasterListofOGroups;
@@ -1655,7 +1695,176 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
     }
   }
           
+  public void option1changed() {
+      if (option1.selectedProperty().get()) {
+          option2.selectedProperty().set(false);
+          option2table.setDisable(true);
+      } else {
+          option2.selectedProperty().set(true);
+          option2table.setDisable(false);
+      }
+      
+  }     
+  public void option2changed() {
+      if (option2.selectedProperty().get()) {
+          option1.selectedProperty().set(false);
+          option2table.setDisable(false);
+      } else {
+          option1.selectedProperty().set(true);
+          option2table.setDisable(true);
+      }
+      
+  }      
          
+            public static class AutoTextFieldCellFactory  
+     implements Callback<TableColumn<Information,String>,TableCell<Information,String>> {
+
+    @Override
+    public TableCell<Information, String> call(TableColumn<Information, String> param) {
+        TextFieldCell textFieldCell = new TextFieldCell();
+        return textFieldCell;
+    }
+
+    public static class TextFieldCell extends TableCell<Information,String> {
+        private TextField textField;
+        private StringProperty boundToCurrently = null;
+
+        public TextFieldCell() {
+            String strCss;
+          // Padding in Text field cell is not wanted - we want the Textfield itself to "be"
+          // The cell.  Though, this is aesthetic only.  to each his own.  comment out
+          // to revert back.  
+          strCss = "-fx-padding: 0;";
+
+
+          this.setStyle(strCss);
+          textField = new TextField();
+           ChangeListener listener = new ChangeListener() {
+            @Override
+            public void changed(ObservableValue o, Object oldVal, Object newVal) {
+                if (((ReadOnlyBooleanProperty)o).get()) {
+                 ((TableCell)((TextField)((ReadOnlyBooleanProperty)o).getBean()).getParent()).setPrefWidth(260);
+            } else {
+               ((TableCell)((TextField)((ReadOnlyBooleanProperty)o).getBean()).getParent()).setPrefWidth(75);
+           }
+            }
+        };
+          
+          textField.hoverProperty().addListener(listener);
+            strCss = "" +
+                    //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
+                    "-fx-background-color: -fx-control-inner-background;" +
+                    //"-fx-background-insets: 0, 1, 2;" +
+                    "-fx-background-insets: 0;" +
+                    //"-fx-background-radius: 3, 2, 2;" +
+                    "-fx-background-radius: 0;" +
+                    "-fx-padding: 3 5 3 5;" +   /*Play with this value to center the text depending on cell height??*/
+                    //"-fx-padding: 0 0 0 0;" +
+                    "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);" +
+                    "-fx-cursor: text;" +
+                    "";
+
+          TextFields.bindAutoCompletion(textField, "Retention Time of Ion","File: Retention Time of Peak","Mass/Charge (MZ) of Ion", "File: Mass/Charge (MZ) of Peak", "File: Peak Area");
+          textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                TextField tf = (TextField)getGraphic();    
+                String strStyleGotFocus = "-fx-background-color: lightblue, -fx-text-box-border, -fx-control-inner-background;" +
+                            "-fx-background-insets: -0.4, 1, 2;" +
+                            "-fx-background-radius: 3.4, 2, 2;";
+                String strStyleLostFocus = //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
+                                   "-fx-background-color: -fx-control-inner-background;" +
+                                 //"-fx-background-insets: 0, 1, 2;" +
+                                   "-fx-background-insets: 0;" +
+                                 //"-fx-background-radius: 3, 2, 2;" +
+                                   "-fx-background-radius: 0;" +
+                                   "-fx-padding: 3 5 3 5;" +   /**/
+                                   //"-fx-padding: 0 0 0 0;" +
+                                   "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);" +
+                                   "-fx-cursor: text;" +
+                                   "";
+                if(newValue.booleanValue())
+                  tf.setStyle(strStyleGotFocus);
+                else
+                  tf.setStyle(strStyleLostFocus);             
+            
+            }
+          });
+          textField.hoverProperty().addListener(new ChangeListener<Boolean>() {
+ public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                TextField tf = (TextField)getGraphic();
+                String strStyleGotHover = "-fx-background-color: lightblue, -fx-text-box-border, derive(-fx-control-inner-background, 10%);" +
+                            "-fx-background-insets: 1, 2.8, 3.8;" +
+                            "-fx-background-radius: 3.4, 2, 2;";
+                String strStyleLostHover = //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
+                                   "-fx-background-color: -fx-control-inner-background;" +
+                                 //"-fx-background-insets: 0, 1, 2;" +
+                                   "-fx-background-insets: 0;" +
+                                 //"-fx-background-radius: 3, 2, 2;" +
+                                   "-fx-background-radius: 0;" +
+                                   "-fx-padding: 3 5 3 5;" +   /**/
+                                   //"-fx-padding: 0 0 0 0;" +
+                                   "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);" +
+                                   "-fx-cursor: text;" +
+                                   "";
+                String strStyleHasFocus = "-fx-background-color: lightblue, -fx-text-box-border, -fx-control-inner-background;" +
+                            "-fx-background-insets: -0.4, 1, 2;" +
+                            "-fx-background-radius: 3.4, 2, 2;";
+                if(newValue.booleanValue()) {
+                  tf.setStyle(strStyleGotHover);
+                }
+                else {
+                  if(!tf.focusedProperty().get()) {
+                    tf.setStyle(strStyleLostHover);
+                  }
+                  else {
+                    tf.setStyle(strStyleHasFocus);
+                  }
+                }
+
+            }
+          });
+          textField.setStyle(strCss);
+          this.setGraphic(textField);
+        }
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+          super.updateItem(item, empty);        
+          if(!empty) {
+            // Show the Text Field
+            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+            // Retrieve the actual String Property that should be bound to the TextField
+            // If the TextField is currently bound to a different StringProperty
+            // Unbind the old property and rebind to the new one
+            ObservableValue<String> ov = getTableColumn().getCellObservableValue(getIndex());
+            SimpleStringProperty sp = (SimpleStringProperty)ov;
+
+            if(this.boundToCurrently==null) {
+                this.boundToCurrently = sp;
+                this.textField.textProperty().bindBidirectional(sp);
+            }
+            else {
+                if(this.boundToCurrently != sp) {
+                  this.textField.textProperty().unbindBidirectional(this.boundToCurrently);
+                  this.boundToCurrently = sp;
+                  this.textField.textProperty().bindBidirectional(this.boundToCurrently);
+                }
+            }
+//            System.out.println("item=" + item + " ObservableValue<String>=" + ov.getValue());
+            //this.textField.setText(item);  // No longer need this!!!
+          }
+          else {
+            this.setContentDisplay(ContentDisplay.TEXT_ONLY);
+          }
+        }
+
+    }
+  }
+  
+            
+          
   }
     
 

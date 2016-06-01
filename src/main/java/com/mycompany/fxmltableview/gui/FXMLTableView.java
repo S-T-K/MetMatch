@@ -14,6 +14,8 @@ import static javafx.application.Application.launch;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
 
 public class FXMLTableView extends Application {
 
