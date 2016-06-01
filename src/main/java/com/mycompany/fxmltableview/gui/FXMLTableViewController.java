@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -48,6 +49,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
@@ -56,9 +58,11 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
@@ -513,38 +517,44 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         metTable.setPlaceholder(label);
         
         final ObservableList<Information> infos = FXCollections.observableArrayList(
-    new Information("Info1", "Header1"),
-    new Information("Info2","Header2"),
-    new Information("Info3","Header3"),
-    new Information("Info4","Header4"),
-    new Information("Info5","Header5"),
-    new Information("Info6","Header6")
+    new Information("Retention Time", "RT", "Expected Retention Time of the Ion"),
+    new Information("Mass/Charge","MZ", "Expected Mass/Charge Ration of the Ion"),
+    new Information("Ion ID","Num","Each Ion has to hava a unique number"),
+    new Information("Metabolite ID","OGroup","Each Metabolite has to have a unique number"),
+    new Information("Number of Carbon Atoms","Xn", "Number of Carbon Atoms of the Ion"),
+    new Information("Ion Form","Ion","Annotated Ion Form, e.g. [M+H]+"),
+    new Information("Uncharged Ion Mass", "M", "Mass of uncharged, intact Ion"),
+    new Information("Ion Charge", "Charge", "Charge of the Ion"),
+    new Information("Scan Event", "ScanEvent", "Scan Event"),
+    new Information("Ionisation Mode", "Ionisation_Mode", "Ionisation Mode")
 );
+                InputTable.setItems(infos);
          
          
-        
-        Callback<TableColumn<Information, String>, 
-            TableCell<Information, String>> cellFactory
-                = (TableColumn<Information, String> p) -> new EditingCell();
          
         infocol.setCellValueFactory(
     new PropertyValueFactory<Information,String>("information")
 );
  
- headcol.setCellFactory(cellFactory);
-        headcol.setOnEditCommit(
-            new EventHandler<CellEditEvent<Information, String>>() {
-                @Override
-                public void handle(CellEditEvent<Information, String> t) {
-                    ((Information) t.getTableView().getItems().get(
-                        t.getTablePosition().getRow())
-                        ).setHeader(t.getNewValue());
+        headcol.setCellValueFactory(new PropertyValueFactory<Information,String>("header"));
+    headcol.setCellFactory(new TextFieldCellFactory());
+       InputTable.setEditable(true);
+
+       InputTable.setRowFactory(tv -> new TableRow<Information>() {
+            private Tooltip tooltip = new Tooltip();
+            @Override
+            public void updateItem(Information info, boolean empty) {
+                super.updateItem(info, empty);
+                if (info == null) {
+                    setTooltip(null);
+                } else {
+                    tooltip.setText(info.getTooltip());
+                    setTooltip(tooltip);
                 }
-             }
-        );
-       
-        InputTable.setItems(infos);
-         InputTable.setEditable(true);
+            }
+        });
+
+         
     }
 
     //Open File Chooser for Data Matrix
@@ -1583,68 +1593,72 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         adductanchor.setDisable(toggle);
     }
     
-        class EditingCell extends TableCell<Information, String> {
- 
+    
+    //from: http://stackoverflow.com/questions/7880494/uitableview-better-editing-through-binding
+          public static class TextFieldCellFactory  
+     implements Callback<TableColumn<Information,String>,TableCell<Information,String>> {
+
+    @Override
+    public TableCell<Information, String> call(TableColumn<Information, String> param) {
+        TextFieldCell textFieldCell = new TextFieldCell();
+        return textFieldCell;
+    }
+
+    public static class TextFieldCell extends TableCell<Information,String> {
         private TextField textField;
- 
-        public EditingCell() {
-        }
- 
-        @Override
-        public void startEdit() {
-            if (!isEmpty()) {
-                super.startEdit();
-                createTextField();
-                setText(null);
-                setGraphic(textField);
-                textField.selectAll();
+        private StringProperty boundToCurrently = null;
+
+        public TextFieldCell() {
+          textField = new TextField();
+          textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                TextField tf = (TextField)getGraphic();    
             }
+          });
+          textField.hoverProperty().addListener(new ChangeListener<Boolean>() {
+
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                TextField tf = (TextField)getGraphic();
+            }
+          });
+          this.setGraphic(textField);
         }
- 
+
         @Override
-        public void cancelEdit() {
-            super.cancelEdit();
- 
-            setText((String) getItem());
-            setGraphic(null);
-        }
- 
-        @Override
-        public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
- 
-            if (empty) {
-                setText(null);
-                setGraphic(null);
-            } else {
-                if (isEditing()) {
-                    if (textField != null) {
-                        textField.setText(getString());
-                    }
-                    setText(null);
-                    setGraphic(textField);
-                } else {
-                    setText(getString());
-                    setGraphic(null);
+        protected void updateItem(String item, boolean empty) {
+          super.updateItem(item, empty);        
+          if(!empty) {
+            // Show the Text Field
+            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+            // Retrieve the actual String Property that should be bound to the TextField
+            // If the TextField is currently bound to a different StringProperty
+            // Unbind the old property and rebind to the new one
+            ObservableValue<String> ov = getTableColumn().getCellObservableValue(getIndex());
+            SimpleStringProperty sp = (SimpleStringProperty)ov;
+
+            if(this.boundToCurrently==null) {
+                this.boundToCurrently = sp;
+                this.textField.textProperty().bindBidirectional(sp);
+            }
+            else {
+                if(this.boundToCurrently != sp) {
+                  this.textField.textProperty().unbindBidirectional(this.boundToCurrently);
+                  this.boundToCurrently = sp;
+                  this.textField.textProperty().bindBidirectional(this.boundToCurrently);
                 }
             }
+//            System.out.println("item=" + item + " ObservableValue<String>=" + ov.getValue());
+            //this.textField.setText(item);  // No longer need this!!!
+          }
+          else {
+            this.setContentDisplay(ContentDisplay.TEXT_ONLY);
+          }
         }
- 
-        private void createTextField() {
-            textField = new TextField(getString());
-            textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()* 2);
-            textField.focusedProperty().addListener(
-                (ObservableValue<? extends Boolean> arg0, 
-                Boolean arg1, Boolean arg2) -> {
-                    if (!arg2) {
-                        commitEdit(textField.getText());
-                    }
-            });
-        }
- 
-        private String getString() {
-            return getItem() == null ? "" : getItem().toString();
-        }
+
     }
+  }
+  }
     
-}
+
