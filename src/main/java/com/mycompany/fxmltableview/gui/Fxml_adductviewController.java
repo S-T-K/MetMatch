@@ -307,6 +307,7 @@ public class Fxml_adductviewController implements Initializable {
                            updateProgress(i+1,entry.getListofAdducts().size());
                            row++;
                            
+                           
                         } else {
                          
                      }
@@ -1307,7 +1308,7 @@ chart.setOnMouseReleased(null);
                 XYChart.Series series = entry.getKey();
                 Entry adduct = entry.getValue();
                 RawDataFile file = seriestofile.get(series);
-                float shift;
+                float shift=0;
                 //if peak found
                 if (adduct.getListofSlices().containsKey(file)&&adduct.getListofSlices().get(file).getFittedPeak()!=null) {
                     shift = adduct.getListofSlices().get(file).getFittedPeak().getIndexshift();

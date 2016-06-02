@@ -139,6 +139,7 @@ public class Entry {
         this.Scorefitabove = new SimpleFloatProperty(Float.NaN);
         this.Scorecertainty = new SimpleFloatProperty(Float.NaN);
         this.listofSlices = new HashMap<RawDataFile, Slice>();
+        this.Charge=-999;
         
 
         this.Scores = new HashMap<RawDataFile, Float>();
@@ -228,12 +229,14 @@ if (listofSlices.containsKey(file)) {
 //        
         if (session.getPeackPick().equals("Naïve (Gauss)")) {
             currentSlice.NaivePeakPicking();
+           session.getSncalculator().calculate(currentSlice);
             
         } else if (session.getPeackPick().equals("MassSpecWavelet")) {
             currentSlice.WaveletPeakPicking();
             
         } else if (session.getPeackPick().equals("Naïve (Savitzky-Golay)")) {
             currentSlice.SavitzkyGolayPeakPicking();
+            session.getSncalculator().calculate(currentSlice);
             
         } else {
             System.out.println("Error");

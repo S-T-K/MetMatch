@@ -1467,6 +1467,8 @@ public class ChartGenerator {
                 ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());
                 ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setStrokeWidth(currentSlice.getFile().getWidth());
                 
+                
+                System.out.println("Num: " + list.get(i).getSlice().getAdduct().getNum() + " SNR: " + peak.getSNR());
             } 
 
         }

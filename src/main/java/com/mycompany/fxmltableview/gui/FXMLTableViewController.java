@@ -1553,7 +1553,9 @@ public class FXMLTableViewController implements Initializable {
                         info[indices[6]] = String.valueOf(adduct.getM());
                     }
                     if (indices[7] > -1) {
-                        info[indices[7]] = String.valueOf(adduct.getCharge());
+                        if (adduct.getCharge()!=-999) {
+                        info[indices[7]] = String.valueOf(adduct.getCharge());}
+                        else {info[indices[7]] = "";}
                     }
                     if (indices[8] > -1) {
                         info[indices[8]] = String.valueOf(adduct.getScanEvent());

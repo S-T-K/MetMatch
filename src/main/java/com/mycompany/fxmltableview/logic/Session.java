@@ -74,6 +74,7 @@ public class Session {
     
     private PropArrayCalculator proparraycalculator;
     private GravityCalculator gravitycalculator;
+    private SNCalculator sncalculator;
     
     private String[] labels;
     private int[] indices;
@@ -106,6 +107,7 @@ public class Session {
         end = new SimpleFloatProperty (30.0f);
         
         proparraycalculator=new PropArrayCalculator(this);
+        sncalculator = new SNCalculator();
         
         
     infos = FXCollections.observableArrayList(
@@ -1111,6 +1113,20 @@ public class Session {
      */
     public void setOutputoptions(ArrayList<String> outputoptions) {
         this.outputoptions = outputoptions;
+    }
+
+    /**
+     * @return the sncalculator
+     */
+    public SNCalculator getSncalculator() {
+        return sncalculator;
+    }
+
+    /**
+     * @param sncalculator the sncalculator to set
+     */
+    public void setSncalculator(SNCalculator sncalculator) {
+        this.sncalculator = sncalculator;
     }
     
 }
