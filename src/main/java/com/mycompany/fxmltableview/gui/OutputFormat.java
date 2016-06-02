@@ -128,4 +128,9 @@ public class OutputFormat {
     public void setC10(String c10) {
         C10.set(c10);
     }
+    
+    public String[] getHeaders() {
+        String[] headers = {C1.get(),C2.get(),C3.get(),C4.get(),C5.get(),C6.get(),C7.get(),C8.get(),C9.get(),C10.get()};
+        return headers;
+    }
 }

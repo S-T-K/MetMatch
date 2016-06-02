@@ -121,11 +121,22 @@ public class Session {
     new Information("Ionisation Mode", "Ionisation_Mode", "Ionisation Mode")
 );
     outputoptions = new ArrayList<>();
-    outputoptions.add("Retention Time of Ion");
-    outputoptions.add("File: Retention Time of Peak");
-    outputoptions.add("Mass/Charge (MZ) of Ion");
-    outputoptions.add("File: Mass/Charge (MZ) of Peak");
-    outputoptions.add("File: Peak Area");
+    outputoptions.add("Reference Retention Time (RT) of Ion");
+    outputoptions.add("Files: Retention Time of Peak");
+    outputoptions.add("Reference Mass/Charge (MZ) of Ion");
+    outputoptions.add("Files: Mass/Charge (MZ) of Peak");
+    outputoptions.add("Files: Peak Area");
+    outputoptions.add("Ion ID");
+    outputoptions.add("Metabolite ID");
+    outputoptions.add("Number of Carbon Atoms");
+    outputoptions.add("Ion Form");
+    outputoptions.add("Uncharged Ion Mass");
+    outputoptions.add("Ion Charge");
+    outputoptions.add("Scan Event");
+    outputoptions.add("Ionisation Mode");
+    outputoptions.add("Files: Retention Time Shift of Peak");
+    outputoptions.add("Files: Mass/Charge (MZ) Shift of Peak");
+    
     
             
         

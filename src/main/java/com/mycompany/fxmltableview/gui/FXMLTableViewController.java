@@ -92,64 +92,64 @@ public class FXMLTableViewController implements Initializable {
     //link fxml information to controller
     @FXML
     private TreeTableView<Entry> metTable;
-    
+
     @FXML
     TreeTableColumn nameColumn;
-    
+
     @FXML
     TreeTableColumn numColumn, scoreColumn, scorepeakfoundColumn, scorepeakcloseColumn, scorecertaintyColumn, scorepeakrangeColumn, scorefitaboveColumn;
-    
+
     @FXML
     TreeTableColumn rtColumn;
-    
+
     @FXML
     TreeTableColumn mzColumn;
-    
+
     @FXML
     private Accordion accordion;
-    
+
     @FXML
     Button addBatchButton, paramButton;
-    
+
     @FXML
     ProgressBar progressbar;
-    
+
     @FXML
-    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdName8, AdName9, AdName10, AdName11, AdName12, AdName13, AdName14, AdName15, AdName16, AdName17, AdName18, AdName19, AdName20, AdName21, AdName22, AdName23, AdName24, AdName25, AdName26, AdName27, AdName28, AdName29, AdName30, AdName31, AdName32, AdName33, AdName34, AdName35, AdName36, AdName37, AdName38, AdName39, AdName40, AdName41, AdName42, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdMass8, AdMass9, AdMass10, AdMass11, AdMass12, AdMass13, AdMass14, AdMass15, AdMass16, AdMass17, AdMass18, AdMass19, AdMass20, AdMass21, AdMass22, AdMass23, AdMass24, AdMass25, AdMass26, AdMass27, AdMass28, AdMass29, AdMass30, AdMass31, AdMass32, AdMass33, AdMass34, AdMass35, AdMass36, AdMass37, AdMass38, AdMass39, AdMass40, AdMass41, AdMass42, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdM8, AdM9, AdM10, AdM11, AdM12, AdM13, AdM14, AdM15, AdM16, AdM17, AdM18, AdM19, AdM20, AdM21, AdM22, AdM23, AdM24, AdM25, AdM26, AdM27, AdM28, AdM29, AdM30, AdM31, AdM32, AdM33, AdM34, AdM35, AdM36, AdM37, AdM38, AdM39, AdM40, AdM41, AdM42,  AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7, AdC8, AdC9, AdC10, AdC11, AdC12, AdC13, AdC14, AdC15, AdC16, AdC17, AdC18, AdC19, AdC20, AdC21, AdC22, AdC23, AdC24, AdC25, AdC26, AdC27, AdC28, AdC29, AdC30, AdC31, AdC32, AdC33, AdC34, AdC35, AdC36, AdC37, AdC38, AdC39, AdC40, AdC41, AdC42;
-    
+    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdName8, AdName9, AdName10, AdName11, AdName12, AdName13, AdName14, AdName15, AdName16, AdName17, AdName18, AdName19, AdName20, AdName21, AdName22, AdName23, AdName24, AdName25, AdName26, AdName27, AdName28, AdName29, AdName30, AdName31, AdName32, AdName33, AdName34, AdName35, AdName36, AdName37, AdName38, AdName39, AdName40, AdName41, AdName42, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdMass8, AdMass9, AdMass10, AdMass11, AdMass12, AdMass13, AdMass14, AdMass15, AdMass16, AdMass17, AdMass18, AdMass19, AdMass20, AdMass21, AdMass22, AdMass23, AdMass24, AdMass25, AdMass26, AdMass27, AdMass28, AdMass29, AdMass30, AdMass31, AdMass32, AdMass33, AdMass34, AdMass35, AdMass36, AdMass37, AdMass38, AdMass39, AdMass40, AdMass41, AdMass42, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdM8, AdM9, AdM10, AdM11, AdM12, AdM13, AdM14, AdM15, AdM16, AdM17, AdM18, AdM19, AdM20, AdM21, AdM22, AdM23, AdM24, AdM25, AdM26, AdM27, AdM28, AdM29, AdM30, AdM31, AdM32, AdM33, AdM34, AdM35, AdM36, AdM37, AdM38, AdM39, AdM40, AdM41, AdM42, AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7, AdC8, AdC9, AdC10, AdC11, AdC12, AdC13, AdC14, AdC15, AdC16, AdC17, AdC18, AdC19, AdC20, AdC21, AdC22, AdC23, AdC24, AdC25, AdC26, AdC27, AdC28, AdC29, AdC30, AdC31, AdC32, AdC33, AdC34, AdC35, AdC36, AdC37, AdC38, AdC39, AdC40, AdC41, AdC42;
+
     @FXML
     Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7, Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42;
-    
+
     @FXML
     Rectangle box1, box2, box3, box4;
-    
+
     @FXML
     ChoiceBox PeakPick;
-    
+
     @FXML
     CheckBox toggleadductgeneration;
-    
+
     @FXML
     MenuItem paramMenu, shift, shift2, output;
-    
+
     @FXML
     TabPane TabPane;
-    
+
     @FXML
     AnchorPane adductanchor;
-    
+
     @FXML
     TableView<Information> InputTable;
-    
+
     @FXML
     TableView<OutputFormat> option2table;
-    
+
     @FXML
     TableColumn infocol, headcol, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10;
-    
+
     @FXML
-    RadioButton option1,option2;
-    
+    RadioButton option1, option2;
+
     private ObservableList<OutputFormat> outputformat;
 
     //Check for changed parameters
@@ -203,10 +203,9 @@ public class FXMLTableViewController implements Initializable {
 //            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        new File("C:\\Users\\stefankoch\\Documents\\tmp2").mkdirs();
-
-AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textProperty(), AdM4.textProperty(), AdM5.textProperty(), AdM6.textProperty(), AdM7.textProperty(), AdM8.textProperty(), AdM9.textProperty(), AdM10.textProperty(), AdM11.textProperty(), AdM12.textProperty(), AdM13.textProperty(), AdM14.textProperty(), AdM15.textProperty(), AdM16.textProperty(), AdM17.textProperty(), AdM18.textProperty(), AdM19.textProperty(), AdM20.textProperty(), AdM21.textProperty(), AdM22.textProperty(), AdM23.textProperty(), AdM24.textProperty(), AdM25.textProperty(), AdM26.textProperty(), AdM27.textProperty(), AdM28.textProperty(), AdM29.textProperty(), AdM30.textProperty(), AdM31.textProperty(), AdM32.textProperty(), AdM33.textProperty(), AdM34.textProperty(), AdM35.textProperty(), AdM36.textProperty(), AdM37.textProperty(), AdM38.textProperty(), AdM39.textProperty(), AdM40.textProperty(), AdM41.textProperty(), AdM42.textProperty()));
+        AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textProperty(), AdM4.textProperty(), AdM5.textProperty(), AdM6.textProperty(), AdM7.textProperty(), AdM8.textProperty(), AdM9.textProperty(), AdM10.textProperty(), AdM11.textProperty(), AdM12.textProperty(), AdM13.textProperty(), AdM14.textProperty(), AdM15.textProperty(), AdM16.textProperty(), AdM17.textProperty(), AdM18.textProperty(), AdM19.textProperty(), AdM20.textProperty(), AdM21.textProperty(), AdM22.textProperty(), AdM23.textProperty(), AdM24.textProperty(), AdM25.textProperty(), AdM26.textProperty(), AdM27.textProperty(), AdM28.textProperty(), AdM29.textProperty(), AdM30.textProperty(), AdM31.textProperty(), AdM32.textProperty(), AdM33.textProperty(), AdM34.textProperty(), AdM35.textProperty(), AdM36.textProperty(), AdM37.textProperty(), AdM38.textProperty(), AdM39.textProperty(), AdM40.textProperty(), AdM41.textProperty(), AdM42.textProperty()));
         AdCs.addAll(Arrays.asList(AdC1.textProperty(), AdC2.textProperty(), AdC3.textProperty(), AdC4.textProperty(), AdC5.textProperty(), AdC6.textProperty(), AdC7.textProperty(), AdC8.textProperty(), AdC9.textProperty(), AdC10.textProperty(), AdC11.textProperty(), AdC12.textProperty(), AdC13.textProperty(), AdC14.textProperty(), AdC15.textProperty(), AdC16.textProperty(), AdC17.textProperty(), AdC18.textProperty(), AdC19.textProperty(), AdC20.textProperty(), AdC21.textProperty(), AdC22.textProperty(), AdC23.textProperty(), AdC24.textProperty(), AdC25.textProperty(), AdC26.textProperty(), AdC27.textProperty(), AdC28.textProperty(), AdC29.textProperty(), AdC30.textProperty(), AdC31.textProperty(), AdC32.textProperty(), AdC33.textProperty(), AdC34.textProperty(), AdC35.textProperty(), AdC36.textProperty(), AdC37.textProperty(), AdC38.textProperty(), AdC39.textProperty(), AdC40.textProperty(), AdC41.textProperty(), AdC42.textProperty()));
-        AdLs.addAll(Arrays.asList(Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7,Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42));
+        AdLs.addAll(Arrays.asList(Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7, Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42));
 
         //listener for adduct parameter list
         ChangeListener listener = new ChangeListener() {
@@ -220,63 +219,61 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
                 //get numbers
                 String string = AdCs.get(index).get();
                 int c;
-                try{
-                c = Integer.parseInt(string.substring(0, string.length() - 1));}
-                catch (NumberFormatException e) {
+                try {
+                    c = Integer.parseInt(string.substring(0, string.length() - 1));
+                } catch (NumberFormatException e) {
                     c = 0;
                 } catch (StringIndexOutOfBoundsException e) {
                     c = 0;
                 }
                 int m;
-                try{
-                m = Integer.parseInt(AdMs.get(index).get());}
-                catch (NumberFormatException e) {
+                try {
+                    m = Integer.parseInt(AdMs.get(index).get());
+                } catch (NumberFormatException e) {
                     m = 0;
                 }
 
                 //make string
-                if (m<1||c<1) {
+                if (m < 1 || c < 1) {
                     string = "";
                 } else {
                     //test if division possible
-                    if (m%c==0) {
-                        m=m/c;
-                        c=1;
-                    } else if (c%m==0) {
-                        c=c/m;
-                        m=1;
-                    }                   
-                    
-                    
-                if (c > 1) {
-                    if (m > 1) {
-                        if (m == c) {
-                            string = "M + ";
-                        } else {
-                            string = m + "M/" + c + " +";
-                        }
-                    } else {
-                        string = "M/" + c + " +";
+                    if (m % c == 0) {
+                        m = m / c;
+                        c = 1;
+                    } else if (c % m == 0) {
+                        c = c / m;
+                        m = 1;
                     }
-                } else if (m > 1) {
-                    string = m + "M +";
-                } else {
-                    string = "M +";
-                }
+
+                    if (c > 1) {
+                        if (m > 1) {
+                            if (m == c) {
+                                string = "M + ";
+                            } else {
+                                string = m + "M/" + c + " +";
+                            }
+                        } else {
+                            string = "M/" + c + " +";
+                        }
+                    } else if (m > 1) {
+                        string = m + "M +";
+                    } else {
+                        string = "M +";
+                    }
                 }
                 AdLs.get(index).setText(string);
-                
-            
+
             }
         };
-        
+
         for (int i = 0; i < AdMs.size(); i++) {
             AdMs.get(i).addListener(listener);
-        }        
+        }
         for (int i = 0; i < AdCs.size(); i++) {
             AdCs.get(i).addListener(listener);
         }
-        
+
         //Parameters
         AdName1.textProperty().bindBidirectional(session.getListofadductnameproperties().get(0));
         AdName2.textProperty().bindBidirectional(session.getListofadductnameproperties().get(1));
@@ -286,40 +283,40 @@ AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textPro
         AdName6.textProperty().bindBidirectional(session.getListofadductnameproperties().get(5));
         AdName7.textProperty().bindBidirectional(session.getListofadductnameproperties().get(6));
         AdName8.textProperty().bindBidirectional(session.getListofadductnameproperties().get(7));
-AdName9.textProperty().bindBidirectional(session.getListofadductnameproperties().get(8));
-AdName10.textProperty().bindBidirectional(session.getListofadductnameproperties().get(9));
-AdName11.textProperty().bindBidirectional(session.getListofadductnameproperties().get(10));
-AdName12.textProperty().bindBidirectional(session.getListofadductnameproperties().get(11));
-AdName13.textProperty().bindBidirectional(session.getListofadductnameproperties().get(12));
-AdName14.textProperty().bindBidirectional(session.getListofadductnameproperties().get(13));
-AdName15.textProperty().bindBidirectional(session.getListofadductnameproperties().get(14));
-AdName16.textProperty().bindBidirectional(session.getListofadductnameproperties().get(15));
-AdName17.textProperty().bindBidirectional(session.getListofadductnameproperties().get(16));
-AdName18.textProperty().bindBidirectional(session.getListofadductnameproperties().get(17));
-AdName19.textProperty().bindBidirectional(session.getListofadductnameproperties().get(18));
-AdName20.textProperty().bindBidirectional(session.getListofadductnameproperties().get(19));
-AdName21.textProperty().bindBidirectional(session.getListofadductnameproperties().get(20));
-AdName22.textProperty().bindBidirectional(session.getListofadductnameproperties().get(21));
-AdName23.textProperty().bindBidirectional(session.getListofadductnameproperties().get(22));
-AdName24.textProperty().bindBidirectional(session.getListofadductnameproperties().get(23));
-AdName25.textProperty().bindBidirectional(session.getListofadductnameproperties().get(24));
-AdName26.textProperty().bindBidirectional(session.getListofadductnameproperties().get(25));
-AdName27.textProperty().bindBidirectional(session.getListofadductnameproperties().get(26));
-AdName28.textProperty().bindBidirectional(session.getListofadductnameproperties().get(27));
-AdName29.textProperty().bindBidirectional(session.getListofadductnameproperties().get(28));
-AdName30.textProperty().bindBidirectional(session.getListofadductnameproperties().get(29));
-AdName31.textProperty().bindBidirectional(session.getListofadductnameproperties().get(30));
-AdName32.textProperty().bindBidirectional(session.getListofadductnameproperties().get(31));
-AdName33.textProperty().bindBidirectional(session.getListofadductnameproperties().get(32));
-AdName34.textProperty().bindBidirectional(session.getListofadductnameproperties().get(33));
-AdName35.textProperty().bindBidirectional(session.getListofadductnameproperties().get(34));
-AdName36.textProperty().bindBidirectional(session.getListofadductnameproperties().get(35));
-AdName37.textProperty().bindBidirectional(session.getListofadductnameproperties().get(36));
-AdName38.textProperty().bindBidirectional(session.getListofadductnameproperties().get(37));
-AdName39.textProperty().bindBidirectional(session.getListofadductnameproperties().get(38));
-AdName40.textProperty().bindBidirectional(session.getListofadductnameproperties().get(39));
-AdName41.textProperty().bindBidirectional(session.getListofadductnameproperties().get(40));
-AdName42.textProperty().bindBidirectional(session.getListofadductnameproperties().get(41));
+        AdName9.textProperty().bindBidirectional(session.getListofadductnameproperties().get(8));
+        AdName10.textProperty().bindBidirectional(session.getListofadductnameproperties().get(9));
+        AdName11.textProperty().bindBidirectional(session.getListofadductnameproperties().get(10));
+        AdName12.textProperty().bindBidirectional(session.getListofadductnameproperties().get(11));
+        AdName13.textProperty().bindBidirectional(session.getListofadductnameproperties().get(12));
+        AdName14.textProperty().bindBidirectional(session.getListofadductnameproperties().get(13));
+        AdName15.textProperty().bindBidirectional(session.getListofadductnameproperties().get(14));
+        AdName16.textProperty().bindBidirectional(session.getListofadductnameproperties().get(15));
+        AdName17.textProperty().bindBidirectional(session.getListofadductnameproperties().get(16));
+        AdName18.textProperty().bindBidirectional(session.getListofadductnameproperties().get(17));
+        AdName19.textProperty().bindBidirectional(session.getListofadductnameproperties().get(18));
+        AdName20.textProperty().bindBidirectional(session.getListofadductnameproperties().get(19));
+        AdName21.textProperty().bindBidirectional(session.getListofadductnameproperties().get(20));
+        AdName22.textProperty().bindBidirectional(session.getListofadductnameproperties().get(21));
+        AdName23.textProperty().bindBidirectional(session.getListofadductnameproperties().get(22));
+        AdName24.textProperty().bindBidirectional(session.getListofadductnameproperties().get(23));
+        AdName25.textProperty().bindBidirectional(session.getListofadductnameproperties().get(24));
+        AdName26.textProperty().bindBidirectional(session.getListofadductnameproperties().get(25));
+        AdName27.textProperty().bindBidirectional(session.getListofadductnameproperties().get(26));
+        AdName28.textProperty().bindBidirectional(session.getListofadductnameproperties().get(27));
+        AdName29.textProperty().bindBidirectional(session.getListofadductnameproperties().get(28));
+        AdName30.textProperty().bindBidirectional(session.getListofadductnameproperties().get(29));
+        AdName31.textProperty().bindBidirectional(session.getListofadductnameproperties().get(30));
+        AdName32.textProperty().bindBidirectional(session.getListofadductnameproperties().get(31));
+        AdName33.textProperty().bindBidirectional(session.getListofadductnameproperties().get(32));
+        AdName34.textProperty().bindBidirectional(session.getListofadductnameproperties().get(33));
+        AdName35.textProperty().bindBidirectional(session.getListofadductnameproperties().get(34));
+        AdName36.textProperty().bindBidirectional(session.getListofadductnameproperties().get(35));
+        AdName37.textProperty().bindBidirectional(session.getListofadductnameproperties().get(36));
+        AdName38.textProperty().bindBidirectional(session.getListofadductnameproperties().get(37));
+        AdName39.textProperty().bindBidirectional(session.getListofadductnameproperties().get(38));
+        AdName40.textProperty().bindBidirectional(session.getListofadductnameproperties().get(39));
+        AdName41.textProperty().bindBidirectional(session.getListofadductnameproperties().get(40));
+        AdName42.textProperty().bindBidirectional(session.getListofadductnameproperties().get(41));
         AdMass1.textProperty().bindBidirectional(session.getListofadductmassproperties().get(0), new NumberStringConverter());
         AdMass2.textProperty().bindBidirectional(session.getListofadductmassproperties().get(1), new NumberStringConverter());
         AdMass3.textProperty().bindBidirectional(session.getListofadductmassproperties().get(2), new NumberStringConverter());
@@ -328,40 +325,40 @@ AdName42.textProperty().bindBidirectional(session.getListofadductnameproperties(
         AdMass6.textProperty().bindBidirectional(session.getListofadductmassproperties().get(5), new NumberStringConverter());
         AdMass7.textProperty().bindBidirectional(session.getListofadductmassproperties().get(6), new NumberStringConverter());
         AdMass8.textProperty().bindBidirectional(session.getListofadductmassproperties().get(7), new NumberStringConverter());
-AdMass9.textProperty().bindBidirectional(session.getListofadductmassproperties().get(8), new NumberStringConverter());
-AdMass10.textProperty().bindBidirectional(session.getListofadductmassproperties().get(9), new NumberStringConverter());
-AdMass11.textProperty().bindBidirectional(session.getListofadductmassproperties().get(10), new NumberStringConverter());
-AdMass12.textProperty().bindBidirectional(session.getListofadductmassproperties().get(11), new NumberStringConverter());
-AdMass13.textProperty().bindBidirectional(session.getListofadductmassproperties().get(12), new NumberStringConverter());
-AdMass14.textProperty().bindBidirectional(session.getListofadductmassproperties().get(13), new NumberStringConverter());
-AdMass15.textProperty().bindBidirectional(session.getListofadductmassproperties().get(14), new NumberStringConverter());
-AdMass16.textProperty().bindBidirectional(session.getListofadductmassproperties().get(15), new NumberStringConverter());
-AdMass17.textProperty().bindBidirectional(session.getListofadductmassproperties().get(16), new NumberStringConverter());
-AdMass18.textProperty().bindBidirectional(session.getListofadductmassproperties().get(17), new NumberStringConverter());
-AdMass19.textProperty().bindBidirectional(session.getListofadductmassproperties().get(18), new NumberStringConverter());
-AdMass20.textProperty().bindBidirectional(session.getListofadductmassproperties().get(19), new NumberStringConverter());
-AdMass21.textProperty().bindBidirectional(session.getListofadductmassproperties().get(20), new NumberStringConverter());
-AdMass22.textProperty().bindBidirectional(session.getListofadductmassproperties().get(21), new NumberStringConverter());
-AdMass23.textProperty().bindBidirectional(session.getListofadductmassproperties().get(22), new NumberStringConverter());
-AdMass24.textProperty().bindBidirectional(session.getListofadductmassproperties().get(23), new NumberStringConverter());
-AdMass25.textProperty().bindBidirectional(session.getListofadductmassproperties().get(24), new NumberStringConverter());
-AdMass26.textProperty().bindBidirectional(session.getListofadductmassproperties().get(25), new NumberStringConverter());
-AdMass27.textProperty().bindBidirectional(session.getListofadductmassproperties().get(26), new NumberStringConverter());
-AdMass28.textProperty().bindBidirectional(session.getListofadductmassproperties().get(27), new NumberStringConverter());
-AdMass29.textProperty().bindBidirectional(session.getListofadductmassproperties().get(28), new NumberStringConverter());
-AdMass30.textProperty().bindBidirectional(session.getListofadductmassproperties().get(29), new NumberStringConverter());
-AdMass31.textProperty().bindBidirectional(session.getListofadductmassproperties().get(30), new NumberStringConverter());
-AdMass32.textProperty().bindBidirectional(session.getListofadductmassproperties().get(31), new NumberStringConverter());
-AdMass33.textProperty().bindBidirectional(session.getListofadductmassproperties().get(32), new NumberStringConverter());
-AdMass34.textProperty().bindBidirectional(session.getListofadductmassproperties().get(33), new NumberStringConverter());
-AdMass35.textProperty().bindBidirectional(session.getListofadductmassproperties().get(34), new NumberStringConverter());
-AdMass36.textProperty().bindBidirectional(session.getListofadductmassproperties().get(35), new NumberStringConverter());
-AdMass37.textProperty().bindBidirectional(session.getListofadductmassproperties().get(36), new NumberStringConverter());
-AdMass38.textProperty().bindBidirectional(session.getListofadductmassproperties().get(37), new NumberStringConverter());
-AdMass39.textProperty().bindBidirectional(session.getListofadductmassproperties().get(38), new NumberStringConverter());
-AdMass40.textProperty().bindBidirectional(session.getListofadductmassproperties().get(39), new NumberStringConverter());
-AdMass41.textProperty().bindBidirectional(session.getListofadductmassproperties().get(40), new NumberStringConverter());
-AdMass42.textProperty().bindBidirectional(session.getListofadductmassproperties().get(41), new NumberStringConverter());
+        AdMass9.textProperty().bindBidirectional(session.getListofadductmassproperties().get(8), new NumberStringConverter());
+        AdMass10.textProperty().bindBidirectional(session.getListofadductmassproperties().get(9), new NumberStringConverter());
+        AdMass11.textProperty().bindBidirectional(session.getListofadductmassproperties().get(10), new NumberStringConverter());
+        AdMass12.textProperty().bindBidirectional(session.getListofadductmassproperties().get(11), new NumberStringConverter());
+        AdMass13.textProperty().bindBidirectional(session.getListofadductmassproperties().get(12), new NumberStringConverter());
+        AdMass14.textProperty().bindBidirectional(session.getListofadductmassproperties().get(13), new NumberStringConverter());
+        AdMass15.textProperty().bindBidirectional(session.getListofadductmassproperties().get(14), new NumberStringConverter());
+        AdMass16.textProperty().bindBidirectional(session.getListofadductmassproperties().get(15), new NumberStringConverter());
+        AdMass17.textProperty().bindBidirectional(session.getListofadductmassproperties().get(16), new NumberStringConverter());
+        AdMass18.textProperty().bindBidirectional(session.getListofadductmassproperties().get(17), new NumberStringConverter());
+        AdMass19.textProperty().bindBidirectional(session.getListofadductmassproperties().get(18), new NumberStringConverter());
+        AdMass20.textProperty().bindBidirectional(session.getListofadductmassproperties().get(19), new NumberStringConverter());
+        AdMass21.textProperty().bindBidirectional(session.getListofadductmassproperties().get(20), new NumberStringConverter());
+        AdMass22.textProperty().bindBidirectional(session.getListofadductmassproperties().get(21), new NumberStringConverter());
+        AdMass23.textProperty().bindBidirectional(session.getListofadductmassproperties().get(22), new NumberStringConverter());
+        AdMass24.textProperty().bindBidirectional(session.getListofadductmassproperties().get(23), new NumberStringConverter());
+        AdMass25.textProperty().bindBidirectional(session.getListofadductmassproperties().get(24), new NumberStringConverter());
+        AdMass26.textProperty().bindBidirectional(session.getListofadductmassproperties().get(25), new NumberStringConverter());
+        AdMass27.textProperty().bindBidirectional(session.getListofadductmassproperties().get(26), new NumberStringConverter());
+        AdMass28.textProperty().bindBidirectional(session.getListofadductmassproperties().get(27), new NumberStringConverter());
+        AdMass29.textProperty().bindBidirectional(session.getListofadductmassproperties().get(28), new NumberStringConverter());
+        AdMass30.textProperty().bindBidirectional(session.getListofadductmassproperties().get(29), new NumberStringConverter());
+        AdMass31.textProperty().bindBidirectional(session.getListofadductmassproperties().get(30), new NumberStringConverter());
+        AdMass32.textProperty().bindBidirectional(session.getListofadductmassproperties().get(31), new NumberStringConverter());
+        AdMass33.textProperty().bindBidirectional(session.getListofadductmassproperties().get(32), new NumberStringConverter());
+        AdMass34.textProperty().bindBidirectional(session.getListofadductmassproperties().get(33), new NumberStringConverter());
+        AdMass35.textProperty().bindBidirectional(session.getListofadductmassproperties().get(34), new NumberStringConverter());
+        AdMass36.textProperty().bindBidirectional(session.getListofadductmassproperties().get(35), new NumberStringConverter());
+        AdMass37.textProperty().bindBidirectional(session.getListofadductmassproperties().get(36), new NumberStringConverter());
+        AdMass38.textProperty().bindBidirectional(session.getListofadductmassproperties().get(37), new NumberStringConverter());
+        AdMass39.textProperty().bindBidirectional(session.getListofadductmassproperties().get(38), new NumberStringConverter());
+        AdMass40.textProperty().bindBidirectional(session.getListofadductmassproperties().get(39), new NumberStringConverter());
+        AdMass41.textProperty().bindBidirectional(session.getListofadductmassproperties().get(40), new NumberStringConverter());
+        AdMass42.textProperty().bindBidirectional(session.getListofadductmassproperties().get(41), new NumberStringConverter());
         AdM1.textProperty().bindBidirectional(session.getListofadductmproperties().get(0), new NumberStringConverter());
         AdM2.textProperty().bindBidirectional(session.getListofadductmproperties().get(1), new NumberStringConverter());
         AdM3.textProperty().bindBidirectional(session.getListofadductmproperties().get(2), new NumberStringConverter());
@@ -370,40 +367,40 @@ AdMass42.textProperty().bindBidirectional(session.getListofadductmassproperties(
         AdM6.textProperty().bindBidirectional(session.getListofadductmproperties().get(5), new NumberStringConverter());
         AdM7.textProperty().bindBidirectional(session.getListofadductmproperties().get(6), new NumberStringConverter());
         AdM8.textProperty().bindBidirectional(session.getListofadductmproperties().get(7), new NumberStringConverter());
-AdM9.textProperty().bindBidirectional(session.getListofadductmproperties().get(8), new NumberStringConverter());
-AdM10.textProperty().bindBidirectional(session.getListofadductmproperties().get(9), new NumberStringConverter());
-AdM11.textProperty().bindBidirectional(session.getListofadductmproperties().get(10), new NumberStringConverter());
-AdM12.textProperty().bindBidirectional(session.getListofadductmproperties().get(11), new NumberStringConverter());
-AdM13.textProperty().bindBidirectional(session.getListofadductmproperties().get(12), new NumberStringConverter());
-AdM14.textProperty().bindBidirectional(session.getListofadductmproperties().get(13), new NumberStringConverter());
-AdM15.textProperty().bindBidirectional(session.getListofadductmproperties().get(14), new NumberStringConverter());
-AdM16.textProperty().bindBidirectional(session.getListofadductmproperties().get(15), new NumberStringConverter());
-AdM17.textProperty().bindBidirectional(session.getListofadductmproperties().get(16), new NumberStringConverter());
-AdM18.textProperty().bindBidirectional(session.getListofadductmproperties().get(17), new NumberStringConverter());
-AdM19.textProperty().bindBidirectional(session.getListofadductmproperties().get(18), new NumberStringConverter());
-AdM20.textProperty().bindBidirectional(session.getListofadductmproperties().get(19), new NumberStringConverter());
-AdM21.textProperty().bindBidirectional(session.getListofadductmproperties().get(20), new NumberStringConverter());
-AdM22.textProperty().bindBidirectional(session.getListofadductmproperties().get(21), new NumberStringConverter());
-AdM23.textProperty().bindBidirectional(session.getListofadductmproperties().get(22), new NumberStringConverter());
-AdM24.textProperty().bindBidirectional(session.getListofadductmproperties().get(23), new NumberStringConverter());
-AdM25.textProperty().bindBidirectional(session.getListofadductmproperties().get(24), new NumberStringConverter());
-AdM26.textProperty().bindBidirectional(session.getListofadductmproperties().get(25), new NumberStringConverter());
-AdM27.textProperty().bindBidirectional(session.getListofadductmproperties().get(26), new NumberStringConverter());
-AdM28.textProperty().bindBidirectional(session.getListofadductmproperties().get(27), new NumberStringConverter());
-AdM29.textProperty().bindBidirectional(session.getListofadductmproperties().get(28), new NumberStringConverter());
-AdM30.textProperty().bindBidirectional(session.getListofadductmproperties().get(29), new NumberStringConverter());
-AdM31.textProperty().bindBidirectional(session.getListofadductmproperties().get(30), new NumberStringConverter());
-AdM32.textProperty().bindBidirectional(session.getListofadductmproperties().get(31), new NumberStringConverter());
-AdM33.textProperty().bindBidirectional(session.getListofadductmproperties().get(32), new NumberStringConverter());
-AdM34.textProperty().bindBidirectional(session.getListofadductmproperties().get(33), new NumberStringConverter());
-AdM35.textProperty().bindBidirectional(session.getListofadductmproperties().get(34), new NumberStringConverter());
-AdM36.textProperty().bindBidirectional(session.getListofadductmproperties().get(35), new NumberStringConverter());
-AdM37.textProperty().bindBidirectional(session.getListofadductmproperties().get(36), new NumberStringConverter());
-AdM38.textProperty().bindBidirectional(session.getListofadductmproperties().get(37), new NumberStringConverter());
-AdM39.textProperty().bindBidirectional(session.getListofadductmproperties().get(38), new NumberStringConverter());
-AdM40.textProperty().bindBidirectional(session.getListofadductmproperties().get(39), new NumberStringConverter());
-AdM41.textProperty().bindBidirectional(session.getListofadductmproperties().get(40), new NumberStringConverter());
-AdM42.textProperty().bindBidirectional(session.getListofadductmproperties().get(41), new NumberStringConverter());
+        AdM9.textProperty().bindBidirectional(session.getListofadductmproperties().get(8), new NumberStringConverter());
+        AdM10.textProperty().bindBidirectional(session.getListofadductmproperties().get(9), new NumberStringConverter());
+        AdM11.textProperty().bindBidirectional(session.getListofadductmproperties().get(10), new NumberStringConverter());
+        AdM12.textProperty().bindBidirectional(session.getListofadductmproperties().get(11), new NumberStringConverter());
+        AdM13.textProperty().bindBidirectional(session.getListofadductmproperties().get(12), new NumberStringConverter());
+        AdM14.textProperty().bindBidirectional(session.getListofadductmproperties().get(13), new NumberStringConverter());
+        AdM15.textProperty().bindBidirectional(session.getListofadductmproperties().get(14), new NumberStringConverter());
+        AdM16.textProperty().bindBidirectional(session.getListofadductmproperties().get(15), new NumberStringConverter());
+        AdM17.textProperty().bindBidirectional(session.getListofadductmproperties().get(16), new NumberStringConverter());
+        AdM18.textProperty().bindBidirectional(session.getListofadductmproperties().get(17), new NumberStringConverter());
+        AdM19.textProperty().bindBidirectional(session.getListofadductmproperties().get(18), new NumberStringConverter());
+        AdM20.textProperty().bindBidirectional(session.getListofadductmproperties().get(19), new NumberStringConverter());
+        AdM21.textProperty().bindBidirectional(session.getListofadductmproperties().get(20), new NumberStringConverter());
+        AdM22.textProperty().bindBidirectional(session.getListofadductmproperties().get(21), new NumberStringConverter());
+        AdM23.textProperty().bindBidirectional(session.getListofadductmproperties().get(22), new NumberStringConverter());
+        AdM24.textProperty().bindBidirectional(session.getListofadductmproperties().get(23), new NumberStringConverter());
+        AdM25.textProperty().bindBidirectional(session.getListofadductmproperties().get(24), new NumberStringConverter());
+        AdM26.textProperty().bindBidirectional(session.getListofadductmproperties().get(25), new NumberStringConverter());
+        AdM27.textProperty().bindBidirectional(session.getListofadductmproperties().get(26), new NumberStringConverter());
+        AdM28.textProperty().bindBidirectional(session.getListofadductmproperties().get(27), new NumberStringConverter());
+        AdM29.textProperty().bindBidirectional(session.getListofadductmproperties().get(28), new NumberStringConverter());
+        AdM30.textProperty().bindBidirectional(session.getListofadductmproperties().get(29), new NumberStringConverter());
+        AdM31.textProperty().bindBidirectional(session.getListofadductmproperties().get(30), new NumberStringConverter());
+        AdM32.textProperty().bindBidirectional(session.getListofadductmproperties().get(31), new NumberStringConverter());
+        AdM33.textProperty().bindBidirectional(session.getListofadductmproperties().get(32), new NumberStringConverter());
+        AdM34.textProperty().bindBidirectional(session.getListofadductmproperties().get(33), new NumberStringConverter());
+        AdM35.textProperty().bindBidirectional(session.getListofadductmproperties().get(34), new NumberStringConverter());
+        AdM36.textProperty().bindBidirectional(session.getListofadductmproperties().get(35), new NumberStringConverter());
+        AdM37.textProperty().bindBidirectional(session.getListofadductmproperties().get(36), new NumberStringConverter());
+        AdM38.textProperty().bindBidirectional(session.getListofadductmproperties().get(37), new NumberStringConverter());
+        AdM39.textProperty().bindBidirectional(session.getListofadductmproperties().get(38), new NumberStringConverter());
+        AdM40.textProperty().bindBidirectional(session.getListofadductmproperties().get(39), new NumberStringConverter());
+        AdM41.textProperty().bindBidirectional(session.getListofadductmproperties().get(40), new NumberStringConverter());
+        AdM42.textProperty().bindBidirectional(session.getListofadductmproperties().get(41), new NumberStringConverter());
         AdC1.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(0));
         AdC2.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(1));
         AdC3.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(2));
@@ -412,41 +409,40 @@ AdM42.textProperty().bindBidirectional(session.getListofadductmproperties().get(
         AdC6.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(5));
         AdC7.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(6));
         AdC8.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(7));
-AdC9.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(8));
-AdC10.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(9));
-AdC11.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(10));
-AdC12.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(11));
-AdC13.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(12));
-AdC14.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(13));
-AdC15.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(14));
-AdC16.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(15));
-AdC17.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(16));
-AdC18.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(17));
-AdC19.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(18));
-AdC20.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(19));
-AdC21.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(20));
-AdC22.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(21));
-AdC23.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(22));
-AdC24.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(23));
-AdC25.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(24));
-AdC26.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(25));
-AdC27.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(26));
-AdC28.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(27));
-AdC29.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(28));
-AdC30.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(29));
-AdC31.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(30));
-AdC32.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(31));
-AdC33.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(32));
-AdC34.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(33));
-AdC35.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(34));
-AdC36.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(35));
-AdC37.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(36));
-AdC38.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(37));
-AdC39.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(38));
-AdC40.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(39));
-AdC41.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(40));
-AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(41));
-        
+        AdC9.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(8));
+        AdC10.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(9));
+        AdC11.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(10));
+        AdC12.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(11));
+        AdC13.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(12));
+        AdC14.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(13));
+        AdC15.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(14));
+        AdC16.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(15));
+        AdC17.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(16));
+        AdC18.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(17));
+        AdC19.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(18));
+        AdC20.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(19));
+        AdC21.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(20));
+        AdC22.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(21));
+        AdC23.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(22));
+        AdC24.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(23));
+        AdC25.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(24));
+        AdC26.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(25));
+        AdC27.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(26));
+        AdC28.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(27));
+        AdC29.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(28));
+        AdC30.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(29));
+        AdC31.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(30));
+        AdC32.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(31));
+        AdC33.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(32));
+        AdC34.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(33));
+        AdC35.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(34));
+        AdC36.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(35));
+        AdC37.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(36));
+        AdC38.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(37));
+        AdC39.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(38));
+        AdC40.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(39));
+        AdC41.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(40));
+        AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties().get(41));
 
 //        Adlabel1.textProperty().bind(new StringBinding() {{bind(session.getListofadductmproperties().get(0));}
 //      @Override
@@ -487,12 +483,12 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         PeakPick.setItems(FXCollections.observableArrayList(
                 "Naïve (Gauss)", "MassSpecWavelet", "Naïve (Savitzky-Golay)")
         );
-        
+
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 session.setPeackPick(PeakPick.getItems().get(newVal.intValue()).toString());
             }
-            
+
         });
         PeakPick.getSelectionModel().select(0);
         panelink = new HashMap<>();
@@ -500,7 +496,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
 
         //set batchcount to 0,
         batchcount = 0;
-        
+
         Label label = new Label("1.)    <------------  Set Parameters \n\n\n  2.)  Click here to choose Data Matrix");
         label.setAlignment(Pos.CENTER);
         label.setMinHeight(500);
@@ -509,10 +505,10 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         label.setFont(Font.font("Verdana", 14));
         label.setOnMouseClicked((MouseEvent event) -> {
             try {
-                
+
                 ProgressIndicator prog = new ProgressIndicator();
                 prog.setMaxHeight(50);
-                
+
                 metTable.setPlaceholder(prog);
                 prog.setOnMouseClicked((MouseEvent event2) -> {
                     try {
@@ -527,22 +523,20 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             }
         });
         metTable.setPlaceholder(label);
-        
-        
-                InputTable.setItems(session.getInfos());
-         
-         
-         
-        infocol.setCellValueFactory(
-    new PropertyValueFactory<Information,String>("information")
-);
- 
-        headcol.setCellValueFactory(new PropertyValueFactory<Information,String>("header"));
-    headcol.setCellFactory(new TextFieldCellFactory());
-       InputTable.setEditable(true);
 
-       InputTable.setRowFactory(tv -> new TableRow<Information>() {
+        InputTable.setItems(session.getInfos());
+
+        infocol.setCellValueFactory(
+                new PropertyValueFactory<Information, String>("information")
+        );
+
+        headcol.setCellValueFactory(new PropertyValueFactory<Information, String>("header"));
+        headcol.setCellFactory(new TextFieldCellFactory());
+        InputTable.setEditable(true);
+
+        InputTable.setRowFactory(tv -> new TableRow<Information>() {
             private Tooltip tooltip = new Tooltip();
+
             @Override
             public void updateItem(Information info, boolean empty) {
                 super.updateItem(info, empty);
@@ -555,35 +549,34 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             }
         });
 
-      outputformat = FXCollections.observableArrayList(
-    new OutputFormat()
-);
-       C1.setCellValueFactory(new PropertyValueFactory<Information,String>("C1"));
-    C1.setCellFactory(new AutoTextFieldCellFactory());
-    C2.setCellValueFactory(new PropertyValueFactory<Information,String>("C2"));
-    C2.setCellFactory(new AutoTextFieldCellFactory());
-    C3.setCellValueFactory(new PropertyValueFactory<Information,String>("C3"));
-    C3.setCellFactory(new AutoTextFieldCellFactory());
-    C4.setCellValueFactory(new PropertyValueFactory<Information,String>("C4"));
-    C4.setCellFactory(new AutoTextFieldCellFactory());
-    C5.setCellValueFactory(new PropertyValueFactory<Information,String>("C5"));
-    C5.setCellFactory(new AutoTextFieldCellFactory());
-    C6.setCellValueFactory(new PropertyValueFactory<Information,String>("C6"));
-    C6.setCellFactory(new AutoTextFieldCellFactory());
-    C7.setCellValueFactory(new PropertyValueFactory<Information,String>("C7"));
-    C7.setCellFactory(new AutoTextFieldCellFactory());
-    C8.setCellValueFactory(new PropertyValueFactory<Information,String>("C8"));
-    C8.setCellFactory(new AutoTextFieldCellFactory());
-    C9.setCellValueFactory(new PropertyValueFactory<Information,String>("C9"));
-    C9.setCellFactory(new AutoTextFieldCellFactory());
-    C10.setCellValueFactory(new PropertyValueFactory<Information,String>("C10"));
-    C10.setCellFactory(new AutoTextFieldCellFactory());
-      
-    option2table.setItems(outputformat);
-    option1.selectedProperty().set(true);
-    option1changed();
-    
-         
+        outputformat = FXCollections.observableArrayList(
+                new OutputFormat()
+        );
+        C1.setCellValueFactory(new PropertyValueFactory<Information, String>("C1"));
+        C1.setCellFactory(new AutoTextFieldCellFactory());
+        C2.setCellValueFactory(new PropertyValueFactory<Information, String>("C2"));
+        C2.setCellFactory(new AutoTextFieldCellFactory());
+        C3.setCellValueFactory(new PropertyValueFactory<Information, String>("C3"));
+        C3.setCellFactory(new AutoTextFieldCellFactory());
+        C4.setCellValueFactory(new PropertyValueFactory<Information, String>("C4"));
+        C4.setCellFactory(new AutoTextFieldCellFactory());
+        C5.setCellValueFactory(new PropertyValueFactory<Information, String>("C5"));
+        C5.setCellFactory(new AutoTextFieldCellFactory());
+        C6.setCellValueFactory(new PropertyValueFactory<Information, String>("C6"));
+        C6.setCellFactory(new AutoTextFieldCellFactory());
+        C7.setCellValueFactory(new PropertyValueFactory<Information, String>("C7"));
+        C7.setCellFactory(new AutoTextFieldCellFactory());
+        C8.setCellValueFactory(new PropertyValueFactory<Information, String>("C8"));
+        C8.setCellFactory(new AutoTextFieldCellFactory());
+        C9.setCellValueFactory(new PropertyValueFactory<Information, String>("C9"));
+        C9.setCellFactory(new AutoTextFieldCellFactory());
+        C10.setCellValueFactory(new PropertyValueFactory<Information, String>("C10"));
+        C10.setCellFactory(new AutoTextFieldCellFactory());
+
+        option2table.setItems(outputformat);
+        option1.selectedProperty().set(true);
+        option1changed();
+
     }
 
     //Open File Chooser for Data Matrix
@@ -605,31 +598,31 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         generateAdductsnew();
         //Convert List into TreeTable Entries
         TreeItem<Entry> superroot = new TreeItem<>();
-        
+
         int numberofadducts = 0;
         //for all OGroups
         for (int i = 0; i < getMasterListofOGroups().size(); i++) {
             TreeItem<Entry> root = new TreeItem<>(getMasterListofOGroups().get(i));
             root.setExpanded(false);
             superroot.getChildren().add(root);
-            
+
             for (int j = 0; j < getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                 TreeItem<Entry> childNode1 = new TreeItem<>(getMasterListofOGroups().get(i).getListofAdducts().get(j));
                 root.getChildren().add(childNode1);
                 numberofadducts++;
             }
-            
+
         }
         session.setNumberofadducts(numberofadducts);
-        
+
         getMetTable().setRoot(superroot);
         getMetTable().setShowRoot(false);
-        
+
         addBatchButton.setDisable(false);
         addBatchButton.setVisible(true);
         accordion.setVisible(true);
         setParameterPane(false);
-        
+
         TabPane.setVisible(false);
         RTTol.setDisable(true);
         MZTol.setDisable(true);
@@ -640,16 +633,16 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         paramMenu.setDisable(false);
         toggleadductgeneration.setDisable(true);
         adductanchor.setDisable(true);
-        
+
         session.prepare();
-        
+
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
-        
+
         try {
             TitledPane tps = new TitledPane();
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             //loader.setRoot(tps);
             Reference reference = new Reference();
@@ -664,7 +657,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -674,7 +667,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-                    
+
                     try {
 
                         //create new window
@@ -694,28 +687,28 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                         controller.print();
                         stage.show();
                         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                            
+
                             public void handle(WindowEvent we) {
                                 controller.close();
                             }
                         });
-                        
+
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                 }
             }
         });
-        
+
     }
 
     //add a new batch
     public void addBatch() {
-        
+
         try {
             TitledPane tps = new TitledPane();
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             //loader.setRoot(tps);
             Batch batch = new Batch(batchcount);
@@ -730,16 +723,16 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     //calculates Shift and opens a new window
     public void newwindowcalculate() throws IOException, InterruptedException {
-        
+
         output.setDisable(false);
         //open new window
         Stage stage = new Stage();
@@ -755,21 +748,21 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         controller.print(getMasterListofOGroups());
         System.out.println("PRINTNEW");
         stage.show();
-        
+
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 controller.close();
             }
         });
-        
+
     }
 
     //does the Shift calculation
     public void calculate(CountDownLatch latch, ProgressBar prog) throws IOException, InterruptedException {
-        
+
         FloatProperty progress = new SimpleFloatProperty(0.0f);
         prog.progressProperty().bind(progress);
-        
+
         Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
@@ -779,10 +772,10 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                         for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
                             RawDataFile currentfile = session.getListofDatasets().get(d).getListofFiles().get(f);
                             if (currentfile.getActive().booleanValue()) {
-                                
+
                                 Collections.sort(getMasterListofOGroups(), new orderbyRT());
                                 float[][] matrix = new float[getMasterListofOGroups().size()][session.getResolution()];
-                                
+
                                 CountDownLatch latchpeak = new CountDownLatch(1);
                                 Task task = new Task<Void>() {
                                     @Override
@@ -817,19 +810,19 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                                     getMasterListofOGroups().get(current).peakpickOGroup(currentfile);
                                                     picktime += System.currentTimeMillis() - pick;
                                                     getMasterListofOGroups().get(current).getOGroupPropArraySmooth(currentfile, matrix, current);
-                                                    
+
                                                 }
                                             }
                                             //System.out.println("Size of Queue: " + queue.size());
                                         }
-                                        
+
                                         latchpeak.countDown();
                                         System.out.println("Total peak picking time: " + picktime);
                                         System.out.println("Total time: " + (System.currentTimeMillis() - start));
                                         session.getIothread().lockFile(currentfile, false);
                                         return null;
                                     }
-                                    
+
                                 };
 
                                 //new thread that executes task
@@ -855,7 +848,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                 //fill first row
                                 for (int j = 0; j < session.getResolution(); j++) {
                                     weights[0][j] = matrix[0][j];
-                                    
+
                                 }
                                 //TODO: Penalty for change in j
                                 //fill rest of weights matrix
@@ -873,9 +866,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                             max = weights[i - 1][j + 1] + matrix[i][j];
                                         }
                                         weights[i][j] = max;
-                                        
+
                                     }
-                                    
+
                                 }
                                 //get max in last row
                                 float max = 0;
@@ -886,13 +879,13 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                         max = weights[getMasterListofOGroups().size() - 1][j];
                                     }
                                 }
-                                
+
                                 getMasterListofOGroups().get(getMasterListofOGroups().size() - 1).setFittedShift(currentfile, (short) maxint);
 
                                 //TODO: animate range as function of time
                                 for (int i = getMasterListofOGroups().size() - 1; i > -1; i--) {
                                     max = 0;
-                                    
+
                                     int j = maxint;
                                     if (weights[i][j] > max) {
                                         max = weights[i][j];
@@ -902,12 +895,12 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                         max = weights[i][j - 1] - penalty;
                                         maxint = j - 1;
                                     }
-                                    
+
                                     if ((j + 1) < session.getResolution() && weights[i][j + 1] - penalty > max) {
                                         //max = weights[i][j+1];
                                         maxint = j + 1;
                                     }
-                                    
+
                                     getMasterListofOGroups().get(i).setFittedShift(currentfile, (short) maxint);
 
                                     //set score for OPGroup
@@ -916,9 +909,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                     for (int a = 0; a < getMasterListofOGroups().get(i).getListofAdducts().size(); a++) {
                                         //getMasterListofOGroups().get(i).getListofAdducts().get(a).addScore(currentfile, (getMasterListofOGroups().get(i).getListofAdducts().get(a).getAdductPropArray(currentfile)[getMasterListofOGroups().get(i).getOGroupFittedShift(currentfile)]));
                                     }
-                                    
+
                                     getMetTable().refresh();
-                                    
+
                                 }
                                 //TODO number of active files
 
@@ -932,21 +925,21 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
 
                 //don't recalculate unless something changes
                 session.setPeakPickchanged(false);
-                
+
                 latch.countDown();
                 return null;
             }
-            
+
         };
 
         //new thread that executes task
         new Thread(task).start();
-        
+
     }
 
     //calculates Shift and opens a new window
     public void newWindowShiftFitting() throws IOException, InterruptedException {
-        
+
         output.setDisable(false);
         //open new window
         Stage stage = new Stage();
@@ -963,25 +956,25 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         controller.setOlist(MasterListofOGroups);
         System.out.println("PRINTNEW");
         stage.show();
-        
+
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 controller.close();
             }
         });
-        
+
     }
-    
+
     public float getmaxofrange(float[][] weights, int row, int col, int range) {
         float max = 0;
-        
+
         for (int i = (col - range); i <= (col + range); i++) {
             if (i < session.getResolution() && i >= 0 && weights[row][i] > max) {
                 max += weights[row][i];
             }
-            
+
         }
-        
+
         return max;
     }
 
@@ -991,7 +984,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
     public TreeTableView<Entry> getMetTable() {
         return metTable;
     }
-    
+
     public FXMLTableViewController getController() {
         return this;
     }
@@ -1044,7 +1037,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
     public void setDatasettocontroller(HashMap<Dataset, BatchController> datasettocontroller) {
         this.datasettocontroller = datasettocontroller;
     }
-    
+
     public void generateOutput() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 
         //sort by OGroup and Num, to get order of Input
@@ -1056,7 +1049,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         //generate sorted List
         List<Entry> list = new ArrayList<Entry>();
         TreeItem<Entry> root = getMetTable().getRoot();
-        
+
         for (int i = 0; i < root.getChildren().size(); i++) {
             list.add(root.getChildren().get(i).getValue());
         }
@@ -1077,7 +1070,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         //parse Input Matrix again
         TsvParserSettings settings = new TsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
-        
+
         TsvParser parser = new TsvParser(settings);
         FileReader reader = new FileReader(session.getReferenceTsv());
         List<String[]> allRows = parser.parseAll(reader);
@@ -1091,7 +1084,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         for (int i = 0; i < allRows.size(); i++) {
             rows.add(new ArrayList<>(Arrays.asList(allRows.get(i))));
         }
-        
+
         PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
 
@@ -1121,9 +1114,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                             }
                         }
                     }
-                    
+
                     adduct.setEmpty(empty);
-                    
+
                     if (!empty) {
                         List<String> newline = new ArrayList<String>();
                         newline.add(String.valueOf(adduct.getNum()));
@@ -1170,9 +1163,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                         }
                     }
                 }
-                
+
             }
-            
+
         }
 
         //back to arrays...
@@ -1182,20 +1175,286 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             row = rows.get(i).toArray(row);
             allRows.add(row);
         }
-        
+
         writer.writeHeaders(headers);
         for (int i = 1; i < rows.size(); i++) {
             writer.writeRow(rows.get(i).toArray());
         }
-        
+
         writer.close();
         Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
         getMetTable().getSortOrder().clear();
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
-        
+
     }
-    
+
+    public void generateOutputSpecific() throws FileNotFoundException, IOException {
+        //get headers for Output
+        String[] headers = outputformat.get(0).getHeaders();
+        //because a header could start with "Files:", we may have to adjust them and increase the size
+        List<String> nheaders = new ArrayList<>();
+        for (String string : headers) {
+            if (string != null) {
+                if (string.startsWith("Files:")) {
+                    for (RawDataFile file : session.getAllFiles()) {
+                        nheaders.add(file.getName() + ": " + string.substring(7));
+                    }
+                } else {
+                    nheaders.add(string);
+                }
+            }
+        }
+
+        //generate Strings for all Ions
+        List<String[]> OutallRows = new ArrayList<>();
+
+        //initialize
+        int c = 0;  //count
+        for (Entry entry : MasterListofOGroups) {
+            for (Entry adduct : entry.getListofAdducts()) {
+                OutallRows.add(new String[nheaders.size()]);
+                c++;
+            }
+        }
+        boolean[] hasdata = new boolean[c];
+
+        //iterate over all headers
+        c = 0;    //current column
+       
+        for (String string : headers) {
+            if (string != null) {
+                int r = 0; //row
+                //find out which information is needed
+                switch (string) {
+                    case "Reference Retention Time (RT) of Ion":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = Float.toString(adduct.getRT());
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                    case "Files: Retention Time of Peak":
+                        //for all Files
+                        for (RawDataFile file : session.getAllFiles()) {
+                            r=0;
+                            //for all Ions
+                            for (Entry entry : MasterListofOGroups) {
+                                for (Entry adduct : entry.getListofAdducts()) {
+                                    if (adduct.getListofSlices().containsKey(file)) {
+                                        Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
+                                        if (peak != null) {
+                                            OutallRows.get(r)[c] = String.valueOf((peak.getIndexRT()));
+                                            hasdata[r] = true;
+                                        }
+                                    }
+                                    r++;
+                                }
+                            }
+                            c++;
+                        }
+                        break;
+                        case "Reference Mass/Charge (MZ) of Ion":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = Float.toString(adduct.getMZ());
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Files: Mass/Charge (MZ) of Peak":
+                        //for all Files
+                        for (RawDataFile file : session.getAllFiles()) {
+                            r=0;
+                            //for all Ions
+                            for (Entry entry : MasterListofOGroups) {
+                                for (Entry adduct : entry.getListofAdducts()) {
+                                    if (adduct.getListofSlices().containsKey(file)) {
+                                        Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
+                                        if (peak != null) {
+                                            OutallRows.get(r)[c] = String.valueOf((peak.getMZ()));
+                                            hasdata[r] = true;
+                                        }
+                                    }
+                                    r++;
+                                }
+                            }
+                            c++;
+                        }
+                        break;
+                        case "Files: Peak Area":
+                        //for all Files
+                        for (RawDataFile file : session.getAllFiles()) {
+                            r=0;
+                            //for all Ions
+                            for (Entry entry : MasterListofOGroups) {
+                                for (Entry adduct : entry.getListofAdducts()) {
+                                    if (adduct.getListofSlices().containsKey(file)) {
+                                        Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
+                                        if (peak != null) {
+                                            OutallRows.get(r)[c] = String.valueOf((peak.getArea()));
+                                            hasdata[r] = true;
+                                        }
+                                    }
+                                    r++;
+                                }
+                            }
+                            c++;
+                        }
+                        break;
+                        case "Ion ID":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = Float.toString(adduct.getNum());
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Metabolite ID":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = Float.toString(entry.getOGroup());
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Number of Carbon Atoms":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = Float.toString(adduct.getXn());
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Ion Form":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = adduct.getIon();
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Uncharged Ion Mass":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = Float.toString(adduct.getM());
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Ion Charge":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = Float.toString(adduct.getCharge());
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Scan Event":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = adduct.getScanEvent();
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                        case "Ionisation Mode":
+                        //for all Ions
+                        for (Entry entry : MasterListofOGroups) {
+                            for (Entry adduct : entry.getListofAdducts()) {
+                                OutallRows.get(r)[c] = adduct.getIonisation();
+                                r++;
+                            }
+                        }
+                        c++;
+                        break;
+                         case "Files: Retention Time Shift of Peak":
+                        //for all Files
+                        for (RawDataFile file : session.getAllFiles()) {
+                            r=0;
+                            //for all Ions
+                            for (Entry entry : MasterListofOGroups) {
+                                for (Entry adduct : entry.getListofAdducts()) {
+                                    if (adduct.getListofSlices().containsKey(file)) {
+                                        Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
+                                        if (peak != null) {
+                                            OutallRows.get(r)[c] = String.valueOf(peak.getIndexRT() - adduct.getRT());
+                                            hasdata[r] = true;
+                                        }
+                                    }
+                                    r++;
+                                }
+                            }
+                            c++;
+                        }
+                        break;
+                        case "Files: Mass/Charge (MZ) Shift of Peak":
+                        //for all Files
+                        for (RawDataFile file : session.getAllFiles()) {
+                            r=0;
+                            //for all Ions
+                            for (Entry entry : MasterListofOGroups) {
+                                for (Entry adduct : entry.getListofAdducts()) {
+                                    if (adduct.getListofSlices().containsKey(file)) {
+                                        Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
+                                        if (peak != null) {
+                                            OutallRows.get(r)[c] = String.valueOf((peak.getMZ() - adduct.getMZ()) / ((adduct.getMZ() / 1000000f)));
+                                            hasdata[r] = true;
+                                        }
+                                    }
+                                    r++;
+                                }
+                            }
+                            c++;
+                        }
+                        break;
+
+                }
+
+            }
+        }
+        
+        //clean empty Ions
+        for (int i = hasdata.length-1; i>=0; i--) {
+            if (!hasdata[i]) {
+                OutallRows.remove(i);
+            }
+        }
+        
+        PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
+        TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
+        writer.writeHeaders(nheaders);
+        for (int i = 0; i < OutallRows.size(); i++) {
+            writer.writeRow(OutallRows.get(i));
+        }
+
+        writer.close();
+        Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
+
+        System.out.println("Done");
+        
+
+    }
+
     public void generateOutputExtended() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 
         //list of OGroups
@@ -1205,7 +1464,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         //parse Input Matrix again
         TsvParserSettings settings = new TsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
-        
+
         TsvParser parser = new TsvParser(settings);
         FileReader reader = new FileReader(session.getReferenceTsv());
         List<String[]> InallRows = parser.parseAll(reader);
@@ -1283,19 +1542,25 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                     info[indices[0]] = String.valueOf(adduct.getNum());
                     info[indices[1]] = String.valueOf(adduct.getMZ());
                     info[indices[2]] = String.valueOf(adduct.getRT());
-                    if (indices[3]>-1) {
-                    info[indices[3]] = String.valueOf(adduct.getXn());}
+                    if (indices[3] > -1) {
+                        info[indices[3]] = String.valueOf(adduct.getXn());
+                    }
                     info[indices[4]] = String.valueOf(adduct.getOGroup());
-                    if (indices[5]>-1) {
-                    info[indices[5]] = String.valueOf(adduct.getIon());}
-                    if (indices[6]>-1) {
-                    info[indices[6]] = String.valueOf(adduct.getM());}
-                    if (indices[7]>-1) {
-                    info[indices[7]] = String.valueOf(adduct.getCharge());}
-                    if (indices[8]>-1) {
-                    info[indices[8]] = String.valueOf(adduct.getScanEvent());}
-                    if (indices[9]>-1) {
-                    info[indices[9]] = String.valueOf(adduct.getIonisation());}
+                    if (indices[5] > -1) {
+                        info[indices[5]] = String.valueOf(adduct.getIon());
+                    }
+                    if (indices[6] > -1) {
+                        info[indices[6]] = String.valueOf(adduct.getM());
+                    }
+                    if (indices[7] > -1) {
+                        info[indices[7]] = String.valueOf(adduct.getCharge());
+                    }
+                    if (indices[8] > -1) {
+                        info[indices[8]] = String.valueOf(adduct.getScanEvent());
+                    }
+                    if (indices[9] > -1) {
+                        info[indices[9]] = String.valueOf(adduct.getIonisation());
+                    }
                     hasdata.add(Boolean.FALSE);
                 }
 
@@ -1306,20 +1571,20 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                         Peak peak = adduct.getListofSlices().get(file).getFittedPeak();
                         if (peak != null) {
                             info[file.getColumn()] = String.valueOf(peak.getArea());
-                            info[file.getColumn()+1] = String.valueOf((peak.getIndexRT()-adduct.getRT()));
-                            info[file.getColumn()+2] = String.valueOf((peak.getMZ()-adduct.getMZ())/((adduct.getMZ()/1000000f)));
-                            info[file.getColumn()+3] = String.valueOf(peak.getMZ());
+                            info[file.getColumn() + 1] = String.valueOf((peak.getIndexRT() - adduct.getRT()));
+                            info[file.getColumn() + 2] = String.valueOf((peak.getMZ() - adduct.getMZ()) / ((adduct.getMZ() / 1000000f)));
+                            info[file.getColumn() + 3] = String.valueOf(peak.getMZ());
                             hasdata.set(hasdata.size() - 1, Boolean.TRUE);
                         }
                     }
-                    
+
                 }
-                
+
                 Outrows.add(info);
                 adduct.setOutline(Outrows.size() - 1);
-                
+
             }
-            
+
         }
 
         //delete empty 
@@ -1328,21 +1593,21 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                 Outrows.remove(i);
             }
         }
-        
+
         PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
         writer.writeHeaders(Outheader);
         for (int i = 0; i < Outrows.size(); i++) {
             writer.writeRow(Outrows.get(i));
         }
-        
+
         writer.close();
         Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
-        
+
         System.out.println("Done");
-        
+
     }
-    
+
     public void generateAdducts() {
         if (toggleadductgeneration.selectedProperty().get()) {
 
@@ -1357,7 +1622,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             }
             this.maxnumber = max;
             max++;
-            
+
             for (int o = 0; o < MasterListofOGroups.size(); o++) {
                 int size = MasterListofOGroups.get(o).getListofAdducts().size();
                 for (int a = 0; a < size; a++) {
@@ -1388,13 +1653,12 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                     }
                                 }
                             }
-                            
+
                         }
 
                         //if ion specified
                     } else //if multiple Ions specified
-                    {
-                        if (adduct.getIon().indexOf(',') > 0) {
+                     if (adduct.getIon().indexOf(',') > 0) {
                             //do something
                         } else {
                             String Ion = adduct.getIon().substring(adduct.getIon().indexOf('+') + 1, adduct.getIon().indexOf(']', 3));
@@ -1422,17 +1686,16 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                         }
                                     }
                                 }
-                                
+
                             }
                         }
-                    }
-                    
+
                 }
             }
-            
+
         }
     }
-    
+
     public void generateAdductsnew() {
         if (toggleadductgeneration.selectedProperty().get()) {
 
@@ -1447,7 +1710,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
             }
             this.maxnumber = max;
             max++;
-            
+
             double start = System.currentTimeMillis();
             for (int o = 0; o < MasterListofOGroups.size(); o++) {
                 int size = MasterListofOGroups.get(o).getListofAdducts().size();
@@ -1458,12 +1721,11 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                         //if not
                         int j = 0;
                         for (String namen : session.getListofadductnames()) {
-                        
-                            
+
                             //add every possible adduct
                             int k = 0;
                             for (String nameo : session.getListofadductnames()) {
-                            
+
                                 //to every hypothetical adduct
                                 if (j != k) {
                                     //don't add the same value
@@ -1476,7 +1738,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                     mass *= session.getListofadductms().get(j);
                                     mass /= session.getListofadductcharges().get(j);
                                     mass += session.getListofadductmasses().get(j);
-                                    
+
                                     Float ppm = mass / 1000000 * session.getMZTolerance();
                                     boolean duplicate = false;
                                     for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
@@ -1493,7 +1755,7 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                         for (int c = 0; c < session.getListofadductcharges().get(k); c++) {
                                             Ion = Ion.concat(String.valueOf(sign));
                                         }
-                                        Ion = Ion.concat(")" + namen+"]");
+                                        Ion = Ion.concat(")" + namen + "]");
                                         charge = session.getListofadductchargeproperties().get(j).get();
                                         sign = charge.charAt(charge.length() - 1);
                                         for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
@@ -1510,21 +1772,19 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
 
                         //if ion specified
                     } else //if multiple Ions specified
-                    {
-                        if (adduct.getIon().indexOf(',') > 0) {
+                     if (adduct.getIon().indexOf(',') > 0) {
                             //do something
                         } else {
                             int j = 0;
                             for (String namen : session.getListofadductnames()) {
-                            
+
                                 //and add every possible adduct
-                                
                                 Float mass = adduct.getM();
                                 //get new mass
                                 mass *= session.getListofadductms().get(j);
                                 mass /= session.getListofadductcharges().get(j);
                                 mass += session.getListofadductmasses().get(j);
-                                
+
                                 Float ppm = mass / 1000000 * session.getMZTolerance();
                                 boolean duplicate = false;
                                 for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
@@ -1546,17 +1806,16 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
                                 }
                                 j++;
                             }
-                            
+
                         }
-                    }
-                    
+
                 }
             }
-            
-            System.out.println("Total time: " + (System.currentTimeMillis()-start));
+
+            System.out.println("Total time: " + (System.currentTimeMillis() - start));
         }
     }
-    
+
     public void showParameters() {
         setParameterPane(true);
         TabPane.setVisible(true);
@@ -1565,9 +1824,9 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         oldPick = PeakPick.getSelectionModel().getSelectedItem().toString();
         oldBase = Base.getText();
         oldRT = RTTolShift.getText();
-        
+
     }
-    
+
     public void hideParameters() {
         setParameterPane(false);
         TabPane.setVisible(false);
@@ -1582,13 +1841,13 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
         if (!oldBase.equals(Base.getText())) {
             session.setPeakPickchanged(true);
         }
-        
+
         if (!oldRT.equals(RTTolShift.getText())) {
             session.setPeakPickchanged(true);
         }
-        
+
     }
-    
+
     public void setParameterPane(boolean bool) {
 //        label1.setVisible(bool);
 //        label2.setVisible(bool);
@@ -1613,258 +1872,255 @@ AdC42.textProperty().bindBidirectional(session.getListofadductchargeproperties()
 //        Base.setVisible(bool);
 //        PeakPick.setVisible(bool);
         paramButton.setVisible(bool);
-        
+
     }
 
     //when closing the window, end all running processes, such as Rengine
     public void close() {
         session.getEngine().end();
         session.getIothread().terminate();
-        
+
     }
-    
+
     public void toggleAdductGeneration() {
         boolean toggle = !toggleadductgeneration.selectedProperty().get();
         adductanchor.setDisable(toggle);
     }
-    
-    
+
     //from: http://stackoverflow.com/questions/7880494/uitableview-better-editing-through-binding
-          public static class TextFieldCellFactory  
-     implements Callback<TableColumn<Information,String>,TableCell<Information,String>> {
-
-    @Override
-    public TableCell<Information, String> call(TableColumn<Information, String> param) {
-        TextFieldCell textFieldCell = new TextFieldCell();
-        return textFieldCell;
-    }
-
-    public static class TextFieldCell extends TableCell<Information,String> {
-        private TextField textField;
-        private StringProperty boundToCurrently = null;
-
-        public TextFieldCell() {
-          textField = new TextField();
-          textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                TextField tf = (TextField)getGraphic();    
-            }
-          });
-          textField.hoverProperty().addListener(new ChangeListener<Boolean>() {
-
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                TextField tf = (TextField)getGraphic();
-            }
-          });
-          this.setGraphic(textField);
-        }
+    public static class TextFieldCellFactory
+            implements Callback<TableColumn<Information, String>, TableCell<Information, String>> {
 
         @Override
-        protected void updateItem(String item, boolean empty) {
-          super.updateItem(item, empty);        
-          if(!empty) {
-            // Show the Text Field
-            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-
-            // Retrieve the actual String Property that should be bound to the TextField
-            // If the TextField is currently bound to a different StringProperty
-            // Unbind the old property and rebind to the new one
-            ObservableValue<String> ov = getTableColumn().getCellObservableValue(getIndex());
-            SimpleStringProperty sp = (SimpleStringProperty)ov;
-
-            if(this.boundToCurrently==null) {
-                this.boundToCurrently = sp;
-                this.textField.textProperty().bindBidirectional(sp);
-            }
-            else {
-                if(this.boundToCurrently != sp) {
-                  this.textField.textProperty().unbindBidirectional(this.boundToCurrently);
-                  this.boundToCurrently = sp;
-                  this.textField.textProperty().bindBidirectional(this.boundToCurrently);
-                }
-            }
-//            System.out.println("item=" + item + " ObservableValue<String>=" + ov.getValue());
-            //this.textField.setText(item);  // No longer need this!!!
-          }
-          else {
-            this.setContentDisplay(ContentDisplay.TEXT_ONLY);
-          }
+        public TableCell<Information, String> call(TableColumn<Information, String> param) {
+            TextFieldCell textFieldCell = new TextFieldCell();
+            return textFieldCell;
         }
 
-    }
-  }
-          
-  public void option1changed() {
-      if (option1.selectedProperty().get()) {
-          option2.selectedProperty().set(false);
-          option2table.setDisable(true);
-      } else {
-          option2.selectedProperty().set(true);
-          option2table.setDisable(false);
-      }
-      
-  }     
-  public void option2changed() {
-      if (option2.selectedProperty().get()) {
-          option1.selectedProperty().set(false);
-          option2table.setDisable(false);
-      } else {
-          option1.selectedProperty().set(true);
-          option2table.setDisable(true);
-      }
-      
-  }      
-         
-            public static class AutoTextFieldCellFactory  
-     implements Callback<TableColumn<Information,String>,TableCell<Information,String>> {
+        public static class TextFieldCell extends TableCell<Information, String> {
 
-    @Override
-    public TableCell<Information, String> call(TableColumn<Information, String> param) {
-        TextFieldCell textFieldCell = new TextFieldCell();
-        return textFieldCell;
-    }
+            private TextField textField;
+            private StringProperty boundToCurrently = null;
 
-    public static class TextFieldCell extends TableCell<Information,String> {
-        private TextField textField;
-        private StringProperty boundToCurrently = null;
+            public TextFieldCell() {
+                textField = new TextField();
+                textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
-        public TextFieldCell() {
-            String strCss;
-          // Padding in Text field cell is not wanted - we want the Textfield itself to "be"
-          // The cell.  Though, this is aesthetic only.  to each his own.  comment out
-          // to revert back.  
-          strCss = "-fx-padding: 0;";
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        TextField tf = (TextField) getGraphic();
+                    }
+                });
+                textField.hoverProperty().addListener(new ChangeListener<Boolean>() {
 
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        TextField tf = (TextField) getGraphic();
+                    }
+                });
+                this.setGraphic(textField);
+            }
 
-          this.setStyle(strCss);
-          textField = new TextField();
-           ChangeListener listener = new ChangeListener() {
             @Override
-            public void changed(ObservableValue o, Object oldVal, Object newVal) {
-                if (((ReadOnlyBooleanProperty)o).get()) {
-                 ((TableCell)((TextField)((ReadOnlyBooleanProperty)o).getBean()).getParent()).setPrefWidth(260);
-            } else {
-               ((TableCell)((TextField)((ReadOnlyBooleanProperty)o).getBean()).getParent()).setPrefWidth(75);
-           }
-            }
-        };
-          
-          textField.hoverProperty().addListener(listener);
-            strCss = "" +
-                    //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
-                    "-fx-background-color: -fx-control-inner-background;" +
-                    //"-fx-background-insets: 0, 1, 2;" +
-                    "-fx-background-insets: 0;" +
-                    //"-fx-background-radius: 3, 2, 2;" +
-                    "-fx-background-radius: 0;" +
-                    "-fx-padding: 3 5 3 5;" +   /*Play with this value to center the text depending on cell height??*/
-                    //"-fx-padding: 0 0 0 0;" +
-                    "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);" +
-                    "-fx-cursor: text;" +
-                    "";
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    // Show the Text Field
+                    this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-          TextFields.bindAutoCompletion(textField, "Retention Time of Ion","File: Retention Time of Peak","Mass/Charge (MZ) of Ion", "File: Mass/Charge (MZ) of Peak", "File: Peak Area");
-          textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                    // Retrieve the actual String Property that should be bound to the TextField
+                    // If the TextField is currently bound to a different StringProperty
+                    // Unbind the old property and rebind to the new one
+                    ObservableValue<String> ov = getTableColumn().getCellObservableValue(getIndex());
+                    SimpleStringProperty sp = (SimpleStringProperty) ov;
 
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                TextField tf = (TextField)getGraphic();    
-                String strStyleGotFocus = "-fx-background-color: lightblue, -fx-text-box-border, -fx-control-inner-background;" +
-                            "-fx-background-insets: -0.4, 1, 2;" +
-                            "-fx-background-radius: 3.4, 2, 2;";
-                String strStyleLostFocus = //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
-                                   "-fx-background-color: -fx-control-inner-background;" +
-                                 //"-fx-background-insets: 0, 1, 2;" +
-                                   "-fx-background-insets: 0;" +
-                                 //"-fx-background-radius: 3, 2, 2;" +
-                                   "-fx-background-radius: 0;" +
-                                   "-fx-padding: 3 5 3 5;" +   /**/
-                                   //"-fx-padding: 0 0 0 0;" +
-                                   "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);" +
-                                   "-fx-cursor: text;" +
-                                   "";
-                if(newValue.booleanValue())
-                  tf.setStyle(strStyleGotFocus);
-                else
-                  tf.setStyle(strStyleLostFocus);             
-            
-            }
-          });
-          textField.hoverProperty().addListener(new ChangeListener<Boolean>() {
- public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                TextField tf = (TextField)getGraphic();
-                String strStyleGotHover = "-fx-background-color: lightblue, -fx-text-box-border, derive(-fx-control-inner-background, 10%);" +
-                            "-fx-background-insets: 1, 2.8, 3.8;" +
-                            "-fx-background-radius: 3.4, 2, 2;";
-                String strStyleLostHover = //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
-                                   "-fx-background-color: -fx-control-inner-background;" +
-                                 //"-fx-background-insets: 0, 1, 2;" +
-                                   "-fx-background-insets: 0;" +
-                                 //"-fx-background-radius: 3, 2, 2;" +
-                                   "-fx-background-radius: 0;" +
-                                   "-fx-padding: 3 5 3 5;" +   /**/
-                                   //"-fx-padding: 0 0 0 0;" +
-                                   "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);" +
-                                   "-fx-cursor: text;" +
-                                   "";
-                String strStyleHasFocus = "-fx-background-color: lightblue, -fx-text-box-border, -fx-control-inner-background;" +
-                            "-fx-background-insets: -0.4, 1, 2;" +
-                            "-fx-background-radius: 3.4, 2, 2;";
-                if(newValue.booleanValue()) {
-                  tf.setStyle(strStyleGotHover);
-                }
-                else {
-                  if(!tf.focusedProperty().get()) {
-                    tf.setStyle(strStyleLostHover);
-                  }
-                  else {
-                    tf.setStyle(strStyleHasFocus);
-                  }
-                }
-
-            }
-          });
-          textField.setStyle(strCss);
-          this.setGraphic(textField);
-        }
-
-        @Override
-        protected void updateItem(String item, boolean empty) {
-          super.updateItem(item, empty);        
-          if(!empty) {
-            // Show the Text Field
-            this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-
-            // Retrieve the actual String Property that should be bound to the TextField
-            // If the TextField is currently bound to a different StringProperty
-            // Unbind the old property and rebind to the new one
-            ObservableValue<String> ov = getTableColumn().getCellObservableValue(getIndex());
-            SimpleStringProperty sp = (SimpleStringProperty)ov;
-
-            if(this.boundToCurrently==null) {
-                this.boundToCurrently = sp;
-                this.textField.textProperty().bindBidirectional(sp);
-            }
-            else {
-                if(this.boundToCurrently != sp) {
-                  this.textField.textProperty().unbindBidirectional(this.boundToCurrently);
-                  this.boundToCurrently = sp;
-                  this.textField.textProperty().bindBidirectional(this.boundToCurrently);
-                }
-            }
+                    if (this.boundToCurrently == null) {
+                        this.boundToCurrently = sp;
+                        this.textField.textProperty().bindBidirectional(sp);
+                    } else if (this.boundToCurrently != sp) {
+                        this.textField.textProperty().unbindBidirectional(this.boundToCurrently);
+                        this.boundToCurrently = sp;
+                        this.textField.textProperty().bindBidirectional(this.boundToCurrently);
+                    }
 //            System.out.println("item=" + item + " ObservableValue<String>=" + ov.getValue());
-            //this.textField.setText(item);  // No longer need this!!!
-          }
-          else {
-            this.setContentDisplay(ContentDisplay.TEXT_ONLY);
-          }
+                    //this.textField.setText(item);  // No longer need this!!!
+                } else {
+                    this.setContentDisplay(ContentDisplay.TEXT_ONLY);
+                }
+            }
+
+        }
+    }
+
+    public void option1changed() {
+        if (option1.selectedProperty().get()) {
+            option2.selectedProperty().set(false);
+            option2table.setDisable(true);
+        } else {
+            option2.selectedProperty().set(true);
+            option2table.setDisable(false);
         }
 
     }
-  }
-  
-            
-          
-  }
-    
 
+    public void option2changed() {
+        if (option2.selectedProperty().get()) {
+            option1.selectedProperty().set(false);
+            option2table.setDisable(false);
+        } else {
+            option1.selectedProperty().set(true);
+            option2table.setDisable(true);
+        }
+
+    }
+
+    public class AutoTextFieldCellFactory
+            implements Callback<TableColumn<Information, String>, TableCell<Information, String>> {
+
+        @Override
+        public TableCell<Information, String> call(TableColumn<Information, String> param) {
+            TextFieldCell textFieldCell = new TextFieldCell();
+            return textFieldCell;
+        }
+
+        public class TextFieldCell extends TableCell<Information, String> {
+
+            private TextField textField;
+            private StringProperty boundToCurrently = null;
+
+            public TextFieldCell() {
+                String strCss;
+                // Padding in Text field cell is not wanted - we want the Textfield itself to "be"
+                // The cell.  Though, this is aesthetic only.  to each his own.  comment out
+                // to revert back.  
+                strCss = "-fx-padding: 0;";
+
+                this.setStyle(strCss);
+                textField = new TextField();
+                ChangeListener listener = new ChangeListener() {
+                    @Override
+                    public void changed(ObservableValue o, Object oldVal, Object newVal) {
+                        if (((ReadOnlyBooleanProperty) o).get()) {
+                            ((TableCell) ((TextField) ((ReadOnlyBooleanProperty) o).getBean()).getParent()).setPrefWidth(260);
+                        } else {
+                            ((TableCell) ((TextField) ((ReadOnlyBooleanProperty) o).getBean()).getParent()).setPrefWidth(75);
+                        }
+                    }
+                };
+
+                textField.hoverProperty().addListener(listener);
+                strCss = ""
+                        + //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
+                        "-fx-background-color: -fx-control-inner-background;"
+                        + //"-fx-background-insets: 0, 1, 2;" +
+                        "-fx-background-insets: 0;"
+                        + //"-fx-background-radius: 3, 2, 2;" +
+                        "-fx-background-radius: 0;"
+                        + "-fx-padding: 3 5 3 5;"
+                        + /*Play with this value to center the text depending on cell height??*/ //"-fx-padding: 0 0 0 0;" +
+                        "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);"
+                        + "-fx-cursor: text;"
+                        + "";
+
+                TextFields.bindAutoCompletion(textField, session.getOutputoptions());
+                textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        TextField tf = (TextField) getGraphic();
+                        String strStyleGotFocus = "-fx-background-color: lightblue, -fx-text-box-border, -fx-control-inner-background;"
+                                + "-fx-background-insets: -0.4, 1, 2;"
+                                + "-fx-background-radius: 3.4, 2, 2;";
+                        String strStyleLostFocus
+                                = //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
+                                "-fx-background-color: -fx-control-inner-background;"
+                                + //"-fx-background-insets: 0, 1, 2;" +
+                                "-fx-background-insets: 0;"
+                                + //"-fx-background-radius: 3, 2, 2;" +
+                                "-fx-background-radius: 0;"
+                                + "-fx-padding: 3 5 3 5;"
+                                + /**/ //"-fx-padding: 0 0 0 0;" +
+                                "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);"
+                                + "-fx-cursor: text;"
+                                + "";
+                        if (newValue.booleanValue()) {
+                            tf.setStyle(strStyleGotFocus);
+                        } else {
+                            tf.setStyle(strStyleLostFocus);
+                        }
+
+                    }
+                });
+                textField.hoverProperty().addListener(new ChangeListener<Boolean>() {
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        TextField tf = (TextField) getGraphic();
+                        String strStyleGotHover = "-fx-background-color: lightblue, -fx-text-box-border, derive(-fx-control-inner-background, 10%);"
+                                + "-fx-background-insets: 1, 2.8, 3.8;"
+                                + "-fx-background-radius: 3.4, 2, 2;";
+                        String strStyleLostHover
+                                = //"-fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;" +
+                                "-fx-background-color: -fx-control-inner-background;"
+                                + //"-fx-background-insets: 0, 1, 2;" +
+                                "-fx-background-insets: 0;"
+                                + //"-fx-background-radius: 3, 2, 2;" +
+                                "-fx-background-radius: 0;"
+                                + "-fx-padding: 3 5 3 5;"
+                                + /**/ //"-fx-padding: 0 0 0 0;" +
+                                "-fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);"
+                                + "-fx-cursor: text;"
+                                + "";
+                        String strStyleHasFocus = "-fx-background-color: lightblue, -fx-text-box-border, -fx-control-inner-background;"
+                                + "-fx-background-insets: -0.4, 1, 2;"
+                                + "-fx-background-radius: 3.4, 2, 2;";
+                        if (newValue.booleanValue()) {
+                            tf.setStyle(strStyleGotHover);
+                        } else if (!tf.focusedProperty().get()) {
+                            tf.setStyle(strStyleLostHover);
+                        } else {
+                            tf.setStyle(strStyleHasFocus);
+                        }
+
+                    }
+                });
+                textField.setStyle(strCss);
+                this.setGraphic(textField);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    // Show the Text Field
+                    this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+                    // Retrieve the actual String Property that should be bound to the TextField
+                    // If the TextField is currently bound to a different StringProperty
+                    // Unbind the old property and rebind to the new one
+                    ObservableValue<String> ov = getTableColumn().getCellObservableValue(getIndex());
+                    SimpleStringProperty sp = (SimpleStringProperty) ov;
+
+                    if (this.boundToCurrently == null) {
+                        this.boundToCurrently = sp;
+                        this.textField.textProperty().bindBidirectional(sp);
+                    } else if (this.boundToCurrently != sp) {
+                        this.textField.textProperty().unbindBidirectional(this.boundToCurrently);
+                        this.boundToCurrently = sp;
+                        this.textField.textProperty().bindBidirectional(this.boundToCurrently);
+                    }
+//            System.out.println("item=" + item + " ObservableValue<String>=" + ov.getValue());
+                    //this.textField.setText(item);  // No longer need this!!!
+                } else {
+                    this.setContentDisplay(ContentDisplay.TEXT_ONLY);
+                }
+            }
+
+        }
+    }
+
+    public void Output() throws UnsupportedEncodingException, IOException {
+        if (option1.selectedProperty().get()) {
+            generateOutputExtended();
+        } else {
+            generateOutputSpecific();
+        }
+
+    }
+
+}
