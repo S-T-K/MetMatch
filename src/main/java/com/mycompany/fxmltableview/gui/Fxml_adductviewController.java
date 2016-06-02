@@ -96,7 +96,7 @@ public class Fxml_adductviewController implements Initializable {
     CheckMenuItem EICToggle, NEICToggle, MZToggle, ShiftToggle;
     
     @FXML
-    ToggleButton EICMode, PeakMode, addPeak, weighttoggle;
+    ToggleButton EICMode, PeakMode, addPeak, weighttoggle, AlignToggle;
     
     @FXML
     ContextMenu contextMenu;
@@ -125,6 +125,7 @@ public class Fxml_adductviewController implements Initializable {
     private HashMap<XYChart.Series, XYChart<Number,Number>> seriestochart;
     private HashMap<XYChart.Series, Peak> seriestopeak;
     private HashMap<Entry,List<XYChart<Number,Number>>> adducttochart;
+    private HashMap<XYChart.Series, Entry> alignableseries;
     private Entry entry;
     private List<XYChart> charts;
     
@@ -148,7 +149,8 @@ public class Fxml_adductviewController implements Initializable {
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         seriestochart = new HashMap<XYChart.Series, XYChart<Number,Number>>();
         setSeriestopeak(new HashMap<XYChart.Series, Peak>());
-         charts = new ArrayList<XYChart>();
+        charts = new ArrayList<XYChart>();
+        alignableseries = new HashMap<>();
         adducttochart= new HashMap<Entry,List<XYChart<Number,Number>>>();
         hover.setColor(Color.LIME);
         hover.setSpread(1);
@@ -304,10 +306,11 @@ public class Fxml_adductviewController implements Initializable {
                             System.out.println("generated charts " + (i + 1) + " of " + entry.getListofAdducts().size());
                            updateProgress(i+1,entry.getListofAdducts().size());
                            row++;
+                           
                         } else {
                          
                      }
-                     
+                             
                      
                 }
                  
@@ -411,6 +414,9 @@ public class Fxml_adductviewController implements Initializable {
                 if (addPeak.selectedProperty().get()) {
                 peakPickMode();
                 }
+                         if (AlignToggle.selectedProperty().get()) {
+             Align();
+         }
                 
                 progress.setVisible(false);
                Platform.runLater(new Runnable() {
@@ -426,6 +432,8 @@ public class Fxml_adductviewController implements Initializable {
         t = new Thread(task);
         t.start();
          float end = System.currentTimeMillis();
+         
+
          
         System.out.println("Drawing time: " + (end-start) );
     }
@@ -855,6 +863,7 @@ public class Fxml_adductviewController implements Initializable {
         seriestochart.clear();
         getSeriestopeak().clear();
         adducttochart.clear();
+        alignableseries.clear();
         
         //delete all listeners
         for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
@@ -1291,4 +1300,81 @@ chart.setOnMouseReleased(null);
         peakWeightMode();
     }
     
+    public void Align() {
+        //if acitve
+        if (AlignToggle.selectedProperty().get()) {
+            for (Map.Entry<XYChart.Series,Entry> entry :alignableseries.entrySet()) {
+                XYChart.Series series = entry.getKey();
+                Entry adduct = entry.getValue();
+                RawDataFile file = seriestofile.get(series);
+                float shift;
+                //if peak found
+                if (adduct.getListofSlices().containsKey(file)&&adduct.getListofSlices().get(file).getFittedPeak()!=null) {
+                    shift = adduct.getListofSlices().get(file).getFittedPeak().getIndexshift();
+                    //if no peak found
+                } else {
+                    shift = adduct.getOGroupObject().getOgroupShift().get(file);
+                }
+                ObservableList<XYChart.Data> list = series.getData();
+                for (XYChart.Data data : list) {
+                    data.XValueProperty().setValue(((float)data.XValueProperty().getValue())-shift);
+                
+                    
+                }
+                
+                
+            }
+            
+            
+            //if not acitve
+        }else {
+            for (Map.Entry<XYChart.Series,Entry> entry :alignableseries.entrySet()) {
+                XYChart.Series series = entry.getKey();
+                Entry adduct = entry.getValue();
+                RawDataFile file = seriestofile.get(series);
+                float shift;
+                //if peak found
+                if (adduct.getListofSlices().containsKey(file)&&adduct.getListofSlices().get(file).getFittedPeak()!=null) {
+                    shift = adduct.getListofSlices().get(file).getFittedPeak().getIndexshift();
+                    //if no peak found
+                } else {
+                    shift = adduct.getOGroupObject().getOgroupShift().get(file);
+                }
+                
+                
+                
+                ObservableList<XYChart.Data> list = series.getData();
+                for (XYChart.Data data : list) {
+                    data.XValueProperty().setValue(((float)data.XValueProperty().getValue())+shift);
+                
+                    
+                }
+                
+                
+            }
+            
+        }
+        
+    }
+
+    /**
+     * @return the alignableseries
+     */
+    public HashMap<XYChart.Series, Entry> getAlignableseries() {
+        return alignableseries;
+    }
+
+    /**
+     * @param alignableseries the alignableseries to set
+     */
+    public void setAlignableseries(HashMap<XYChart.Series, Entry> alignableseries) {
+        this.alignableseries = alignableseries;
+    }
+
+    /**
+     * @return the alignablescatterseries
+     */
+    
+
+   
 }

@@ -100,6 +100,7 @@ public class ChartGenerator {
                 }
                 XYChart.Series newSeries = new XYChart.Series();
                 adductcontroller.getSeriestochart().put(newSeries, linechart);
+                adductcontroller.getAlignableseries().put(newSeries,adduct);
                 
                 //add Series to HashMaps
                 adductcontroller.getSeriestofile().put(newSeries, currentfile);
@@ -393,6 +394,7 @@ public class ChartGenerator {
 
                 XYChart.Series newSeries = new XYChart.Series();
                 adductcontroller.getSeriestochart().put(newSeries, areachart);
+                adductcontroller.getAlignableseries().put(newSeries,adduct);
  
                 //add Series to HashMaps
                 adductcontroller.getSeriestofile().put(newSeries, currentfile);
@@ -692,6 +694,7 @@ public class ChartGenerator {
 
                 XYChart.Series newSeries = new XYChart.Series();
                 adductcontroller.getSeriestochart().put(newSeries, scatterchart);
+                adductcontroller.getAlignableseries().put(newSeries,adduct);
                 
                 
                  //add Series to HashMaps
@@ -1325,6 +1328,7 @@ public class ChartGenerator {
           if (adduct.getListofSlices().get(currentfile).getFittedpeak()!=null) {
                     XYChart.Series newSeries2 = new XYChart.Series();
                     adductcontroller.getSeriestochart().put(newSeries2, areachart);
+                    adductcontroller.getAlignableseries().put(newSeries2, adduct);
                     float[] RTArray = currentfile.getRTArray();
                     float RT = RTArray[adduct.getListofSlices().get(currentfile).getListofPeaks().get(adduct.getListofSlices().get(currentfile).getFittedpeak()).getIndex()+adduct.getListofSlices().get(currentfile).getRTstart()];
                     newSeries2.getData().add(new XYChart.Data(RT-width, 0));
@@ -1348,6 +1352,7 @@ public class ChartGenerator {
                 } else {
                     XYChart.Series newSeries2 = new XYChart.Series();
                     adductcontroller.getSeriestochart().put(newSeries2, areachart);
+                    adductcontroller.getAlignableseries().put(newSeries2, adduct);
                     //float[] RTArray = currentfile.getRTArray();
                     float RT = adduct.getOGroupObject().getOgroupShift().get(currentfile)+adduct.getOGroupObject().getRT();
                     newSeries2.getData().add(new XYChart.Data(RT, -0.05));
@@ -1431,6 +1436,7 @@ public class ChartGenerator {
             for (int i = 0; i< list.size(); i++) {
                 XYChart.Series newSeries = new XYChart.Series();
                 adductcontroller.getSeriestochart().put(newSeries, areachart);
+                adductcontroller.getAlignableseries().put(newSeries, adduct);
                 Peak peak = list.get(i);
                  //get Data Points
                 for ( int j = peak.getStart(); j<=peak.getIndex(); j++) {

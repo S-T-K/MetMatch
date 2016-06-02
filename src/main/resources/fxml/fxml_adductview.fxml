@@ -52,19 +52,20 @@
             <TextField fx:id="weightfield" maxHeight="17.0" minHeight="17.0" onMouseClicked="#showSlider" prefHeight="17.0" prefWidth="62.0" />
          </graphic>
       </ToggleButton>
-      <ToggleButton fx:id="EICMode" layoutX="86.0" mnemonicParsing="false" onAction="#togglePeak" prefHeight="25.0" prefWidth="77.0" text="EIC Mode" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="2.0" />
+      <ToggleButton fx:id="EICMode" layoutX="86.0" mnemonicParsing="false" onAction="#togglePeak" prefHeight="25.0" prefWidth="43.0" text="EIC" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="2.0" />
       <ToggleButton fx:id="addPeak" disable="true" layoutX="258.0" mnemonicParsing="false" onAction="#peakPickMode" prefHeight="25.0" prefWidth="25.0" text="+" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="2.0">
          <tooltip>
             <Tooltip text="Add peak manually" />
          </tooltip>
       </ToggleButton>
-      <ToggleButton fx:id="PeakMode" layoutX="167.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleEIC" prefHeight="25.0" prefWidth="77.0" text="Peak Mode" AnchorPane.leftAnchor="167.0" AnchorPane.topAnchor="2.0" />
+      <ToggleButton fx:id="PeakMode" layoutX="167.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleEIC" prefHeight="25.0" prefWidth="43.0" text="Peak" AnchorPane.leftAnchor="128.0" AnchorPane.topAnchor="2.0" />
       <Label fx:id="nodatalabel" alignment="CENTER" contentDisplay="CENTER" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" text="No Data" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
       <Slider fx:id="weightslider" blockIncrement="500.0" layoutY="-6.0" majorTickUnit="250.0" max="1000.0" min="-1000.0" minorTickCount="4" onMouseReleased="#hideSlider" prefHeight="29.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" value="1.0" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
+      <ToggleButton fx:id="AlignToggle" layoutX="193.0" layoutY="20.0" mnemonicParsing="false" onAction="#Align" prefHeight="25.0" prefWidth="50.0" text="Align" AnchorPane.leftAnchor="193.0" AnchorPane.topAnchor="2.0" />
       <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
    </children>
 </AnchorPane>
