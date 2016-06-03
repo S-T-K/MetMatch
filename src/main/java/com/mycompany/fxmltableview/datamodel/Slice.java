@@ -307,7 +307,7 @@ public class Slice {
      
             
             CurveSmooth csm = new CurveSmooth(correctedIntArray);
-            csm.savitzkyGolay(30);
+            csm.savitzkyGolayPlusFirstDerivPlot(20);
            
             
            
@@ -1007,10 +1007,39 @@ public class Slice {
 //        System.out.println(adduct.getOGroup() + ":  Score peak found: " +  getScorepeakfound());
         }
         
+        //calculate Noise Units of a hypothetical peak 
         if (fittedpeak==null){
-            int RTindex = Math.abs(Arrays.binarySearch(file.getRTArray(), shift+adduct.getRT()));
-            fitabove = (IntArray[RTindex-RTstart]-file.getSession().getBaseline())/avgInt;
-            //System.out.println("Fit Above = " + fitabove);
+            int RTindex = Math.abs(Arrays.binarySearch(file.getRTArray(), shift+adduct.getRT()))-RTstart;
+            float intensity = IntArray[RTindex];
+            
+            //TODO get range
+            //TODO don't include already found peaks
+            float sheight=intensity;
+            float eheight=intensity;
+            for (int i = 1; i< 15; i++) {
+                if (RTindex-i>0) {
+                    sheight=Math.min(sheight, IntArray[RTindex-i]);
+                }
+                if (RTindex+i<IntArray.length) {
+                    eheight = Math.min(eheight, IntArray[RTindex+i]);
+                }
+            }
+            
+            float height = (sheight+eheight)/2;
+           //calculate Noise Unit for peak
+            float NU = (float) Math.sqrt(intensity)*file.getNoiseFactor();
+            
+            //calculate height above surrounding signals
+            height=intensity-height;
+            
+            //calculate how many Noise Units the peak rises above the surrounding signals
+            fitabove = (height/NU);
+           
+            
+            
+            
+            
+           
         }
         
     }

@@ -9,6 +9,7 @@ import com.mycompany.fxmltableview.datamodel.Peak;
 import com.mycompany.fxmltableview.datamodel.Slice;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  *
@@ -23,12 +24,13 @@ Chromatography/Mass Spectrometry Data) 1999
  */
 public class SNCalculator {
     
+    
     public SNCalculator() {
         
     }
     
     
-    public void calculate(Slice slice) {
+    public void calculatetrueSN(Slice slice) {
         if (slice.getListofPeaks()==null||slice.getListofPeaks().size()<1) {
             return;
         }
@@ -155,10 +157,146 @@ public class SNCalculator {
         
         float avg = sum/count;
         float range = max-min;
+       
         
         //calculate S/N ratio for each peak
         for (Peak peak:slice.getListofPeaks()) {
             peak.setSNR((Int[peak.getIndex()]-avg)/range);
+            
+        }
+        
+        
+        
+    }
+    //Noise factor calculation according to Stein
+    public float calculateNoiseFactor(Slice[] listofSlices) {
+        TreeSet<Float> Ns = new TreeSet<>();
+        
+        for (Slice slice:listofSlices) {
+            float[] Int = slice.getIntArray();
+            int start = 0; 
+            int end = start+12;
+            while (end<Int.length) {
+                float avg = 0;
+                boolean reject=false;
+                for (int i=0; i<13; i++) {
+                    float f = Int[start+i];
+                    if (f<0.001) {
+                        reject=true;
+                        break;
+                    }else{
+                    avg+=Int[start+i]; }
+                }
+                avg/=13;
+                //if no zero values
+                if (!reject) {
+                    TreeSet<Float> set = new TreeSet<>();
+                    byte crossings = 0;
+                    boolean lower;
+                    float f = Int[start]-avg;
+                    if (f>0) {
+                        lower = false;
+                        set.add(f);
+                    } else {
+                        lower = true;
+                        set.add((f*-1));
+                    }
+                    
+                    //count number of crossings
+                    for (int i = 1; i<13; i++) {
+                        f = Int[start+i]-avg;
+                        if (f>0) {
+                            if (lower) {
+                                crossings++;
+                            }
+                            set.add(f);
+                            lower = false;
+                        } else {
+                            if (!lower) {
+                                crossings++;
+                            }
+                            set.add((f*-1));
+                            lower = true;
+                        }
+                    }
+                    
+                    if (crossings>=7) {
+                        //get median deviation
+                        float med = (float)set.toArray()[7];
+                        med/=Math.sqrt(avg);
+                        Ns.add(med);
+                    }
+                    
+                    
+                    
+                    
+                    
+                }
+                
+                
+                start = end+1;
+                end = start+12;
+            }
+            
+            
+        }
+        
+        float N = (float) Ns.toArray()[Ns.size()/2];
+        System.out.println(N);
+        
+        return N;
+    }
+    
+    public void calculateNoiseUnits(Slice slice) {
+        if (slice.getListofPeaks()==null||slice.getListofPeaks().size()<1) {
+            return;
+        }
+        
+        if (slice.getAdduct().getNum()==8957) {
+            System.out.println();
+        }
+        float Noisefactor = slice.getFile().getNoiseFactor();
+        float[] Int = slice.getIntArray();
+        
+        
+      
+        
+        for (Peak peak:slice.getListofPeaks()) {
+            //estimate height of peak above its surrounding signals
+            //takes the min of the 3 closest signals to the peak borders, including the peak borders themselves to ensure we have at least one value
+            float height;
+            
+            int start = peak.getStart();
+            int end = peak.getEnd();
+            
+            float sheight=Int[start];
+            float eheight =Int[end];
+            
+            for (int i = 1; i<=3; i++) {
+                if (start-i>0) {
+                    sheight=Math.min(sheight, Int[start-i]);
+                }
+                if (end+i<Int.length) {
+                   eheight=Math.min(eheight, Int[end+i]);
+                }
+            }
+            
+            height=(sheight+eheight)/2;
+            
+            //calculate Noise Unit for peak
+            float NU = (float) Math.sqrt(Int[peak.getIndex()])*Noisefactor;
+            
+            //calculate height above surrounding signals
+            height=Int[peak.getIndex()]-height;
+            
+            //calculate how many Noise Units the peak rises above the surrounding signals
+            peak.setNoiseUnits(height/NU);
+            
+            if (height/NU<3) {
+                System.out.println(slice.getAdduct().getOGroup() + ": " + slice.getAdduct().getNum() + ": Noisy");
+            }
+            
+            
             
         }
         

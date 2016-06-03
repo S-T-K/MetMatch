@@ -56,6 +56,7 @@ public class RawDataFile {
     private Session session;
     private float scanspersecond;
     private float factor;
+    private float NoiseFactor;
     
     private Property<Boolean> active;
     private final Property<Color> color;
@@ -266,7 +267,7 @@ public class RawDataFile {
     bytecount*=8;
     listofSlices=newlist;
  System.out.println("                               Timenarrow:  " + (System.currentTimeMillis()-start3));
-        
+ NoiseFactor = session.getSncalculator().calculateNoiseFactor(listofSlices);       
         
 this.listofScans=null; //get rid of Scans, they are not needed any more
 double end = System.currentTimeMillis();
@@ -634,6 +635,20 @@ session.getIothread().writefile(this);
      */
     public void setColumn(int column) {
         this.column = column;
+    }
+
+    /**
+     * @return the NoiseFactor
+     */
+    public float getNoiseFactor() {
+        return NoiseFactor;
+    }
+
+    /**
+     * @param NoiseFactor the NoiseFactor to set
+     */
+    public void setNoiseFactor(float NoiseFactor) {
+        this.NoiseFactor = NoiseFactor;
     }
     
     

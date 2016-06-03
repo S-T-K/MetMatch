@@ -1469,6 +1469,8 @@ public class ChartGenerator {
                 
                 
                 System.out.println("Num: " + list.get(i).getSlice().getAdduct().getNum() + " SNR: " + peak.getSNR());
+                System.out.println("Num: " + list.get(i).getSlice().getAdduct().getNum() + " NU: " + peak.getNoiseUnits());
+                
             } 
 
         }

@@ -25,6 +25,7 @@ public class Peak {
     private float indexshift;
     private float weight;
     private float MZ;
+    private float noiseUnits;
     
     
     public Peak(short index, float scale, float SNR, float area, Slice slice) throws InterruptedException {
@@ -295,6 +296,20 @@ public class Peak {
      */
     public void setMZ(float MZ) {
         this.MZ = MZ;
+    }
+
+    /**
+     * @return the noiseUnits
+     */
+    public float getNoiseUnits() {
+        return noiseUnits;
+    }
+
+    /**
+     * @param noiseUnits the noiseUnits to set
+     */
+    public void setNoiseUnits(float noiseUnits) {
+        this.noiseUnits = noiseUnits;
     }
     
     //Comparator to sort List of Entries
