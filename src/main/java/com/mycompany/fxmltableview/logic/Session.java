@@ -54,6 +54,7 @@ public class Session {
     private short maxPeakLengthint;
     private SimpleFloatProperty start;
     private SimpleFloatProperty end;
+    private SimpleFloatProperty noisethreshold;
    
     private int numberofadducts;
     private int numberofFiles;
@@ -105,9 +106,10 @@ public class Session {
         peakschanged = true;
         start = new SimpleFloatProperty (3.0f);
         end = new SimpleFloatProperty (30.0f);
+        noisethreshold = new SimpleFloatProperty(3.0f);
         
         proparraycalculator=new PropArrayCalculator(this);
-        sncalculator = new SNCalculator();
+        sncalculator = new SNCalculator(this);
         
         
     infos = FXCollections.observableArrayList(
@@ -1127,6 +1129,20 @@ public class Session {
      */
     public void setSncalculator(SNCalculator sncalculator) {
         this.sncalculator = sncalculator;
+    }
+
+    /**
+     * @return the noisethreshold
+     */
+    public SimpleFloatProperty getNoisethreshold() {
+        return noisethreshold;
+    }
+
+    /**
+     * @param noisethreshold the noisethreshold to set
+     */
+    public void setNoisethreshold(SimpleFloatProperty noisethreshold) {
+        this.noisethreshold = noisethreshold;
     }
     
 }

@@ -234,7 +234,7 @@ if (listofSlices.containsKey(file)) {
             
         } else if (session.getPeackPick().equals("MassSpecWavelet")) {
             currentSlice.WaveletPeakPicking();
-            session.getSncalculator().calculateNoiseUnits(currentSlice);
+        
             
         } else if (session.getPeackPick().equals("Naïve (Savitzky-Golay)")) {
             currentSlice.SavitzkyGolayPeakPicking();

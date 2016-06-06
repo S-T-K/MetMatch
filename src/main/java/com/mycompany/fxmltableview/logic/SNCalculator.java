@@ -24,9 +24,10 @@ Chromatography/Mass Spectrometry Data) 1999
  */
 public class SNCalculator {
     
+    Session session;
     
-    public SNCalculator() {
-        
+    public SNCalculator(Session session) {
+        this.session=session;
     }
     
     
@@ -247,19 +248,20 @@ public class SNCalculator {
         return N;
     }
     
+    //calculates Noise Units for each peak, and deletes peaks with NU lower than threshold
     public void calculateNoiseUnits(Slice slice) {
         if (slice.getListofPeaks()==null||slice.getListofPeaks().size()<1) {
             return;
         }
         
-        if (slice.getAdduct().getNum()==8957) {
-            System.out.println();
-        }
+//        if (slice.getAdduct().getNum()==8957) {
+//            System.out.println();
+//        }
         float Noisefactor = slice.getFile().getNoiseFactor();
         float[] Int = slice.getIntArray();
         
         
-      
+      List<Peak> goodpeaks = new ArrayList<Peak>();
         
         for (Peak peak:slice.getListofPeaks()) {
             //estimate height of peak above its surrounding signals
@@ -292,14 +294,15 @@ public class SNCalculator {
             //calculate how many Noise Units the peak rises above the surrounding signals
             peak.setNoiseUnits(height/NU);
             
-            if (height/NU<3) {
-                System.out.println(slice.getAdduct().getOGroup() + ": " + slice.getAdduct().getNum() + ": Noisy");
+            if (height/NU>=session.getNoisethreshold().get()) {
+                //System.out.println(slice.getAdduct().getOGroup() + ": " + slice.getAdduct().getNum() + ": Noisy");
+                goodpeaks.add(peak);
             }
             
             
             
         }
-        
+        slice.setListofPeaks(goodpeaks);
         
     }
     

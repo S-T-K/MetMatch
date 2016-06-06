@@ -241,7 +241,9 @@ public class Slice {
         //Retrieve values, see script for names
         //=OUTPUTS
         //float start3 = System.currentTimeMillis();
-        double[][] ret = engine.eval("getMajorPeaks(eic, scales=c(5, 19), snrTh=3)").asDoubleMatrix();
+        String evalstring = "getMajorPeaks(eic, scales=c(5, 19), snrTh=";
+        evalstring = evalstring.concat(file.getSession().getNoisethreshold().get() + ")");
+        double[][] ret = engine.eval(evalstring).asDoubleMatrix();
         //System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
         
         //Print output values, work with them...
@@ -307,7 +309,7 @@ public class Slice {
      
             
             CurveSmooth csm = new CurveSmooth(correctedIntArray);
-            csm.savitzkyGolayPlusFirstDerivPlot(20);
+            csm.savitzkyGolay(30);
            
             
            
@@ -1012,6 +1014,17 @@ public class Slice {
             int RTindex = Math.abs(Arrays.binarySearch(file.getRTArray(), shift+adduct.getRT()))-RTstart;
             float intensity = IntArray[RTindex];
             
+            //check if we are "inside" another peak, if yes, do nothing
+            boolean inside = false;
+            if (listofPeaks!=null) {
+            for (Peak peak:listofPeaks) {
+                if (peak.getStart()<=RTindex&&peak.getEnd()>=RTindex) {
+                    inside = true;
+                }
+            }
+            }
+            if (!inside) {
+            
             //TODO get range
             //TODO don't include already found peaks
             float sheight=intensity;
@@ -1037,7 +1050,7 @@ public class Slice {
            
             
             
-            
+            }
             
            
         }
