@@ -68,6 +68,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeSortMode;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -181,6 +182,7 @@ public class FXMLTableViewController implements Initializable {
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        metTable.setSortMode(TreeSortMode.ALL_DESCENDANTS);
 
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml

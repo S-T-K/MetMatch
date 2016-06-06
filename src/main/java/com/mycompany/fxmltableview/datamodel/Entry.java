@@ -694,6 +694,7 @@ if (listofSlices.containsKey(file)) {
     }
     }
     }
+    Ranges.remove(file);
     if (number>1)  {
         Ranges.put(file, (max-min));
         //System.out.println("Range: " + (max-min));

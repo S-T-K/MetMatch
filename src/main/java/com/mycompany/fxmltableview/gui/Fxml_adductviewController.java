@@ -446,6 +446,11 @@ public class Fxml_adductviewController implements Initializable {
             metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
         }
         metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().nextSibling());
+        Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            metTable.getSelectionModel().getSelectedItem().nextSibling().getChildren().sort(metTable.getComparator());
+                        }});
         print();
 
     }
@@ -457,6 +462,11 @@ public class Fxml_adductviewController implements Initializable {
             metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
         }
         metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().previousSibling());
+        Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            metTable.getSelectionModel().getSelectedItem().previousSibling().getChildren().sort(metTable.getComparator());
+                        }});
         print();
 
     }
@@ -856,7 +866,6 @@ public class Fxml_adductviewController implements Initializable {
     }
     
      public void nextprev() {
-      
          
         //delete all nodes
         filetoseries.clear();
