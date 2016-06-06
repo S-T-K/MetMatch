@@ -108,7 +108,7 @@ public class Session {
         end = new SimpleFloatProperty (30.0f);
         noisethreshold = new SimpleFloatProperty(3.0f);
         
-        proparraycalculator=new PropArrayCalculator(this);
+        //proparraycalculator=new PropArrayCalculator(this);
         sncalculator = new SNCalculator(this);
         
         
@@ -757,6 +757,7 @@ public class Session {
         
         float delta = (RTTolerance.floatValue()*2)/resolution.floatValue();
         IntPeakRTTol = (int) (PeakRTTolerance.floatValue()/delta);
+        proparraycalculator = new PropArrayCalculator(this);
         System.out.println("IntPeakRTTol: " + IntPeakRTTol);
         
     }

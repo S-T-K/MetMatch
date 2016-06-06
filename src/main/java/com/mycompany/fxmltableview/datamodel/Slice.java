@@ -907,7 +907,13 @@ public class Slice {
     public void addPeak(Peak peak){
         float[] length = peak.gethalflength();
         float halflength =file.getSession().getMinPeakLength().floatValue()/2;
-        if (length[0]>=halflength&&length[1]>=halflength) {
+        boolean duplicate = false;
+        for (Peak p: listofPeaks) {
+           if (p.getIndex()==peak.getIndex()) {
+               duplicate = true;
+           }
+        }
+        if (!duplicate&&length[0]>=halflength&&length[1]>=halflength) {
         this.listofPeaks.add(peak);}
     }
     

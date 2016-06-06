@@ -42,6 +42,7 @@ public class SNCalculator {
         int start = 0;
         //analyze region in front of every peak
         for (Peak peak:slice.getListofPeaks()) {
+            if (start<peak.getStart()){
             float[] segment = new float[peak.getStart()-start];
             System.arraycopy(Int, start, segment, 0, peak.getStart()-start);
                 int s = 0;
@@ -88,6 +89,7 @@ public class SNCalculator {
                     e=s+12;
                 }
                 start = peak.getEnd()+1;
+        }
         }
         
         //analyze the remaining rest
