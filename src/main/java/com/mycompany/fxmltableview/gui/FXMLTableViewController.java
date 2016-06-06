@@ -56,6 +56,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -136,7 +137,7 @@ public class FXMLTableViewController implements Initializable {
     TabPane TabPane;
 
     @FXML
-    AnchorPane adductanchor;
+    AnchorPane adductanchor, inputTab;
 
     @FXML
     TableView<Information> InputTable;
@@ -639,6 +640,8 @@ public class FXMLTableViewController implements Initializable {
         paramMenu.setDisable(false);
         toggleadductgeneration.setDisable(true);
         adductanchor.setDisable(true);
+        inputTab.setDisable(true);
+        
 
         session.prepare();
 

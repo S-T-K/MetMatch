@@ -46,7 +46,7 @@
                     <tabs>
                         <Tab text="Input">
                            <content>
-                              <AnchorPane fx:id="Tab11" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <AnchorPane fx:id="inputTab" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
                                     <TableView fx:id="InputTable" layoutX="51.0" layoutY="74.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="423.0" prefWidth="318.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="51.0" AnchorPane.topAnchor="74.0">
                                       <columns>
@@ -468,7 +468,7 @@
                                         <PropertyValueFactory property="MZ" />
                                     </cellValueFactory>
                                 </TreeTableColumn>
-                                <TreeTableColumn fx:id="scorecertaintyColumn" maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="Certainty">
+                                <TreeTableColumn fx:id="scorecertaintyColumn" maxWidth="400.0" minWidth="50.0" prefWidth="151.594482421875" text="Certainty" visible="false">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="Scorecertainty" />
                                     </cellValueFactory>
@@ -488,12 +488,12 @@
                               <PropertyValueFactory property="Scorepeakrange" />
                            </cellValueFactory>
                         </TreeTableColumn>
-                        <TreeTableColumn fx:id="scorefitaboveColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="Intensity">
+                        <TreeTableColumn fx:id="scorefitaboveColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="False Negative NU">
                            <cellValueFactory>
                               <PropertyValueFactory property="Scorefitabove" />
                            </cellValueFactory>
                         </TreeTableColumn>
-                                <TreeTableColumn fx:id="scoreColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="Score">
+                                <TreeTableColumn fx:id="scoreColumn" maxWidth="400.0" minWidth="50.0" prefWidth="112.56005859375" text="Score" visible="false">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="Score" />
                                     </cellValueFactory>

@@ -206,7 +206,7 @@ public class Slice {
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
     public void WaveletPeakPicking() throws InterruptedException {
-        float startc = System.currentTimeMillis();
+        //float startc = System.currentTimeMillis();
             deleteAutoPeaks();
         
             //baseline correct IntensityArray
@@ -264,7 +264,7 @@ public class Slice {
         //engine.end();
          EIC=null;
 
-        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+       // System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
         //System.out.println("Slice processed.......");
     }
     
@@ -970,6 +970,7 @@ public class Slice {
 
     
     public void setFittedPeak(float shift) {
+        fitabove = Float.NaN;
         
        
        
@@ -1026,7 +1027,6 @@ public class Slice {
             if (!inside) {
             
             //TODO get range
-            //TODO don't include already found peaks
             float sheight=intensity;
             float eheight=intensity;
             for (int i = 1; i< 15; i++) {
@@ -1038,6 +1038,9 @@ public class Slice {
                 }
             }
             
+            //avoid false detection on steep slopes
+            if (eheight<intensity&&sheight<intensity) {
+            
             float height = (sheight+eheight)/2;
            //calculate Noise Unit for peak
             float NU = (float) Math.sqrt(intensity)*file.getNoiseFactor();
@@ -1048,7 +1051,7 @@ public class Slice {
             //calculate how many Noise Units the peak rises above the surrounding signals
             fitabove = (height/NU);
            
-            
+            }
             
             }
             
