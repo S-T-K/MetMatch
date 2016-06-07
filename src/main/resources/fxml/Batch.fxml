@@ -94,11 +94,6 @@
                         <PropertyValueFactory property="pfound" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="certaintyColumn" maxWidth="77.0" minWidth="0.0" prefWidth="0.0" text="avg. certainty">
-                     <cellValueFactory>
-                        <PropertyValueFactory property="avgcertainty" />
-                     </cellValueFactory>
-                  </TableColumn>
                </columns>
                <contextMenu>
                   <ContextMenu fx:id="fileContextMenu" onShowing="#checkforFile">

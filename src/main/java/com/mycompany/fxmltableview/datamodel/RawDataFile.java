@@ -66,7 +66,6 @@ public class RawDataFile {
     private FloatProperty mzshift;
     
     private FloatProperty pfound;
-    private FloatProperty avgcertainty;
     
     private int maxPeakLengthInt;
     private int peakRTTolerance;
@@ -84,7 +83,6 @@ public class RawDataFile {
        
         mzshift = new SimpleFloatProperty();
         pfound = new SimpleFloatProperty(Float.NaN);
-        avgcertainty = new SimpleFloatProperty();
         active = new SimpleBooleanProperty(true);
         pointer = 0;
         
@@ -391,19 +389,7 @@ session.getIothread().writefile(this);
         this.pfound = pfound;
     }
     
-    /**
-     * @return the mzshift
-     */
-    public float getAvgcertainty() {
-        return avgcertainty.get();
-    }
-
-    /**
-     * @param mzshift the mzshift to set
-     */
-    public void setAvgCertainty(FloatProperty avg) {
-        this.avgcertainty = avg;
-    }
+    
 
     /**
      * @return the session
@@ -487,7 +473,6 @@ session.getIothread().writefile(this);
     for (float cert : certainties) {
         sum += cert;
     }
-    avgcertainty=new SimpleFloatProperty(sum/certainties.size());
     pfound=new SimpleFloatProperty((float)found/(float)session.getListofOGroups().size()*100);
   
     getDataset().getController().getBatchFileView().refresh();
