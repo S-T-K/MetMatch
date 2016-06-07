@@ -86,7 +86,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.textfield.TextFields;
-import org.jfree.fx.FXGraphics2D;
+
 
 //this is the Controller for the Main GUI
 public class FXMLTableViewController implements Initializable {
@@ -164,7 +164,6 @@ public class FXMLTableViewController implements Initializable {
 
     //current session, storing all information
     Session session;
-    FXGraphics2D test;
     HashMap<TitledPane, Dataset> panelink;
     private HashMap<Dataset, BatchController> datasettocontroller;
 

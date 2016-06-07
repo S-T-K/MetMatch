@@ -103,7 +103,8 @@ public class GravityCalculator {
 //                         if (matrix[j][k]>100) {
 //                         System.out.println();
 //                         }
-                         nmax += matrix[j][k] * (1 / (distance * distance));
+//TODO: other distance penalties than square
+                         nmax += matrix[j][k] / ((distance * distance));
                      }
                  }
                  if (nmax > max) {

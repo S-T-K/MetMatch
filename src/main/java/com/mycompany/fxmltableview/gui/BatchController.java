@@ -78,7 +78,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
-import org.jfree.fx.FXGraphics2D;
 
 
 //this is the Controller for the Main GUI
