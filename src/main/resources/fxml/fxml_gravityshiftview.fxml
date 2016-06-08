@@ -51,7 +51,7 @@
       </Pane>
       <MenuBar layoutY="5.0" prefHeight="33.0" prefWidth="174.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
         <menus>
-          <Menu fx:id="menu" mnemonicParsing="false" text="Use these parameters on...">
+          <Menu fx:id="menu" mnemonicParsing="false" text="Use these Parameters on...">
             <items>
               <MenuItem fx:id="item1" mnemonicParsing="false" onAction="#calculateBatch" text="this Batch" />
                   <MenuItem fx:id="item2" mnemonicParsing="false" onAction="#calculateAllFiles" text="all Files" />
