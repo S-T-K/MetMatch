@@ -371,19 +371,23 @@ public class Session {
         String lastOGroup = "-1";
         Entry ogroup = null;
         for (int i = 1; i < allRows.size(); i++) {
-            for (int j = 0; j<labels.length; j++) {
-               try { labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]]); }
-               catch(NullPointerException e) {
-                   labeledXn[j] = 0;
-               }
-               //if "Several" take first one
-               //TODO: change
-               catch (NumberFormatException e) {
-                   int end = allRows.get(i)[indexLabelsXn[j]].indexOf(',');
-                   labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]].substring(9,end));
-               }
-            }
+//            for (int j = 0; j<labels.length; j++) {
+//               try { labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]]); }
+//               catch(NullPointerException e) {
+//                   labeledXn[j] = 0;
+//               }
+//               //if "Several" take first one
+//               //TODO: change
+//               catch (NumberFormatException e) {
+//                   int end = allRows.get(i)[indexLabelsXn[j]].indexOf(',');
+//                   labeledXn[j] = (int)Float.parseFloat(allRows.get(i)[indexLabelsXn[j]].substring(9,end));
+//               }
+//            }
             //required information
+//            if (i==6071) {
+//                System.out.println(i);
+//            }
+            
             Num = Integer.parseInt(allRows.get(i)[indexNum]);
             MZ = Float.parseFloat(allRows.get(i)[indexMZ]);
             RT = Float.parseFloat(allRows.get(i)[indexRT]);
