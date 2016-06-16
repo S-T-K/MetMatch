@@ -933,17 +933,17 @@ menu.setDisable(false);
 
     public void close() {
         //delete all nodes
-//        for (Ellipse el : nodetoogroup.keySet()) {
-//            el = null;
-//        }
+        for (Ellipse el : nodetoogroup.keySet()) {
+            el = null;
+        }
 
         //delete all listeners
-//        for (Map.Entry<ChangeListener, Property> lis : listeners.entrySet()) {
-//            lis.getValue().removeListener(lis.getKey());
-//        }
-//        for (Map.Entry<ListChangeListener, ObservableList> lis : listlisteners.entrySet()) {
-//            lis.getValue().removeListener(lis.getKey());
-//        }
+        for (Map.Entry<ChangeListener, Property> lis : listeners.entrySet()) {
+            lis.getValue().removeListener(lis.getKey());
+        }
+        for (Map.Entry<ListChangeListener, ObservableList> lis : listlisteners.entrySet()) {
+            lis.getValue().removeListener(lis.getKey());
+        }
     }
 
     public Session getSession() {

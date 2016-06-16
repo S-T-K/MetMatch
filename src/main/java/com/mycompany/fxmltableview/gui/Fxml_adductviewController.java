@@ -71,6 +71,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.Group;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -109,6 +110,9 @@ public class Fxml_adductviewController implements Initializable {
     
     @FXML
     TextField weightfield;
+    
+    @FXML
+    AnchorPane anchor;
            
 
     TreeTableView<Entry> metTable;
@@ -160,7 +164,7 @@ public class Fxml_adductviewController implements Initializable {
         progress.setOpacity(0.25);
         EICToggle.selectedProperty().setValue(true);
         NEICToggle.selectedProperty().setValue(true);
-        MZToggle.selectedProperty().setValue(true);
+        MZToggle.selectedProperty().setValue(false);
         EICMode.selectedProperty().set(true);
         scrollPane.setContextMenu(null);
         
@@ -170,6 +174,7 @@ public class Fxml_adductviewController implements Initializable {
 
     //method that generates the graphs
     public void print() {
+        anchor.setDisable(true);
         float start = System.currentTimeMillis();
         //new Maps, old Series are gone
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
@@ -420,6 +425,7 @@ public class Fxml_adductviewController implements Initializable {
          }
                 
                 progress.setVisible(false);
+                anchor.setDisable(false);
                Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -850,6 +856,7 @@ public class Fxml_adductviewController implements Initializable {
     }
     
     public void close() {
+        gridPane.getChildren().clear();
         t.interrupt();
         //delete all nodes
         for(XYChart.Series ser : seriestofile.keySet()) {
@@ -863,12 +870,22 @@ public class Fxml_adductviewController implements Initializable {
         for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
             lis.getValue().removeListener(lis.getKey());
         }
+        nextprev();
     }
     
      public void nextprev() {
          
         //delete all nodes
+         for (Map.Entry<RawDataFile,List<XYChart.Series>> entry: filetoseries.entrySet()) {
+            for (XYChart.Series series:entry.getValue()) {
+                series.setNode(null);
+                for (XYChart.Data data: ((List<XYChart.Data <Number,Number>>)series.getData())) {
+                    data.setNode(null);
+                }
+            }
+        }
         filetoseries.clear();
+       
         seriestofile.clear();
         seriestochart.clear();
         getSeriestopeak().clear();
@@ -879,7 +896,13 @@ public class Fxml_adductviewController implements Initializable {
         for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
             lis.getValue().removeListener(lis.getKey());
         }
+        for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
+            lis.getValue().removeListener(lis.getKey());
+        }
+                
+                
         charts.clear();
+        gridPane.getChildren().clear();
     }
 
      
