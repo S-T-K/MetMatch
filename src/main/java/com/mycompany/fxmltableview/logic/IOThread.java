@@ -111,7 +111,7 @@ public class IOThread implements Runnable{
              //if nothing else to do 
              if (count2==0){
              //check if new Slices to write not crit
-             while (count3 < 100 && write.size()>10000) {
+             while (count3 < 100 && write.size()>10000000) {
                  try {
                      Slice slice = write.take();
                      try {

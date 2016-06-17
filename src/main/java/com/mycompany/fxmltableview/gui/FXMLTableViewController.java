@@ -1515,10 +1515,10 @@ public class FXMLTableViewController implements Initializable {
         for (int i = 0; i < nof; i++) {
             RawDataFile file = session.getAllFiles().get(i);
             file.setColumn(cc);
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_Area";
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_RT-Shift";
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_MZ-Shift";
-            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + "_Test_MZ";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + ".Area";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + ".RT-Shift";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + ".MZ-Shift";
+            Outheader[cc++] = file.getName().substring(0, file.getName().length() - 6) + ".MZ";
         }
 
         //write old information after files

@@ -166,7 +166,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
         stackpane.setVisible(false);
         menu.setDisable(true);
         progress.setVisible(false);
-
+       
         
 
     
@@ -177,7 +177,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
        
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
-       
+        setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
             
 
     }

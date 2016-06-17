@@ -94,7 +94,7 @@ public class Session {
         this.listofDatasets = new ArrayList<>();
         this.resolution = new SimpleIntegerProperty(100);
         this.baseline = new SimpleFloatProperty(1000);
-        SliceMZTolerance = new SimpleFloatProperty (5.0f);
+        SliceMZTolerance = new SimpleFloatProperty (3.5f);
         RTTolerance = new SimpleFloatProperty(1.5f);
         MZTolerance = new SimpleFloatProperty(11.0f);
         PeakRTTolerance = new SimpleFloatProperty(0.15f);

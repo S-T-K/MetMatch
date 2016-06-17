@@ -162,9 +162,9 @@ public class Fxml_adductviewController implements Initializable {
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
         progress.setOpacity(0.25);
-        EICToggle.selectedProperty().setValue(true);
-        NEICToggle.selectedProperty().setValue(true);
-        MZToggle.selectedProperty().setValue(false);
+        EICToggle.selectedProperty().setValue(false);
+        NEICToggle.selectedProperty().setValue(false);
+        MZToggle.selectedProperty().setValue(true);
         EICMode.selectedProperty().set(true);
         scrollPane.setContextMenu(null);
         
