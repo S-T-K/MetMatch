@@ -1626,19 +1626,28 @@ public class ChartGenerator {
         linechart.getData().add(midSeries);
         XYChart.Series botSeries = new XYChart.Series();
         linechart.getData().add(botSeries);
+        List<XYChart.Data> list1 = new ArrayList<>();
+        List<XYChart.Data> list2 = new ArrayList<>();
+        List<XYChart.Data> list3 = new ArrayList<>();
         
         for (int i = 0; i<list.size(); i++) {
             XYChart.Data data1 = new XYChart.Data(list.get(i).getRT(), 100);
-            topSeries.getData().add(data1);
+            list1.add(data1);
             newshiftcontroller.setTopSeries(topSeries);
             XYChart.Data data3 = new XYChart.Data(list.get(i).getRT(), 0);
-            botSeries.getData().add(data3);
+           list3.add(data3);
             newshiftcontroller.setBotSeries(botSeries);
             XYChart.Data data2 = new XYChart.Data(list.get(i).getRT(), 0.0f);
-            midSeries.getData().add(data2);
+            list2.add(data2);
             newshiftcontroller.setMidSeries(midSeries);
         }
-        
+        topSeries.getData().addAll(list1);
+        botSeries.getData().addAll(list3);
+        midSeries.getData().addAll(list2);
+         newshiftcontroller.getSeriestofile().put(topSeries, null);
+         newshiftcontroller.getSeriestofile().put(midSeries, null);
+         newshiftcontroller.getSeriestofile().put(botSeries, null);
+         
         linechart.applyCss();
         //Color Top Series
         ((Group) topSeries.getNode()).getChildren().get(1).setVisible(false);
@@ -1779,6 +1788,7 @@ public class ChartGenerator {
         ScatterChart<Number, Number> scatterchart = new ScatterChart(xAxis, yAxis);
         XYChart.Series backSeries = new XYChart.Series();
         RawDataFile file = session.getSelectedFiles().get(0);
+        List<XYChart.Data> points = new ArrayList<>();
         for (int i = 0; i<list.size(); i++) {
             for (int j = 0; j<list.get(i).getListofAdducts().size(); j++) {
                 Entry adduct = list.get(i).getListofAdducts().get(j);
@@ -1806,13 +1816,15 @@ public class ChartGenerator {
                           }
                     
                     data.setNode(rect);
-                         backSeries.getData().add(data);
+                         points.add(data);
                     }
                     }
                 }
             }
         }
+        backSeries.getData().addAll(points);
         scatterchart.getData().add(backSeries);
+        newshiftcontroller.getSeriestofile().put(backSeries, null);
 //        float upper = 0;
 //        float lower = 0;
 //        float shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();

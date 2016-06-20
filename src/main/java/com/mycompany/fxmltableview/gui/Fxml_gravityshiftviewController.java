@@ -393,6 +393,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 //        new Thread(maintask).start();
 //    }
     public void animate(ObservableList<Entry> list) throws IOException, InterruptedException {
+        close();
         session.setPeakPickchanged(true);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
@@ -933,16 +934,29 @@ menu.setDisable(false);
 
     public void close() {
         //delete all nodes
+        if (seriestofile!=null) {
+        for (XYChart.Series series : seriestofile.keySet()) {
+            series.getData().clear();
+        }
+        }
+        if (nodetoogroup!=null) {
+
         for (Ellipse el : nodetoogroup.keySet()) {
             el = null;
         }
-
+        }
+        
+        
         //delete all listeners
+        if (listeners!=null) {
         for (Map.Entry<ChangeListener, Property> lis : listeners.entrySet()) {
             lis.getValue().removeListener(lis.getKey());
         }
+        }
+        if (listlisteners!=null) {
         for (Map.Entry<ListChangeListener, ObservableList> lis : listlisteners.entrySet()) {
             lis.getValue().removeListener(lis.getKey());
+        }
         }
     }
 
@@ -1578,7 +1592,7 @@ menu.setDisable(false);
     }
     
    public void calculateFiles(List<RawDataFile> filelist) throws InterruptedException, IOException {
-       
+       close();
   
        int files = filelist.size();
        

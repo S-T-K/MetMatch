@@ -859,10 +859,7 @@ public class Fxml_adductviewController implements Initializable {
     public void close() {
         gridPane.getChildren().clear();
         t.interrupt();
-        //delete all nodes
-        for(XYChart.Series ser : seriestofile.keySet()) {
-            ser = null;
-        }
+        
         
         //delete all listeners
         for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
@@ -877,24 +874,23 @@ public class Fxml_adductviewController implements Initializable {
      public void nextprev() {
          
         //delete all nodes
-          for (XYChart.Series series : seriestofile.keySet()) {
+        if (t!=null) {
+t.interrupt();}
+for (XYChart.Series series : seriestofile.keySet()) {
             series.getData().clear();
         }
+for (XYChart chart : seriestochart.values()) {
+            chart.getData().clear();
+        }
         filetoseries.clear();
+                
+        
        
         seriestofile.clear();
         seriestochart.clear();
         getSeriestopeak().clear();
         adducttochart.clear();
         alignableseries.clear();
-        
-        //delete all listeners
-        for(Map.Entry<ChangeListener,Property> lis : listeners.entrySet()){
-            lis.getValue().removeListener(lis.getKey());
-        }
-        for(Map.Entry<ListChangeListener,ObservableList> lis : listlisteners.entrySet()){
-            lis.getValue().removeListener(lis.getKey());
-        }
                 
                 
         charts.clear();
