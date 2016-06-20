@@ -162,8 +162,8 @@ public class Fxml_adductviewController implements Initializable {
         listeners = new HashMap<ChangeListener, Property>();
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
         progress.setOpacity(0.25);
-        EICToggle.selectedProperty().setValue(false);
-        NEICToggle.selectedProperty().setValue(false);
+        EICToggle.selectedProperty().setValue(true);
+        NEICToggle.selectedProperty().setValue(true);
         MZToggle.selectedProperty().setValue(true);
         EICMode.selectedProperty().set(true);
         scrollPane.setContextMenu(null);
@@ -174,6 +174,7 @@ public class Fxml_adductviewController implements Initializable {
 
     //method that generates the graphs
     public void print() {
+        nextprev();
         anchor.setDisable(true);
         float start = System.currentTimeMillis();
         //new Maps, old Series are gone
@@ -876,13 +877,8 @@ public class Fxml_adductviewController implements Initializable {
      public void nextprev() {
          
         //delete all nodes
-         for (Map.Entry<RawDataFile,List<XYChart.Series>> entry: filetoseries.entrySet()) {
-            for (XYChart.Series series:entry.getValue()) {
-                series.setNode(null);
-                for (XYChart.Data data: ((List<XYChart.Data <Number,Number>>)series.getData())) {
-                    data.setNode(null);
-                }
-            }
+          for (XYChart.Series series : seriestofile.keySet()) {
+            series.getData().clear();
         }
         filetoseries.clear();
        

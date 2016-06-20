@@ -1,0 +1,13 @@
+.chart-line-symbol {
+    -fx-background-color: #f9d900, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 0px;
+    -fx-padding: 0px;
+}
+
+.chart-area-symbol {
+    -fx-background-color: #f9d900, white;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 0px; /* makes sure this remains circular */
+    -fx-padding: 0px;
+}

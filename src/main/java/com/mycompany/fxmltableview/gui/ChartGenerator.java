@@ -125,6 +125,9 @@ public class ChartGenerator {
                     newSeries.getData().add(data);
 
                 }
+                File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
+        linechart.getStylesheets().clear();
+        linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
 
                 // add new Series
                 linechart.getData().add(newSeries);
@@ -144,7 +147,7 @@ public class ChartGenerator {
         }}}
 
         //don't draw symbols
-        linechart.setCreateSymbols(false);
+//        linechart.setCreateSymbols(false);
         //set size of chart
         linechart.setMaxSize(450, 300);
 
@@ -418,6 +421,10 @@ public class ChartGenerator {
                 //float endinner = System.currentTimeMillis();
                 //System.out.println("Inner loop norm: " + (endinner-startinner));
                 areachart.getData().add(newSeries);
+                File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
+        areachart.getStylesheets().clear();
+        areachart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
+                
                 areachart.applyCss();
                 if (currentfile.isselected()) {
                     paintselectedLine(((Group) newSeries.getNode()).getChildren().get(1));
@@ -433,7 +440,7 @@ public class ChartGenerator {
                 ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setVisible(false);
                 ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());
 
-                areachart.setCreateSymbols(false);
+//                areachart.setCreateSymbols(false);
                 areachart.setMaxSize(450, 300);
 
                 //float endouter = System.currentTimeMillis();
