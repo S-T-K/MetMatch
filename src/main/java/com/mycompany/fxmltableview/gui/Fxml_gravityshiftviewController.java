@@ -166,6 +166,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
         stackpane.setVisible(false);
         menu.setDisable(true);
         progress.setVisible(false);
+       setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
+       setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
        
         
 
@@ -933,6 +935,7 @@ menu.setDisable(false);
     }
 
     public void close() {
+        System.out.println("closing");
         //delete all nodes
         if (seriestofile!=null) {
         for (XYChart.Series series : seriestofile.keySet()) {
@@ -940,12 +943,9 @@ menu.setDisable(false);
         }
         }
         if (nodetoogroup!=null) {
-
-        for (Ellipse el : nodetoogroup.keySet()) {
-            el = null;
+        nodetoogroup.keySet().clear();
         }
-        }
-        
+        seriestofile.clear();
         
         //delete all listeners
         if (listeners!=null) {
@@ -958,6 +958,10 @@ menu.setDisable(false);
             lis.getValue().removeListener(lis.getKey());
         }
         }
+       
+        filetoseries.clear();
+               
+        stackpane.getChildren().clear();
     }
 
     public Session getSession() {

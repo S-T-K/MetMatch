@@ -116,18 +116,19 @@ public class ChartGenerator {
                 //float startinner = System.currentTimeMillis();
                 float[]intArr = currentSlice.getIntArray();
                 int startRT = currentSlice.getRTstart();
-                
+                List<XYChart.Data> points = new ArrayList<>(intArr.length);
                 for (int j = 0; j < intArr.length; j++) {
                     float intensity = intArr[j];
                     float currentRT = RTArray[startRT+j];
                     XYChart.Data data = new XYChart.Data(currentRT, intensity);
 
-                    newSeries.getData().add(data);
+                    points.add(data);
 
                 }
+                newSeries.getData().addAll(points);
                 File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
-        linechart.getStylesheets().clear();
-        linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
+                linechart.getStylesheets().clear();
+                linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
 
                 // add new Series
                 linechart.getData().add(newSeries);
@@ -412,12 +413,14 @@ public class ChartGenerator {
                 int startRT = currentSlice.getRTstart();
                 float maxIntensity = currentSlice.getMaxIntensity();
                 //float startinner = System.currentTimeMillis();
+                List<XYChart.Data> points = new ArrayList<>(intArr.length);
                 for (int j = 0; j < intArr.length; j++) {
                     float intensity = intArr[j];
                     float currentRT = RTArray[j+startRT];
-                    newSeries.getData().add(new XYChart.Data(currentRT, intensity / maxIntensity));
+                    points.add(new XYChart.Data(currentRT, intensity / maxIntensity));
 
                 }
+                newSeries.getData().addAll(points);
                 //float endinner = System.currentTimeMillis();
                 //System.out.println("Inner loop norm: " + (endinner-startinner));
                 areachart.getData().add(newSeries);
@@ -720,6 +723,7 @@ public class ChartGenerator {
                 int RTstart = currentSlice.getRTstart();
                 float width = currentSlice.getFile().getWidth() + 1.5f;
 //float startinner = System.currentTimeMillis();
+List<XYChart.Data> points = new ArrayList<>(intArr.length);
                 for (int j = 0; j < intArr.length; j++) {
                     XYChart.Data data = new XYChart.Data(RTArray[j+RTstart], getppm(adduct.getMZ(), mzArr[j]));
 
@@ -744,8 +748,9 @@ public class ChartGenerator {
                     //Tooltip tooltip = new Tooltip();
                     //tooltip.setText(currentSlice.getIntensityList().get(j).toString());
                     //Tooltip.install(data.getNode(), tooltip);
-                    newSeries.getData().add(data);
+                    points.add(data);
                 }
+                newSeries.getData().addAll(points);
 
                 //float endinner = System.currentTimeMillis();
 //System.out.println("Inner loop mass: " + (endinner-startinner));
@@ -987,7 +992,7 @@ public class ChartGenerator {
         }
         backSeries.getData().addAll(points);
         scatterchart.getData().add(backSeries);
-            
+        shiftcontroller.getSeriestofile().put(backSeries, null);
             
             
  
@@ -1084,47 +1089,8 @@ public class ChartGenerator {
 
         float upper = 0;
         float lower = 0;
-        float shiftiter = (list.get(0).getSession().getRTTolerance() * 2) / list.get(0).getSession().getResolution();
-        int middleint = (list.get(0).getSession().getResolution() / 2) - 1;
+  
         
-        
-        //draw penalty Area
-        XYChart.Series backSeries = new XYChart.Series();
-        
-        
-        List<RawDataFile> sellist =  session.getSelectedFiles();
-        List<XYChart.Data> points = new ArrayList<XYChart.Data>();
-        //draw background
-        for (int i = 0;i<list.size(); i=i+3) {
-            for (int j = 0; j< session.getResolution(); j++) {
-                boolean penalty = false;
-               for (int s = 0; s<sellist.size(); s++) {
-                   if (sellist.get(s).getActive()) {
-                       if (list.get(i).getPenArray()!=null){
-                           if (list.get(i).getPenArray().containsKey(sellist.get(s))) {
-                       if (list.get(i).getPenArray().get(sellist.get(s))[j]<0) {
-                           penalty = true;
-                           break;
-                           
-                       }
-                       }
-                       }
-                   }
-               }
-                if (penalty) {
-                    XYChart.Data data = new XYChart.Data(list.get(i).getRT(), (j-middleint)*60*shiftiter);
-                    Rectangle rect = new Rectangle(5,5);
-                    rect.setFill(Color.PINK);
-                    data.setNode(rect);
-                    points.add(data);
-                }
-               
-            }
-        }
-        backSeries.getData().addAll(points);
-        scatterchart.getData().add(backSeries);
-            
-            
             
  
         
@@ -1133,12 +1099,10 @@ public class ChartGenerator {
         for (int f = 0; f < list.get(0).getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
             RawDataFile currentfile = list.get(0).getSession().getListofDatasets().get(d).getListofFiles().get(f);
             if (currentfile.getActive().booleanValue()) {
-                shiftiter=1.0f/currentfile.getScanspersecond();
-               
-                
+
                 XYChart.Series newSeries = new XYChart.Series();
                 
-                newshiftcontroller.getSeriestofile().put(newSeries, currentfile);
+                
                 if (newshiftcontroller.getFiletoseries().containsKey(currentfile)){
                     newshiftcontroller.getFiletoseries().get(currentfile).add(newSeries);
                 } else {
@@ -1152,7 +1116,7 @@ public class ChartGenerator {
                 
 
                 
-                
+                List<XYChart.Data> points2 = new ArrayList<>();
                 for (int i = 1; i < list.size()-1; i++) {
                     
                     float shift = (list.get(i).getOgroupShift().get(currentfile))*60;
@@ -1183,13 +1147,15 @@ public class ChartGenerator {
                     
                     
                     
-                    newSeries.getData().add(data);
+                    points2.add(data);
                     if (shift > upper) {
                         upper = shift;
                     } else if (shift < lower) {
                         lower = shift;
                     }
                 }
+                newshiftcontroller.getSeriestofile().put(newSeries, currentfile);
+                newSeries.getData().addAll(points2);
                 scatterchart.getData().add(newSeries);
               
                 
@@ -1532,10 +1498,11 @@ public class ChartGenerator {
                 float shiftiter = (session.getRTTolerance() * 2) / session.getResolution();
                 int middleint = (session.getResolution() / 2) - 1;
                 
+                List<XYChart.Data> points = new ArrayList<>();
                 for (int j = 0; j < session.getListofOGroups().size(); j++) {
                   float shift = (session.getListofOGroups().get(j).getOgroupShift().get(currentfile))*60;
                     XYChart.Data data = new XYChart.Data(session.getListofOGroups().get(j).getRT(), shift);
-                    newSeries.getData().add(data);
+                    points.add(data);
                     if (shift > upper) {
                         upper = shift;
                     } else if (shift < lower) {
@@ -1544,6 +1511,7 @@ public class ChartGenerator {
                    
 
                 }
+                newSeries.getData().addAll(points);
                 
                  XYChart.Series shiftSeries = new XYChart.Series();
                  XYChart.Data data = new XYChart.Data(adduct.getRT(), -100);
@@ -1571,9 +1539,11 @@ public class ChartGenerator {
 
             }
         }}}
+        
+        File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
+        linechart.getStylesheets().clear();
+        linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
 
-        //don't draw symbols
-        linechart.setCreateSymbols(false);
         //set size of chart
         linechart.setMaxSize(450, 300);
 
@@ -1750,7 +1720,10 @@ public class ChartGenerator {
 //        }}}
 
         //don't draw symbols
-        linechart.setCreateSymbols(false);
+        //linechart.setCreateSymbols(false);
+        File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
+        linechart.getStylesheets().clear();
+        linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
         //set size of chart
         linechart.setMaxSize(2000, 2000);
 
