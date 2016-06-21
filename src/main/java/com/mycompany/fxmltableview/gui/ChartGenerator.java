@@ -148,7 +148,7 @@ public class ChartGenerator {
         }}}
 
         //don't draw symbols
-//        linechart.setCreateSymbols(false);
+        linechart.setCreateSymbols(false);
         //set size of chart
         linechart.setMaxSize(450, 300);
 
@@ -443,7 +443,7 @@ public class ChartGenerator {
                 ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setVisible(false);
                 ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());
 
-//                areachart.setCreateSymbols(false);
+                areachart.setCreateSymbols(false);
                 areachart.setMaxSize(450, 300);
 
                 //float endouter = System.currentTimeMillis();

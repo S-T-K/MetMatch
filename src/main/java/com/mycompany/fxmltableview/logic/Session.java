@@ -84,7 +84,13 @@ public class Session {
     private ArrayList<String> outputoptions;
     
     public Session() {
-        
+//        //Or RUN: -Djava.library.path=C:\Users\stefankoch\Documents\R\R-3.2.3\library\rJava\jri
+//in actions runproject
+// exec.args=-Xms1g -Xmx5g -classpath %classpath ${packageClassName}
+// exec.executable=java
+//        System.setProperty("java.library.path", "C:\\Users\\stefankoch\\Documents\\R\\R-3.2.3\\library\\rJava\\jri");
+System.out.println(System.getProperty("java.library.path"));
+System.out.println(System.getProperty("user.dir"));
         
         startIOThread();
        this.gravitycalculator=new GravityCalculator(this);
@@ -100,8 +106,14 @@ public class Session {
         PeakRTTolerance = new SimpleFloatProperty(0.15f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
         minPeakLength = new SimpleFloatProperty(0.1f);
+        
+            
         engine = new Rengine(new String[] { "--no-save" }, false, null);
-        engine.eval("source(\"C:/Users/stefankoch/Desktop/MassSpecWaveletIdentification.r\")");
+        System.out.println(engine.eval("source(\"MassSpecWaveletIdentification.r\")"));
+
+        
+       
+        
         peakPickchanged = true;
         peakschanged = true;
         start = new SimpleFloatProperty (3.0f);
