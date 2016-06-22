@@ -13,7 +13,6 @@ import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
 import java.util.Collections;
 import javafx.scene.Node;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -21,7 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import java.util.Arrays;
-import java.util.List;
+import java.util.List;  
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import org.apache.commons.lang3.ArrayUtils;
@@ -61,14 +60,14 @@ public class ChartGenerator {
        
     }
 
-    public LineChart generateEIC(Entry adduct) throws InterruptedException {
+    public LineChartnoSymbol generateEIC(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Intensity");
-        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+        LineChartnoSymbol<Number, Number> linechart = new LineChartnoSymbol(xAxis, yAxis);
         
         
         if (adductcontroller.getAdducttochart().containsKey(adduct)) {
@@ -126,9 +125,7 @@ public class ChartGenerator {
 
                 }
                 newSeries.getData().addAll(points);
-                File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
-                linechart.getStylesheets().clear();
-                linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
+                
 
                 // add new Series
                 linechart.getData().add(newSeries);
@@ -280,14 +277,14 @@ public class ChartGenerator {
         linechart.setLegendVisible(false);
         return linechart;
     }
-    public LineChart generateNormalizedEIC(Entry adduct) throws InterruptedException {
+    public LineChartnoSymbol generateNormalizedEIC(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Intensity (normalized)");
-        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+        LineChartnoSymbol<Number, Number> linechart = new LineChartnoSymbol(xAxis, yAxis);
         
         if (adductcontroller.getAdducttochart().containsKey(adduct)) {
             adductcontroller.getAdducttochart().get(adduct).add(linechart);
@@ -368,14 +365,14 @@ public class ChartGenerator {
         return linechart;
     }
     
-     public AreaChart generateNormalizedEICArea(Entry adduct) throws InterruptedException {
+     public AreaChartnoSymbol generateNormalizedEICArea(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Intensity (normalized)");
-        AreaChart<Number, Number> areachart = new AreaChart(xAxis, yAxis);
+        AreaChartnoSymbol<Number, Number> areachart = new AreaChartnoSymbol(xAxis, yAxis);
         
         if (adductcontroller.getAdducttochart().containsKey(adduct)) {
             adductcontroller.getAdducttochart().get(adduct).add(areachart);
@@ -424,9 +421,6 @@ public class ChartGenerator {
                 //float endinner = System.currentTimeMillis();
                 //System.out.println("Inner loop norm: " + (endinner-startinner));
                 areachart.getData().add(newSeries);
-                File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
-        areachart.getStylesheets().clear();
-        areachart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
                 
                 areachart.applyCss();
                 if (currentfile.isselected()) {
@@ -443,7 +437,6 @@ public class ChartGenerator {
                 ((Path)((Group) newSeries.getNode()).getChildren().get(0)).setVisible(false);
                 ((Path)((Group) newSeries.getNode()).getChildren().get(1)).setStrokeWidth(currentSlice.getFile().getWidth());
 
-                areachart.setCreateSymbols(false);
                 areachart.setMaxSize(450, 300);
 
                 //float endouter = System.currentTimeMillis();
@@ -470,14 +463,14 @@ public class ChartGenerator {
         areachart.setLegendVisible(false);
         return areachart;
     }
-//    public LineChart generateNormalizedEICwithPeak(Entry adduct) throws InterruptedException {
+//    public LineChartnoSymbol generateNormalizedEICwithPeak(Entry adduct) throws InterruptedException {
 //
 //        //Basic Chart attributes
 //        NumberAxis xAxis = new NumberAxis();
 //        NumberAxis yAxis = new NumberAxis();
 //        xAxis.setLabel("RT [minutes]");
 //        yAxis.setLabel("Intensity (normalized)");
-//        LineChart<Number, Number> areachart = new LineChart(xAxis, yAxis);
+//        LineChartnoSymbol<Number, Number> areachart = new LineChartnoSymbol(xAxis, yAxis);
 //
 //        // for all slices (= for all files)
 //        //float startouter = System.currentTimeMillis();
@@ -599,14 +592,14 @@ public class ChartGenerator {
 //    }
 
 
-//    public LineChart generateNormalizedEICwithProp(Entry adduct) throws InterruptedException {
+//    public LineChartnoSymbol generateNormalizedEICwithProp(Entry adduct) throws InterruptedException {
 //
 //        //Basic Chart attributes
 //        NumberAxis xAxis = new NumberAxis();
 //        NumberAxis yAxis = new NumberAxis();
 //        xAxis.setLabel("RT [minutes]");
 //        yAxis.setLabel("Intensity (normalized)");
-//        LineChart<Number, Number> areachart = new LineChart(xAxis, yAxis);
+//        LineChartnoSymbol<Number, Number> areachart = new LineChartnoSymbol(xAxis, yAxis);
 //
 //        // for all slices (= for all files)
 //        //float startouter = System.currentTimeMillis();
@@ -783,7 +776,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
 
     }
 
-//    public float PropArray(Entry adduct, LineChart<Number, Number> areachart) throws InterruptedException {
+//    public float PropArray(Entry adduct, LineChartnoSymbol<Number, Number> areachart) throws InterruptedException {
 //
 //        float maxProp = 1;
 //         for (int d = 0; d<session.getListofDatasets().size(); d++) {
@@ -847,13 +840,13 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
 //        return maxProp;
 //    }
 
-//    public LineChart generateShiftChart(ObservableList<Entry> list) {
+//    public LineChartnoSymbol generateShiftChart(ObservableList<Entry> list) {
 //
 //        NumberAxis xAxis = new NumberAxis();
 //        NumberAxis yAxis = new NumberAxis();
 //        xAxis.setLabel("RT [minutes]");
 //        yAxis.setLabel("Shift [seconds]");
-//        LineChart<Number, Number> areachart = new LineChart(xAxis, yAxis);
+//        LineChartnoSymbol<Number, Number> areachart = new LineChartnoSymbol(xAxis, yAxis);
 //
 //        float upper = 0;
 //        float lower = 0;
@@ -1244,7 +1237,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
         return scatterchart;
     }
     
-    void generateShiftmarker(Entry adduct, RawDataFile currentfile, LineChart linechart) {
+    void generateShiftmarker(Entry adduct, RawDataFile currentfile, LineChartnoSymbol linechart) {
         if (adduct.getOGroupObject().getOgroupShift().containsKey(currentfile)) {
         
           if (adduct.getListofSlices().get(currentfile).getFittedpeak()!=null) {
@@ -1291,7 +1284,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
         }
         
     }
-    void generateShiftmarkerArea(Entry adduct, RawDataFile currentfile, AreaChart areachart) {
+    void generateShiftmarkerArea(Entry adduct, RawDataFile currentfile, AreaChartnoSymbol areachart) {
         
         float width = session.getRTTolerance()*(1.0f/30.0f);
         
@@ -1350,7 +1343,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
         
     }
     
-    void generatePeakmarker(Entry adduct, RawDataFile currentfile, LineChart linechart) {
+    void generatePeakmarker(Entry adduct, RawDataFile currentfile, LineChartnoSymbol linechart) {
         
         List<Peak> list = adduct.getListofSlices().get(currentfile).getListofPeaks();
         if (list!= null) {
@@ -1398,7 +1391,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
     }
     
     //generates peak marker
-        void generatePeakmarkerArea(Entry adduct, RawDataFile currentfile, AreaChart areachart) {
+        void generatePeakmarkerArea(Entry adduct, RawDataFile currentfile, AreaChartnoSymbol areachart) {
         Slice currentSlice = adduct.getListofSlices().get(currentfile);
         List<Peak> list = currentSlice.getListofPeaks();
         float[] RTArray = currentfile.getRTArray();
@@ -1451,14 +1444,14 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
     }
     
     
-     public LineChart generateShiftMap(Entry adduct) throws InterruptedException {
+     public LineChartnoSymbol generateShiftMap(Entry adduct) throws InterruptedException {
 
         //Basic Chart attributes
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("Shift [seconds]");
-        LineChart<Number, Number> linechart = new LineChart(xAxis, yAxis);
+        LineChartnoSymbol<Number, Number> linechart = new LineChartnoSymbol(xAxis, yAxis);
         float upper = 0;
         float lower = 0;
         
@@ -1578,7 +1571,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
      }
      
      
-     public AreaChart generateNewShift(ObservableList<Entry> list) throws InterruptedException {
+     public AreaChartnoSymbol generateNewShift(ObservableList<Entry> list) throws InterruptedException {
 //Info:
 //newSeries.getNode() is Group, consisting of 2 Paths, 0 is a simple line, as in linechart, 1 is the line plus the area, color is a pale version of line
 //1 can be set invisible, then it works like a normal line chart
@@ -1589,7 +1582,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("RT [minutes]");
         yAxis.setLabel("RT-Shift [sec]");
-        AreaChart<Number, Number> linechart = new AreaChart(xAxis, yAxis);
+        AreaChartnoSymbol<Number, Number> linechart = new AreaChartnoSymbol(xAxis, yAxis);
         XYChart.Series topSeries = new XYChart.Series();
         linechart.getData().add(topSeries);
         XYChart.Series midSeries = new XYChart.Series();
@@ -1721,9 +1714,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
 
         //don't draw symbols
         //linechart.setCreateSymbols(false);
-        File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
-        linechart.getStylesheets().clear();
-        linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
+       
         //set size of chart
         linechart.setMaxSize(2000, 2000);
 

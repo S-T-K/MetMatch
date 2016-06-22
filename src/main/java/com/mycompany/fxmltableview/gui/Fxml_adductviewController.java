@@ -43,7 +43,6 @@ import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -163,8 +162,8 @@ public class Fxml_adductviewController implements Initializable {
         listlisteners = new HashMap<ListChangeListener, ObservableList>();
         progress.setOpacity(0.25);
         EICToggle.selectedProperty().setValue(true);
-        NEICToggle.selectedProperty().setValue(true);
-        MZToggle.selectedProperty().setValue(true);
+        NEICToggle.selectedProperty().setValue(false);
+        MZToggle.selectedProperty().setValue(false);
         EICMode.selectedProperty().set(true);
         scrollPane.setContextMenu(null);
         
@@ -285,12 +284,12 @@ public class Fxml_adductviewController implements Initializable {
                     
                             addRow(row, box);
                             if(EICToggle.selectedProperty().get()) {
-                            LineChart<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
+                            LineChartnoSymbol<Number, Number> linechart1 = chartGenerator.generateEIC(adduct);
                             addColumn(1, linechart1);
                             }
                             
                             if(NEICToggle.selectedProperty().get()) {
-                                AreaChart<Number, Number> linechart2 = chartGenerator.generateNormalizedEICArea(adduct);
+                                AreaChartnoSymbol<Number, Number> linechart2 = chartGenerator.generateNormalizedEICArea(adduct);
                                 addColumn(2, linechart2);
                                 charts.add(linechart2);
                                 if (addPeak.selectedProperty().get()) {
@@ -304,7 +303,7 @@ public class Fxml_adductviewController implements Initializable {
                             }
                             
                             if (ShiftToggle.selectedProperty().get()) {
-                            LineChart<Number, Number> shiftchart = chartGenerator.generateShiftMap(adduct);
+                            LineChartnoSymbol<Number, Number> shiftchart = chartGenerator.generateShiftMap(adduct);
                             addColumn(4, shiftchart);
                                 
                             }

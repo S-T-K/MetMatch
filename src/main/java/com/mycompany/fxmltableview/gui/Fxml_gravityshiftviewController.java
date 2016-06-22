@@ -128,7 +128,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 
 
 
-    private AreaChart<Number, Number> areachart;
+    private AreaChartnoSymbol<Number, Number> areachart;
     private ScatterChart<Number, Number> scatterchart;
    
 
@@ -395,7 +395,6 @@ public class Fxml_gravityshiftviewController implements Initializable {
 //        new Thread(maintask).start();
 //    }
     public void animate(ObservableList<Entry> list) throws IOException, InterruptedException {
-        close();
         session.setPeakPickchanged(true);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());

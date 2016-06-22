@@ -88,7 +88,7 @@ public class Session {
 //in actions runproject
 // exec.args=-Xms1g -Xmx5g -classpath %classpath ${packageClassName}
 // exec.executable=java
-//        System.setProperty("java.library.path", "C:\\Users\\stefankoch\\Documents\\R\\R-3.2.3\\library\\rJava\\jri");
+//System.setProperty("java.library.path", "C:\\Program Files\\R\\R-3.2.3\\library\\rJava\\jri\\x64");
 System.out.println(System.getProperty("java.library.path"));
 System.out.println(System.getProperty("user.dir"));
         
@@ -109,7 +109,8 @@ System.out.println(System.getProperty("user.dir"));
         
             
         engine = new Rengine(new String[] { "--no-save" }, false, null);
-        System.out.println(engine.eval("source(\"MassSpecWaveletIdentification.r\")"));
+        System.out.println(engine.eval("paste(capture.output(getwd()),collapse='\\n')").asString());
+        System.out.println(engine.eval("paste(capture.output( source(\"MassSpecWaveletIdentification.r\")),collapse='\\n')").asString());
 
         
        

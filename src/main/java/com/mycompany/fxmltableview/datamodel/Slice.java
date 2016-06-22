@@ -237,6 +237,7 @@ public class Slice {
         // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
         //=INPUTS
         engine.eval("eic=" + EIC);
+        System.out.println("eic=" + EIC);
         System.out.println("send data");
        REXP s = engine.eval("capture.output( eic=" + EIC + ")");
 System.out.println(s.asString());
@@ -250,6 +251,7 @@ System.out.println(s.asString());
         System.out.println("getmajorpeaks");
         evalstring = evalstring.concat(file.getSession().getNoisethreshold().get() + ")");
         s = engine.eval("paste(capture.output( " + evalstring + "),collapse='\\n')");
+        System.out.println(evalstring);
 System.out.println(s.asString());
         double[][] ret = engine.eval(evalstring).asDoubleMatrix();
         System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
