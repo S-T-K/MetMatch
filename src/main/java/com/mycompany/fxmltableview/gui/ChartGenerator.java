@@ -1533,9 +1533,9 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
             }
         }}}
         
-        File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
-        linechart.getStylesheets().clear();
-        linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
+//        File file = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet2.css");
+//        linechart.getStylesheets().clear();
+//        linechart.getStylesheets().add("file:///" + file.getAbsolutePath().replace("\\", "/"));
 
         //set size of chart
         linechart.setMaxSize(450, 300);
@@ -1914,9 +1914,9 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
         scatterchart.setAlternativeColumnFillVisible(false);
         
    
-        File f = new File("C:\\Users\\stefankoch\\Documents\\NetBeansProjects\\JavaFXTable\\src\\main\\java\\com\\mycompany\\fxmltableview\\gui\\stylesheet.css");
+        File f = new File("\\styles\\stylesheet.css");
         scatterchart.getStylesheets().clear();
-        scatterchart.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
+        scatterchart.getStylesheets().add("/styles/stylesheet.css");
         //scatterchart.applyCss();
 //        Background back = new Background(new BackgroundFill(Color.GREEN, null, null));
 //       scatterchart.setBackground(back);

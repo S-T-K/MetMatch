@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -85,6 +86,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
+import org.apache.commons.io.FileUtils;
 import org.controlsfx.control.textfield.TextFields;
 
 
@@ -199,12 +201,12 @@ public class FXMLTableViewController implements Initializable {
         session = new Session();
         session.getReference().setName("Reference");
 
-//        try {
-//            FileUtils.deleteDirectory(new File("C:\\Users\\stefankoch\\Documents\\tmp2"));
-//        } catch (IOException ex) {
-//            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        new File("C:\\Users\\stefankoch\\Documents\\tmp2").mkdirs();
+        try {
+            FileUtils.deleteDirectory(new File("tmp"));
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        new File("tmp").mkdirs();
         AdMs.addAll(Arrays.asList(AdM1.textProperty(), AdM2.textProperty(), AdM3.textProperty(), AdM4.textProperty(), AdM5.textProperty(), AdM6.textProperty(), AdM7.textProperty(), AdM8.textProperty(), AdM9.textProperty(), AdM10.textProperty(), AdM11.textProperty(), AdM12.textProperty(), AdM13.textProperty(), AdM14.textProperty(), AdM15.textProperty(), AdM16.textProperty(), AdM17.textProperty(), AdM18.textProperty(), AdM19.textProperty(), AdM20.textProperty(), AdM21.textProperty(), AdM22.textProperty(), AdM23.textProperty(), AdM24.textProperty(), AdM25.textProperty(), AdM26.textProperty(), AdM27.textProperty(), AdM28.textProperty(), AdM29.textProperty(), AdM30.textProperty(), AdM31.textProperty(), AdM32.textProperty(), AdM33.textProperty(), AdM34.textProperty(), AdM35.textProperty(), AdM36.textProperty(), AdM37.textProperty(), AdM38.textProperty(), AdM39.textProperty(), AdM40.textProperty(), AdM41.textProperty(), AdM42.textProperty()));
         AdCs.addAll(Arrays.asList(AdC1.textProperty(), AdC2.textProperty(), AdC3.textProperty(), AdC4.textProperty(), AdC5.textProperty(), AdC6.textProperty(), AdC7.textProperty(), AdC8.textProperty(), AdC9.textProperty(), AdC10.textProperty(), AdC11.textProperty(), AdC12.textProperty(), AdC13.textProperty(), AdC14.textProperty(), AdC15.textProperty(), AdC16.textProperty(), AdC17.textProperty(), AdC18.textProperty(), AdC19.textProperty(), AdC20.textProperty(), AdC21.textProperty(), AdC22.textProperty(), AdC23.textProperty(), AdC24.textProperty(), AdC25.textProperty(), AdC26.textProperty(), AdC27.textProperty(), AdC28.textProperty(), AdC29.textProperty(), AdC30.textProperty(), AdC31.textProperty(), AdC32.textProperty(), AdC33.textProperty(), AdC34.textProperty(), AdC35.textProperty(), AdC36.textProperty(), AdC37.textProperty(), AdC38.textProperty(), AdC39.textProperty(), AdC40.textProperty(), AdC41.textProperty(), AdC42.textProperty()));
         AdLs.addAll(Arrays.asList(Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7, Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42));
@@ -1450,7 +1452,9 @@ public class FXMLTableViewController implements Initializable {
             }
         }
         
-        PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
+        String file = Paths.get(".").toAbsolutePath().normalize().toString();
+        file = file.concat("\\Output\\matched_" + session.getReferenceTsv().getName().substring(0, session.getReferenceTsv().getName().length()-4) + ".txt");
+        PrintWriter printwriter = new PrintWriter(file, "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
         writer.writeHeaders(nheaders);
         for (int i = 0; i < OutallRows.size(); i++) {
@@ -1458,7 +1462,7 @@ public class FXMLTableViewController implements Initializable {
         }
 
         writer.close();
-        Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
+        Runtime.getRuntime().exec("explorer.exe /select," + file);
 
         System.out.println("Done");
         
@@ -1605,8 +1609,9 @@ public class FXMLTableViewController implements Initializable {
                 Outrows.remove(i);
             }
         }
-
-        PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\output.txt", "UTF-8");
+        String file = Paths.get(".").toAbsolutePath().normalize().toString();
+        file = file.concat("\\Output\\matched_" + session.getReferenceTsv().getName().substring(0, session.getReferenceTsv().getName().length()-4) + ".txt");
+        PrintWriter printwriter = new PrintWriter(file, "UTF-8");
         TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
         writer.writeHeaders(Outheader);
         for (int i = 0; i < Outrows.size(); i++) {
@@ -1614,7 +1619,7 @@ public class FXMLTableViewController implements Initializable {
         }
 
         writer.close();
-        Runtime.getRuntime().exec("explorer.exe /select," + "C:\\Users\\stefankoch\\Documents\\Output\\output.txt");
+        Runtime.getRuntime().exec("explorer.exe /select," + file);
 
         System.out.println("Done");
 

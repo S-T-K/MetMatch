@@ -207,7 +207,7 @@ public class Slice {
 //generates Array filled with "probabilities", correspond to wavelet peaks 
 //caluclated with R MassSpecWavelet
     public void WaveletPeakPicking() throws InterruptedException {
-        float startc = System.currentTimeMillis();
+//        float startc = System.currentTimeMillis();
             deleteAutoPeaks();
         
             //baseline correct IntensityArray
@@ -220,45 +220,45 @@ public class Slice {
             }
 
         
-        float start1 = System.currentTimeMillis();
+        //float start1 = System.currentTimeMillis();
         // Create an R vector in the form of a string.
         String EIC = Arrays.toString(correctedIntArray);
         EIC = EIC.substring(1, EIC.length()-1);
         //100 zeros at start and end, 50 are not enough
         EIC = "c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,".concat(EIC);
         EIC = EIC.concat(",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
-        System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
+        //System.out.println("EIC String processing: " + (System.currentTimeMillis()-start1));
        
         
         // Start Rengine.
         Rengine engine = adduct.getSession().getEngine();
-        System.out.println("get engine");
+        //System.out.println("get engine");
 
         // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
         //=INPUTS
         engine.eval("eic=" + EIC);
-        System.out.println("eic=" + EIC);
-        System.out.println("send data");
-       REXP s = engine.eval("capture.output( eic=" + EIC + ")");
-System.out.println(s.asString());
+        //System.out.println("eic=" + EIC);
+        //System.out.println("send data");
+//       REXP s = engine.eval("capture.output( eic=" + EIC + ")");
+//System.out.println(s.asString());
         
         
         //Retrieve values, see script for names
         //=OUTPUTS
-        float start3 = System.currentTimeMillis();
+//        float start3 = System.currentTimeMillis();
         String evalstring = "getMajorPeaks(eic, scales=c(5, 19), snrTh=";
          
-        System.out.println("getmajorpeaks");
+//        System.out.println("getmajorpeaks");
         evalstring = evalstring.concat(file.getSession().getNoisethreshold().get() + ")");
-        s = engine.eval("paste(capture.output( " + evalstring + "),collapse='\\n')");
-        System.out.println(evalstring);
-System.out.println(s.asString());
+//        s = engine.eval("paste(capture.output( " + evalstring + "),collapse='\\n')");
+//        System.out.println(evalstring);
+//System.out.println(s.asString());
         double[][] ret = engine.eval(evalstring).asDoubleMatrix();
-        System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
+//        System.out.println("Wavelet calculation: " + (System.currentTimeMillis()-start3));
         
         //Print output values, work with them...
         if (ret!=null) {
-            float start4 = System.currentTimeMillis();
+//            float start4 = System.currentTimeMillis();
         
             for (int j = 0; j<ret[0].length; j++) {
                 //101 because of 100 zeros at start and R starts at 1
@@ -268,14 +268,14 @@ System.out.println(s.asString());
             }}
             
         
-        System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
+//        System.out.println("PropArray processing: " + (System.currentTimeMillis()-start4));
         }
         //end Rengine, otherwise thread doesn't terminate
         //engine.end();
          EIC=null;
 
-        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
-        System.out.println("Slice processed.......");
+//        System.out.println("Complete processing: " + (System.currentTimeMillis()-startc));
+//        System.out.println("Slice processed.......");
     }
     
     

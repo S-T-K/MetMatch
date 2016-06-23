@@ -497,7 +497,7 @@ session.getIothread().writefile(this);
     }
     
     public void initializeFile(int bytecount) throws FileNotFoundException, IOException, InterruptedException {
-        RandomAccessFile memoryMappedFile = new RandomAccessFile("C:\\Users\\stefankoch\\Documents\\tmp2\\" + this.toString() + ".out", "rw");
+        RandomAccessFile memoryMappedFile = new RandomAccessFile("tmp\\" + this.toString() + ".out", "rw");
         MMFile = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, bytecount);
         
     }
