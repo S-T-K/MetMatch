@@ -67,6 +67,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeSortMode;
@@ -75,9 +76,15 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -87,6 +94,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.commons.io.FileUtils;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.TextFields;
 
 
@@ -113,7 +121,10 @@ public class FXMLTableViewController implements Initializable {
     private Accordion accordion;
 
     @FXML
-    Button addBatchButton, paramButton;
+    Button addBatchButton, paramButton, shiftButton, outputButton;
+    
+    @FXML
+    ToggleButton parameterButton;
 
     @FXML
     ProgressBar progressbar;
@@ -132,9 +143,6 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     CheckBox toggleadductgeneration;
-
-    @FXML
-    MenuItem paramMenu, shift, shift2, output;
 
     @FXML
     TabPane TabPane;
@@ -183,6 +191,54 @@ public class FXMLTableViewController implements Initializable {
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
+        parameterButton.setDisable(true);
+        outputButton.setDisable(true);
+        shiftButton.setDisable(true);
+        
+        //TEST
+        parameterButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent evt) {
+                
+ 
+                if (evt.getButton()==MouseButton.SECONDARY) {
+                    
+ 
+                    double targetX = evt.getScreenX();
+                    double targetY = evt.getScreenY();
+ 
+                    GridPane pane = new GridPane();
+                    pane.add(new Label(""), 1, 1);
+                    pane.add(new Label("TODO, could contain parameters, images, descriptions, help..."), 1, 2);
+                    pane.add(new Label(""), 1, 3);
+                    pane.add(new TextField("Parameter!"), 1, 4);
+                    pane.add(new Label(""), 1, 5);
+                    Button button = new Button("Show Image!");
+                    pane.add(button, 1, 6);
+         
+                    pane.add(new Label(""), 1, 7);
+                    ImageView view = new ImageView();
+                    view.setImage(new Image("file:TestBild.png", true));
+                    
+                    PopOver popOver = new PopOver(pane);
+                    popOver.setTitle("Detachable!");
+                               button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent evt) {
+              pane.add(view, 1, 8);
+              pane.getChildren().remove(button);
+            }
+        });
+ 
+                    double size = 3;
+                   
+                        popOver.show(outputButton, targetX, targetY);
+                    
+                }
+            }
+        });
+        
         metTable.setSortMode(TreeSortMode.ALL_DESCENDANTS);
 
         //set Factories for the tables
@@ -640,7 +696,7 @@ public class FXMLTableViewController implements Initializable {
         Res.setDisable(true);
         Start.setDisable(true);
         End.setDisable(true);
-        paramMenu.setDisable(false);
+        parameterButton.setDisable(false);
         toggleadductgeneration.setDisable(true);
         adductanchor.setDisable(true);
         inputTab.setDisable(true);
@@ -745,7 +801,7 @@ public class FXMLTableViewController implements Initializable {
     //calculates Shift and opens a new window
     public void newwindowcalculate() throws IOException, InterruptedException {
 
-        output.setDisable(false);
+        
         //open new window
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_pathshiftview.fxml"));
@@ -952,7 +1008,7 @@ public class FXMLTableViewController implements Initializable {
     //calculates Shift and opens a new window
     public void newWindowShiftFitting() throws IOException, InterruptedException {
 
-        output.setDisable(false);
+       
         //open new window
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_gravityshiftview.fxml"));
@@ -1830,6 +1886,14 @@ public class FXMLTableViewController implements Initializable {
             }
 
             System.out.println("Total time: " + (System.currentTimeMillis() - start));
+        }
+    }
+    
+    public void parameters() {
+        if (parameterButton.selectedProperty().getValue()) {
+            showParameters();
+        } else {
+            hideParameters();
         }
     }
 

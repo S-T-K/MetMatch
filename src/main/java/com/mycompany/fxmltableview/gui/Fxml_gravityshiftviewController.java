@@ -1595,6 +1595,7 @@ menu.setDisable(false);
     }
     
    public void calculateFiles(List<RawDataFile> filelist) throws InterruptedException, IOException {
+       
        close();
   
        int files = filelist.size();
@@ -1714,7 +1715,7 @@ done++;
             
           
             showShift(olist);
-            
+            supercontroller.outputButton.setDisable(false);
             session.setPeakPickchanged(false);
             paramToggle.setDisable(true);
             menu.setDisable(true);

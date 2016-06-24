@@ -297,8 +297,8 @@ public class BatchController implements Initializable {
 
         //new thread that executes task
         new Thread(task).start();
-TVcontroller.shift.setDisable(false);
-TVcontroller.shift2.setDisable(false);
+TVcontroller.shiftButton.setDisable(false);
+
         
     }
     

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.image.*?>
@@ -18,22 +19,15 @@
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="910.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.FXMLTableViewController">
     <children>
-        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="826.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <menus>
-                <Menu mnemonicParsing="false" text="Actions">
-                    <items>
-                  <MenuItem fx:id="shift" disable="true" mnemonicParsing="false" onAction="#newwindowcalculate" text="Calculate Shift" />
-                  <MenuItem fx:id="shift2" disable="true" mnemonicParsing="false" onAction="#newWindowShiftFitting" text="new Shift (experimental)" />
-                        <MenuItem fx:id="output" disable="true" mnemonicParsing="false" onAction="#Output" text="Generate Output Matrix" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Parameters">
-                    <items>
-                        <MenuItem fx:id="paramMenu" disable="true" mnemonicParsing="false" onAction="#showParameters" text="Show/Edit" />
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
+      <ToolBar maxHeight="27.0" prefHeight="27.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+            <ToggleButton fx:id="parameterButton" mnemonicParsing="false" onAction="#parameters" prefHeight="0.0" prefWidth="110.0" text="Set Parameters" translateY="-1.0" />
+            <Label text="&gt;" />
+          <Button fx:id="shiftButton" mnemonicParsing="false" onAction="#newWindowShiftFitting" prefHeight="0.0" prefWidth="110.0" text="Calculate Shift" translateY="-1.0" />
+            <Label text="&gt;" />
+            <Button fx:id="outputButton" mnemonicParsing="false" onAction="#Output" prefHeight="0.0" prefWidth="110.0" text="Generate Output" translateY="-1.0" />
+        </items>
+      </ToolBar>
         <Separator layoutY="570.0" prefHeight="2.0" prefWidth="826.0" />
         <ProgressBar fx:id="progressbar" layoutX="626.0" layoutY="577.0" prefHeight="18.0" prefWidth="191.0" progress="0.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="9.0" />
         <SplitPane dividerPositions="0.5182038834951457" layoutY="27.0" prefHeight="544.0" prefWidth="826.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
