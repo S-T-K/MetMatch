@@ -191,7 +191,8 @@ public class FXMLTableViewController implements Initializable {
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+        toggleadductgeneration.selectedProperty().set(false);
+        toggleAdductGeneration();
         parameterButton.setDisable(true);
         outputButton.setDisable(true);
         shiftButton.setDisable(true);
@@ -556,7 +557,7 @@ public class FXMLTableViewController implements Initializable {
             }
 
         });
-        PeakPick.getSelectionModel().select(0);
+        PeakPick.getSelectionModel().select(1);
         panelink = new HashMap<>();
         setDatasettocontroller(new HashMap<>());
 
@@ -1544,7 +1545,7 @@ public class FXMLTableViewController implements Initializable {
         //generate new Matrix, with all files and all adducts
         List<String[]> OutallRows = new ArrayList<>();
         //get first file column
-        int ffc = 0;
+        int ffc = InallRows.get(0).length;
         for (int i = 0; i < Inheader.length; i++) {
             System.out.println(Inheader[i]);
             if (Inheader[i].startsWith("_")) {

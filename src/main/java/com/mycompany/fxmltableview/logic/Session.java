@@ -100,7 +100,7 @@ System.out.println(System.getProperty("user.dir"));
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
         this.resolution = new SimpleIntegerProperty(100);
-        this.baseline = new SimpleFloatProperty(1000);
+        this.baseline = new SimpleFloatProperty(0);
         SliceMZTolerance = new SimpleFloatProperty (3.5f);
         RTTolerance = new SimpleFloatProperty(1.5f);
         MZTolerance = new SimpleFloatProperty(11.0f);
@@ -118,8 +118,8 @@ System.out.println(System.getProperty("user.dir"));
         
         peakPickchanged = true;
         peakschanged = true;
-        start = new SimpleFloatProperty (3.0f);
-        end = new SimpleFloatProperty (30.0f);
+        start = new SimpleFloatProperty (0.0f);
+        end = new SimpleFloatProperty (40.0f);
         noisethreshold = new SimpleFloatProperty(3.0f);
         
         //proparraycalculator=new PropArrayCalculator(this);
@@ -130,10 +130,10 @@ System.out.println(System.getProperty("user.dir"));
     new Information("Retention Time", "RT", "Expected Retention Time of the Ion"),
     new Information("Mass/Charge","MZ", "Expected Mass/Charge Ratio of the Ion"),
     new Information("Ion ID","Num","Each Ion has to hava a unique number"),
-    new Information("Metabolite ID","OGroup","Each Metabolite has to have a unique number"),
+    new Information("Metabolite ID","Group_ID","Each Metabolite has to have a unique number"),
     new Information("Number of Carbon Atoms","Xn", "Number of Carbon Atoms of the Ion"),
-    new Information("Ion Form","Ion","Annotated Ion Form, e.g. [M+H]+"),
-    new Information("Uncharged Ion Mass", "M", "Mass of uncharged, intact Ion"),
+    new Information("Ion Form","","Annotated Ion Form, e.g. [M+H]+"),
+    new Information("Uncharged Ion Mass", "", "Mass of uncharged, intact Ion"),
     new Information("Ion Charge", "Charge", "Charge of the Ion"),
     new Information("Scan Event", "ScanEvent", "Scan Event"),
     new Information("Ionisation Mode", "Ionisation_Mode", "Ionisation Mode")
