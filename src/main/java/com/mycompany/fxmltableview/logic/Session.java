@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -324,6 +325,7 @@ System.out.println(System.getProperty("user.dir"));
     // returns List of Ogroups, with their adducts
     public ObservableList<Entry> parseReferenceTsv() throws FileNotFoundException {
         ObservableList<Entry> obsList = FXCollections.observableArrayList();
+        HashMap<Integer,Entry> OMap = new HashMap<>();
         
         
         TsvParserSettings settings = new TsvParserSettings();
@@ -381,7 +383,7 @@ System.out.println(System.getProperty("user.dir"));
         String Ionisation = null;
         
         
-        String lastOGroup = "-1";
+       
         Entry ogroup = null;
         for (int i = 1; i < allRows.size(); i++) {
 //            for (int j = 0; j<labels.length; j++) {
@@ -422,15 +424,13 @@ System.out.println(System.getProperty("user.dir"));
             
             if (RT>=start.floatValue()&&RT<=end.floatValue()) {
             //if new Ogroup, make new Ogroup
-            if (!(lastOGroup.equals(allRows.get(i)[indexOGroup]))) {
-                if (ogroup!=null){
-                //ogroup.generateRTArray();
-                }
+            if (!OMap.containsKey(OGroup)) {
                 ogroup = new Entry(OGroup, this);
-                lastOGroup = allRows.get(i)[indexOGroup];
+                OMap.put(OGroup, ogroup);
                 obsList.add(ogroup);
             }
-            //add Adduct to current Ogroup
+            //add Adduct to correct Ogroup
+            ogroup = OMap.get(OGroup);
             Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,Charge,ScanEvent,Ionisation, labeledXn, i, this,ogroup);
             ogroup.addAdduct(adduct);
             //System.out.println(labeledXn[0]+ "   " + labeledXn[1]);

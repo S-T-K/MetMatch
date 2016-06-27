@@ -697,6 +697,7 @@ public class FXMLTableViewController implements Initializable {
         Start.setDisable(true);
         End.setDisable(true);
         parameterButton.setDisable(false);
+        parameterButton.setStyle("-fx-base: #BBFFAD;");
         toggleadductgeneration.setDisable(true);
         adductanchor.setDisable(true);
         inputTab.setDisable(true);

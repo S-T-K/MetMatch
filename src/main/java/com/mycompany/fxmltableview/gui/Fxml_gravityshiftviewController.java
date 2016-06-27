@@ -1716,6 +1716,8 @@ done++;
           
             showShift(olist);
             supercontroller.outputButton.setDisable(false);
+            supercontroller.shiftButton.setStyle("-fx-base: #9DFF89;");
+            supercontroller.outputButton.setStyle("-fx-base: #2BFF00;");
             session.setPeakPickchanged(false);
             paramToggle.setDisable(true);
             menu.setDisable(true);

@@ -298,6 +298,8 @@ public class BatchController implements Initializable {
         //new thread that executes task
         new Thread(task).start();
 TVcontroller.shiftButton.setDisable(false);
+TVcontroller.shiftButton.setStyle("-fx-base: #9DFF89;");
+TVcontroller.parameterButton.setStyle("-fx-base: #BBFFAD;");
 
         
     }

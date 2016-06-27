@@ -1430,7 +1430,7 @@ public class Slice {
         sum/=IntArray.length;
         avgInt=sum;
         if (max-sum<file.getSession().getBaseline()) {
-            //System.out.println("noise deleted");
+            System.out.println("noise deleted" + this.adduct.getNum());
             empty = true;
         }
         
