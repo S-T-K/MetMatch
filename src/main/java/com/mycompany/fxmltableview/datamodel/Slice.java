@@ -1029,6 +1029,13 @@ public class Slice {
         //calculate Noise Units of a hypothetical peak 
         if (fittedpeak==null){
             int RTindex = Math.abs(Arrays.binarySearch(file.getRTArray(), shift+adduct.getRT()))-RTstart;
+            if (RTindex>=IntArray.length) {
+            System.out.println(this.adduct.getNum());
+            RTindex=IntArray.length-1;
+            } else if (RTindex<0) {
+                RTindex = 0;
+            }
+            
             float intensity = IntArray[RTindex];
             
             //check if we are "inside" another peak, if yes, do nothing
