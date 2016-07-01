@@ -232,7 +232,17 @@ public class RawDataFile {
             }
             
         }
-        ppm = ppmvalues[maxbin];
+        //don't just take the max bin
+        double accuratebin = 0;
+        int sum = 0;
+        for (int i  = maxbin-2; i<maxbin+3; i++) {
+            if (i>0&&i<mzbins.length) {
+            accuratebin+=(i+1)*mzbins[i];
+            sum+=mzbins[i];
+            }
+        }
+        accuratebin=accuratebin/sum-1;
+        ppm = (float) (session.getMZTolerance()*(-1)+accuratebin*valuestep);
         System.out.println("PPM: " + ppm);
         System.out.println("                               Timeppm:  " + (System.currentTimeMillis()-start2));
         
