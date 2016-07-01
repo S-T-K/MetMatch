@@ -2250,7 +2250,7 @@ public class FXMLTableViewController implements Initializable {
                 "-fx-background-radius: 5em; " +
                 "-fx-base: #2CFF00;"
         );
-        
+       
     }
     
     public void oldOption(Button button) {
@@ -2276,7 +2276,7 @@ public class FXMLTableViewController implements Initializable {
     
     public void disableOption(Button button) {
         button.setDisable(true);
-        button.setStyle(""
+        button.setStyle("-fx-background-radius: 5em; " 
         );
     }
     

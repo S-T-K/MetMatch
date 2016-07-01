@@ -19,7 +19,7 @@
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="910.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.FXMLTableViewController">
     <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000072" height="28.0" stroke="BLACK" strokeType="INSIDE" width="1899.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-989.0" AnchorPane.topAnchor="0.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000006" height="28.0" stroke="BLACK" strokeType="INSIDE" width="1899.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-989.0" AnchorPane.topAnchor="0.0" />
       <HBox prefHeight="27.0" prefWidth="910.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="parameterButton" minWidth="110.0" mnemonicParsing="false" onAction="#parameters" prefHeight="0.0" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER" />
