@@ -124,7 +124,7 @@ public class FXMLTableViewController implements Initializable {
     Button addBatchButton, paramButton, shiftButton, outputButton;
     
     @FXML
-    ToggleButton parameterButton;
+    Button parameterButton, referenceMatrixButton, referenceFilesButton, batchFilesButton, checkResultsButton, p1, p2, p3, p4, p5, p6;
 
     @FXML
     ProgressBar progressbar;
@@ -191,54 +191,11 @@ public class FXMLTableViewController implements Initializable {
     //initialize the table, and various elements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
+        initializeButtons();
         toggleadductgeneration.selectedProperty().set(false);
         toggleAdductGeneration();
-        parameterButton.setDisable(true);
-        outputButton.setDisable(true);
-        shiftButton.setDisable(true);
         
-        //TEST
-        parameterButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent evt) {
-                
- 
-                if (evt.getButton()==MouseButton.SECONDARY) {
-                    
- 
-                    double targetX = evt.getScreenX();
-                    double targetY = evt.getScreenY();
- 
-                    GridPane pane = new GridPane();
-                    pane.add(new Label(""), 1, 1);
-                    pane.add(new Label("TODO, could contain parameters, images, descriptions, help..."), 1, 2);
-                    pane.add(new Label(""), 1, 3);
-                    pane.add(new TextField("Parameter!"), 1, 4);
-                    pane.add(new Label(""), 1, 5);
-                    Button button = new Button("Show Image!");
-                    pane.add(button, 1, 6);
-         
-                    pane.add(new Label(""), 1, 7);
-                    ImageView view = new ImageView();
-                    view.setImage(new Image("file:TestBild.png", true));
-                    
-                    PopOver popOver = new PopOver(pane);
-                    popOver.setTitle("Detachable!");
-                               button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent evt) {
-              pane.add(view, 1, 8);
-              pane.getChildren().remove(button);
-            }
-        });
- 
-                    double size = 3;
-                   
-                        popOver.show(outputButton, targetX, targetY);
-                    
-                }
-            }
-        });
         
         metTable.setSortMode(TreeSortMode.ALL_DESCENDANTS);
 
@@ -659,7 +616,11 @@ public class FXMLTableViewController implements Initializable {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
         setMasterListofOGroups(session.parseReferenceTsv());
-
+        
+        //Disable Option
+        referenceMatrixButton.setOnAction((event) -> {
+    
+});
         //generate additional adducts
         session.finalizeAdducts();
         generateAdductsnew();
@@ -697,8 +658,6 @@ public class FXMLTableViewController implements Initializable {
         Res.setDisable(true);
         Start.setDisable(true);
         End.setDisable(true);
-        parameterButton.setDisable(false);
-        parameterButton.setStyle("-fx-base: #BBFFAD;");
         toggleadductgeneration.setDisable(true);
         adductanchor.setDisable(true);
         inputTab.setDisable(true);
@@ -771,6 +730,14 @@ public class FXMLTableViewController implements Initializable {
             }
         });
 
+        oldOption(parameterButton);
+        oldOption(referenceMatrixButton);
+        newOption(referenceFilesButton);
+        newOption(batchFilesButton);
+        activePath(p2);
+        activePath(p3);
+        
+        
     }
 
     //add a new batch
@@ -1892,11 +1859,11 @@ public class FXMLTableViewController implements Initializable {
     }
     
     public void parameters() {
-        if (parameterButton.selectedProperty().getValue()) {
+        if (TabPane.visibleProperty().get()) {
+            
+        } else 
             showParameters();
-        } else {
-            hideParameters();
-        }
+        
     }
 
     public void showParameters() {
@@ -2204,6 +2171,124 @@ public class FXMLTableViewController implements Initializable {
             generateOutputSpecific();
         }
 
+    }
+    
+    public void initializeButtons() {
+        //parameterButton, referenceMatrixButton, referenceFilesButton, batchFilesButton, checkResultsButton, p1, p2, p3, p4, p5, p6
+        
+        parameterButton.setDisable(false);
+        referenceMatrixButton.setDisable(false);
+        referenceFilesButton.setDisable(true);
+        batchFilesButton.setDisable(true);
+        checkResultsButton.setDisable(true);
+        initOption(parameterButton);
+        initOption(referenceMatrixButton);
+        initOption(referenceFilesButton);
+        initOption(batchFilesButton);
+        initOption(checkResultsButton);
+        initOption(outputButton);
+        initOption(shiftButton);
+        p1.setDisable(true);
+        p2.setDisable(true);
+        p3.setDisable(true);
+        p4.setDisable(true);
+        p5.setDisable(true);
+        p6.setDisable(true);
+        outputButton.setDisable(true);
+        shiftButton.setDisable(true);
+        newOption(parameterButton);
+        newOption(referenceMatrixButton);
+        activePath(p1);
+        
+        //TEST
+        parameterButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent evt) {
+                
+ 
+                if (evt.getButton()==MouseButton.SECONDARY) {
+                    
+ 
+                    double targetX = evt.getScreenX();
+                    double targetY = evt.getScreenY();
+ 
+                    GridPane pane = new GridPane();
+                    pane.add(new Label(""), 1, 1);
+                    pane.add(new Label("TODO, could contain parameters, images, descriptions, help..."), 1, 2);
+                    pane.add(new Label(""), 1, 3);
+                    pane.add(new TextField("Parameter!"), 1, 4);
+                    pane.add(new Label(""), 1, 5);
+                    Button button = new Button("Show Image!");
+                    pane.add(button, 1, 6);
+         
+                    pane.add(new Label(""), 1, 7);
+                    ImageView view = new ImageView();
+                    view.setImage(new Image("file:TestBild.png", true));
+                    
+                    PopOver popOver = new PopOver(pane);
+                    popOver.setTitle("Detachable!");
+                               button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent evt) {
+              pane.add(view, 1, 8);
+              pane.getChildren().remove(button);
+            }
+        });
+ 
+                    double size = 3;
+                   
+                        popOver.show(outputButton, targetX, targetY);
+                    
+                }
+            }
+        });
+    }
+    
+    public void newOption(Button button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-background-radius: 5em; " +
+                "-fx-base: #2CFF00;"
+        );
+        
+    }
+    
+    public void oldOption(Button button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-background-radius: 5em; " +
+                "-fx-base: #D8FFCF;"
+        );
+    }
+    
+    public void activePath(Button button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-base: #D8FFCF;"
+        );
+    }
+    
+    public void initOption(Button button) {
+        button.setStyle(
+                "-fx-background-radius: 5em; " 
+        );
+    }
+    
+    public void disableOption(Button button) {
+        button.setDisable(true);
+        button.setStyle(""
+        );
+    }
+    
+    public void inactivePath(Button button) {
+        button.setDisable(true);
+        button.setStyle(
+                ""
+        );
+    }
+    
+    public void openReferenceFiles() throws FileNotFoundException {
+//        session.getReference().getController().openBatchmzxmlChooser();
     }
 
 }
