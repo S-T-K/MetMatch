@@ -1738,10 +1738,18 @@ done++;
    }
    
    public void calculateBatch() throws InterruptedException, IOException {
+     
+       
        //disable all other Files
        Dataset current = session.getSelectedFiles().get(0).getDataset();
-       List<RawDataFile> filelist = current.getListofFiles();
+       List<RawDataFile> filelist = new ArrayList<>(current.getListofFiles());
        
+       //only select 1 file
+       for (int i = 1; i <session.getSelectedFiles().size(); i++) {
+           if (!session.getSelectedFiles().get(i).getDataset().equals(current)) {
+               session.getSelectedFiles().get(i).getDataset().getController().getBatchFileView().getSelectionModel().clearSelection();
+           }
+       }
       
        //inactivate all other files (don't draw them)
        for (int i = 0; i<session.getAllFiles().size(); i++) {
@@ -1773,7 +1781,7 @@ done++;
                 }
        samplefile.calculateScorenew();
        session.getIothread().lockFile(samplefile, false);
-        calculateFiles(filelist);
+       calculateFiles(filelist);
    }
    
    
