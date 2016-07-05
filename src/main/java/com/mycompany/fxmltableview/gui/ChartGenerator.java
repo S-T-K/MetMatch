@@ -1471,7 +1471,7 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
                     if (session.getListofDatasets().get(d).getActive()) {
         for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
             RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
-            if (currentfile.getActive().booleanValue()) {
+            if (currentfile.getActive().booleanValue()&&session.getListofOGroups().get(0).getOgroupShift().get(currentfile)!=null) {
                 
                 XYChart.Series newSeries = new XYChart.Series();
                 adductcontroller.getSeriestochart().put(newSeries, linechart);
