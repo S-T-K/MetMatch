@@ -61,7 +61,7 @@ public class Slice {
     private Short fittedpeak;
     private float avgInt;
     
-    private float scorepeakclose = 1;
+    private float scorepeakclose = Float.POSITIVE_INFINITY;
     private float fitabove;
    
     private Entry adduct;

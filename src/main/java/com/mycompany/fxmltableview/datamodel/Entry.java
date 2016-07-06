@@ -1096,6 +1096,61 @@ public void setPeakWeight(RawDataFile file, double weight, float start, float en
     
 }
 
+public String getScorepeakfoundString () {
+   if (Scorepeakfound.getValue().isNaN()||Scorepeakfound.getValue().isInfinite()) {
+       return "";
+   } else if (Scorepeakfound.getValue()==1.0f) {
+       return "Yes";
+   } else if (Scorepeakfound.getValue()==0.0f){
+       return "No";
+   } else {
+       return Scorepeakfound.getValue().toString();
+   }
+}
 
+public String getScorepeakcloseString () {
+   if (Scorepeakclose.getValue().isNaN()||Scorepeakclose.getValue().isInfinite()) {
+       return "";
+   } else {
+       return Scorepeakclose.getValue().toString();
+   }
+}
+public String getScorepeakrangeString () {
+   if (Scorepeakrange.getValue().isNaN()||Scorepeakrange.getValue().isInfinite()) {
+       return "";
+   } else {
+       return Scorepeakrange.getValue().toString();
+   }
+}
+public String getScorefitaboveString () {
+   if (Scorefitabove.getValue().isNaN()||Scorefitabove.getValue().isInfinite()||Scorefitabove.getValue().equals(new Float(0))) {
+       return "";
+   } else {
+       return Scorefitabove.getValue().toString();
+   }
+}
+
+public String getMZString () {
+    //get min max MZ of all adducts
+   if (MZ==null) {
+       float minMZ = Float.POSITIVE_INFINITY;
+       float maxMZ = Float.NEGATIVE_INFINITY;
+       for (Entry adduct: listofAdducts) {
+           if (adduct.getMZ()>maxMZ) {
+               maxMZ = adduct.getMZ();
+           }
+           if (adduct.getMZ()<minMZ) {
+               minMZ=adduct.getMZ();
+           }
+       }
+       if (minMZ==maxMZ) {
+           return String.valueOf(minMZ);
+       } else {
+       return (String.valueOf(minMZ) + " to " + String.valueOf(maxMZ));
+       }
+   } else {
+       return MZ.getValue().toString();
+   }
+}
 
 }

@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -202,15 +203,15 @@ public class FXMLTableViewController implements Initializable {
         //set Factories for the tables
         nameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("OGroup"));  //String in brackets has to be the same as PropertyValueFactory property= "..." in fxml
         scoreColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Score"));
-        scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakfound"));
-        scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakclose"));
+        scorepeakfoundColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("ScorepeakfoundString"));
+        scorepeakcloseColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("ScorepeakcloseString"));
         scorecertaintyColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorecertainty"));
-        scorepeakrangeColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorepeakrange"));
-        scorefitaboveColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("Scorefitabove"));
+        scorepeakrangeColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("ScorepeakrangeString"));
+        scorefitaboveColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("ScorefitaboveString"));
         numColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("Num"));
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("RT"));
-        mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("MZ"));
-
+        mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("MZString"));
+        scorefitaboveColumn.setComparator(new FloatStringComparator());
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
@@ -2290,5 +2291,32 @@ public class FXMLTableViewController implements Initializable {
     public void openReferenceFiles() throws FileNotFoundException {
 //        session.getReference().getController().openBatchmzxmlChooser();
     }
+public class FloatStringComparator implements Comparator<String> {
 
+        @Override
+            public int compare(String o1, String o2) {
+    
+    if (o1.isEmpty()) {
+        return -1;
+    }
+    if (o2.isEmpty()) {
+        return 1;
+    }
+    if (Float.parseFloat(o1) == Float.parseFloat(o2)) {
+        return 0;
+    }
+    
+    if (Float.parseFloat(o1)>Float.parseFloat(o2)) {
+        return 1;
+    }
+    if (Float.parseFloat(o1)<Float.parseFloat(o2)) {
+        return -1;
+    }
+    return 0;
+  }
+        
+    
+    
 }
+}
+

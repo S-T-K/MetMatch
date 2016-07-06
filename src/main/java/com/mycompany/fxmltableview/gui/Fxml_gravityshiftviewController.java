@@ -430,6 +430,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
                 
         
         float[] centroids = new float[list.size()];
+        int rh = session.getResolution()/2;
+        java.util.Arrays.fill(centroids, rh);
                 for (int d = 0; d < session.getListofDatasets().size(); d++) {
                     if (session.getListofDatasets().get(d).getActive()) {
                         for (int f = 0; f < session.getListofDatasets().get(d).getListofFiles().size(); f++) {
@@ -1675,6 +1677,8 @@ done++;
                                          //calculation
                                 //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
                                 float[] centroids = new float[olist.size()];
+                                int rh = session.getResolution()/2;
+                                java.util.Arrays.fill(centroids, rh);
                                 
                                 int count = 0;
                                 while (count<9&&grav.getxRanges()[count] != 0) {

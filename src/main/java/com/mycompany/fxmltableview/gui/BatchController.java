@@ -377,16 +377,16 @@ public void newwindowcalculate() throws IOException, InterruptedException {
 //                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakclose(new SimpleFloatProperty(maxScorepeakclose));
 //                   TVcontroller.getMasterListofOGroups().get(i).setScorepeakfound(new SimpleFloatProperty(maxScorepeakfound));
 //                   float omaxScore = 0;
-                       float ominScorepeakclose = 1;
-                       float omaxScorepeakfound = 0;
-                       float omaxScorefitabove = 0;
-                       float omaxrange = 0f;
+                       float ominScorepeakclose = Float.POSITIVE_INFINITY;
+                       float omaxScorepeakfound = Float.NEGATIVE_INFINITY;
+                       float omaxScorefitabove = Float.NEGATIVE_INFINITY;
+                       float omaxrange = Float.NEGATIVE_INFINITY;
                    
                    for (int j = 0; j<TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
 //                       float maxScore = 0;
-                       float minScorepeakclose = session.getRTTolerance();
-                       float maxScorepeakfound = 0;
-                       float maxScorefitabove = 0;
+                       float minScorepeakclose = Float.POSITIVE_INFINITY;
+                       float maxScorepeakfound = Float.NEGATIVE_INFINITY;
+                       float maxScorefitabove = Float.NEGATIVE_INFINITY;
                    for (int f = 0; f<completeList.size(); f++) {
                        RawDataFile file = completeList.get(f);
 //                       if (TVcontroller.getMasterListofOGroups().get(i).getListofAdducts().get(j).getScore(file)>maxScore) {

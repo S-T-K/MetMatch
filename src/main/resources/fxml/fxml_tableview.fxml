@@ -92,42 +92,42 @@
                         <content>
                           <AnchorPane fx:id="Tab1" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="36.0" layoutX="16.0" layoutY="365.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="365.0" />
-                                    <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="370.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="97.0" layoutX="16.0" layoutY="222.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="199.0" AnchorPane.topAnchor="222.0" />
+                                    <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="67.0" layoutX="16.0" layoutY="312.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="312.0" />
+                                    <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="317.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="97.0" layoutX="16.0" layoutY="190.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="199.0" AnchorPane.topAnchor="190.0" />
                                     <Rectangle fx:id="box1" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="27.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="27.0" />
                                     <TextField fx:id="RTTol" layoutX="125.0" layoutY="32.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <Rectangle fx:id="box2" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="122.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="122.0" />
+                                    <Rectangle fx:id="box2" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="37.0" layoutX="16.0" layoutY="122.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="199.0" AnchorPane.topAnchor="122.0" />
                                     <TextField fx:id="SliceMZTol" layoutX="125.0" layoutY="128.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <TextField fx:id="Res" layoutX="125.0" layoutY="157.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="Res" layoutX="125.0" layoutY="347.0" prefHeight="25.0" prefWidth="80.0" />
                                     <Label fx:id="label1" layoutX="18.0" layoutY="2.0" prefHeight="31.0" prefWidth="117.0" text="Parsing Parameters" />
-                                    <Label fx:id="label7" layoutX="18.0" layoutY="197.0" prefHeight="31.0" prefWidth="117.0" text="Peak Picking" />
+                                    <Label fx:id="label7" layoutX="18.0" layoutY="165.0" prefHeight="31.0" prefWidth="117.0" text="Peak Picking" />
                                     <Label fx:id="label4" layoutX="18.0" layoutY="104.0" prefHeight="17.0" prefWidth="117.0" text="Slice Parameters" />
                                     <TextField fx:id="MZTol" layoutX="125.0" layoutY="62.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <TextField fx:id="Base" layoutX="125.0" layoutY="227.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <Label fx:id="label10" layoutX="18.0" layoutY="340.0" prefHeight="31.0" prefWidth="117.0" text="Shift" />
-                                    <Label fx:id="label11" layoutX="25.0" layoutY="374.0" text="RT Tolerance:" />
-                                    <Label fx:id="label8" layoutX="25.0" layoutY="231.0" text="Cutoff:" />
+                                    <TextField fx:id="Base" layoutX="125.0" layoutY="195.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <Label fx:id="label10" layoutX="18.0" layoutY="287.0" prefHeight="31.0" prefWidth="117.0" text="Shift" />
+                                    <Label fx:id="label11" layoutX="25.0" layoutY="321.0" text="RT Tolerance:" />
+                                    <Label fx:id="label8" layoutX="25.0" layoutY="199.0" text="Cutoff:" />
                                     <Label fx:id="label2" layoutX="25.0" layoutY="36.0" text="RT Tolerance: " />
-                                    <Label fx:id="label6" layoutX="25.0" layoutY="161.0" text="Resolution:" />
+                                    <Label fx:id="label6" layoutX="25.0" layoutY="351.0" text="Number of Bins:" />
                                     <Label fx:id="label5" layoutX="25.0" layoutY="132.0" text="M/Z Tolerance:" />
-                                    <Label fx:id="label9" layoutX="25.0" layoutY="261.0" text="Peak Picking:" />
+                                    <Label fx:id="label9" layoutX="25.0" layoutY="229.0" text="Peak Picking:" />
                                     <Label fx:id="label3" layoutX="25.0" layoutY="66.0" text="M/Z Tolerance: " />
                                     <Label layoutX="209.0" layoutY="36.0" text="min" />
                                     <Label layoutX="209.0" layoutY="66.0" text="ppm" />
                                     <Label layoutX="207.0" layoutY="132.0" text="ppm" />
-                                    <Label layoutX="211.0" layoutY="374.0" text="min" />
-                                    <Rectangle fx:id="box31" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="432.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" />
-                                    <Label fx:id="label91" layoutX="25.0" layoutY="471.0" text="End:" />
-                                    <Label fx:id="label81" layoutX="25.0" layoutY="441.0" text="Start:" />
-                                    <Label fx:id="label71" layoutX="18.0" layoutY="407.0" prefHeight="31.0" prefWidth="117.0" text="Range" />
-                                    <Label layoutX="209.0" layoutY="472.0" text="min" />
-                                    <Label layoutX="209.0" layoutY="442.0" text="min" />
-                                    <TextField fx:id="End" layoutX="125.0" layoutY="468.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <TextField fx:id="Start" layoutX="125.0" layoutY="438.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <ChoiceBox fx:id="PeakPick" layoutX="125.0" layoutY="257.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <Label fx:id="noiselabel" layoutX="25.0" layoutY="292.0" prefHeight="17.0" prefWidth="86.0" text="S/N Threshold" />
-                                    <TextField fx:id="Noise" layoutX="125.0" layoutY="288.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <Label layoutX="211.0" layoutY="321.0" text="min" />
+                                    <Rectangle fx:id="box31" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="404.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" />
+                                    <Label fx:id="label91" layoutX="25.0" layoutY="443.0" text="End:" />
+                                    <Label fx:id="label81" layoutX="25.0" layoutY="413.0" text="Start:" />
+                                    <Label fx:id="label71" layoutX="18.0" layoutY="379.0" prefHeight="31.0" prefWidth="117.0" text="Range" />
+                                    <Label layoutX="209.0" layoutY="444.0" text="min" />
+                                    <Label layoutX="209.0" layoutY="414.0" text="min" />
+                                    <TextField fx:id="End" layoutX="125.0" layoutY="440.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="Start" layoutX="125.0" layoutY="410.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <ChoiceBox fx:id="PeakPick" layoutX="125.0" layoutY="225.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <Label fx:id="noiselabel" layoutX="25.0" layoutY="260.0" prefHeight="17.0" prefWidth="86.0" text="S/N Threshold" />
+                                    <TextField fx:id="Noise" layoutX="125.0" layoutY="256.0" prefHeight="25.0" prefWidth="80.0" />
                                  </children>
                               </AnchorPane>
                         </content>
