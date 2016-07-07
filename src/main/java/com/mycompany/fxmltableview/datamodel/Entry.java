@@ -1109,7 +1109,7 @@ public String getScorepeakfoundString () {
 }
 
 public String getScorepeakcloseString () {
-   if (Scorepeakclose.getValue().isNaN()||Scorepeakclose.getValue().isInfinite()) {
+   if (Scorepeakclose.getValue().isNaN()||Scorepeakclose.getValue().isInfinite()||Scorepeakclose.getValue().equals(session.getRTTolerance())) {
        return "";
    } else {
        return Scorepeakclose.getValue().toString();

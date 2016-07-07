@@ -212,6 +212,9 @@ public class FXMLTableViewController implements Initializable {
         rtColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, Float>("RT"));
         mzColumn.setCellValueFactory(new TreeItemPropertyValueFactory<Entry, String>("MZString"));
         scorefitaboveColumn.setComparator(new FloatStringComparator());
+        scorepeakcloseColumn.setComparator(new FloatStringComparator());
+        scorepeakrangeColumn.setComparator(new FloatStringComparator());
+        mzColumn.setComparator(new MZStringComparator());
         //create new Session
         session = new Session();
         session.getReference().setName("Reference");
@@ -2314,9 +2317,43 @@ public class FloatStringComparator implements Comparator<String> {
     }
     return 0;
   }
+}
+            
+            public class MZStringComparator implements Comparator<String> {
+
+        @Override
+            public int compare(String o1, String o2) {
+    //get the first number
+    if (o1.contains("to")) {
+        o1 = o1.substring(0, o1.indexOf("to")-1);
+    }
+    
+    if (o2.contains("to")) {
+        o2 = o2.substring(0, o2.indexOf("to")-1);
+    }
+                
+    if (o1.isEmpty()) {
+        return -1;
+    }
+    if (o2.isEmpty()) {
+        return 1;
+    }
+    if (Float.parseFloat(o1) == Float.parseFloat(o2)) {
+        return 0;
+    }
+    
+    if (Float.parseFloat(o1)>Float.parseFloat(o2)) {
+        return 1;
+    }
+    if (Float.parseFloat(o1)<Float.parseFloat(o2)) {
+        return -1;
+    }
+    return 0;
+  }
         
     
     
 }
 }
+
 
