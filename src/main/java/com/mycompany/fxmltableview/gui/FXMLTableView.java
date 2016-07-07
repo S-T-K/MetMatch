@@ -1,9 +1,12 @@
 package com.mycompany.fxmltableview.gui;
 
+import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -26,6 +29,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
+import org.apache.commons.io.FileUtils;
 
 public class FXMLTableView extends Application {
 

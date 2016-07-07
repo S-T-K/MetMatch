@@ -612,7 +612,7 @@ public class FXMLTableViewController implements Initializable {
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MetExtract output files (*.tsv, *.txt)", "*.tsv", "*.txt");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Reference Matrix (*.tsv, *.txt)", "*.tsv", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show open file dialog
