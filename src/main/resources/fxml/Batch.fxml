@@ -91,7 +91,7 @@
                   </TableColumn>
                   <TableColumn fx:id="foundColumn" maxWidth="77.0" minWidth="0.0" prefWidth="0.0" text="\% found">
                      <cellValueFactory>
-                        <PropertyValueFactory property="pfound" />
+                        <PropertyValueFactory property="pfoundString" />
                      </cellValueFactory>
                   </TableColumn>
                </columns>

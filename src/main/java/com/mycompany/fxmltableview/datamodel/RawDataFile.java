@@ -90,8 +90,9 @@ public class RawDataFile {
         color.addListener(new ChangeListener<Color>() {
             @Override
             public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
-              for (int i = 0; i< session.getSelectedFiles().size(); i++) {
-                  session.getSelectedFiles().get(i).setColor(newValue);
+              for (RawDataFile file: session.getSelectedFiles()) {
+                  if (file.getDataset().equals(dataset)) {
+                  file.setColor(newValue);}
               }
             }
 
@@ -100,14 +101,16 @@ public class RawDataFile {
         active.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-              for (int i = 0; i< session.getSelectedFiles().size(); i++) {
-                  session.getSelectedFiles().get(i).setActive(newValue);
+              for (RawDataFile file: session.getSelectedFiles()) {
+                  if (file.getDataset().equals(dataset)) {
+                  file.setActive(newValue);
+                  }
               }
               
               
               boolean active = false;
-              for (int i = 0; i< dataset.getListofFiles().size(); i++) {
-                  if (dataset.getListofFiles().get(i).getActive().booleanValue()) {
+              for (RawDataFile file: dataset.getListofFiles()) {
+                  if (file.getActive().booleanValue()) {
                       active = true;
                   }
               }
@@ -646,5 +649,11 @@ session.getIothread().writefile(this);
         this.NoiseFactor = NoiseFactor;
     }
     
+    public String getPfoundString() {
+        if (!pfound.getValue().isNaN()) {
+            return pfound.getValue().toString();
+        }
+        return "";
+    }
     
 }

@@ -119,7 +119,7 @@ public class FXMLTableViewController implements Initializable {
     TreeTableColumn mzColumn;
 
     @FXML
-    private Accordion accordion;
+    Accordion accordion;
 
     @FXML
     Button addBatchButton, paramButton, shiftButton, outputButton;
@@ -655,6 +655,7 @@ public class FXMLTableViewController implements Initializable {
         accordion.setVisible(true);
         setParameterPane(false);
 
+        
         TabPane.setVisible(false);
         RTTol.setDisable(true);
         MZTol.setDisable(true);
