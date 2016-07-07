@@ -227,7 +227,7 @@ if (listofSlices.containsKey(file)) {
         
         if (session.isPeakPickchanged()||currentSlice.getListofPeaks()==null){
 //        
-        if (session.getPeackPick().equals("Naïve (Gauss)")) {
+        if (session.getPeackPick().equals("Gauss Peak Correlation")) {
             currentSlice.NaivePeakPicking();
            session.getSncalculator().calculatetrueSN(currentSlice);
            session.getSncalculator().calculateNoiseUnits(currentSlice);
@@ -236,7 +236,7 @@ if (listofSlices.containsKey(file)) {
             currentSlice.WaveletPeakPicking();
         
             
-        } else if (session.getPeackPick().equals("Naïve (Savitzky-Golay)")) {
+        } else if (session.getPeackPick().equals("Savitzky-Golay Filter")) {
             currentSlice.SavitzkyGolayPeakPicking();
             session.getSncalculator().calculatetrueSN(currentSlice);
             session.getSncalculator().calculateNoiseUnits(currentSlice);

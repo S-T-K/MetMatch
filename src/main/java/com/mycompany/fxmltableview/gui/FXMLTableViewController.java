@@ -504,7 +504,7 @@ public class FXMLTableViewController implements Initializable {
         Res.textProperty().bindBidirectional(session.getResProp(), new NumberStringConverter());
         Base.textProperty().bindBidirectional(session.getBaseProp(), new NumberStringConverter());
         PeakPick.setItems(FXCollections.observableArrayList(
-                "Naïve (Gauss)", "MassSpecWavelet", "Naïve (Savitzky-Golay)")
+                "Gauss Peak Correlation", "MassSpecWavelet", "Savitzky-Golay Filter")
         );
 
         PeakPick.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
