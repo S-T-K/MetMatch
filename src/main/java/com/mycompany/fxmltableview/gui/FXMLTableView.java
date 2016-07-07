@@ -52,7 +52,7 @@ public class FXMLTableView extends Application {
                                Alert dlg = new Alert(AlertType.CONFIRMATION, "");
                                dlg.setTitle("Close MetMatch");
                                dlg.setHeaderText("Are you sure you want to close MetMatch?");
-                                dlg.setContentText("Unsaved data will be lost.");
+                               dlg.setContentText("Unsaved data will be lost.");
                                Optional<ButtonType> result = dlg.showAndWait();
                                we.consume();
 if (result.get() == ButtonType.OK){

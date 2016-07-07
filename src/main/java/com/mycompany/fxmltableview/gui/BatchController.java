@@ -167,6 +167,23 @@ public class BatchController implements Initializable {
             }
         });
         batchFileView.setPlaceholder(label);
+        batchFileView.setRowFactory(new Callback<TableView<RawDataFile>, TableRow<RawDataFile>>() {  
+        @Override  
+        public TableRow<RawDataFile> call(TableView<RawDataFile> tableView2) {  
+            final TableRow<RawDataFile> row = new TableRow<>();  
+            row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {  
+                @Override  
+                public void handle(MouseEvent event) {  
+                    final int index = row.getIndex();  
+                    if (index >= 0 && index < batchFileView.getItems().size() && batchFileView.getSelectionModel().isSelected(index)  ) {
+                        batchFileView.getSelectionModel().clearSelection(index);
+                        event.consume();  
+                    }  
+                }  
+            });  
+            return row;  
+        }  
+    });  
         
 //        BatchPane.expandedProperty().addListener(new ChangeListener<Boolean>() {
 //            @Override
