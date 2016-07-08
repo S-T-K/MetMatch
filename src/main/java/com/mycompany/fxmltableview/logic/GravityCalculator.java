@@ -5,8 +5,11 @@
  */
 package com.mycompany.fxmltableview.logic;
 
+import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import javafx.application.Platform;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  *
@@ -126,4 +129,63 @@ public class GravityCalculator {
        
         return ncentroids;
     }
+     
+     //function to test whether there is some sort of global maximum
+     public void qualitycheck(float[][] matrix, float[] centroids, RawDataFile file) {
+         //get weigtht sum of one peak
+         float[][] pmatrix = new float[1][session.getResolution()];
+         session.getProparraycalculator().calculate(10, 1, 10, pmatrix, 0);
+         float w = 0;
+         for (int i = 0; i<session.getResolution(); i++) {
+             w+=pmatrix[0][i];
+         }
+         System.out.println(w);
+         
+         //get 10% range
+         int range = (int) (matrix[0].length*0.05);
+         
+         //wf contains the weights along the fit, while wr contains the weights outside the fit
+         float wf = 0f;
+         float wr = 0f;
+         for (int i = 0; i<matrix.length; i++) {
+             int upperlimit = (int) (session.getResolution()*0.90);
+             int limit1=matrix[i].length;
+             if (limit1>=upperlimit) {
+                 limit1=upperlimit;
+             }
+             for (int j = (int) (0+session.getResolution()*0.1); j<limit1; j++) {
+                 wr+=matrix[i][j];  
+             }
+             int limit = (int) (centroids[i]+range);
+             if (limit>=upperlimit) {
+                 limit = upperlimit;
+             }
+             for (int j = (int) (centroids[i]-range); j<=limit; j++) {
+                 wf+=matrix[i][j];
+             }
+             
+             for (int j = (int) (centroids[i]+range+1); j<upperlimit; j++) {
+                 wr+=matrix[i][j];
+             }
+         }
+   
+         
+         
+         System.out.println(file.getName() + ": anchor peaks: " + (wf-(wr/7))/w );
+         
+         if ((wf-(wr/7))/w<50) {
+               Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                           Alert alert = new Alert(AlertType.WARNING, "");
+         alert.setTitle("Warning");
+         alert.setHeaderText(file.getName() + ": Very few peaks detected!");
+         alert.setContentText("Only very few peaks could be used in calculating the retention time shift function. This indicated that the file contains very few of the metabolites specified in the reference data matrix.\n\nPlease verify the correctness of the results!");
+         alert.showAndWait();
+                        }});
+         
+         
+         }
+     }
+     
 }
