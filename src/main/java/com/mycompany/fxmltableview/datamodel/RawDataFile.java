@@ -10,10 +10,15 @@ import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.nio.BufferOverflowException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -671,45 +676,96 @@ session.getIothread().writefile(this);
      * @param rtshiftfunction the rtshiftfunction to set
      */
     public void setRtshiftfunction(ObservableList<Entry> list, float[] centroids) {
-        LinearInterpolator inter = new LinearInterpolator();
-        ArrayList<Double> RTlist = new ArrayList<>();
-        ArrayList<Double> centlist = new ArrayList<>();
-        RTlist.add(0d);
-        centlist.add(0d);
-        float step = session.getRTTolerance()*2*60/session.getResolution();
-        float middle = session.getResolution()/2-1;
-        int i = 1;
-       
-        for (Entry o:list) {
-            if (RTlist.get(RTlist.size()-1)<o.getRT()) {
-            RTlist.add((double)o.getRT());
-            centlist.add((double)(centroids[i-1]-middle)*step);
-            }
-            i++;
-        }
-       
-        double[] RT = new double[RTlist.size()];
-        double[] cent = new double[RTlist.size()];
+        //uncomment to write changed file
         
-        i = 0;
-        for(Double d:RTlist) {
-            RT[i]=d;
-            i++;
-        }
-        i=0;
-        for (Double d:centlist) {
-            cent[i]=d;
-            i++;
-        }
-        
-        try {
-        this.rtshiftfunction = inter.interpolate(RT, cent);
-        
-        
-        }
-        catch (Exception e ) {
-            System.out.println(e.getMessage());
-        }
+//        LinearInterpolator inter = new LinearInterpolator();
+//        ArrayList<Double> RTlist = new ArrayList<>();
+//        ArrayList<Double> centlist = new ArrayList<>();
+//        RTlist.add(0d);
+//        centlist.add(0d);
+//        float step = session.getRTTolerance()*2*60/session.getResolution();
+//        float middle = session.getResolution()/2-1;
+//        int i = 1;
+//       
+//        for (Entry o:list) {
+//            if (RTlist.get(RTlist.size()-1)<o.getRT()) {
+//            RTlist.add((double)o.getRT());
+//            centlist.add((double)(centroids[i-1]-middle)*step);
+//            }
+//            i++;
+//        }
+//        
+//        RTlist.add(Double.MAX_VALUE);
+//        centlist.add(0d);
+//       
+//        double[] RT = new double[RTlist.size()];
+//        double[] cent = new double[RTlist.size()];
+//        
+//        i = 0;
+//        for(Double d:RTlist) {
+//            RT[i]=d*60;
+//            i++;
+//        }
+//        i=0;
+//        for (Double d:centlist) {
+//            cent[i]=d;
+//            i++;
+//        }
+//        
+//        try {
+//        this.rtshiftfunction = inter.interpolate(RT, cent);
+//
+//        
+//        
+//        String content = readFile(file, StandardCharsets.UTF_8);
+//        StringBuilder file = new StringBuilder(content);
+//        
+//        
+//        //look for RT
+//        String RTstring = "retentionTime=\"PT";
+//        String RTend = "S\"";
+//        int start = file.indexOf(RTstring)+17;
+//        int end = file.indexOf(RTend,start);
+//        i = 0;
+//while (start >= 17) {
+//    String retentiontime = (file.substring(start,end));
+//    
+//    //rt1 = old RT value
+//    double rt1 = Double.parseDouble(retentiontime);
+//    
+//    //rt2 = new RT value
+//    double rt2 = rt1 - rtshiftfunction.value(rt1);
+//    System.out.println(rt1);
+//    
+//    String newrettime = String.valueOf(rt2)+"00000000";
+//    for (int s = 0; s <retentiontime.length(); s++) {
+//        file.setCharAt(start+s, newrettime.charAt(s));
+//    }
+//    start = content.indexOf(RTstring, start + 10)+17;
+//    end = content.indexOf(RTend, start);
+//    System.out.println(i++);
+//    if (i==1697) {
+//        System.out.println("Got");
+//    }
+//}
+//String newfile = file.toString();
+//
+//
+////print new file
+//PrintWriter out = new PrintWriter("changed_" + this.file.getName());
+//out.println(newfile);
+//out.close();
+//        
+//        }
+//        catch (Exception e ) {
+//            System.out.println(e.getMessage());
+//        }
     }
     
+    static String readFile(File file, Charset encoding) 
+  throws IOException 
+{
+  byte[] encoded = Files.readAllBytes(file.toPath());
+  return new String(encoded, encoding);
+}
 }
