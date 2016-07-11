@@ -243,11 +243,88 @@ public class SNCalculator {
             
             
         }
-        
+        //check if enough symbols have been found
+        if (Ns.size()>10) {
         float N = (float) Ns.toArray()[Ns.size()/2];
         System.out.println(N);
         
         return N;
+        } else {
+            System.out.println("Warning: Noise Units could not be correctly calculated");
+             for (Slice slice:listofSlices) {
+            float[] Int = slice.getIntArray();
+            int start = 0; 
+            int end = start+12;
+            while (end<Int.length) {
+                float avg = 0;
+                boolean reject=false;
+                for (int i=0; i<13; i++) {
+                    float f = Int[start+i];
+                    if (f<0.001) {
+                        reject=true;
+                        break;
+                    }else{
+                    avg+=Int[start+i]; }
+                }
+                avg/=13;
+                //if no zero values
+                if (!reject) {
+                    TreeSet<Float> set = new TreeSet<>();
+                    byte crossings = 0;
+                    boolean lower;
+                    float f = Int[start]-avg;
+                    if (f>0) {
+                        lower = false;
+                        set.add(f);
+                    } else {
+                        lower = true;
+                        set.add((f*-1));
+                    }
+                    
+                    //count number of crossings
+                    for (int i = 1; i<13; i++) {
+                        f = Int[start+i]-avg;
+                        if (f>0) {
+                            if (lower) {
+                                crossings++;
+                            }
+                            set.add(f);
+                            lower = false;
+                        } else {
+                            if (!lower) {
+                                crossings++;
+                            }
+                            set.add((f*-1));
+                            lower = true;
+                        }
+                    }
+                    
+                    if (crossings>=2) {
+                        //get median deviation
+                        float med = (float)set.toArray()[7];
+                        med/=Math.sqrt(avg);
+                        Ns.add(med);
+                    }
+                    
+                    
+                    
+                    
+                    
+                }
+                
+                
+                start = end+1;
+                end = start+12;
+            }
+            
+            
+        }
+             float N = (float) Ns.toArray()[Ns.size()/2];
+        System.out.println(N);
+        
+        return N;
+        }
+        
     }
     
     //calculates Noise Units for each peak, and deletes peaks with NU lower than threshold

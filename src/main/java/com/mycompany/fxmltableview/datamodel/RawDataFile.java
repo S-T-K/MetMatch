@@ -32,6 +32,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 /**
  *
@@ -71,6 +73,8 @@ public class RawDataFile {
     private int peakRTTolerance;
     
     private int column;
+    
+    private PolynomialSplineFunction rtshiftfunction;
 
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file, Session session) {
@@ -654,6 +658,58 @@ session.getIothread().writefile(this);
             return pfound.getValue().toString();
         }
         return "";
+    }
+
+    /**
+     * @return the rtshiftfunction
+     */
+    public PolynomialSplineFunction getRtshiftfunction() {
+        return rtshiftfunction;
+    }
+
+    /**
+     * @param rtshiftfunction the rtshiftfunction to set
+     */
+    public void setRtshiftfunction(ObservableList<Entry> list, float[] centroids) {
+        LinearInterpolator inter = new LinearInterpolator();
+        ArrayList<Double> RTlist = new ArrayList<>();
+        ArrayList<Double> centlist = new ArrayList<>();
+        RTlist.add(0d);
+        centlist.add(0d);
+        float step = session.getRTTolerance()*2*60/session.getResolution();
+        float middle = session.getResolution()/2-1;
+        int i = 1;
+       
+        for (Entry o:list) {
+            if (RTlist.get(RTlist.size()-1)<o.getRT()) {
+            RTlist.add((double)o.getRT());
+            centlist.add((double)(centroids[i-1]-middle)*step);
+            }
+            i++;
+        }
+       
+        double[] RT = new double[RTlist.size()];
+        double[] cent = new double[RTlist.size()];
+        
+        i = 0;
+        for(Double d:RTlist) {
+            RT[i]=d;
+            i++;
+        }
+        i=0;
+        for (Double d:centlist) {
+            cent[i]=d;
+            i++;
+        }
+        
+        try {
+        this.rtshiftfunction = inter.interpolate(RT, cent);
+        
+        
+        }
+        catch (Exception e ) {
+            System.out.println(e.getMessage());
+        }
     }
     
 }

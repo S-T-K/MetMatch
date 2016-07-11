@@ -105,14 +105,22 @@ public class DomParser {
         String scanType = EL.getAttribute("scanType");
 
         // decode B64 encoded peaks, and split them into to arrays containging m/z and corresponding intensity
+        float[] peaks;
+        float[] massovercharge = null;
+        float[] intensity = null;
+        try {
         String encodedpeaks = getTextValue(EL, "peaks");
-        float[] peaks = decoder.extractArray(encodedpeaks);
-        float[] massovercharge = new float[peaks.length/2];
-        float[] intensity = new float[peaks.length/2];
+        peaks = decoder.extractArray(encodedpeaks);
+        massovercharge = new float[peaks.length/2];
+        intensity = new float[peaks.length/2];
         for (int i =0; i<peaks.length/2; i++) {
             massovercharge[i]=peaks[i*2];
             intensity[i]=peaks[(i*2)+1];
         }
+        } catch (Exception e ) {
+            System.out.println("Exception when parsing mzXML!");
+        }
+        
         
         String msLevelString = EL.getAttribute("msLevel");
         int msLevel = Integer.parseInt(msLevelString);

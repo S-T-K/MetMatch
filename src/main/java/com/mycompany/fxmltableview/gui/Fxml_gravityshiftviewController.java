@@ -561,6 +561,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 
                                 }
                                 grav.qualitycheck(samplematrix, centroids, samplefile);
+                                samplefile.setRtshiftfunction(olist, centroids);
                                 progress.setVisible(false);
                              ((Group) topSeries.getNode()).getChildren().get(0).setVisible(false);
                              ((Group) botSeries.getNode()).getChildren().get(0).setVisible(false);
@@ -1692,6 +1693,7 @@ done++;
                                 
                                 //quality check
                                 grav.qualitycheck(matrix, centroids,currentfile);
+                                currentfile.setRtshiftfunction(olist, centroids);
                           
 //set fitted peak
                 for (int i = 0; i<olist.size(); i++) {

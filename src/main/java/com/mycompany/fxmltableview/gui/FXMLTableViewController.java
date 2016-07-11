@@ -2223,8 +2223,8 @@ public class FXMLTableViewController implements Initializable {
                     pane.add(new Label(""), 1, 3);
                     pane.add(new TextField("Parameter!"), 1, 4);
                     pane.add(new Label(""), 1, 5);
-                    Button button = new Button("Show Image!");
-                    pane.add(button, 1, 6);
+                    Label label = new Label("?");
+                    pane.add(label, 1, 6);
          
                     pane.add(new Label(""), 1, 7);
                     ImageView view = new ImageView();
@@ -2232,11 +2232,19 @@ public class FXMLTableViewController implements Initializable {
                     
                     PopOver popOver = new PopOver(pane);
                     popOver.setTitle("Detachable!");
-                               button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                               label.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent evt) {
+                double start = System.currentTimeMillis();
+                boolean finished = false;
+                while (!finished&&System.currentTimeMillis()-start<750) {
+                if (System.currentTimeMillis()-start>500&&label.isHover()) {
+                    finished=true;
               pane.add(view, 1, 8);
-              pane.getChildren().remove(button);
+              pane.getChildren().remove(label);
+                }
+                
+            }
             }
         });
  
