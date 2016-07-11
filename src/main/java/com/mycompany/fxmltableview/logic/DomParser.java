@@ -21,11 +21,11 @@ public class DomParser {
     
     Document mzxmlFile;
     String Filepath;
-    B64decoder decoder;
+    B64Coder decoder;
 
     public DomParser(String path) {
         this.Filepath = path;
-        this.decoder = new B64decoder();
+        this.decoder = new B64Coder();
     }
 
     public List ParseFile() {
