@@ -207,7 +207,7 @@ public class RawDataFile {
  
         double start2 = System.currentTimeMillis();
         //calculate MZshift
-        int[] mzbins = new int[(int)session.getMZTolerance()*4+1];
+        int[] mzbins = new int[(int)session.getMZTolerance()*100+1];
         float[] ppmvalues = new float[mzbins.length];
         float valuestep = session.getMZTolerance()*2/mzbins.length;
         for (int i = 0; i< mzbins.length; i++) {
@@ -216,17 +216,18 @@ public class RawDataFile {
         float ppm;
         for (int i = 0; i< listofSlices.length; i++) {
             if (listofSlices[i]!=null){
-                int count = 0;
-                float sum = 0;
+                double count = 0;
+                double sum = 0;
                 for (int j = 0; j<listofSlices[i].getMZArray().length; j++) {
                     if (listofSlices[i].getMZArray()[j]!=0) {
-                        sum+=listofSlices[i].getMZArray()[j];
-                        count++;
+                        sum+=listofSlices[i].getMZArray()[j]*listofSlices[i].getIntArray()[j];
+                        count+=listofSlices[i].getIntArray()[j];
                     }}
-                    sum/=count;
-                    sum-=listofSlices[i].getAdduct().getMZ();
-                    sum/=listofSlices[i].getAdduct().getMZ()/1000000;
-                    int bin = Arrays.binarySearch(ppmvalues, sum)-1;
+                    double weightedsum = sum/count;
+//                    weightedsum-=listofSlices[i].getAdduct().getMZ();
+//                    weightedsum/=listofSlices[i].getAdduct().getMZ()/1000000;
+                    weightedsum = (weightedsum-listofSlices[i].getAdduct().getMZ())/(weightedsum/1000000);
+                    int bin = Arrays.binarySearch(ppmvalues, (float)weightedsum)-1;
        //System.out.println(bin);
        if (bin<0) {
             bin =((bin + 3) * (-1));
@@ -248,7 +249,7 @@ public class RawDataFile {
         //don't just take the max bin
         double accuratebin = 0;
         int sum = 0;
-        for (int i  = maxbin-2; i<maxbin+3; i++) {
+        for (int i  = maxbin-4; i<maxbin+5; i++) {
             if (i>0&&i<mzbins.length) {
             accuratebin+=(i+1)*mzbins[i];
             sum+=mzbins[i];
@@ -759,7 +760,7 @@ while (start >= 17) {
     
     //rt2 = new RT value
     double rt2 = rt1 - rtshiftfunction.value(rt1);
-    System.out.println(rt1);
+
     
     String newrettime = String.valueOf(rt2)+"00000000";
     for (int s = 0; s <retentiontime.length(); s++) {
@@ -767,8 +768,7 @@ while (start >= 17) {
     }
     start = content.indexOf(RTstring, start + 10)+17;
     end = content.indexOf(RTend, start);
-    System.out.println(i++);
-    
+
 }
 String newfile = file.toString();
 
