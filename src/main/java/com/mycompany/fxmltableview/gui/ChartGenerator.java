@@ -11,7 +11,6 @@ import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Slice;
 import com.mycompany.fxmltableview.logic.Session;
 import java.io.File;
-import java.util.Collections;
 import javafx.scene.Node;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -19,17 +18,13 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
-import java.util.Arrays;
 import java.util.List;  
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
-import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.shape.Ellipse;
 
 /**

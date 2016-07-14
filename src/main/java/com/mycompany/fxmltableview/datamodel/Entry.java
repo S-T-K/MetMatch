@@ -10,21 +10,17 @@ package com.mycompany.fxmltableview.datamodel;
 import com.mycompany.fxmltableview.logic.Session;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.chart.XYChart;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+
 
 /**
  *

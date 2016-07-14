@@ -69,16 +69,22 @@ public class GravityCalculator {
              counts[i] = 1;
          }
 
+         //copy centroids. Otherwise results from one iteration would be used within the same iteration
          float[] ncentroids = new float[centroids.length];
          for (int i = 0; i < centroids.length; i++) {
              ncentroids[i] = centroids[i];
          }
+         
+         //don't calcualte every step for big xRanges, => increase performance
          int step = (int) ((double) xRanges[count] / 10.0);
          if (step < 1) {
              step = 1;
          }
+         
+         //for every OGroup ordered by RT (skip by step if xRange is big)
          for (int i = 0; i < centroids.length; i = i + step) {
 
+             //check starts and ends
              int xstart = i - xRanges[count];
              if (xstart < 0) {
                  xstart = 0;
@@ -96,17 +102,19 @@ public class GravityCalculator {
                  yend = session.getResolution() - 1;
              }
 
+             //maxint is the y-position of the maximum
+             //max is the max proximity along the yRange
              int maxint = -1;
              float max = 0;
+             //for the whole yRange
              for (int l = ystart; l <= yend; l++) {
+                 //nmax sums up the current y-position
                  float nmax = 0;
+                 //for the current y-position, calculate proximity to all peaks within xRange and yRange
                  for (int j = xstart; j <= xend; j++) {
                      for (int k = ystart; k <= yend; k++) {
                          float distance = Math.abs(k - l) + 1;
-//                         if (matrix[j][k]>100) {
-//                         System.out.println();
-//                         }
-//TODO: other distance penalties than square
+                         //weight*distance squared, to prefer clusters to averages
                          nmax += matrix[j][k] / ((distance * distance));
                      }
                  }
@@ -116,9 +124,15 @@ public class GravityCalculator {
                  }
              }
              if (maxint > -1) {
+                 //use max for every centroid within the xRange
                  for (int l = xstart; l <= xend; l++) {
+                     //calculate distance to current centroid, distance of 1 = no distance, distance of 0 = maxdistance+1
+                     //each value is weighted according to its distance, and the result should be the weighted average of all values
+                     //to avoid keeping a list, the average is updated continuously, which requires to keep track of the current sum of all weights = counts
                      float xdistance = xRanges[count] + 1 - (Math.abs(i - l));
-                     xdistance /= xRanges[count];
+                     //normalize distance
+                     xdistance /= (xRanges[count]+1);
+                     //the weight is the sum of the proximity value and the distance
                      ncentroids[l] = (ncentroids[l] * counts[l] + (maxint * max * xdistance)) / (counts[l] + (max * xdistance));
                      counts[l] += max * xdistance;
                  }

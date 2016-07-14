@@ -10,11 +10,8 @@ import flanagan.analysis.CurveSmooth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
-import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.rosuda.JRI.Rengine;
 
@@ -24,10 +21,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import java.io.FileNotFoundException;
-import java.util.Collections;
 import javafx.scene.chart.XYChart;
-import org.apache.commons.lang3.ArrayUtils;
-import org.rosuda.JRI.REXP;
 
 
 /**
