@@ -1774,7 +1774,7 @@ public class FXMLTableViewController implements Initializable {
                             for (String nameo : session.getListofadductnames()) {
 
                                 //to every hypothetical adduct
-                                if (j != k) {
+                                if (j != k && (adduct.getCharge()==null||session.getListofadductcharges().get(k)==adduct.getCharge())) {
                                     //don't add the same value
                                     //get original mass
                                     Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);

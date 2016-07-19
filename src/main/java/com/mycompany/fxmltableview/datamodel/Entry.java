@@ -814,7 +814,7 @@ if (listofSlices.containsKey(file)) {
     /**
      * @return the Charge
      */
-    public int getCharge() {
+    public Integer getCharge() {
         return Charge;
     }
 

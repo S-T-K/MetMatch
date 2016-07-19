@@ -674,108 +674,108 @@ session.getIothread().writefile(this);
     public void setRtshiftfunction(ObservableList<Entry> list, float[] centroids) {
         //uncomment to write changed file
         
-        LinearInterpolator inter = new LinearInterpolator();
-        ArrayList<Double> RTlist = new ArrayList<>();
-        ArrayList<Double> centlist = new ArrayList<>();
-        RTlist.add(0d);
-        centlist.add(0d);
-        float step = session.getRTTolerance()*2*60/session.getResolution();
-        float middle = session.getResolution()/2-1;
-        int i = 1;
-       
-        for (Entry o:list) {
-            if (RTlist.get(RTlist.size()-1)<o.getRT()) {
-            RTlist.add((double)o.getRT());
-            centlist.add((double)(centroids[i-1]-middle)*step);
-            }
-            i++;
-        }
-        
-        RTlist.add(Double.MAX_VALUE);
-        centlist.add(0d);
-       
-        double[] RT = new double[RTlist.size()];
-        double[] cent = new double[RTlist.size()];
-        
-        i = 0;
-        for(Double d:RTlist) {
-            RT[i]=d*60;
-            i++;
-        }
-        i=0;
-        for (Double d:centlist) {
-            cent[i]=d;
-            i++;
-        }
-        
-        try {
-        this.rtshiftfunction = inter.interpolate(RT, cent);
-
-        
-        
-        String content = readFile(file, StandardCharsets.UTF_8);
-        StringBuilder file = new StringBuilder(content);
-        
-        
-        //look for RT
-        String RTstring = "retentionTime=\"PT";
-        String Peakstartstring = "<peaks";
-        String Peakendstring = "</peaks>";
-        String RTend = "S\"";
-        B64Coder decoder = new B64Coder();
-        float mzshift = this.mzshift.get();
-        int start = file.indexOf(RTstring)+17;
-        int end = file.indexOf(RTend,start);
-        int peakstart = file.indexOf(Peakstartstring);
-        peakstart = file.indexOf(">", peakstart)+1;
-        int peakend = file.indexOf(Peakendstring,peakstart);
-        i = 0;
-while (start >= 17) {
-    String retentiontime = (file.substring(start,end));
-    String codedpeak = file.substring(peakstart,peakend);
-    float[] decoded = decoder.extractArray(codedpeak);
-    
-    //change m/z values
-    for (int m = 0; m<decoded.length; m=m+2) {
-        decoded[m] = decoded[m]-decoded[m]/1000000*mzshift;
-    }
-    
-    String newcodedpeak = decoder.encodeArray(decoded);
-    for (int s = 0; s <newcodedpeak.length(); s++) {
-        file.setCharAt(peakstart+s, newcodedpeak.charAt(s));
-    }
-    
-    peakstart = file.indexOf(Peakstartstring,peakend);
-    peakstart = file.indexOf(">", peakstart)+1;
-    peakend = file.indexOf(Peakendstring,peakstart);
-    
-    //rt1 = old RT value
-    double rt1 = Double.parseDouble(retentiontime);
-    
-    //rt2 = new RT value
-    double rt2 = rt1 - rtshiftfunction.value(rt1);
-
-    
-    String newrettime = String.valueOf(rt2)+"00000000";
-    for (int s = 0; s <retentiontime.length(); s++) {
-        file.setCharAt(start+s, newrettime.charAt(s));
-    }
-    start = content.indexOf(RTstring, start + 10)+17;
-    end = content.indexOf(RTend, start);
-
-}
-String newfile = file.toString();
-
-
-//print new file
-PrintWriter out = new PrintWriter("changed_" + this.file.getName());
-out.println(newfile);
-out.close();
-        
-        }
-        catch (Exception e ) {
-            System.out.println(e.getMessage());
-        }
+//        LinearInterpolator inter = new LinearInterpolator();
+//        ArrayList<Double> RTlist = new ArrayList<>();
+//        ArrayList<Double> centlist = new ArrayList<>();
+//        RTlist.add(0d);
+//        centlist.add(0d);
+//        float step = session.getRTTolerance()*2*60/session.getResolution();
+//        float middle = session.getResolution()/2-1;
+//        int i = 1;
+//       
+//        for (Entry o:list) {
+//            if (RTlist.get(RTlist.size()-1)<o.getRT()) {
+//            RTlist.add((double)o.getRT());
+//            centlist.add((double)(centroids[i-1]-middle)*step);
+//            }
+//            i++;
+//        }
+//        
+//        RTlist.add(Double.MAX_VALUE);
+//        centlist.add(0d);
+//       
+//        double[] RT = new double[RTlist.size()];
+//        double[] cent = new double[RTlist.size()];
+//        
+//        i = 0;
+//        for(Double d:RTlist) {
+//            RT[i]=d*60;
+//            i++;
+//        }
+//        i=0;
+//        for (Double d:centlist) {
+//            cent[i]=d;
+//            i++;
+//        }
+//        
+//        try {
+//        this.rtshiftfunction = inter.interpolate(RT, cent);
+//
+//        
+//        
+//        String content = readFile(file, StandardCharsets.UTF_8);
+//        StringBuilder file = new StringBuilder(content);
+//        
+//        
+//        //look for RT
+//        String RTstring = "retentionTime=\"PT";
+//        String Peakstartstring = "<peaks";
+//        String Peakendstring = "</peaks>";
+//        String RTend = "S\"";
+//        B64Coder decoder = new B64Coder();
+//        float mzshift = this.mzshift.get();
+//        int start = file.indexOf(RTstring)+17;
+//        int end = file.indexOf(RTend,start);
+//        int peakstart = file.indexOf(Peakstartstring);
+//        peakstart = file.indexOf(">", peakstart)+1;
+//        int peakend = file.indexOf(Peakendstring,peakstart);
+//        i = 0;
+//while (start >= 17) {
+//    String retentiontime = (file.substring(start,end));
+//    String codedpeak = file.substring(peakstart,peakend);
+//    float[] decoded = decoder.extractArray(codedpeak);
+//    
+//    //change m/z values
+//    for (int m = 0; m<decoded.length; m=m+2) {
+//        decoded[m] = decoded[m]-decoded[m]/1000000*mzshift;
+//    }
+//    
+//    String newcodedpeak = decoder.encodeArray(decoded);
+//    for (int s = 0; s <newcodedpeak.length(); s++) {
+//        file.setCharAt(peakstart+s, newcodedpeak.charAt(s));
+//    }
+//    
+//    peakstart = file.indexOf(Peakstartstring,peakend);
+//    peakstart = file.indexOf(">", peakstart)+1;
+//    peakend = file.indexOf(Peakendstring,peakstart);
+//    
+//    //rt1 = old RT value
+//    double rt1 = Double.parseDouble(retentiontime);
+//    
+//    //rt2 = new RT value
+//    double rt2 = rt1 - rtshiftfunction.value(rt1);
+//
+//    
+//    String newrettime = String.valueOf(rt2)+"00000000";
+//    for (int s = 0; s <retentiontime.length(); s++) {
+//        file.setCharAt(start+s, newrettime.charAt(s));
+//    }
+//    start = content.indexOf(RTstring, start + 10)+17;
+//    end = content.indexOf(RTend, start);
+//
+//}
+//String newfile = file.toString();
+//
+//
+////print new file
+//PrintWriter out = new PrintWriter("changed_" + this.file.getName());
+//out.println(newfile);
+//out.close();
+//        
+//        }
+//        catch (Exception e ) {
+//            System.out.println(e.getMessage());
+//        }
     }
     
     static String readFile(File file, Charset encoding) 
