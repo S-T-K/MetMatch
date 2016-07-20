@@ -20,40 +20,44 @@
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="910.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.FXMLTableViewController">
     <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000006" height="28.0" stroke="BLACK" strokeType="INSIDE" width="1899.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-989.0" AnchorPane.topAnchor="0.0" />
-      <HBox prefHeight="27.0" prefWidth="910.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="indicatorbar" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="parameterButton" minWidth="110.0" mnemonicParsing="false" onAction="#parameters" prefHeight="0.0" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER" />
-            <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="referenceMatrixButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceDataMatrixChooser" prefHeight="0.0" prefWidth="110.0" text="Reference Matrix" HBox.hgrow="NEVER" />
-            <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="referenceFilesButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceFiles" prefHeight="0.0" prefWidth="110.0" text="Reference Files" HBox.hgrow="NEVER" />
-            <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="batchFilesButton" minWidth="110.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="110.0" text="Batch Files" HBox.hgrow="NEVER" />
-            <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="shiftButton" minWidth="110.0" mnemonicParsing="false" onAction="#newWindowShiftFitting" prefHeight="0.0" prefWidth="110.0" text="Calculate Shift" HBox.hgrow="NEVER" />
-            <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="checkResultsButton" minWidth="110.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="110.0" text="Check Results" HBox.hgrow="NEVER" />
-            <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="outputButton" minWidth="110.0" mnemonicParsing="false" onAction="#Output" prefHeight="0.0" prefWidth="110.0" text="Generate Output" HBox.hgrow="NEVER" />
+            <HBox prefHeight="27.0" prefWidth="910.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Button fx:id="parameterButton" minWidth="110.0" mnemonicParsing="false" onAction="#parameters" prefHeight="0.0" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER" />
+                  <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="referenceMatrixButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceDataMatrixChooser" prefHeight="0.0" prefWidth="110.0" text="Reference Matrix" HBox.hgrow="NEVER" />
+                  <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="referenceFilesButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceFiles" prefHeight="0.0" prefWidth="110.0" text="Reference Files" HBox.hgrow="NEVER" />
+                  <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="batchFilesButton" minWidth="110.0" mnemonicParsing="false" onAction="#openBatchFiles" prefHeight="0.0" prefWidth="110.0" text="Batch Files" HBox.hgrow="NEVER" />
+                  <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="shiftButton" minWidth="110.0" mnemonicParsing="false" onAction="#newWindowShiftFitting" prefHeight="0.0" prefWidth="110.0" text="Calculate Shift" HBox.hgrow="NEVER" />
+                  <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="checkResultsButton" minWidth="110.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="110.0" text="Check Results" HBox.hgrow="NEVER" />
+                  <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="outputButton" minWidth="110.0" mnemonicParsing="false" onAction="#Output" prefHeight="0.0" prefWidth="110.0" text="Generate Output" HBox.hgrow="NEVER" />
+               </children>
+            </HBox>
+            <HBox mouseTransparent="true" prefHeight="27.0" prefWidth="910.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane maxWidth="107.5" minWidth="107.5" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+                  <Button fx:id="p1" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
+                  <Button fx:id="p2" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
+                  <Button fx:id="p3" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
+                  <Button fx:id="p4" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
+                  <Button fx:id="p5" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
+                  <Button fx:id="p6" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="107.5" minWidth="107.5" prefWidth="107.5" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
-      <HBox layoutX="10.0" layoutY="10.0" mouseTransparent="true" prefHeight="27.0" prefWidth="910.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <AnchorPane maxWidth="107.5" minWidth="107.5" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
-            <Button fx:id="p1" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
-            <Button fx:id="p2" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
-            <Button fx:id="p3" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
-            <Button fx:id="p4" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
-            <Button fx:id="p5" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="105.0" minWidth="105.0" prefHeight="100.0" prefWidth="105.0" />
-            <Button fx:id="p6" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="107.5" minWidth="107.5" prefWidth="107.5" />
-         </children>
-      </HBox>
+      </AnchorPane>
         <Separator layoutY="570.0" prefHeight="2.0" prefWidth="826.0" />
         <ProgressBar fx:id="progressbar" layoutX="626.0" layoutY="577.0" prefHeight="18.0" prefWidth="191.0" progress="0.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="9.0" />
         <SplitPane dividerPositions="0.5182038834951457" layoutY="27.0" prefHeight="544.0" prefWidth="826.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
@@ -93,21 +97,42 @@
                           <AnchorPane fx:id="Tab1" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
                                     <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="67.0" layoutX="16.0" layoutY="312.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="312.0" />
-                                    <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="317.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="317.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="When matching chromatographic peaks, only peaks with a deviation of less than this value from the calculated RT shift are taken into consideration" />
+                                       </tooltip></TextField>
                                     <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="97.0" layoutX="16.0" layoutY="190.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="199.0" AnchorPane.topAnchor="190.0" />
                                     <Rectangle fx:id="box1" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="27.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="27.0" />
-                                    <TextField fx:id="RTTol" layoutX="125.0" layoutY="32.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="RTTol" layoutX="125.0" layoutY="32.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Signals with a RT deviation lower or equal to this value will be extracted. The deviation is relative to the RT specified in the reference data matrix" />
+                                       </tooltip></TextField>
                                     <Rectangle fx:id="box2" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="37.0" layoutX="16.0" layoutY="122.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="199.0" AnchorPane.topAnchor="122.0" />
-                                    <TextField fx:id="SliceMZTol" layoutX="125.0" layoutY="128.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <TextField fx:id="Res" layoutX="125.0" layoutY="347.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <Label fx:id="label1" layoutX="18.0" layoutY="2.0" prefHeight="31.0" prefWidth="117.0" text="Parsing Parameters" />
+                                    <TextField fx:id="SliceMZTol" layoutX="125.0" layoutY="128.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Any signal that deviates by more than this value from the calculated M/Z shift will be deleted from the EIC" />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="Res" layoutX="125.0" layoutY="347.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="This parameter is used during the calculation of the retention time shifts. Higher values result in more accurate calculations." />
+                                       </tooltip></TextField>
+                                    <Label fx:id="label1" layoutX="18.0" layoutY="2.0" prefHeight="31.0" prefWidth="117.0" text="Parsing Parameters">
+                                       <tooltip>
+                                          <Tooltip text="Set extraction tolerances" />
+                                       </tooltip></Label>
                                     <Label fx:id="label7" layoutX="18.0" layoutY="165.0" prefHeight="31.0" prefWidth="117.0" text="Peak Picking" />
                                     <Label fx:id="label4" layoutX="18.0" layoutY="104.0" prefHeight="17.0" prefWidth="117.0" text="Slice Parameters" />
-                                    <TextField fx:id="MZTol" layoutX="125.0" layoutY="62.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <TextField fx:id="Base" layoutX="125.0" layoutY="195.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="MZTol" layoutX="125.0" layoutY="62.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Signals with an M/Z deviation lower or equal to this value will be extracted. The deviation is relative to the RT specified in the reference data matrix" />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="Base" layoutX="125.0" layoutY="195.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Any peak with an abundance less than this value will be rejected" />
+                                       </tooltip></TextField>
                                     <Label fx:id="label10" layoutX="18.0" layoutY="287.0" prefHeight="31.0" prefWidth="117.0" text="Shift" />
                                     <Label fx:id="label11" layoutX="25.0" layoutY="321.0" text="RT Tolerance:" />
-                                    <Label fx:id="label8" layoutX="25.0" layoutY="199.0" text="Cutoff:" />
+                                    <Label fx:id="label8" layoutX="25.0" layoutY="199.0" text="Intensity Cutoff:" />
                                     <Label fx:id="label2" layoutX="25.0" layoutY="36.0" text="RT Tolerance: " />
                                     <Label fx:id="label6" layoutX="25.0" layoutY="351.0" text="Number of Bins:" />
                                     <Label fx:id="label5" layoutX="25.0" layoutY="132.0" text="M/Z Tolerance:" />
@@ -123,11 +148,23 @@
                                     <Label fx:id="label71" layoutX="18.0" layoutY="379.0" prefHeight="31.0" prefWidth="117.0" text="Range" />
                                     <Label layoutX="209.0" layoutY="444.0" text="min" />
                                     <Label layoutX="209.0" layoutY="414.0" text="min" />
-                                    <TextField fx:id="End" layoutX="125.0" layoutY="440.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <TextField fx:id="Start" layoutX="125.0" layoutY="410.0" prefHeight="25.0" prefWidth="80.0" />
-                                    <ChoiceBox fx:id="PeakPick" layoutX="125.0" layoutY="225.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="End" layoutX="125.0" layoutY="440.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Metabolites with a RT higher than this value are not parsed from the input file" />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="Start" layoutX="125.0" layoutY="410.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Metabolites with a RT lower than this value are not parsed from the input file" />
+                                       </tooltip></TextField>
+                                    <ChoiceBox fx:id="PeakPick" layoutX="125.0" layoutY="225.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Set peak picking algorithm" />
+                                       </tooltip></ChoiceBox>
                                     <Label fx:id="noiselabel" layoutX="25.0" layoutY="260.0" prefHeight="17.0" prefWidth="86.0" text="S/N Threshold" />
-                                    <TextField fx:id="Noise" layoutX="125.0" layoutY="256.0" prefHeight="25.0" prefWidth="80.0" />
+                                    <TextField fx:id="Noise" layoutX="125.0" layoutY="256.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Depending on the chosen peak picking algorithm, peaks with a S/N (signal-to-noise ratio) or NU (noise unit value) smaller than this value will be rejected" />
+                                       </tooltip></TextField>
                                  </children>
                               </AnchorPane>
                         </content>

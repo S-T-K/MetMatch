@@ -122,10 +122,10 @@ public class FXMLTableViewController implements Initializable {
     Accordion accordion;
 
     @FXML
-    Button addBatchButton, paramButton, shiftButton, outputButton;
+    public Button addBatchButton, paramButton, shiftButton, outputButton;
     
     @FXML
-    Button parameterButton, referenceMatrixButton, referenceFilesButton, batchFilesButton, checkResultsButton, p1, p2, p3, p4, p5, p6;
+    public Button parameterButton, referenceMatrixButton, referenceFilesButton, batchFilesButton, checkResultsButton, p1, p2, p3, p4, p5, p6;
 
     @FXML
     ProgressBar progressbar;
@@ -149,7 +149,7 @@ public class FXMLTableViewController implements Initializable {
     TabPane TabPane;
 
     @FXML
-    AnchorPane adductanchor, inputTab;
+    AnchorPane adductanchor, inputTab, indicatorbar;
 
     @FXML
     TableView<Information> InputTable;
@@ -169,6 +169,7 @@ public class FXMLTableViewController implements Initializable {
     String oldPick;
     String oldBase;
     String oldRT;
+    String oldSN;
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
     private ObservableList<Entry> MasterListofOGroups;
@@ -216,8 +217,8 @@ public class FXMLTableViewController implements Initializable {
         scorepeakrangeColumn.setComparator(new FloatStringComparator());
         mzColumn.setComparator(new MZStringComparator());
         //create new Session
-        session = new Session();
-        session.getReference().setName("Reference");
+        session = new Session(this);
+        session.getReference().setName("Batch Nr. 1: Reference");
 
         try {
             FileUtils.deleteDirectory(new File("tmp"));
@@ -679,8 +680,8 @@ public class FXMLTableViewController implements Initializable {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
             //loader.setRoot(tps);
-            Reference reference = new Reference();
-            reference.setName("Reference");
+            Reference reference = session.getReference();
+            reference.setName("Batch Nr. 1: Reference");
             session.addDataset(reference);
             batchcount++;
             panelink.put(tps, reference);
@@ -710,6 +711,7 @@ public class FXMLTableViewController implements Initializable {
                         Pane myPane = (Pane) loader.load();
                         Scene myScene = new Scene(myPane);
                         stage.setScene(myScene);
+                        stage.setTitle("EIC Viewer");
                         Fxml_adductviewController controller = loader.<Fxml_adductviewController>getController();
                         controller.setSession(session);
                         controller.setMainController(getController());
@@ -746,7 +748,7 @@ public class FXMLTableViewController implements Initializable {
     }
 
     //add a new batch
-    public void addBatch() {
+    public Batch addBatch() {
 
         try {
             TitledPane tps = new TitledPane();
@@ -765,11 +767,11 @@ public class FXMLTableViewController implements Initializable {
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
-
+            return batch;
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+return null;
     }
 
     //calculates Shift and opens a new window
@@ -782,6 +784,7 @@ public class FXMLTableViewController implements Initializable {
         Pane myPane = (Pane) loader.load();
         Scene myScene = new Scene(myPane);
         stage.setScene(myScene);
+        stage.setTitle("Shift Calculator");
         Fxml_pathshiftviewController controller = loader.<Fxml_pathshiftviewController>getController();
         controller.setSupercontroller(this);
         controller.setSession(session);
@@ -981,7 +984,12 @@ public class FXMLTableViewController implements Initializable {
 
     //calculates Shift and opens a new window
     public void newWindowShiftFitting() throws IOException, InterruptedException {
-
+indicatorbar.setDisable(true);
+disableOption(checkResultsButton);
+disableOption(outputButton);
+newOption(shiftButton);
+inactivePath(p5);
+inactivePath(p6);
        
         //open new window
         Stage stage = new Stage();
@@ -989,9 +997,11 @@ public class FXMLTableViewController implements Initializable {
         Pane myPane = (Pane) loader.load();
         Scene myScene = new Scene(myPane);
         stage.setScene(myScene);
+        stage.setTitle("Shift Calculator");
         Fxml_gravityshiftviewController controller = loader.<Fxml_gravityshiftviewController>getController();
         controller.setSupercontroller(this);
         controller.setSession(session);
+        controller.stage=stage;
 
         //print graphs
         //controller.animate(getMasterListofOGroups());
@@ -1002,6 +1012,7 @@ public class FXMLTableViewController implements Initializable {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 controller.close();
+                indicatorbar.setDisable(false);
             }
         });
 
@@ -1872,6 +1883,7 @@ public class FXMLTableViewController implements Initializable {
     }
 
     public void showParameters() {
+        indicatorbar.setDisable(true);
         setParameterPane(true);
         TabPane.setVisible(true);
         accordion.setVisible(false);
@@ -1879,10 +1891,13 @@ public class FXMLTableViewController implements Initializable {
         oldPick = PeakPick.getSelectionModel().getSelectedItem().toString();
         oldBase = Base.getText();
         oldRT = RTTolShift.getText();
+        oldSN = Noise.getText();
+        newOption(paramButton);
 
     }
 
     public void hideParameters() {
+        indicatorbar.setDisable(false);
         setParameterPane(false);
         TabPane.setVisible(false);
         accordion.setVisible(true);
@@ -1898,6 +1913,10 @@ public class FXMLTableViewController implements Initializable {
         }
 
         if (!oldRT.equals(RTTolShift.getText())) {
+            session.setPeakPickchanged(true);
+        }
+        
+        if (!oldSN.equals(Noise.getText())) {
             session.setPeakPickchanged(true);
         }
 
@@ -2301,7 +2320,12 @@ public class FXMLTableViewController implements Initializable {
     }
     
     public void openReferenceFiles() throws FileNotFoundException {
-//        session.getReference().getController().openBatchmzxmlChooser();
+        session.getReference().getController().openBatchmzxmlChooser();
+    }
+    
+     public void openBatchFiles() throws FileNotFoundException {
+        Batch batch = addBatch();
+        batch.getController().openBatchmzxmlChooser();
     }
 public class FloatStringComparator implements Comparator<String> {
 
@@ -2363,6 +2387,7 @@ public class FloatStringComparator implements Comparator<String> {
     
     
 }
+            
 }
 
 

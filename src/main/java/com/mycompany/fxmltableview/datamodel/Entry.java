@@ -1094,7 +1094,7 @@ public void setPeakWeight(RawDataFile file, double weight, float start, float en
 
 public String getScorepeakfoundString () {
    if (Scorepeakfound.getValue().isNaN()||Scorepeakfound.getValue().isInfinite()) {
-       return "";
+       return "No";
    } else if (Scorepeakfound.getValue()==1.0f) {
        return "Yes";
    } else if (Scorepeakfound.getValue()==0.0f){

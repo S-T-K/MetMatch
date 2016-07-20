@@ -13,60 +13,101 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_gravityshiftviewController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="384.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_gravityshiftviewController">
    <children>
-      <StackPane fx:id="stackpane" layoutY="35.0" prefHeight="365.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
-      <ToolBar prefHeight="27.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-            <ToggleButton fx:id="paramToggle" mnemonicParsing="false" onAction="#showhideparam" prefHeight="28.0" prefWidth="140.0" text="Parameters" />
-        </items>
-      </ToolBar>
-      <Pane fx:id="paramPane" prefHeight="365.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+      <AnchorPane fx:id="maskpane" layoutY="27.0" prefHeight="357.0" prefWidth="232.0" visible="false" />
+      <ToolBar prefHeight="27.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <HBox layoutX="720.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextField fx:id="y4" layoutX="124.0" layoutY="165.0" prefHeight="25.0" prefWidth="110.0" />
-            <TextField layoutX="14.0" layoutY="165.0" prefHeight="25.0" prefWidth="110.0" fx:id="x4" />
-            <TextField fx:id="y2" layoutX="124.0" layoutY="103.0" prefHeight="25.0" prefWidth="110.0" />
-            <TextField layoutX="14.0" layoutY="196.0" prefHeight="25.0" prefWidth="110.0" fx:id="x5" />
-            <TextField fx:id="y1" layoutX="124.0" layoutY="71.0" prefHeight="25.0" prefWidth="110.0" />
-            <TextField fx:id="y3" layoutX="124.0" layoutY="134.0" prefHeight="25.0" prefWidth="110.0" />
-            <TextField layoutX="14.0" layoutY="258.0" prefHeight="25.0" prefWidth="110.0" fx:id="x7" />
-            <TextField layoutX="14.0" layoutY="103.0" prefHeight="25.0" prefWidth="110.0" fx:id="x2" />
-            <TextField fx:id="y7" layoutX="124.0" layoutY="258.0" prefHeight="25.0" prefWidth="110.0" />
-            <Label fx:id="label211" alignment="CENTER" layoutX="124.0" layoutY="52.0" prefHeight="17.0" prefWidth="110.0" text="yRange" />
-            <TextField layoutX="14.0" layoutY="134.0" prefHeight="25.0" prefWidth="110.0" fx:id="x3" />
-            <TextField fx:id="y5" layoutX="124.0" layoutY="196.0" prefHeight="25.0" prefWidth="110.0" />
-            <Label fx:id="label21" alignment="CENTER" layoutX="14.0" layoutY="52.0" prefHeight="17.0" prefWidth="109.0" text="xRange" textAlignment="CENTER" />
-            <TextField layoutX="14.0" layoutY="71.0" prefHeight="25.0" prefWidth="110.0" fx:id="x1" />
-            <TextField fx:id="y6" layoutX="124.0" layoutY="227.0" prefHeight="25.0" prefWidth="110.0" />
-            <TextField layoutX="14.0" layoutY="227.0" prefHeight="25.0" prefWidth="110.0" fx:id="x6" />
-            <Slider fx:id="speed" layoutX="54.0" layoutY="31.0" majorTickUnit="1000.0" max="6000.0" minorTickCount="2" nodeOrientation="RIGHT_TO_LEFT" prefHeight="14.0" prefWidth="147.0" showTickMarks="true" value="3000.0" />
-            <Label fx:id="label212" alignment="CENTER" layoutX="69.0" layoutY="6.0" prefHeight="17.0" prefWidth="109.0" text="Animation Speed" textAlignment="CENTER" />
-            <Label fx:id="label213" alignment="CENTER" layoutX="190.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Fast" textAlignment="CENTER" />
-            <Label fx:id="label2131" alignment="CENTER" layoutX="14.0" layoutY="23.0" prefHeight="17.0" prefWidth="53.0" text="Slow" textAlignment="CENTER" />
-            <TextField fx:id="y8" layoutX="124.0" layoutY="289.0" prefHeight="25.0" prefWidth="110.0" />
-            <TextField layoutX="14.0" layoutY="289.0" prefHeight="25.0" prefWidth="110.0" fx:id="x8" />
-            <TextField layoutX="14.0" layoutY="320.0" prefHeight="25.0" prefWidth="110.0" fx:id="x9" />
-            <TextField fx:id="y9" layoutX="124.0" layoutY="320.0" prefHeight="25.0" prefWidth="110.0" />
+            <AnchorPane prefHeight="27.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <AnchorPane fx:id="speedpane" prefHeight="30.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Separator orientation="VERTICAL" prefHeight="26.0" AnchorPane.topAnchor="0.0" />
+                  <Slider fx:id="speed" layoutX="78.0" layoutY="15.0" majorTickUnit="1000.0" max="6000.0" minWidth="100.0" minorTickCount="2" nodeOrientation="RIGHT_TO_LEFT" prefHeight="14.0" prefWidth="147.0" value="100.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="7.0" />
+                  <Label fx:id="label213" alignment="CENTER" layoutX="211.0" layoutY="13.0" prefHeight="26.0" prefWidth="20.0" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label212" alignment="CENTER" layoutX="42.0" prefHeight="17.0" prefWidth="109.0" text="Animation Speed: " textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="4.0" />
+                  <Label fx:id="label2131" alignment="CENTER" layoutY="13.0" prefHeight="26.0" prefWidth="13.0" text="-" textAlignment="CENTER" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="177.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <HBox prefHeight="27.0" prefWidth="719.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button fx:id="parambutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onAction="#showparam" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER" />
+            <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="previewbutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onAction="#preview" prefWidth="110.0" text="Show Preview" />
+            <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+            <MenuButton fx:id="applybutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" prefWidth="110.0" text="   Apply to...">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#calculateBatch" text="this Batch" />
+                <MenuItem mnemonicParsing="false" onAction="#calculateAllFiles" text="all Batches" />
+              </items>
+            </MenuButton>
+            <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="finishbutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onMouseClicked="#finish" prefWidth="110.0" text="Finish" HBox.hgrow="NEVER" />
+         </children>
+      </HBox>
+      <HBox layoutX="10.0" layoutY="10.0" mouseTransparent="true" prefHeight="27.0" prefWidth="719.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane maxWidth="107.5" minWidth="107.5" mouseTransparent="true" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+            <Button fx:id="p1" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+            <AnchorPane maxWidth="105.0" minWidth="105.0" mouseTransparent="true" prefWidth="105.0" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+            <Button fx:id="p2" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+            <AnchorPane maxWidth="105.0" minWidth="105.0" mouseTransparent="true" prefWidth="105.0" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+            <Button fx:id="p3" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+            <AnchorPane maxWidth="107.5" minWidth="107.5" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+         </children>
+      </HBox>
+      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.5" prefHeight="34.0" prefWidth="726.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="-3.0" />
+      <Pane fx:id="paramPane" prefHeight="365.0" prefWidth="1020.0" style="-fx-background-color: #F4F4F4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+         <children>
+            <TextField fx:id="y4" layoutX="141.0" layoutY="165.0" prefHeight="25.0" prefWidth="80.0" />
+            <TextField layoutX="60.0" layoutY="165.0" prefHeight="25.0" prefWidth="80.0" fx:id="x4" />
+            <TextField fx:id="y2" layoutX="141.0" layoutY="103.0" prefHeight="25.0" prefWidth="80.0" />
+            <TextField layoutX="60.0" layoutY="196.0" prefHeight="25.0" prefWidth="80.0" fx:id="x5" />
+            <TextField fx:id="y1" layoutX="141.0" layoutY="71.0" prefHeight="25.0" prefWidth="80.0" />
+            <TextField fx:id="y3" layoutX="141.0" layoutY="134.0" prefHeight="25.0" prefWidth="80.0" />
+            <TextField layoutX="60.0" layoutY="258.0" prefHeight="25.0" prefWidth="80.0" fx:id="x7" />
+            <TextField layoutX="60.0" layoutY="103.0" prefHeight="25.0" prefWidth="80.0" fx:id="x2" />
+            <TextField fx:id="y7" layoutX="141.0" layoutY="258.0" prefHeight="25.0" prefWidth="80.0" />
+            <Label fx:id="label211" alignment="CENTER" layoutX="142.0" layoutY="52.0" prefHeight="17.0" prefWidth="80.0" text="yRange [%]" />
+            <TextField layoutX="60.0" layoutY="134.0" prefHeight="25.0" prefWidth="80.0" fx:id="x3" />
+            <TextField fx:id="y5" layoutX="141.0" layoutY="196.0" prefHeight="25.0" prefWidth="80.0" />
+            <Label fx:id="label21" alignment="CENTER" layoutX="60.0" layoutY="52.0" prefHeight="17.0" prefWidth="80.0" text="xRange [%]" textAlignment="CENTER" />
+            <TextField layoutX="60.0" layoutY="71.0" prefHeight="25.0" prefWidth="80.0" fx:id="x1" />
+            <TextField fx:id="y6" layoutX="141.0" layoutY="227.0" prefHeight="25.0" prefWidth="80.0" />
+            <TextField layoutX="60.0" layoutY="227.0" prefHeight="25.0" prefWidth="80.0" fx:id="x6" />
+            <TextField fx:id="y8" layoutX="141.0" layoutY="289.0" prefHeight="25.0" prefWidth="80.0" />
+            <TextField layoutX="60.0" layoutY="289.0" prefHeight="25.0" prefWidth="80.0" fx:id="x8" />
+            <TextField layoutX="60.0" layoutY="320.0" prefHeight="25.0" prefWidth="80.0" fx:id="x9" />
+            <TextField fx:id="y9" layoutX="141.0" layoutY="320.0" prefHeight="25.0" prefWidth="80.0" />
+            <Label fx:id="label214" alignment="CENTER" layoutX="1.0" layoutY="52.0" prefHeight="17.0" prefWidth="59.0" text="Iteration" textAlignment="CENTER" />
+            <Label fx:id="label2141" alignment="CENTER" layoutX="1.0" layoutY="75.0" prefHeight="17.0" prefWidth="59.0" text="1:" textAlignment="CENTER" />
+            <Label fx:id="label21411" alignment="CENTER" layoutX="1.0" layoutY="107.0" prefHeight="17.0" prefWidth="59.0" text="2:" textAlignment="CENTER" />
+            <Label layoutX="14.0" layoutY="6.0" prefHeight="44.0" prefWidth="205.0" text="Specify xRange and yRange for the desired iteration steps" textFill="#00000084" wrapText="true" />
+            <Label fx:id="label214111" alignment="CENTER" layoutX="1.0" layoutY="138.0" prefHeight="17.0" prefWidth="59.0" text="3:" textAlignment="CENTER" />
+            <Label fx:id="label2141111" alignment="CENTER" layoutX="1.0" layoutY="170.0" prefHeight="17.0" prefWidth="59.0" text="4:" textAlignment="CENTER" />
+            <Label fx:id="label21411111" alignment="CENTER" layoutX="1.0" layoutY="201.0" prefHeight="17.0" prefWidth="59.0" text="5:" textAlignment="CENTER" />
+            <Label fx:id="label214111111" alignment="CENTER" layoutX="1.0" layoutY="231.0" prefHeight="17.0" prefWidth="59.0" text="6:" textAlignment="CENTER" />
+            <Label fx:id="label2141111111" alignment="CENTER" layoutX="1.0" layoutY="262.0" prefHeight="17.0" prefWidth="59.0" text="7:" textAlignment="CENTER" />
+            <Label fx:id="label21411111111" alignment="CENTER" layoutX="1.0" layoutY="293.0" prefHeight="17.0" prefWidth="59.0" text="8:" textAlignment="CENTER" />
+            <Label fx:id="label214111111111" alignment="CENTER" layoutX="1.0" layoutY="324.0" prefHeight="17.0" prefWidth="59.0" text="9:" textAlignment="CENTER" />
          </children>
       </Pane>
-      <MenuBar layoutY="5.0" prefHeight="33.0" prefWidth="174.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
-        <menus>
-          <Menu fx:id="menu" mnemonicParsing="false" text="Use these Parameters on...">
-            <items>
-              <MenuItem fx:id="item1" mnemonicParsing="false" onAction="#calculateBatch" text="this Batch" />
-                  <MenuItem fx:id="item2" mnemonicParsing="false" onAction="#calculateAllFiles" text="all Files" />
-            </items>
-          </Menu>
-        </menus>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </MenuBar>
-      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.25" prefHeight="45.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
-      <Label fx:id="processinglabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="38.0" prefWidth="1020.0" text="Label" textAlignment="CENTER" textFill="#005eff" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <StackPane fx:id="stackpane" layoutX="229.0" layoutY="51.0" prefHeight="357.0" prefWidth="791.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0" />
+      <Label fx:id="processinglabel" alignment="CENTER" contentDisplay="CENTER" layoutX="229.0" layoutY="27.0" prefHeight="357.0" prefWidth="791.0" text="Label" textAlignment="CENTER" textFill="#005eff" visible="false" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
+      <Separator layoutX="280.0" orientation="VERTICAL" prefHeight="357.0" prefWidth="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="27.0" />
    </children>
 </AnchorPane>

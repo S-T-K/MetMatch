@@ -57,6 +57,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
@@ -78,6 +79,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -94,31 +96,29 @@ public class Fxml_gravityshiftviewController implements Initializable {
     StackPane stackpane;
 
     @FXML
-    ToggleButton paramToggle;
+    Button parambutton, previewbutton, finishbutton, p1, p2, p3;
+    
+    @FXML
+    MenuButton applybutton;
 
     @FXML
-    AnchorPane anchorPane;
+    AnchorPane anchorPane, speedpane, maskpane;
     
     @FXML
     ProgressBar progress;
-
-    @FXML
-    Pane paramPane;
 
     @FXML
     TextField x1, x2, x3, x4, x5, x6, x7, x8, x9, y1, y2, y3, y4, y5, y6, y7, y8, y9;
 
     @FXML
     Slider speed;
-            
-    @FXML 
-    Menu menu;
-    
-    @FXML
-    MenuItem item1, item2;
-    
+  
     @FXML
     Label processinglabel;
+    
+    @FXML
+    Pane paramPane;
+    
     
 
 //    @FXML
@@ -130,7 +130,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 
     private AreaChartnoSymbol<Number, Number> areachart;
     private ScatterChart<Number, Number> scatterchart;
-   
+    Stage stage;
 
     //Keep references to Properties and Listeners to be able to delete them
     private HashMap<ChangeListener, Property> listeners;
@@ -159,14 +159,37 @@ public class Fxml_gravityshiftviewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        initOption(parambutton);
+        initOption(previewbutton);
+        initOption(applybutton);
+        initOption(finishbutton);
+        oldOption(parambutton);
+        newOption(previewbutton);
+        disableOption(applybutton);
+        disableOption(finishbutton);
+        activePath(p1);
+        inactivePath(p2);
+        inactivePath(p3);
 
-        paramToggle.setSelected(true);
-        paramToggle.setText("Click to Start");
-        paramPane.setVisible(true);
-        stackpane.setVisible(false);
-        menu.setDisable(true);
+        maskpane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    if (mouseEvent.getClickCount() == 2) {
+                        try {
+                            showparam();
+                        } catch (IOException ex) {
+                            Logger.getLogger(Fxml_gravityshiftviewController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Fxml_gravityshiftviewController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        });
+
         progress.setVisible(false);
-       setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
+        setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
        setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
        
         
@@ -402,6 +425,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
         progress.setVisible(true);
         processinglabel.setText("Picking Peaks... (Step 1 of 2)");
         processinglabel.setVisible(true);
+        speedpane.setDisable(true);
         olist = list;
         //get selected Entry
 
@@ -425,7 +449,11 @@ public class Fxml_gravityshiftviewController implements Initializable {
             public Void call() throws IOException, InterruptedException {
                 
                 if (session.getSelectedFiles().size()<1) {
+                    if (session.getListofDatasets().size()>1&&session.getListofDatasets().get(1).getListofFiles().size()>0) {
+                        session.getListofDatasets().get(1).getController().getBatchFileView().getSelectionModel().select(session.getListofDatasets().get(1).getListofFiles().get(0));
+                    } else {
                     session.getAllFiles().get(0).getDataset().getController().getBatchFileView().getSelectionModel().select(session.getAllFiles().get(0));
+                    }
                 }
                 
         
@@ -529,8 +557,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                         }
                                     });
                                 }
-                                progress.setVisible(false);
                                 processinglabel.setVisible(false);
+                                speedpane.setDisable(false);
                                 //calculation
                                 //calculateAreas(matrix, 0, list.size()-1, 49, 7, 49);
                                
@@ -543,7 +571,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                 int count = 0;
                                 while (count<9&&grav.getxRanges()[count] != 0) {
                                     //draw new borders
-                                    int yrange = grav.getyRanges()[count];
+                                    int yrange = (int) (grav.getyRanges()[count]/100*samplematrix[0].length);
                                   
                                     drawRange(centroids,yrange);        
                                         
@@ -571,8 +599,11 @@ public class Fxml_gravityshiftviewController implements Initializable {
 //                for (int i = 0; i<olist.size(); i++) {
 //                olist.get(i).setFittedShift(currentfile, (short) centroids[i]);
 //                }
-                paramToggle.setDisable(false);
-menu.setDisable(false);
+newOption(applybutton);
+oldOption(previewbutton);
+activePath(p2);
+maskpane.setVisible(true);
+
                 return null;
                             }
                             }
@@ -1440,27 +1471,49 @@ menu.setDisable(false);
 
    
 
-    public void showhideparam() throws IOException, InterruptedException {
-        paramPane.setVisible(paramToggle.selectedProperty().get());
-        stackpane.setVisible(!paramToggle.selectedProperty().get());
-        if (!paramToggle.selectedProperty().get()) {
-            paramToggle.setText("Change Parameters");
-            animate(olist);
-            paramToggle.setDisable(true);
-        } else {
-            paramToggle.setText("Click to Start");
-            menu.setDisable(true);
-        }
+    public void showparam() throws IOException, InterruptedException {
+        stackpane.setDisable(true);
+        paramPane.setDisable(false);
+        maskpane.setVisible(false);
+        activePath(p1);
+        inactivePath(p2);
+        inactivePath(p3);
+        oldOption(parambutton);
+        newOption(previewbutton);
+        disableOption(applybutton);
+        disableOption(finishbutton);
+        progress.setVisible(false);
+       setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
+       setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
+       
+        listeners = new HashMap<ChangeListener, Property>();
+        listlisteners = new HashMap<ListChangeListener, ObservableList>();
+        setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
+    }
+    
+    public void preview() throws IOException, InterruptedException {
+        disableOption(applybutton);
+        disableOption(finishbutton);
+        inactivePath(p2);
+        inactivePath(p3);
+        stackpane.setDisable(false);
+        stackpane.getChildren().clear();
+        paramPane.setDisable(true);
+        areachart=null;
+        scatterchart = null;
+        animate(olist);
+        
+        
     }
 
     public boolean getParameters() {
         int count = 0;
-        grav.setxRanges(new int[9]);
-        grav.setyRanges(new int[9]);
+        grav.setxRanges(new double[9]);
+        grav.setyRanges(new double[9]);
         if (!x1.getText().isEmpty() && !y1.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x1.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y1.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x1.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y1.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1468,8 +1521,8 @@ menu.setDisable(false);
         }
         if (!x2.getText().isEmpty() && !y2.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x2.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y2.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x2.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y2.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1477,8 +1530,8 @@ menu.setDisable(false);
         }
         if (!x3.getText().isEmpty() && !y3.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x3.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y3.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x3.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y3.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1486,8 +1539,8 @@ menu.setDisable(false);
         }
         if (!x4.getText().isEmpty() && !y4.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x4.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y4.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x4.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y4.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1495,8 +1548,8 @@ menu.setDisable(false);
         }
         if (!x5.getText().isEmpty() && !y5.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x5.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y5.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x5.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y5.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1504,8 +1557,8 @@ menu.setDisable(false);
         }
         if (!x6.getText().isEmpty() && !y6.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x6.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y6.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x6.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y6.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1513,8 +1566,8 @@ menu.setDisable(false);
         }
         if (!x7.getText().isEmpty() && !y7.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x7.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y7.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x7.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y7.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1522,8 +1575,8 @@ menu.setDisable(false);
         }
         if (!x8.getText().isEmpty() && !y8.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x8.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y8.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x8.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y8.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1531,8 +1584,8 @@ menu.setDisable(false);
         }
         if (!x9.getText().isEmpty() && !y9.getText().isEmpty()) {
             try {
-                grav.getxRanges()[count] = Integer.parseInt(x9.getText());
-                grav.getyRanges()[count] = Integer.parseInt(y9.getText());
+                grav.getxRanges()[count] = Double.parseDouble(x9.getText());
+                grav.getyRanges()[count] = Double.parseDouble(y9.getText());
                 count++;
             } catch (NumberFormatException e) {
                 return false;
@@ -1725,14 +1778,10 @@ done++;
             
           
             showShift(olist);
-            supercontroller.newOption(supercontroller.outputButton);
-            supercontroller.oldOption(supercontroller.shiftButton);
-            supercontroller.oldOption(supercontroller.checkResultsButton);
-            supercontroller.activePath(supercontroller.p5);
-            supercontroller.activePath(supercontroller.p6);
             session.setPeakPickchanged(false);
-            paramToggle.setDisable(true);
-            menu.setDisable(true);
+            oldOption(applybutton);
+            newOption(finishbutton);
+            activePath(p3);
              return null;   
             }
 
@@ -1821,6 +1870,93 @@ done++;
        
        
    }
+   
+       
+    public void newOption(Button button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-background-radius: 5em; " +
+                "-fx-base: #2CFF00;"
+        );
+       
+    }
+    
+    public void newOption(MenuButton button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-background-radius: 5em; " +
+                "-fx-base: #2CFF00;"
+        );
+       
+    }
+    
+    public void oldOption(Button button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-background-radius: 5em; " +
+                "-fx-base: #D8FFCF;"
+        );
+    }
+    public void oldOption(MenuButton button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-background-radius: 5em; " +
+                "-fx-base: #D8FFCF;"
+        );
+    }
+    
+    public void activePath(Button button) {
+        button.setDisable(false);
+        button.setStyle(
+                "-fx-base: #D8FFCF;"
+        );
+    }
+    
+    public void initOption(Button button) {
+        button.setStyle(
+                "-fx-background-radius: 5em; " 
+        );
+    }
+    
+    public void initOption(MenuButton button) {
+        button.setStyle(
+                "-fx-background-radius: 5em; " 
+        );
+    }
+    
+    public void disableOption(Button button) {
+        button.setDisable(true);
+        button.setStyle("-fx-background-radius: 5em; " 
+        );
+    }
+    
+    public void disableOption(MenuButton button) {
+        button.setDisable(true);
+        button.setStyle("-fx-background-radius: 5em; " 
+        );
+    }
+    
+    public void inactivePath(Button button) {
+        button.setDisable(true);
+        button.setStyle(
+                ""
+        );
+    }
+    
+    public void finish() {
+         supercontroller.newOption(supercontroller.outputButton);
+         supercontroller.oldOption(supercontroller.shiftButton);
+         supercontroller.oldOption(supercontroller.checkResultsButton);
+         supercontroller.activePath(supercontroller.p5);
+         supercontroller.activePath(supercontroller.p6);
+         stage.fireEvent(
+                new WindowEvent(
+                        stage,
+                        WindowEvent.WINDOW_CLOSE_REQUEST
+                )
+        );
+         
+    }
    
    
 }

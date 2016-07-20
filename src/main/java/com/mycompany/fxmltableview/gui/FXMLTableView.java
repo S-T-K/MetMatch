@@ -39,7 +39,7 @@ public class FXMLTableView extends Application {
         //new loader
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_tableview.fxml"));
         //add title
-        primaryStage.setTitle("FXML TableView Example");
+        primaryStage.setTitle("MetMatch [Alpha] Main Window");
         Pane myPane = (Pane) loader.load();
         Scene myScene = new Scene(myPane);
         primaryStage.setScene(myScene);

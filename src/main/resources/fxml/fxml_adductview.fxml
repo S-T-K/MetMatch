@@ -13,7 +13,63 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="400.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_adductviewController">
    <children>
-      <ScrollPane fx:id="scrollPane" layoutY="32.0" prefHeight="368.0" prefViewportHeight="400.0" prefViewportWidth="600.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+      <ToolBar prefHeight="33.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Button fx:id="previousButton" layoutX="2.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#previous" prefHeight="25.0" text="&lt;" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0">
+         <tooltip>
+            <Tooltip text="Previous metabolite" />
+         </tooltip></Button>
+      <Button fx:id="nextButton" layoutX="574.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#next" text="&gt;" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+         <tooltip>
+            <Tooltip text="Next metabolite" />
+         </tooltip></Button>
+      <MenuBar layoutX="871.0" opacity="0.27" prefHeight="29.0" prefWidth="132.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="4.0">
+        <menus>
+          <Menu mnemonicParsing="false" onHiding="#print" text="Show/Hide Charts">
+               <items>
+                  <CheckMenuItem fx:id="EICToggle" mnemonicParsing="false" selected="true" text="EIC" />
+                  <CheckMenuItem fx:id="NEICToggle" mnemonicParsing="false" selected="true" text="Normalized EIC" />
+                  <CheckMenuItem fx:id="MZToggle" mnemonicParsing="false" selected="true" text="M/Z" />
+                  <CheckMenuItem fx:id="ShiftToggle" mnemonicParsing="false" text="Shift" />
+               </items>
+          </Menu>
+        </menus>
+         <tooltip>
+            <Tooltip text="Choose charts" />
+         </tooltip>
+      </MenuBar>
+      <ToggleButton fx:id="weighttoggle" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#peakWeightMode" text="Set Weight to:" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="2.0">
+         <graphic>
+            <TextField fx:id="weightfield" maxHeight="17.0" minHeight="17.0" onMouseClicked="#showSlider" prefHeight="17.0" prefWidth="62.0" />
+         </graphic>
+         <tooltip>
+            <Tooltip text="Draw a rectangle around the desired peaks and set their weight. Only applies to selected files." />
+         </tooltip>
+      </ToggleButton>
+      <ToggleButton fx:id="EICMode" layoutX="86.0" mnemonicParsing="false" onAction="#togglePeak" prefHeight="25.0" prefWidth="43.0" text="EIC" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="2.0">
+         <tooltip>
+            <Tooltip text="Show EICs" />
+         </tooltip></ToggleButton>
+      <ToggleButton fx:id="addPeak" disable="true" layoutX="258.0" mnemonicParsing="false" onAction="#peakPickMode" prefHeight="25.0" prefWidth="25.0" text="+" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="2.0">
+         <tooltip>
+            <Tooltip text="Draw a rectangle around the desired region to set a peak. Only applies to selected files." />
+         </tooltip>
+      </ToggleButton>
+      <ToggleButton fx:id="PeakMode" layoutX="167.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleEIC" prefHeight="25.0" prefWidth="43.0" text="Peak" AnchorPane.leftAnchor="128.0" AnchorPane.topAnchor="2.0">
+         <tooltip>
+            <Tooltip text="Shows EIC's plus peaks" />
+         </tooltip></ToggleButton>
+      <Label fx:id="nodatalabel" alignment="CENTER" contentDisplay="CENTER" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" text="No Data" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Slider fx:id="weightslider" blockIncrement="500.0" layoutY="-6.0" majorTickUnit="250.0" max="1000.0" min="-1000.0" minorTickCount="4" onMouseReleased="#hideSlider" prefHeight="29.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" value="1.0" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
+      <ToggleButton fx:id="AlignToggle" layoutX="191.0" layoutY="20.0" mnemonicParsing="false" onAction="#Align" prefHeight="25.0" prefWidth="52.0" text="Center" AnchorPane.leftAnchor="191.0" AnchorPane.topAnchor="2.0">
+         <tooltip>
+            <Tooltip text="Aligns all EIC's using the calculated shift" />
+         </tooltip></ToggleButton>
+      <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
+      <ScrollPane fx:id="scrollPane" layoutY="32.0" prefHeight="368.0" prefViewportHeight="400.0" prefViewportWidth="600.0" prefWidth="1020.0" style="-fx-background-color: #F4F4F4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
          <content>
             <GridPane fx:id="gridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <columnConstraints>
@@ -32,40 +88,5 @@
             </ContextMenu>
          </contextMenu>
       </ScrollPane>
-      <ToolBar prefHeight="33.0" prefWidth="1020.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <Button fx:id="previousButton" layoutX="2.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#previous" prefHeight="25.0" text="&lt;" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0" />
-      <Button fx:id="nextButton" layoutX="574.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#next" text="&gt;" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
-      <MenuBar layoutX="871.0" opacity="0.27" prefHeight="29.0" prefWidth="132.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="4.0">
-        <menus>
-          <Menu mnemonicParsing="false" onHiding="#print" text="Show/Hide Charts">
-               <items>
-                  <CheckMenuItem fx:id="EICToggle" mnemonicParsing="false" selected="true" text="EIC" />
-                  <CheckMenuItem fx:id="NEICToggle" mnemonicParsing="false" selected="true" text="Normalized EIC" />
-                  <CheckMenuItem fx:id="MZToggle" mnemonicParsing="false" selected="true" text="M/Z" />
-                  <CheckMenuItem fx:id="ShiftToggle" mnemonicParsing="false" text="Shift" />
-               </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <ToggleButton fx:id="weighttoggle" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#peakWeightMode" text="Set Weight to:" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="2.0">
-         <graphic>
-            <TextField fx:id="weightfield" maxHeight="17.0" minHeight="17.0" onMouseClicked="#showSlider" prefHeight="17.0" prefWidth="62.0" />
-         </graphic>
-      </ToggleButton>
-      <ToggleButton fx:id="EICMode" layoutX="86.0" mnemonicParsing="false" onAction="#togglePeak" prefHeight="25.0" prefWidth="43.0" text="EIC" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="2.0" />
-      <ToggleButton fx:id="addPeak" disable="true" layoutX="258.0" mnemonicParsing="false" onAction="#peakPickMode" prefHeight="25.0" prefWidth="25.0" text="+" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="2.0">
-         <tooltip>
-            <Tooltip text="Add peak manually" />
-         </tooltip>
-      </ToggleButton>
-      <ToggleButton fx:id="PeakMode" layoutX="167.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleEIC" prefHeight="25.0" prefWidth="43.0" text="Peak" AnchorPane.leftAnchor="128.0" AnchorPane.topAnchor="2.0" />
-      <Label fx:id="nodatalabel" alignment="CENTER" contentDisplay="CENTER" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" text="No Data" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
-      <Slider fx:id="weightslider" blockIncrement="500.0" layoutY="-6.0" majorTickUnit="250.0" max="1000.0" min="-1000.0" minorTickCount="4" onMouseReleased="#hideSlider" prefHeight="29.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" value="1.0" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
-      <ToggleButton fx:id="AlignToggle" layoutX="191.0" layoutY="20.0" mnemonicParsing="false" onAction="#Align" prefHeight="25.0" prefWidth="52.0" text="Center" AnchorPane.leftAnchor="191.0" AnchorPane.topAnchor="2.0" />
-      <ProgressBar fx:id="progress" layoutX="-208.0" prefHeight="40.0" prefWidth="1026.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
    </children>
 </AnchorPane>

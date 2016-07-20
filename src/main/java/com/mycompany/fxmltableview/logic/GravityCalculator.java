@@ -17,18 +17,18 @@ import javafx.scene.control.Alert.AlertType;
  */
 public class GravityCalculator {
     
-    private int[] xRanges;
-    private int[] yRanges;
+    private double[] xRanges;
+    private double[] yRanges;
     
     Session session;
     
     public GravityCalculator(Session session) {
         this.session=session;
-        xRanges = new int[9];
-        yRanges = new int[9];
-        xRanges[0]=1000;
-        xRanges[1]=100;
-        xRanges[2]=10;
+        xRanges = new double[9];
+        yRanges = new double[9];
+        xRanges[0]=65;
+        xRanges[1]=6.5;
+        xRanges[2]=0.65;
         yRanges[0]=100;
         yRanges[1]=20;
         yRanges[2]=3;
@@ -37,32 +37,35 @@ public class GravityCalculator {
     /**
      * @return the xRanges
      */
-    public int[] getxRanges() {
+    public double[] getxRanges() {
         return xRanges;
     }
 
     /**
      * @param xRanges the xRanges to set
      */
-    public void setxRanges(int[] xRanges) {
+    public void setxRanges(double[] xRanges) {
         this.xRanges = xRanges;
     }
 
     /**
      * @return the yRanges
      */
-    public int[] getyRanges() {
+    public double[] getyRanges() {
         return yRanges;
     }
 
     /**
      * @param yRanges the yRanges to set
      */
-    public void setyRanges(int[] yRanges) {
+    public void setyRanges(double[] yRanges) {
         this.yRanges = yRanges;
     }
     
      public float[] gravity(int count, float[][] matrix, float[] centroids) throws InterruptedException {
+        
+         int absolutex = (int) (xRanges[count]/100*matrix.length);
+         int absolutey = (int) (yRanges[count]/100*matrix[0].length);
         
         long[] counts = new long[centroids.length];
          for (int i = 0; i < counts.length; i++) {
@@ -85,19 +88,19 @@ public class GravityCalculator {
          for (int i = 0; i < centroids.length; i = i + step) {
 
              //check starts and ends
-             int xstart = i - xRanges[count];
+             int xstart = i - absolutex;
              if (xstart < 0) {
                  xstart = 0;
              }
-             int xend = i + xRanges[count];
+             int xend = i + absolutex;
              if (xend > centroids.length - 1) {
                  xend = centroids.length - 1;
              }
-             int ystart = (int) centroids[i] - yRanges[count];
+             int ystart = (int) centroids[i] - absolutey;
              if (ystart < 0) {
                  ystart = 0;
              }
-             int yend = (int) centroids[i] + yRanges[count];
+             int yend = (int) centroids[i] + absolutey;
              if (yend > session.getResolution() - 1) {
                  yend = session.getResolution() - 1;
              }
@@ -129,7 +132,7 @@ public class GravityCalculator {
                      //calculate distance to current centroid, distance of 1 = no distance, distance of 0 = maxdistance+1
                      //each value is weighted according to its distance, and the result should be the weighted average of all values
                      //to avoid keeping a list, the average is updated continuously, which requires to keep track of the current sum of all weights = counts
-                     float xdistance = xRanges[count] + 1 - (Math.abs(i - l));
+                     float xdistance = absolutex + 1 - (Math.abs(i - l));
                      //normalize distance
                      xdistance /= (xRanges[count]+1);
                      //the weight is the sum of the proximity value and the distance
@@ -194,7 +197,7 @@ public class GravityCalculator {
                            Alert alert = new Alert(AlertType.WARNING, "");
          alert.setTitle("Warning");
          alert.setHeaderText(file.getName() + ": Very few peaks detected!");
-         alert.setContentText("Only very few peaks could be used in calculating the retention time shift function. This indicated that the file contains very few of the metabolites specified in the reference data matrix.\n\nPlease verify the correctness of the results!");
+         alert.setContentText("Only very few peaks could be used in calculating the retention time shift function. This indicates that the file contains very few of the metabolites specified in the reference data matrix or that the retention time shift function is far from optimal.\n\nPlease verify the correctness of the results!");
          alert.showAndWait();
                         }});
          

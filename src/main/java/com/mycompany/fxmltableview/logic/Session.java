@@ -11,6 +11,7 @@ import com.mycompany.fxmltableview.datamodel.Entry;
 import com.mycompany.fxmltableview.datamodel.RawDataFile;
 import com.mycompany.fxmltableview.datamodel.Reference;
 import com.mycompany.fxmltableview.datamodel.Slice;
+import com.mycompany.fxmltableview.gui.FXMLTableViewController;
 import com.mycompany.fxmltableview.gui.Information;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
@@ -38,6 +39,7 @@ import org.rosuda.JRI.Rengine;
  */
 public class Session {
    
+    private FXMLTableViewController mastercontroller;
     private IOThread iothread;
     private List<Entry> listofOGroups;
     private Reference reference;
@@ -84,7 +86,7 @@ public class Session {
     private ObservableList<Information> infos;
     private ArrayList<String> outputoptions;
     
-    public Session() {
+    public Session(FXMLTableViewController mastercontroller) {
 //        //Or RUN: -Djava.library.path=C:\Users\stefankoch\Documents\R\R-3.2.3\library\rJava\jri
 //in actions runproject
 // exec.args=-Xms1g -Xmx5g -classpath %classpath ${packageClassName}
@@ -93,6 +95,7 @@ public class Session {
 System.out.println(System.getProperty("java.library.path"));
 System.out.println(System.getProperty("user.dir"));
         
+        this.mastercontroller = mastercontroller;
         startIOThread();
        this.gravitycalculator=new GravityCalculator(this);
         
@@ -699,6 +702,13 @@ System.out.println(System.getProperty("user.dir"));
     public void setPeakPickchanged(boolean peakPickchanged) {
         this.peakPickchanged = peakPickchanged;
         System.out.println("Peak pick changed: " + peakPickchanged);
+        if (peakPickchanged&&getAllFiles().size()>0) {
+            mastercontroller.disableOption(mastercontroller.outputButton);
+            mastercontroller.disableOption(mastercontroller.checkResultsButton);
+            mastercontroller.inactivePath(mastercontroller.p6);
+            mastercontroller.inactivePath(mastercontroller.p5);
+            mastercontroller.newOption(mastercontroller.shiftButton);
+        }
     }
     
     public void addPenalty(float startX, float startY, float endX, float endY) {
