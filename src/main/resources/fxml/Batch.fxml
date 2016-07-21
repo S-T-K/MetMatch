@@ -16,6 +16,7 @@
                   <Menu mnemonicParsing="false" text="Files">
                      <items>
                         <MenuItem fx:id="addReferenceMzXML" mnemonicParsing="false" onAction="#openBatchmzxmlChooser" text="Add new .mzXML" />
+                        <MenuItem fx:id="delete" mnemonicParsing="false" onAction="#deleteBatch" text="Delete Batch" />
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Edit">

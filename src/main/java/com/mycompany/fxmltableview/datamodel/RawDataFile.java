@@ -435,8 +435,8 @@ session.getIothread().writefile(this);
             for (int j =0; j<list.get(i).getListofAdducts().size(); j++) {
                 list.get(i).getListofAdducts().get(j).getListofSlices().remove(this);
                 list.get(i).getListofAdducts().get(j).getScores().remove(this);
-                list.get(i).getListofAdducts().get(j).getCertainties().remove(this);
-                list.get(i).getListofAdducts().get(j).getPenArray().remove(this);
+                //list.get(i).getListofAdducts().get(j).getCertainties().remove(this);
+//                list.get(i).getListofAdducts().get(j).getPenArray().remove(this);
                 //list.get(i).getListofAdducts().get(j).getAdductPropArray().remove(this);
                 
             }

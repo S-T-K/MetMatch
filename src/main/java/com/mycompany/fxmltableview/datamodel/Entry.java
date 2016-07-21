@@ -266,6 +266,7 @@ if (listofSlices.containsKey(file)) {
         //float [] propArray = new float[getSession().getResolution()];
         if (session.isPeakPickchanged()) {
         for (int i = 0; i<listofAdducts.size(); i++) {
+            
             listofAdducts.get(i).peakpickAdduct(file);
 //            for (int j = 0; j<session.getResolution(); j++) {
 //                if(listofAdducts.get(i).getAdductPropArray(file)[j]+propArray[j]>1){
@@ -747,6 +748,10 @@ if (listofSlices.containsKey(file)) {
         session.getProparraycalculator().calculate(slice.getListofPeaks().get(i).getIndexRT(), slice.getListofPeaks().get(i).getWeight(), RT.floatValue(), matrix, row);
                 }
         }}
+        if (Thread.currentThread().isInterrupted()) {
+                 System.out.println("Exiting gracefully");
+                 return;
+             }
         }
     }
 

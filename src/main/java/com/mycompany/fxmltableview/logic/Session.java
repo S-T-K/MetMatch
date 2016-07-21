@@ -702,13 +702,8 @@ System.out.println(System.getProperty("user.dir"));
     public void setPeakPickchanged(boolean peakPickchanged) {
         this.peakPickchanged = peakPickchanged;
         System.out.println("Peak pick changed: " + peakPickchanged);
-        if (peakPickchanged&&getAllFiles().size()>0) {
-            mastercontroller.disableOption(mastercontroller.outputButton);
-            mastercontroller.disableOption(mastercontroller.checkResultsButton);
-            mastercontroller.inactivePath(mastercontroller.p6);
-            mastercontroller.inactivePath(mastercontroller.p5);
-            mastercontroller.newOption(mastercontroller.shiftButton);
-        }
+        if (mastercontroller.currentstep>5) {
+        mastercontroller.setstep(5); }
     }
     
     public void addPenalty(float startX, float startY, float endX, float endY) {

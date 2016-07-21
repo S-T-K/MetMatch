@@ -13,16 +13,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="384.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_gravityshiftviewController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="384.0" prefWidth="1020.0" style="-fx-background-color: #afafaf;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.fxmltableview.gui.Fxml_gravityshiftviewController">
    <children>
-      <AnchorPane fx:id="maskpane" layoutY="27.0" prefHeight="357.0" prefWidth="232.0" visible="false" />
-      <ToolBar prefHeight="27.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <HBox layoutX="720.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="maskpane" layoutY="27.0" prefHeight="357.0" prefWidth="232.0" visible="false" AnchorPane.topAnchor="34.0" />
+      <HBox layoutX="720.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
          <children>
             <AnchorPane prefHeight="27.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <AnchorPane fx:id="speedpane" prefHeight="30.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Separator orientation="VERTICAL" prefHeight="26.0" AnchorPane.topAnchor="0.0" />
+                  <Separator orientation="VERTICAL" prefHeight="26.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.topAnchor="-2.0">
+                     <effect>
+                        <Shadow />
+                     </effect></Separator>
                   <Slider fx:id="speed" layoutX="78.0" layoutY="15.0" majorTickUnit="1000.0" max="6000.0" minWidth="100.0" minorTickCount="2" nodeOrientation="RIGHT_TO_LEFT" prefHeight="14.0" prefWidth="147.0" value="100.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="7.0" />
                   <Label fx:id="label213" alignment="CENTER" layoutX="211.0" layoutY="13.0" prefHeight="26.0" prefWidth="20.0" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0">
                      <font>
@@ -39,35 +41,39 @@
             </AnchorPane>
          </children>
       </HBox>
-      <HBox prefHeight="27.0" prefWidth="719.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="indicatorbar" prefHeight="58.0" prefWidth="1020.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="302.0" AnchorPane.topAnchor="2.0">
          <children>
-            <Button fx:id="parambutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onAction="#showparam" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER" />
-            <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="previewbutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onAction="#preview" prefWidth="110.0" text="Show Preview" />
-            <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <MenuButton fx:id="applybutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" prefWidth="110.0" text="   Apply to...">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#calculateBatch" text="this Batch" />
-                <MenuItem mnemonicParsing="false" onAction="#calculateAllFiles" text="all Batches" />
-              </items>
-            </MenuButton>
-            <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="finishbutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onMouseClicked="#finish" prefWidth="110.0" text="Finish" HBox.hgrow="NEVER" />
+            <HBox mouseTransparent="true" prefHeight="27.0" prefWidth="719.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane maxWidth="107.5" minWidth="107.5" mouseTransparent="true" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+                  <Button fx:id="p1" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="105.0" minWidth="105.0" mouseTransparent="true" prefWidth="105.0" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+                  <Button fx:id="p2" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="105.0" minWidth="105.0" mouseTransparent="true" prefWidth="105.0" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+                  <Button fx:id="p3" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane maxWidth="107.5" minWidth="107.5" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
+               </children>
+            </HBox>
+            <HBox prefHeight="27.0" prefWidth="719.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Button fx:id="parambutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onAction="#showparam" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER" />
+                  <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="previewbutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onAction="#preview" prefWidth="110.0" text="Show Preview" />
+                  <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <MenuButton fx:id="applybutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" prefWidth="110.0" text="   Apply to...">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#calculateBatch" text="this Batch" />
+                      <MenuItem mnemonicParsing="false" onAction="#calculateAllFiles" text="all Batches" />
+                    </items>
+                  </MenuButton>
+                  <AnchorPane minWidth="10.0" prefHeight="200.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="finishbutton" maxWidth="110.0" minWidth="110.0" mnemonicParsing="false" onMouseClicked="#finish" prefWidth="110.0" text="Finish" HBox.hgrow="NEVER" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
-      <HBox layoutX="10.0" layoutY="10.0" mouseTransparent="true" prefHeight="27.0" prefWidth="719.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <AnchorPane maxWidth="107.5" minWidth="107.5" mouseTransparent="true" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
-            <Button fx:id="p1" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="105.0" minWidth="105.0" mouseTransparent="true" prefWidth="105.0" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
-            <Button fx:id="p2" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="105.0" minWidth="105.0" mouseTransparent="true" prefWidth="105.0" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
-            <Button fx:id="p3" maxHeight="8.0" maxWidth="3000.0" minHeight="8.0" minWidth="15.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="8.0" prefWidth="15.0" translateY="8.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane maxWidth="107.5" minWidth="107.5" prefWidth="107.5" stylesheets="@../styles/Button.css" HBox.hgrow="NEVER" />
-         </children>
-      </HBox>
-      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.5" prefHeight="34.0" prefWidth="726.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="-3.0" />
-      <Pane fx:id="paramPane" prefHeight="365.0" prefWidth="1020.0" style="-fx-background-color: #F4F4F4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+      </AnchorPane>
+      <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.5" prefHeight="40.0" prefWidth="726.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="-3.0" />
+      <Pane fx:id="paramPane" layoutY="35.0" prefHeight="349.0" prefWidth="1020.0" style="-fx-background-color: #F4F4F4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
          <children>
             <TextField fx:id="y4" layoutX="141.0" layoutY="165.0" prefHeight="25.0" prefWidth="80.0" />
             <TextField layoutX="60.0" layoutY="165.0" prefHeight="25.0" prefWidth="80.0" fx:id="x4" />
@@ -102,12 +108,13 @@
             <Label fx:id="label214111111111" alignment="CENTER" layoutX="1.0" layoutY="324.0" prefHeight="17.0" prefWidth="59.0" text="9:" textAlignment="CENTER" />
          </children>
       </Pane>
-      <StackPane fx:id="stackpane" layoutX="229.0" layoutY="51.0" prefHeight="357.0" prefWidth="791.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0" />
-      <Label fx:id="processinglabel" alignment="CENTER" contentDisplay="CENTER" layoutX="229.0" layoutY="27.0" prefHeight="357.0" prefWidth="791.0" text="Label" textAlignment="CENTER" textFill="#005eff" visible="false" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+      <StackPane fx:id="stackpane" layoutX="229.0" layoutY="51.0" prefHeight="357.0" prefWidth="791.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0" />
+      <Label fx:id="processinglabel" alignment="CENTER" contentDisplay="CENTER" layoutX="229.0" layoutY="27.0" prefHeight="357.0" prefWidth="791.0" text="Label" textAlignment="CENTER" textFill="#005eff" visible="false" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
-      <Separator layoutX="280.0" orientation="VERTICAL" prefHeight="357.0" prefWidth="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="27.0" />
+      <Separator layoutX="280.0" orientation="VERTICAL" prefHeight="357.0" prefWidth="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="34.0" />
+      <Separator layoutX="10.0" layoutY="10.0" prefHeight="3.0" prefWidth="910.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="31.0" />
    </children>
 </AnchorPane>

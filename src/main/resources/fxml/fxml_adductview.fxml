@@ -58,11 +58,6 @@
          <tooltip>
             <Tooltip text="Shows EIC's plus peaks" />
          </tooltip></ToggleButton>
-      <Label fx:id="nodatalabel" alignment="CENTER" contentDisplay="CENTER" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" text="No Data" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
       <Slider fx:id="weightslider" blockIncrement="500.0" layoutY="-6.0" majorTickUnit="250.0" max="1000.0" min="-1000.0" minorTickCount="4" onMouseReleased="#hideSlider" prefHeight="29.0" prefWidth="269.0" showTickLabels="true" showTickMarks="true" value="1.0" visible="false" AnchorPane.leftAnchor="380.0" AnchorPane.topAnchor="20.0" />
       <ToggleButton fx:id="AlignToggle" layoutX="191.0" layoutY="20.0" mnemonicParsing="false" onAction="#Align" prefHeight="25.0" prefWidth="52.0" text="Center" AnchorPane.leftAnchor="191.0" AnchorPane.topAnchor="2.0">
          <tooltip>
@@ -88,5 +83,10 @@
             </ContextMenu>
          </contextMenu>
       </ScrollPane>
+      <Label fx:id="nodatalabel" alignment="CENTER" contentDisplay="CENTER" layoutY="32.0" prefHeight="368.0" prefWidth="1020.0" text="No Data" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

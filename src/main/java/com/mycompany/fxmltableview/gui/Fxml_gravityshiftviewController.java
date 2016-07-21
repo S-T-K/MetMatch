@@ -54,6 +54,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -102,7 +103,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
     MenuButton applybutton;
 
     @FXML
-    AnchorPane anchorPane, speedpane, maskpane;
+    AnchorPane anchorPane, speedpane, maskpane, indicatorbar;
     
     @FXML
     ProgressBar progress;
@@ -153,6 +154,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
     private float[][] samplematrix;
     private RawDataFile samplefile;
     private float[] samplecentroids;
+    
+    private Task currenttask;
 
     /**
      * Initializes the controller class.
@@ -170,6 +173,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
         activePath(p1);
         inactivePath(p2);
         inactivePath(p3);
+        
+        
 
         maskpane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -536,6 +541,11 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                     });
                                     
                                     new Thread(task).start();
+                                    if (Thread.currentThread().isInterrupted()) {
+                 System.out.println("Exiting gracefully");
+                 task.cancel();
+                 return null;
+             }
                                     latchpeak.await();
                                      Platform.runLater(new Runnable() {
                                         @Override
@@ -623,6 +633,8 @@ maskpane.setVisible(true);
 
         //new thread that executes maintask
         new Thread(task).start();
+        currenttask = task;
+     
 
     }
 
@@ -638,7 +650,7 @@ maskpane.setVisible(true);
      */
     public void setSupercontroller(FXMLTableViewController supercontroller) {
         this.supercontroller = supercontroller;
-
+indicatorbar.setEffect(supercontroller.shadow);
         //Colors selected files in Shiftview, reacts to selection
         ListChangeListener<RawDataFile> listener = new ListChangeListener<RawDataFile>() {
 
@@ -1741,7 +1753,10 @@ done++;
 
 
                                     count++;
-
+if (Thread.currentThread().isInterrupted()) {
+                 System.out.println("Exiting gracefully");
+                 return null;
+             }
                                 }
                                 
                                 //quality check
@@ -1782,6 +1797,7 @@ done++;
             oldOption(applybutton);
             newOption(finishbutton);
             activePath(p3);
+            supercontroller.setstep(7);
              return null;   
             }
 
@@ -1790,6 +1806,7 @@ done++;
         //new thread that executes maintask
         progress.progressProperty().bind(maintask.progressProperty());
         new Thread(maintask).start();
+        currenttask = maintask;
   
         
         
@@ -1872,74 +1889,61 @@ done++;
    }
    
        
-    public void newOption(Button button) {
+ public void newOption(ButtonBase button) {
         button.setDisable(false);
         button.setStyle(
                 "-fx-background-radius: 5em; " +
-                "-fx-base: #2CFF00;"
+                "-fx-base: #2CFF00; "+
+                "-fx-focus-color: transparent; " +
+                "-fx-background-insets: 0;"
         );
        
     }
     
-    public void newOption(MenuButton button) {
+    public void oldOption(ButtonBase button) {
         button.setDisable(false);
         button.setStyle(
                 "-fx-background-radius: 5em; " +
-                "-fx-base: #2CFF00;"
+                "-fx-base: #D8FFCF; " +
+                "-fx-focus-color: transparent; " +
+                "-fx-background-insets: 0;"
         );
-       
     }
     
-    public void oldOption(Button button) {
+    public void activePath(ButtonBase button) {
         button.setDisable(false);
         button.setStyle(
-                "-fx-background-radius: 5em; " +
-                "-fx-base: #D8FFCF;"
-        );
-    }
-    public void oldOption(MenuButton button) {
-        button.setDisable(false);
-        button.setStyle(
-                "-fx-background-radius: 5em; " +
-                "-fx-base: #D8FFCF;"
+                "-fx-base: #D8FFCF; "+
+                "-fx-background-insets: 0;"
         );
     }
     
-    public void activePath(Button button) {
-        button.setDisable(false);
+    public void initOption(ButtonBase button) {
         button.setStyle(
-                "-fx-base: #D8FFCF;"
+                "-fx-background-radius: 5em; "  +
+                "-fx-focus-color: transparent; " +
+                "-fx-background-insets: 0; " +
+                "-fx-opacity: 1.0; " +
+                "-fx-base: #AFAFAF; "
         );
     }
     
-    public void initOption(Button button) {
-        button.setStyle(
-                "-fx-background-radius: 5em; " 
-        );
-    }
-    
-    public void initOption(MenuButton button) {
-        button.setStyle(
-                "-fx-background-radius: 5em; " 
-        );
-    }
-    
-    public void disableOption(Button button) {
+    public void disableOption(ButtonBase button) {
         button.setDisable(true);
-        button.setStyle("-fx-background-radius: 5em; " 
+        button.setStyle("-fx-background-radius: 5em; " +
+                "-fx-focus-color: transparent; "+
+                "-fx-background-insets: 0; " +
+                "-fx-opacity: 1.0; " +
+                "-fx-base: #AFAFAF; "
         );
     }
     
-    public void disableOption(MenuButton button) {
-        button.setDisable(true);
-        button.setStyle("-fx-background-radius: 5em; " 
-        );
-    }
-    
-    public void inactivePath(Button button) {
+    public void inactivePath(ButtonBase button) {
         button.setDisable(true);
         button.setStyle(
-                ""
+                "-fx-background-insets: 0;" +
+                "-fx-opacity: 1.0; " +
+                "-fx-base: #AFAFAF; "
         );
     }
     
@@ -1958,5 +1962,9 @@ done++;
          
     }
    
+    public void abort() {
+        if (currenttask!=null) {
+        currenttask.cancel();}
+    }
    
 }

@@ -30,8 +30,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -50,6 +52,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
@@ -58,6 +61,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
@@ -77,6 +81,8 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -149,7 +155,7 @@ public class FXMLTableViewController implements Initializable {
     TabPane TabPane;
 
     @FXML
-    AnchorPane adductanchor, inputTab, indicatorbar;
+    AnchorPane adductanchor, inputTab, indicatorbar, paramanchor;
 
     @FXML
     TableView<Information> InputTable;
@@ -162,14 +168,20 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     RadioButton option1, option2;
+    
+    @FXML
+    SplitPane splitpane;
+    
+    @FXML
+    Pane maskerpane;
 
     private ObservableList<OutputFormat> outputformat;
 
     //Check for changed parameters
-    String oldPick;
-    String oldBase;
-    String oldRT;
-    String oldSN;
+    String oldPick = "init";
+    String oldBase = "init";
+    String oldRT = "init";
+    String oldSN = "init";
 
     //List with MasterListofOGroups for table, Ogroups (adducts within the Ogroups)
     private ObservableList<Entry> MasterListofOGroups;
@@ -184,11 +196,18 @@ public class FXMLTableViewController implements Initializable {
 
     //max number of adducts in Input Matrix
     int maxnumber;
+    
+    ColorAdjust adjust;
+    DropShadow shadow;
 
     //adducts
     List<StringProperty> AdMs = new ArrayList<>();
     List<StringProperty> AdCs = new ArrayList<>();
     List<Label> AdLs = new ArrayList<>();
+    
+    //progress indication bar
+    public int currentstep = 1;
+    public AtomicInteger loading = new AtomicInteger(0);
 
     //initialize the table, and various elements
     @Override
@@ -197,7 +216,15 @@ public class FXMLTableViewController implements Initializable {
         initializeButtons();
         toggleadductgeneration.selectedProperty().set(false);
         toggleAdductGeneration();
-        
+                
+    adjust = new ColorAdjust();
+    adjust.setBrightness(-0.2);
+ adjust.setSaturation(-0.9);
+ 
+ shadow = new DropShadow();
+ 
+ adjust.setInput(shadow);
+ indicatorbar.setEffect(adjust);
         
         metTable.setSortMode(TreeSortMode.ALL_DESCENDANTS);
 
@@ -219,6 +246,8 @@ public class FXMLTableViewController implements Initializable {
         //create new Session
         session = new Session(this);
         session.getReference().setName("Batch Nr. 1: Reference");
+        
+     
 
         try {
             FileUtils.deleteDirectory(new File("tmp"));
@@ -526,11 +555,21 @@ public class FXMLTableViewController implements Initializable {
         //set batchcount to 0,
         batchcount = 0;
 
-        Label label = new Label("1.)    <------------  Set Parameters \n\n\n  2.)  Click here to choose Data Matrix");
+        Label label = new Label(
+                "Hello there! \n\n\n" + 
+                "This is the MetMatch main window.\n\n" + 
+                "The parameter pane to the left contains all processing \n" +
+                "parameters, sorted into 4 different categories. Simply \n" +
+                "click the tabs to switch between them. \n\n" + 
+                "Once you are done, click the green button \"Apply\" to \n" +
+                "continue to the next processing step. Clicking the green \n" +
+                "button will always take you to the next step. So if you \n" +
+                "are lost, just click the green button! \n\n\n" +
+                "Thank you for using MetMatch!");
         label.setAlignment(Pos.CENTER);
         label.setMinHeight(500);
         label.setMinWidth(500);
-        label.setTextAlignment(TextAlignment.CENTER);
+        label.setTextAlignment(TextAlignment.JUSTIFY);
         label.setFont(Font.font("Verdana", 14));
         label.setOnMouseClicked((MouseEvent event) -> {
             try {
@@ -605,6 +644,31 @@ public class FXMLTableViewController implements Initializable {
         option2table.setItems(outputformat);
         option1.selectedProperty().set(true);
         option1changed();
+        
+                           try {
+            TitledPane tps = new TitledPane();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
+            //loader.setRoot(tps);
+            Reference reference = session.getReference();
+            reference.setName("Batch Nr. 1: Reference");
+            session.addDataset(reference);
+            batchcount++;
+            panelink.put(tps, reference);
+            loader.setController(new BatchController(session, reference, progressbar, getMasterListofOGroups(), tps, this));
+            getDatasettocontroller().put(reference, loader.getController());
+            reference.setController(loader.getController());
+            tps = loader.load();
+            tps.setExpanded(true);
+            getAccordion().getPanes().add(tps);
+            getAccordion().setExpandedPane(tps);
+
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                           
+        accordion.setDisable(true);
+        accordion.setVisible(false);
 
     }
 
@@ -675,27 +739,7 @@ public class FXMLTableViewController implements Initializable {
         getMetTable().getSortOrder().add(mzColumn);
         getMetTable().getSortOrder().add(rtColumn);
 
-        try {
-            TitledPane tps = new TitledPane();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Batch.fxml"));
-            //loader.setRoot(tps);
-            Reference reference = session.getReference();
-            reference.setName("Batch Nr. 1: Reference");
-            session.addDataset(reference);
-            batchcount++;
-            panelink.put(tps, reference);
-            loader.setController(new BatchController(session, reference, progressbar, getMasterListofOGroups(), tps, this));
-            getDatasettocontroller().put(reference, loader.getController());
-            reference.setController(loader.getController());
-            tps = loader.load();
-            tps.setExpanded(true);
-            getAccordion().getPanes().add(tps);
-            getAccordion().setExpandedPane(tps);
-
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         //add float click functionality to the TreeTable
         getMetTable().setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -737,12 +781,8 @@ public class FXMLTableViewController implements Initializable {
             }
         });
 
-        oldOption(parameterButton);
-        oldOption(referenceMatrixButton);
-        newOption(referenceFilesButton);
-        newOption(batchFilesButton);
-        activePath(p2);
-        activePath(p3);
+       setstep(3);
+        accordion.setDisable(false);
         
         
     }
@@ -767,6 +807,7 @@ public class FXMLTableViewController implements Initializable {
             tps.setExpanded(true);
             getAccordion().getPanes().add(tps);
             getAccordion().setExpandedPane(tps);
+            batch.getController().BatchPane=tps;
             return batch;
         } catch (IOException ex) {
             Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -984,12 +1025,10 @@ return null;
 
     //calculates Shift and opens a new window
     public void newWindowShiftFitting() throws IOException, InterruptedException {
-indicatorbar.setDisable(true);
-disableOption(checkResultsButton);
-disableOption(outputButton);
-newOption(shiftButton);
-inactivePath(p5);
-inactivePath(p6);
+maskerpane.setVisible(true);
+indicatorbar.setEffect(adjust);
+
+
        
         //open new window
         Stage stage = new Stage();
@@ -1012,7 +1051,9 @@ inactivePath(p6);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 controller.close();
-                indicatorbar.setDisable(false);
+                controller.abort();
+                maskerpane.setVisible(false);
+                indicatorbar.setEffect(shadow);
             }
         });
 
@@ -1883,7 +1924,8 @@ inactivePath(p6);
     }
 
     public void showParameters() {
-        indicatorbar.setDisable(true);
+        maskerpane.setVisible(true);
+        indicatorbar.setEffect(adjust);
         setParameterPane(true);
         TabPane.setVisible(true);
         accordion.setVisible(false);
@@ -1897,7 +1939,15 @@ inactivePath(p6);
     }
 
     public void hideParameters() {
-        indicatorbar.setDisable(false);
+        accordion.setVisible(true);
+        
+        if (currentstep>2) {
+            accordion.setDisable(false);
+        }
+        
+
+        maskerpane.setVisible(false);
+        indicatorbar.setEffect(shadow);
         setParameterPane(false);
         TabPane.setVisible(false);
         accordion.setVisible(true);
@@ -2200,11 +2250,6 @@ inactivePath(p6);
     public void initializeButtons() {
         //parameterButton, referenceMatrixButton, referenceFilesButton, batchFilesButton, checkResultsButton, p1, p2, p3, p4, p5, p6
         
-        parameterButton.setDisable(false);
-        referenceMatrixButton.setDisable(false);
-        referenceFilesButton.setDisable(true);
-        batchFilesButton.setDisable(true);
-        checkResultsButton.setDisable(true);
         initOption(parameterButton);
         initOption(referenceMatrixButton);
         initOption(referenceFilesButton);
@@ -2212,17 +2257,8 @@ inactivePath(p6);
         initOption(checkResultsButton);
         initOption(outputButton);
         initOption(shiftButton);
-        p1.setDisable(true);
-        p2.setDisable(true);
-        p3.setDisable(true);
-        p4.setDisable(true);
-        p5.setDisable(true);
-        p6.setDisable(true);
-        outputButton.setDisable(true);
-        shiftButton.setDisable(true);
-        newOption(parameterButton);
-        newOption(referenceMatrixButton);
-        activePath(p1);
+        setstep(2);
+        newOption(paramButton);
         
         //TEST
         parameterButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -2280,7 +2316,9 @@ inactivePath(p6);
         button.setDisable(false);
         button.setStyle(
                 "-fx-background-radius: 5em; " +
-                "-fx-base: #2CFF00;"
+                "-fx-base: #2CFF00; "+
+                "-fx-focus-color: transparent; " +
+                "-fx-background-insets: 0;"
         );
        
     }
@@ -2289,33 +2327,46 @@ inactivePath(p6);
         button.setDisable(false);
         button.setStyle(
                 "-fx-background-radius: 5em; " +
-                "-fx-base: #D8FFCF;"
+                "-fx-base: #D8FFCF; " +
+                "-fx-focus-color: transparent; " +
+                "-fx-background-insets: 0;"
         );
     }
     
     public void activePath(Button button) {
         button.setDisable(false);
         button.setStyle(
-                "-fx-base: #D8FFCF;"
+                "-fx-base: #D8FFCF; "+
+                "-fx-background-insets: 0;"
         );
     }
     
     public void initOption(Button button) {
         button.setStyle(
-                "-fx-background-radius: 5em; " 
+                "-fx-background-radius: 5em; "  +
+                "-fx-focus-color: transparent; " +
+                "-fx-background-insets: 0; " +
+                "-fx-opacity: 1.0; " +
+                "-fx-base: #AFAFAF; "
         );
     }
     
     public void disableOption(Button button) {
         button.setDisable(true);
-        button.setStyle("-fx-background-radius: 5em; " 
+        button.setStyle("-fx-background-radius: 5em; " +
+                "-fx-focus-color: transparent; "+
+                "-fx-background-insets: 0; " +
+                "-fx-opacity: 1.0; " +
+                "-fx-base: #AFAFAF; "
         );
     }
     
     public void inactivePath(Button button) {
         button.setDisable(true);
         button.setStyle(
-                ""
+                "-fx-background-insets: 0;" +
+                "-fx-opacity: 1.0; " +
+                "-fx-base: #AFAFAF; "
         );
     }
     
@@ -2387,7 +2438,84 @@ public class FloatStringComparator implements Comparator<String> {
     
     
 }
-            
+
+//update progress indication bar            
+public void setstep(int step) {
+
+    
+    //check for highest allowed step
+    if (step==7&&currentstep==5) {
+    } else if (step==4&&currentstep>4) {
+        return;
+    } else if (step-currentstep>1){
+        return;
+    } else {
+    }
+    currentstep = step;
+    
+        inactivePath(p1);
+    inactivePath(p2);
+    inactivePath(p3);
+    inactivePath(p4);
+    inactivePath(p5);
+    inactivePath(p6);
+    disableOption(parameterButton);
+    disableOption(referenceMatrixButton);
+    disableOption(referenceFilesButton);
+    disableOption(batchFilesButton);
+    disableOption(shiftButton);
+    disableOption(checkResultsButton);
+    disableOption(outputButton);
+    
+    //activate buttons
+    switch (step) {
+        case 7: 
+            oldOption(outputButton);
+            activePath(p6);
+        case 6:
+            oldOption(checkResultsButton);
+            activePath(p5);
+        case 5:
+            oldOption(shiftButton);
+            activePath(p4);
+        case 4:
+            oldOption(batchFilesButton);
+            activePath(p3);
+        case 3:
+            oldOption(referenceFilesButton);
+            activePath(p2);
+        case 2:
+            oldOption(referenceMatrixButton);
+            activePath(p1);
+        case 1:
+            oldOption(parameterButton);
+    }
+    
+    switch (step) {
+        case 7: 
+            newOption(outputButton);
+            break;
+        case 6:
+            newOption(checkResultsButton);
+            break;
+        case 5:
+            newOption(shiftButton);
+            break;
+        case 4:
+            newOption(batchFilesButton);
+            break;
+        case 3:
+            newOption(referenceFilesButton);
+            break;
+        case 2:
+            newOption(referenceMatrixButton);
+            break;
+        case 1:
+            newOption(parameterButton);
+    }
+}
+       
+        
 }
 
 
