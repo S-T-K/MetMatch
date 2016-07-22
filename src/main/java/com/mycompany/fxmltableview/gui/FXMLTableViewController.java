@@ -19,6 +19,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -656,16 +657,33 @@ public class FXMLTableViewController implements Initializable {
     //Open File Chooser for Data Matrix
     public void openReferenceDataMatrixChooser() throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
-
+ Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                           progressbar.setVisible(true);
+                           progressbar.progressProperty().set(-1.0);
+                        }});
+        
         //Set extension filter
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Reference Matrix (*.tsv, *.txt)", "*.tsv", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show open file dialog
+       
         File file = fileChooser.showOpenDialog(null);
+        try {
         session.setReferenceTsv(file);
         System.out.println(session.getReferenceTsv().toString());
-        setMasterListofOGroups(session.parseReferenceTsv());
+        
+        setMasterListofOGroups(session.parseReferenceTsv()); }
+        finally {
+            Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                           progressbar.setVisible(false);
+                        }});
+        }
+       
         
         //Disable Option
         referenceMatrixButton.setOnAction((event) -> {

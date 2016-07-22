@@ -265,6 +265,11 @@ public class BatchController implements Initializable {
 
 //Property to link with progressbar
         FloatProperty progress = new SimpleFloatProperty(0.0f);
+                 Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.set((float) -0.000001);
+                        }});
         progressbar.progressProperty().bind(progress);
 
         FileChooser fileChooser = new FileChooser();
@@ -286,10 +291,15 @@ public class BatchController implements Initializable {
                     TVcontroller.maskerpane.setVisible(true);
                     TVcontroller.indicatorbar.setEffect(TVcontroller.adjust);
                     progressbar.setVisible(true);
+                    
                     for (File file : filelist) {
                         double start = System.currentTimeMillis();
                         batch.addFile(true, file, session);
-                        progress.set(progress.get() + test);
+                        Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.set(progress.get() + test);
+                        }});
                         getBatchFileView().refresh();
                         System.out.println(progress.get());
                         double end = System.currentTimeMillis();
