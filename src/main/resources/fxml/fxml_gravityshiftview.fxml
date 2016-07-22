@@ -38,7 +38,7 @@
                         <Shadow color="#00000096" height="8.95" radius="6.2124999999999995" width="17.9" />
                      </effect>
                   </Separator>
-                  <Line endY="-3.0" opacity="0.48" startY="30.0" strokeWidth="0.5" AnchorPane.leftAnchor="2.0" />
+                  <Line endY="-3.0" opacity="0.43" startY="30.0" stroke="#464646" strokeWidth="0.5" AnchorPane.leftAnchor="2.0" />
                </children>
             </AnchorPane>
          </children>

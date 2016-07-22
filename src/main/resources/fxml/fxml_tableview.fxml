@@ -40,19 +40,40 @@
             </HBox>
             <HBox prefHeight="27.0" prefWidth="910.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button fx:id="parameterButton" minWidth="110.0" mnemonicParsing="false" onAction="#parameters" prefHeight="0.0" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER" />
+                  <Button fx:id="parameterButton" minWidth="110.0" mnemonicParsing="false" onAction="#parameters" prefHeight="0.0" prefWidth="110.0" text="Set Parameters" HBox.hgrow="NEVER">
+                     <tooltip>
+                        <Tooltip text="Change paramters. Some of them can only be changed before loading a reference feature list" />
+                     </tooltip></Button>
                   <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="referenceMatrixButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceDataMatrixChooser" prefHeight="0.0" prefWidth="110.0" text="Reference Matrix" HBox.hgrow="NEVER" />
+                  <Button fx:id="referenceMatrixButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceDataMatrixChooser" prefHeight="0.0" prefWidth="110.0" text="Reference Matrix" HBox.hgrow="NEVER">
+                     <tooltip>
+                        <Tooltip text="Choose a reference feature list" />
+                     </tooltip></Button>
                   <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="referenceFilesButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceFiles" prefHeight="0.0" prefWidth="110.0" text="Reference Files" HBox.hgrow="NEVER" />
+                  <Button fx:id="referenceFilesButton" minWidth="110.0" mnemonicParsing="false" onAction="#openReferenceFiles" prefHeight="0.0" prefWidth="110.0" text="Reference Files" HBox.hgrow="NEVER">
+                     <tooltip>
+                        <Tooltip text="Load the files used to generate the reference feature list" />
+                     </tooltip></Button>
                   <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="batchFilesButton" minWidth="110.0" mnemonicParsing="false" onAction="#openBatchFiles" prefHeight="0.0" prefWidth="110.0" text="Batch Files" HBox.hgrow="NEVER" />
+                  <Button fx:id="batchFilesButton" minWidth="110.0" mnemonicParsing="false" onAction="#openBatchFiles" prefHeight="0.0" prefWidth="110.0" text="Batch Files" HBox.hgrow="NEVER">
+                     <tooltip>
+                        <Tooltip text="Load files to match to the reference feature list" />
+                     </tooltip></Button>
                   <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="shiftButton" minWidth="110.0" mnemonicParsing="false" onAction="#newWindowShiftFitting" prefHeight="0.0" prefWidth="110.0" text="Calculate Shift" HBox.hgrow="NEVER" />
+                  <Button fx:id="shiftButton" minWidth="110.0" mnemonicParsing="false" onAction="#newWindowShiftFitting" prefHeight="0.0" prefWidth="110.0" text="Calculate Shift" HBox.hgrow="NEVER">
+                     <tooltip>
+                        <Tooltip text="Calculate the RT shift of the files relative to the reference feature list" />
+                     </tooltip></Button>
                   <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="checkResultsButton" minWidth="110.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="110.0" text="Check Results" HBox.hgrow="NEVER" />
+                  <Button fx:id="checkResultsButton" minWidth="110.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="110.0" text="Check Results" HBox.hgrow="NEVER">
+                     <tooltip>
+                        <Tooltip text="NOT IMPLEMENTED YET. Automatically check the results and display a report highlighting possible problems" />
+                     </tooltip></Button>
                   <AnchorPane minWidth="10.0" prefHeight="27.0" prefWidth="80.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="outputButton" minWidth="110.0" mnemonicParsing="false" onAction="#Output" prefHeight="0.0" prefWidth="110.0" text="Generate Output" HBox.hgrow="NEVER" />
+                  <Button fx:id="outputButton" minWidth="110.0" mnemonicParsing="false" onAction="#Output" prefHeight="0.0" prefWidth="110.0" text="Generate Output" HBox.hgrow="NEVER">
+                     <tooltip>
+                        <Tooltip text="Write the results to a .tsv file" />
+                     </tooltip></Button>
                </children>
             </HBox>
          </children>
