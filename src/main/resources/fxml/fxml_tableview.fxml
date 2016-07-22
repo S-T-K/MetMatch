@@ -61,12 +61,11 @@
          </effect>
       </AnchorPane>
         <Separator layoutY="570.0" prefHeight="2.0" prefWidth="826.0" />
-        <ProgressBar fx:id="progressbar" layoutX="626.0" layoutY="577.0" prefHeight="8.0" prefWidth="191.0" progress="0.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
-        <SplitPane fx:id="splitpane" dividerPositions="0.47026431718061673" layoutY="34.0" prefHeight="542.0" prefWidth="910.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
+        <SplitPane fx:id="splitpane" dividerPositions="0.47026431718061673" layoutY="34.0" prefHeight="572.0" prefWidth="910.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
             <items>
                 <AnchorPane fx:id="paramanchor" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
-                        <Accordion fx:id="accordion" prefHeight="517.0" prefWidth="243.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <Accordion fx:id="accordion" prefHeight="517.0" prefWidth="243.0" style="-fx-background-color: -fx-body-color;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                         <Button fx:id="addBatchButton" alignment="BASELINE_LEFT" disable="true" layoutY="516.0" mnemonicParsing="false" onMouseClicked="#addBatch" prefHeight="3.0" prefWidth="243.0" text="+ Add Batch" textOverrun="WORD_ELLIPSIS" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <TabPane fx:id="TabPane" prefHeight="200.0" prefWidth="200.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <tabs>
@@ -571,7 +570,11 @@
                 </AnchorPane>
             </items>
         </SplitPane>
-      <Separator prefHeight="3.0" prefWidth="910.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0" />
+      <Separator prefHeight="3.0" prefWidth="910.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+         <effect>
+            <Shadow height="35.84" radius="8.46" width="0.0" />
+         </effect></Separator>
       <Pane fx:id="maskerpane" prefHeight="33.0" prefWidth="910.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <ProgressBar fx:id="progressbar" layoutX="626.0" layoutY="577.0" opacity="0.5" prefHeight="40.0" prefWidth="191.0" visible="false" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="-3.0" />
     </children>
 </AnchorPane>

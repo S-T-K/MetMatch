@@ -29,7 +29,7 @@ public class GravityCalculator {
         xRanges[0]=65;
         xRanges[1]=6.5;
         xRanges[2]=0.65;
-        yRanges[0]=100;
+        yRanges[0]=50;
         yRanges[1]=20;
         yRanges[2]=3;
     }

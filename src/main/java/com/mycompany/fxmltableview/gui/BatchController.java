@@ -149,8 +149,8 @@ public class BatchController implements Initializable {
         Label label = new Label("Click to add Files");
         label.setFont(Font.font("Verdana", 14));
         label.setAlignment(Pos.CENTER);
-        label.setMinHeight(500);
-        label.setMinWidth(500);
+        label.setMinHeight(200);
+        label.setMinWidth(200);
         label.setOnMouseClicked((MouseEvent event) -> {
             try {
                 openBatchmzxmlChooser();
@@ -285,6 +285,7 @@ public class BatchController implements Initializable {
                     TVcontroller.loading.getAndIncrement();
                     TVcontroller.maskerpane.setVisible(true);
                     TVcontroller.indicatorbar.setEffect(TVcontroller.adjust);
+                    progressbar.setVisible(true);
                     for (File file : filelist) {
                         double start = System.currentTimeMillis();
                         batch.addFile(true, file, session);
@@ -302,15 +303,15 @@ public class BatchController implements Initializable {
                             TVcontroller.setstep(5);
                         }
                     }
-
+progressbar.setVisible(false);
                 }
                 TVcontroller.loading.getAndDecrement();
                 if (TVcontroller.loading.get() == 0) {
                     TVcontroller.maskerpane.setVisible(false);
                     TVcontroller.indicatorbar.setEffect(TVcontroller.shadow);
                 }
-                session.setPeakPickchanged(true);
-                session.setPeakschanged(true);
+                //session.setPeakPickchanged(true);
+                
                 return null;
             }
 

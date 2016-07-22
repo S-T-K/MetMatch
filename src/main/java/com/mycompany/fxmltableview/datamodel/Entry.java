@@ -59,6 +59,7 @@ public class Entry {
     private boolean empty;
     private int Inline;
     private int Outline;
+    
 
     
     
@@ -220,8 +221,8 @@ listofSlices=newlist;
 //
 if (listofSlices.containsKey(file)) {
         Slice currentSlice = listofSlices.get(file);
-        
-        if (session.isPeakPickchanged()||currentSlice.getListofPeaks()==null){
+        if (currentSlice.lastpeakpickversion!=session.getPeakPickversion()) {
+            System.out.println("Picking File: " +  currentSlice.getFile().getName());
 //        
         if (session.getPeackPick().equals("Gauss Peak Correlation")) {
             currentSlice.NaivePeakPicking();
@@ -240,6 +241,7 @@ if (listofSlices.containsKey(file)) {
         } else {
             System.out.println("Error");
         }
+        currentSlice.lastpeakpickversion=session.getPeakPickversion();
 //           
 //        float [] sliceArray = currentSlice.getPropArray();
 //                
@@ -257,14 +259,14 @@ if (listofSlices.containsKey(file)) {
 //        
 //        
 //        
-    }}}
+
+        }}}
     
     //generates average PropArray over all Adducts for a dataset
     //TODO: Avg?
     public void peakpickOGroup(RawDataFile file) throws InterruptedException {
         
         //float [] propArray = new float[getSession().getResolution()];
-        if (session.isPeakPickchanged()) {
         for (int i = 0; i<listofAdducts.size(); i++) {
             
             listofAdducts.get(i).peakpickAdduct(file);
@@ -299,7 +301,7 @@ if (listofSlices.containsKey(file)) {
         
         }
         //getOGroupPropArray().put(file, propArray);
-        }
+        
     }
 
     /**

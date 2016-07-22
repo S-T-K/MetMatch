@@ -423,7 +423,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
 //        new Thread(maintask).start();
 //    }
     public void animate(ObservableList<Entry> list) throws IOException, InterruptedException {
-        session.setPeakPickchanged(true);
+        //session.setPeakPickchanged(true);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
         setNodetoogroup((HashMap<Ellipse, TreeItem<Entry>>) new HashMap());
@@ -432,6 +432,14 @@ public class Fxml_gravityshiftviewController implements Initializable {
         processinglabel.setVisible(true);
         speedpane.setDisable(true);
         olist = list;
+          if (session.getSelectedFiles().size()<1) {
+                    if (session.getListofDatasets().size()>1&&session.getListofDatasets().get(1).getListofFiles().size()>0) {
+                        session.getListofDatasets().get(1).getController().getBatchFileView().getSelectionModel().select(session.getListofDatasets().get(1).getListofFiles().get(0));
+                    } else {
+                    session.getAllFiles().get(0).getDataset().getController().getBatchFileView().getSelectionModel().select(session.getAllFiles().get(0));
+                    }
+                }
+          
         //get selected Entry
 
         if (areachart == null) {
@@ -453,13 +461,7 @@ public class Fxml_gravityshiftviewController implements Initializable {
             @Override
             public Void call() throws IOException, InterruptedException {
                 
-                if (session.getSelectedFiles().size()<1) {
-                    if (session.getListofDatasets().size()>1&&session.getListofDatasets().get(1).getListofFiles().size()>0) {
-                        session.getListofDatasets().get(1).getController().getBatchFileView().getSelectionModel().select(session.getListofDatasets().get(1).getListofFiles().get(0));
-                    } else {
-                    session.getAllFiles().get(0).getDataset().getController().getBatchFileView().getSelectionModel().select(session.getAllFiles().get(0));
-                    }
-                }
+              
                 
         
         float[] centroids = new float[list.size()];
@@ -540,13 +542,16 @@ public class Fxml_gravityshiftviewController implements Initializable {
                                         }
                                     });
                                     
-                                    new Thread(task).start();
+                                    if (samplematrix==null||samplefile!=session.getSelectedFiles().get(0)) {
+                                    new Thread(task).start();}
                                     if (Thread.currentThread().isInterrupted()) {
                  System.out.println("Exiting gracefully");
                  task.cancel();
                  return null;
              }
+                                     if (samplematrix==null||samplefile!=session.getSelectedFiles().get(0)) {
                                     latchpeak.await();
+                                     }
                                      Platform.runLater(new Runnable() {
                                         @Override
                                         public void run() {
@@ -1670,7 +1675,7 @@ indicatorbar.setEffect(supercontroller.shadow);
        int files = filelist.size();
        
        progress.setVisible(true);
-        processinglabel.setText("Peak Picking... (Step 1 of 2)");
+        processinglabel.setText("Peak Picking and Shift Detection... (Step 1 of 2)");
         processinglabel.setVisible(true);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());
         setSeriestofile((HashMap<XYChart.Series, RawDataFile>) new HashMap());
@@ -1793,7 +1798,6 @@ if (Thread.currentThread().isInterrupted()) {
             
           
             showShift(olist);
-            session.setPeakPickchanged(false);
             oldOption(applybutton);
             newOption(finishbutton);
             activePath(p3);

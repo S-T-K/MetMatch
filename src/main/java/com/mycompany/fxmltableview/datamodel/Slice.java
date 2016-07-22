@@ -67,6 +67,8 @@ public class Slice {
     //private float[] Bins;
     
     private boolean empty;
+    
+    int lastpeakpickversion = 0;
    
     public Slice(RawDataFile file, Entry adduct) {
         this.file = file;
@@ -979,7 +981,8 @@ public class Slice {
 
 
     
-    public void setFittedPeak(float shift) {
+    public void setFittedPeak(float shift) throws IOException, FileNotFoundException, InterruptedException {
+        try {
         fitabove = Float.NaN;
         
        
@@ -1073,6 +1076,11 @@ public class Slice {
             }
             
            
+        }
+        }
+        catch (NullPointerException e) {
+            readData();
+            setFittedPeak(shift);
         }
         
     }

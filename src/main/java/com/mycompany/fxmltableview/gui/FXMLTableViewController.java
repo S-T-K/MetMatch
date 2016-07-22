@@ -571,25 +571,6 @@ public class FXMLTableViewController implements Initializable {
         label.setMinWidth(500);
         label.setTextAlignment(TextAlignment.JUSTIFY);
         label.setFont(Font.font("Verdana", 14));
-        label.setOnMouseClicked((MouseEvent event) -> {
-            try {
-
-                ProgressIndicator prog = new ProgressIndicator();
-                prog.setMaxHeight(50);
-
-                metTable.setPlaceholder(prog);
-                prog.setOnMouseClicked((MouseEvent event2) -> {
-                    try {
-                        openReferenceDataMatrixChooser();
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                });
-                openReferenceDataMatrixChooser();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
         metTable.setPlaceholder(label);
 
         InputTable.setItems(session.getInfos());
@@ -1010,7 +991,7 @@ return null;
                 }
 
                 //don't recalculate unless something changes
-                session.setPeakPickchanged(false);
+                //session.setPeakPickchanged(false);
 
                 latch.countDown();
                 return null;
@@ -1954,20 +1935,26 @@ indicatorbar.setEffect(adjust);
         addBatchButton.setVisible(true);
         session.prepare();
 
+        
         //indicate change
+        boolean changed = false;
         if (!oldPick.equals(PeakPick.getSelectionModel().getSelectedItem().toString())) {
-            session.setPeakPickchanged(true);
+            changed = true;
         }
         if (!oldBase.equals(Base.getText())) {
-            session.setPeakPickchanged(true);
+            changed = true;
         }
 
         if (!oldRT.equals(RTTolShift.getText())) {
-            session.setPeakPickchanged(true);
+            changed = true;
         }
         
         if (!oldSN.equals(Noise.getText())) {
-            session.setPeakPickchanged(true);
+            changed = true;
+        }
+        
+        if(changed) {
+            session.newPeakPickversion();
         }
 
     }

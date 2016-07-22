@@ -64,8 +64,7 @@ public class Session {
     private Rengine engine;
     private SimpleFloatProperty SliceMZTolerance;
     
-    private boolean peakPickchanged;
-    private boolean peakschanged;
+    private int peakPickversion;
     
     private List<SimpleStringProperty> listofadductnameproperties;
     private List<SimpleFloatProperty> listofadductmassproperties;
@@ -119,8 +118,7 @@ System.out.println(System.getProperty("user.dir"));
         
        
         
-        peakPickchanged = true;
-        peakschanged = true;
+        peakPickversion = 1;
         start = new SimpleFloatProperty (0.0f);
         end = new SimpleFloatProperty (40.0f);
         noisethreshold = new SimpleFloatProperty(3.0f);
@@ -689,19 +687,15 @@ System.out.println(System.getProperty("user.dir"));
     }
     
 
-    /**
-     * @return the peakPickchanged
-     */
-    public boolean isPeakPickchanged() {
-        return peakPickchanged;
+  
+    public int getPeakPickversion() {
+        return peakPickversion;
     }
 
-    /**
-     * @param peakPickchanged the peakPickchanged to set
-     */
-    public void setPeakPickchanged(boolean peakPickchanged) {
-        this.peakPickchanged = peakPickchanged;
-        System.out.println("Peak pick changed: " + peakPickchanged);
+ 
+    public void newPeakPickversion() {
+        this.peakPickversion++;
+        System.out.println("Peak pick changed");
         if (mastercontroller.currentstep>5) {
         mastercontroller.setstep(5); }
     }
@@ -1003,19 +997,6 @@ System.out.println(System.getProperty("user.dir"));
         this.minPeakLength = minPeakLength;
     }
 
-    /**
-     * @return the peakschanged
-     */
-    public boolean isPeakschanged() {
-        return peakschanged;
-    }
-
-    /**
-     * @param peakschanged the peakschanged to set
-     */
-    public void setPeakschanged(boolean peakschanged) {
-        this.peakschanged = peakschanged;
-    }
 
     /**
      * @return the gravitycalculator

@@ -21,10 +21,6 @@
             <AnchorPane prefHeight="27.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <AnchorPane fx:id="speedpane" prefHeight="30.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Separator orientation="VERTICAL" prefHeight="26.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.topAnchor="-2.0">
-                     <effect>
-                        <Shadow />
-                     </effect></Separator>
                   <Slider fx:id="speed" layoutX="78.0" layoutY="15.0" majorTickUnit="1000.0" max="6000.0" minWidth="100.0" minorTickCount="2" nodeOrientation="RIGHT_TO_LEFT" prefHeight="14.0" prefWidth="147.0" value="100.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="7.0" />
                   <Label fx:id="label213" alignment="CENTER" layoutX="211.0" layoutY="13.0" prefHeight="26.0" prefWidth="20.0" text="+" textAlignment="CENTER" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0">
                      <font>
@@ -37,6 +33,12 @@
                         <Font size="17.0" />
                      </font>
                   </Label>
+                  <Separator orientation="VERTICAL" prefHeight="26.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-2.0">
+                     <effect>
+                        <Shadow color="#00000096" height="8.95" radius="6.2124999999999995" width="17.9" />
+                     </effect>
+                  </Separator>
+                  <Line endY="-3.0" opacity="0.48" startY="30.0" strokeWidth="0.5" AnchorPane.leftAnchor="2.0" />
                </children>
             </AnchorPane>
          </children>
@@ -73,7 +75,7 @@
          </children>
       </AnchorPane>
       <ProgressBar fx:id="progress" layoutX="-198.0" layoutY="10.0" opacity="0.5" prefHeight="40.0" prefWidth="726.0" progress="0.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="-3.0" />
-      <Pane fx:id="paramPane" layoutY="35.0" prefHeight="349.0" prefWidth="1020.0" style="-fx-background-color: #F4F4F4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
+      <Pane fx:id="paramPane" layoutY="35.0" prefHeight="349.0" prefWidth="1020.0" style="-fx-background-color: -fx-body-color;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
          <children>
             <TextField fx:id="y4" layoutX="141.0" layoutY="165.0" prefHeight="25.0" prefWidth="80.0" />
             <TextField layoutX="60.0" layoutY="165.0" prefHeight="25.0" prefWidth="80.0" fx:id="x4" />
@@ -108,13 +110,17 @@
             <Label fx:id="label214111111111" alignment="CENTER" layoutX="1.0" layoutY="324.0" prefHeight="17.0" prefWidth="59.0" text="9:" textAlignment="CENTER" />
          </children>
       </Pane>
-      <StackPane fx:id="stackpane" layoutX="229.0" layoutY="51.0" prefHeight="357.0" prefWidth="791.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0" />
+      <StackPane fx:id="stackpane" layoutX="229.0" layoutY="51.0" prefHeight="357.0" prefWidth="791.0" style="-fx-background-color: #f4f4f4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0" />
       <Label fx:id="processinglabel" alignment="CENTER" contentDisplay="CENTER" layoutX="229.0" layoutY="27.0" prefHeight="357.0" prefWidth="791.0" text="Label" textAlignment="CENTER" textFill="#005eff" visible="false" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
-      <Separator layoutX="280.0" orientation="VERTICAL" prefHeight="357.0" prefWidth="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="34.0" />
-      <Separator layoutX="10.0" layoutY="10.0" prefHeight="3.0" prefWidth="910.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="31.0" />
+      <Separator layoutX="280.0" orientation="VERTICAL" prefHeight="357.0" prefWidth="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="228.0" AnchorPane.topAnchor="34.0" />
+      <Separator layoutX="10.0" layoutY="10.0" prefHeight="3.0" prefWidth="910.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+         <effect>
+            <Shadow height="35.84" radius="8.46" width="0.0" />
+         </effect>
+      </Separator>
    </children>
 </AnchorPane>
