@@ -94,22 +94,23 @@
                            <content>
                               <AnchorPane fx:id="inputTab" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="InputTable" layoutX="51.0" layoutY="74.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="423.0" prefWidth="318.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="51.0" AnchorPane.topAnchor="74.0">
+                                    <TableView fx:id="InputTable" layoutX="20.0" layoutY="14.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="506.0" prefWidth="318.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="14.0">
                                       <columns>
                                         <TableColumn fx:id="infocol" editable="false" prefWidth="171.0" sortable="false" text="Information" />
                                         <TableColumn fx:id="headcol" prefWidth="146.0" sortable="false" text="Header" />
                                       </columns>
                                     </TableView>
-                                    <Rectangle arcWidth="5.0" height="123.0" layoutX="52.0" layoutY="99.0" opacity="0.27" stroke="RED" strokeType="INSIDE" strokeWidth="0.0" width="36.0">
+                                    <Rectangle arcWidth="5.0" height="123.0" layoutX="301.0" layoutY="39.0" opacity="0.27" stroke="RED" strokeType="INSIDE" strokeWidth="0.0" width="36.0" AnchorPane.leftAnchor="301.0">
                                        <fill>
                                           <LinearGradient endX="1.0" endY="0.5" startY="0.5047619047619047">
                                              <stops>
-                                                <Stop color="RED" />
-                                                <Stop color="WHITE" offset="1.0" />
+                                                <Stop color="#ffffff00" />
+                                                <Stop color="#ffffff00" offset="0.007662835249042145" />
+                                                <Stop color="RED" offset="1.0" />
                                              </stops>
                                           </LinearGradient>
                                        </fill></Rectangle>
-                                    <Label layoutX="11.0" layoutY="152.0" opacity="0.56" rotate="-90.0" text="Required" textFill="RED" />
+                                    <Label layoutX="330.0" layoutY="92.0" opacity="0.56" rotate="-90.0" text="Required" textFill="RED" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -118,75 +119,132 @@
                         <content>
                           <AnchorPane fx:id="Tab1" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="67.0" layoutX="16.0" layoutY="312.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="312.0" />
-                                    <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="317.0" prefHeight="25.0" prefWidth="80.0">
+                                    <Rectangle fx:id="box4" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="67.0" layoutX="16.0" layoutY="425.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" />
+                                    <TextField fx:id="RTTolShift" layoutX="125.0" layoutY="430.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="When matching chromatographic peaks, only peaks with a deviation of less than this value from the calculated RT shift are taken into consideration" />
-                                       </tooltip></TextField>
-                                    <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="97.0" layoutX="16.0" layoutY="190.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="199.0" AnchorPane.topAnchor="190.0" />
-                                    <Rectangle fx:id="box1" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="27.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="27.0" />
-                                    <TextField fx:id="RTTol" layoutX="125.0" layoutY="32.0" prefHeight="25.0" prefWidth="80.0">
+                                       </tooltip>
+                                    </TextField>
+                                    <Rectangle fx:id="box3" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="129.0" layoutX="16.0" layoutY="285.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="155.0" AnchorPane.topAnchor="285.0" />
+                                    <Rectangle fx:id="box1" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="96.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="155.0" AnchorPane.topAnchor="96.0" />
+                                    <TextField fx:id="RTTol" layoutX="125.0" layoutY="101.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="Signals with a RT deviation lower or equal to this value will be extracted. The deviation is relative to the RT specified in the reference data matrix" />
                                        </tooltip></TextField>
-                                    <Rectangle fx:id="box2" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="37.0" layoutX="16.0" layoutY="122.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="199.0" AnchorPane.topAnchor="122.0" />
-                                    <TextField fx:id="SliceMZTol" layoutX="125.0" layoutY="128.0" prefHeight="25.0" prefWidth="80.0">
+                                    <Rectangle fx:id="box2" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="102.0" layoutX="16.0" layoutY="172.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="155.0" AnchorPane.topAnchor="172.0" />
+                                    <TextField fx:id="SliceMZTol" layoutX="125.0" layoutY="178.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="Any signal that deviates by more than this value from the calculated M/Z shift will be deleted from the EIC" />
                                        </tooltip></TextField>
-                                    <TextField fx:id="Res" layoutX="125.0" layoutY="347.0" prefHeight="25.0" prefWidth="80.0">
+                                    <TextField fx:id="Res" layoutX="125.0" layoutY="460.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="This parameter is used during the calculation of the retention time shifts. Higher values result in more accurate calculations." />
-                                       </tooltip></TextField>
-                                    <Label fx:id="label1" layoutX="18.0" layoutY="2.0" prefHeight="31.0" prefWidth="117.0" text="Parsing Parameters">
+                                       </tooltip>
+                                    </TextField>
+                                    <Label fx:id="label1" layoutX="249.0" layoutY="93.0" prefHeight="8.0" prefWidth="117.0" text="Parsing Parameters">
                                        <tooltip>
                                           <Tooltip text="Set extraction tolerances" />
                                        </tooltip></Label>
-                                    <Label fx:id="label7" layoutX="18.0" layoutY="165.0" prefHeight="31.0" prefWidth="117.0" text="Peak Picking" />
-                                    <Label fx:id="label4" layoutX="18.0" layoutY="104.0" prefHeight="17.0" prefWidth="117.0" text="Slice Parameters" />
-                                    <TextField fx:id="MZTol" layoutX="125.0" layoutY="62.0" prefHeight="25.0" prefWidth="80.0">
+                                    <Label layoutX="249.0" layoutY="282.0" prefHeight="17.0" prefWidth="117.0" text="Peak Picking">
+                                       <tooltip>
+                                          <Tooltip text="Set parameters related to peak picking" />
+                                       </tooltip></Label>
+                                    <Label fx:id="label4" layoutX="249.0" layoutY="170.0" prefHeight="17.0" prefWidth="117.0" text="Slice Parameters">
+                                       <tooltip>
+                                          <Tooltip text="Set slice refinement parameters" />
+                                       </tooltip></Label>
+                                    <TextField fx:id="MZTol" layoutX="125.0" layoutY="131.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="Signals with an M/Z deviation lower or equal to this value will be extracted. The deviation is relative to the RT specified in the reference data matrix" />
                                        </tooltip></TextField>
-                                    <TextField fx:id="Base" layoutX="125.0" layoutY="195.0" prefHeight="25.0" prefWidth="80.0">
+                                    <TextField fx:id="Base" layoutX="125.0" layoutY="290.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="Any peak with an abundance less than this value will be rejected" />
                                        </tooltip></TextField>
-                                    <Label fx:id="label10" layoutX="18.0" layoutY="287.0" prefHeight="31.0" prefWidth="117.0" text="Shift" />
-                                    <Label fx:id="label11" layoutX="25.0" layoutY="321.0" text="RT Tolerance:" />
-                                    <Label fx:id="label8" layoutX="25.0" layoutY="199.0" text="Intensity Cutoff:" />
-                                    <Label fx:id="label2" layoutX="25.0" layoutY="36.0" text="RT Tolerance: " />
-                                    <Label fx:id="label6" layoutX="25.0" layoutY="351.0" text="Number of Bins:" />
-                                    <Label fx:id="label5" layoutX="25.0" layoutY="132.0" text="M/Z Tolerance:" />
-                                    <Label fx:id="label9" layoutX="25.0" layoutY="229.0" text="Peak Picking:" />
-                                    <Label fx:id="label3" layoutX="25.0" layoutY="66.0" text="M/Z Tolerance: " />
-                                    <Label layoutX="209.0" layoutY="36.0" text="min" />
-                                    <Label layoutX="209.0" layoutY="66.0" text="ppm" />
-                                    <Label layoutX="207.0" layoutY="132.0" text="ppm" />
-                                    <Label layoutX="211.0" layoutY="321.0" text="min" />
-                                    <Rectangle fx:id="box31" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="404.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" />
-                                    <Label fx:id="label91" layoutX="25.0" layoutY="443.0" text="End:" />
-                                    <Label fx:id="label81" layoutX="25.0" layoutY="413.0" text="Start:" />
-                                    <Label fx:id="label71" layoutX="18.0" layoutY="379.0" prefHeight="31.0" prefWidth="117.0" text="Range" />
-                                    <Label layoutX="209.0" layoutY="444.0" text="min" />
-                                    <Label layoutX="209.0" layoutY="414.0" text="min" />
-                                    <TextField fx:id="End" layoutX="125.0" layoutY="440.0" prefHeight="25.0" prefWidth="80.0">
+                                    <Label fx:id="label10" layoutX="249.0" layoutY="422.0" prefHeight="8.0" prefWidth="117.0" text="Shift">
                                        <tooltip>
-                                          <Tooltip text="Metabolites with a RT higher than this value are not parsed from the input file" />
-                                       </tooltip></TextField>
-                                    <TextField fx:id="Start" layoutX="125.0" layoutY="410.0" prefHeight="25.0" prefWidth="80.0">
-                                       <tooltip>
-                                          <Tooltip text="Metabolites with a RT lower than this value are not parsed from the input file" />
-                                       </tooltip></TextField>
-                                    <ChoiceBox fx:id="PeakPick" layoutX="125.0" layoutY="225.0" prefHeight="25.0" prefWidth="80.0">
+                                          <Tooltip text="Set shift calculation parameters" />
+                                       </tooltip>
+                                    </Label>
+                                    <Label fx:id="label11" layoutX="25.0" layoutY="434.0" text="RT Tolerance:" />
+                                    <Label fx:id="label8" layoutX="25.0" layoutY="294.0" text="Intensity Cutoff:" />
+                                    <Label fx:id="label2" layoutX="25.0" layoutY="105.0" text="RT Tolerance: " />
+                                    <Label fx:id="label6" layoutX="25.0" layoutY="464.0" text="Number of Bins:" />
+                                    <Label fx:id="label5" layoutX="25.0" layoutY="182.0" text="M/Z Tolerance:" />
+                                    <Label fx:id="label9" layoutX="25.0" layoutY="324.0" text="Peak Picking:" />
+                                    <Label fx:id="label3" layoutX="25.0" layoutY="135.0" text="M/Z Tolerance: " />
+                                    <Label layoutX="209.0" layoutY="105.0" text="min" />
+                                    <Label layoutX="209.0" layoutY="135.0" text="ppm" />
+                                    <Label layoutX="207.0" layoutY="182.0" text="ppm" />
+                                    <Label fx:id="labelmin" layoutX="211.0" layoutY="434.0" text="min" />
+                                    <ChoiceBox fx:id="PeakPick" layoutX="125.0" layoutY="320.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="Set peak picking algorithm" />
                                        </tooltip></ChoiceBox>
-                                    <Label fx:id="noiselabel" layoutX="25.0" layoutY="260.0" prefHeight="17.0" prefWidth="86.0" text="S/N Threshold" />
-                                    <TextField fx:id="Noise" layoutX="125.0" layoutY="256.0" prefHeight="25.0" prefWidth="80.0">
+                                    <Label fx:id="noiselabel" layoutX="25.0" layoutY="355.0" prefHeight="17.0" prefWidth="86.0" text="S/N Threshold:" />
+                                    <TextField fx:id="Noise" layoutX="125.0" layoutY="351.0" prefHeight="25.0" prefWidth="80.0">
                                        <tooltip>
                                           <Tooltip text="Depending on the chosen peak picking algorithm, peaks with a S/N (signal-to-noise ratio) or NU (noise unit value) smaller than this value will be rejected" />
                                        </tooltip></TextField>
+                                    <Label fx:id="label51" layoutX="25.0" layoutY="213.0" text="Minimal Signals:" />
+                                    <TextField fx:id="MinSignals" layoutX="125.0" layoutY="209.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="All slices with less than this number of signals get rejected, as they hold no valuable information" />
+                                       </tooltip>
+                                    </TextField>
+                                    <TextField fx:id="MinConsSignals" layoutX="125.0" layoutY="241.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="All slices with less than this number of consecutive signals will be rejected" />
+                                       </tooltip>
+                                    </TextField>
+                                    <Label fx:id="label511" layoutX="25.0" layoutY="245.0" text="Min. Cons. Signals:" />
+                                    <Label fx:id="dislabel" layoutX="25.0" layoutY="386.0" text="Scales:" />
+                                    <TextField fx:id="Scales" layoutX="125.0" layoutY="382.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Scales parameter for the MassSpecWavelet algorithm, comma separated" />
+                                       </tooltip>
+                                    </TextField>
+                                    <Rectangle fx:id="box31" arcHeight="5.0" arcWidth="5.0" fill="#f2f2f2" height="66.0" layoutX="16.0" layoutY="20.0" stroke="#0000007a" strokeType="INSIDE" width="224.0" />
+                                    <Label fx:id="label91" layoutX="25.0" layoutY="59.0" text="End:" />
+                                    <Label fx:id="label81" layoutX="25.0" layoutY="29.0" text="Start:" />
+                                    <Label fx:id="label71" layoutX="249.0" layoutY="18.0" prefHeight="16.0" prefWidth="117.0" text="Range" />
+                                    <Label layoutX="209.0" layoutY="60.0" text="min" />
+                                    <Label layoutX="209.0" layoutY="30.0" text="min" />
+                                    <TextField fx:id="End" layoutX="125.0" layoutY="56.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Metabolites with a RT higher than this value are not parsed from the input file" />
+                                       </tooltip>
+                                    </TextField>
+                                    <TextField fx:id="Start" layoutX="125.0" layoutY="26.0" prefHeight="25.0" prefWidth="80.0">
+                                       <tooltip>
+                                          <Tooltip text="Metabolites with a RT lower than this value are not parsed from the input file" />
+                                       </tooltip>
+                                    </TextField>
+                                    <Label fx:id="label711" layoutX="249.0" layoutY="34.0" prefHeight="52.0" prefWidth="138.0" text="Only features between start and end are processed" textFill="#828282" wrapText="true">
+                                       <tooltip>
+                                          <Tooltip text="Set minimum and maximum RT for all features" />
+                                       </tooltip>
+                                    </Label>
+                                    <Label fx:id="label7111" layoutX="249.0" layoutY="109.0" prefHeight="52.0" prefWidth="138.0" text="Initial extraction tolerances when parsing .mzXML files" textFill="#828282" wrapText="true">
+                                       <tooltip>
+                                          <Tooltip text="Set minimum and maximum RT for all features" />
+                                       </tooltip>
+                                    </Label>
+                                    <Label fx:id="label71111" layoutX="249.0" layoutY="187.0" prefHeight="69.0" prefWidth="138.0" text="Slice refinement after determination of M/Z shift and rejection of noise slices" textFill="#828282" wrapText="true">
+                                       <tooltip>
+                                          <Tooltip text="Set minimum and maximum RT for all features" />
+                                       </tooltip>
+                                    </Label>
+                                    <Label fx:id="label711111" layoutX="249.0" layoutY="298.0" prefHeight="51.0" prefWidth="138.0" text="Parameters may vary for different peak picking algorithms" textFill="#828282" wrapText="true">
+                                       <tooltip>
+                                          <Tooltip text="Set minimum and maximum RT for all features" />
+                                       </tooltip>
+                                    </Label>
+                                    <Label fx:id="label7" layoutX="249.0" layoutY="438.0" prefHeight="40.0" prefWidth="138.0" text="Tolerance and accuracy for shift calculation" textFill="#828282" wrapText="true">
+                                       <tooltip>
+                                          <Tooltip text="Set minimum and maximum RT for all features" />
+                                       </tooltip>
+                                    </Label>
                                  </children>
                               </AnchorPane>
                         </content>

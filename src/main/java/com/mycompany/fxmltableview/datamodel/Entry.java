@@ -8,6 +8,8 @@ package com.mycompany.fxmltableview.datamodel;
 
 
 import com.mycompany.fxmltableview.logic.Session;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -651,7 +653,7 @@ if (listofSlices.containsKey(file)) {
     /**
      * @param fittedShift the OGroupfittedShift to set
      */
-    public void setFittedShift(RawDataFile file, float shift) {
+    public void setFittedShift(RawDataFile file, float shift) throws IOException, FileNotFoundException, InterruptedException {
         this.Interpolatedshift.put(file,(short)shift);
         float shiftintime = session.getProparraycalculator().getshiftintime(shift);
         

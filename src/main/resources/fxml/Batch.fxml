@@ -86,7 +86,7 @@
                         <PropertyValueFactory property="Width" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="shiftColumn" maxWidth="77.0" minWidth="0.0" prefWidth="0.0" text="Shift [ppm]">
+                  <TableColumn fx:id="shiftColumn" maxWidth="77.0" minWidth="0.0" prefWidth="0.0" text="M/Z Shift [ppm]">
                      <cellValueFactory>
                         <PropertyValueFactory property="mzshift" />
                      </cellValueFactory>

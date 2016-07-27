@@ -138,10 +138,10 @@ public class FXMLTableViewController implements Initializable {
     ProgressBar progressbar;
 
     @FXML
-    TextField RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, Noise, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdName8, AdName9, AdName10, AdName11, AdName12, AdName13, AdName14, AdName15, AdName16, AdName17, AdName18, AdName19, AdName20, AdName21, AdName22, AdName23, AdName24, AdName25, AdName26, AdName27, AdName28, AdName29, AdName30, AdName31, AdName32, AdName33, AdName34, AdName35, AdName36, AdName37, AdName38, AdName39, AdName40, AdName41, AdName42, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdMass8, AdMass9, AdMass10, AdMass11, AdMass12, AdMass13, AdMass14, AdMass15, AdMass16, AdMass17, AdMass18, AdMass19, AdMass20, AdMass21, AdMass22, AdMass23, AdMass24, AdMass25, AdMass26, AdMass27, AdMass28, AdMass29, AdMass30, AdMass31, AdMass32, AdMass33, AdMass34, AdMass35, AdMass36, AdMass37, AdMass38, AdMass39, AdMass40, AdMass41, AdMass42, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdM8, AdM9, AdM10, AdM11, AdM12, AdM13, AdM14, AdM15, AdM16, AdM17, AdM18, AdM19, AdM20, AdM21, AdM22, AdM23, AdM24, AdM25, AdM26, AdM27, AdM28, AdM29, AdM30, AdM31, AdM32, AdM33, AdM34, AdM35, AdM36, AdM37, AdM38, AdM39, AdM40, AdM41, AdM42, AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7, AdC8, AdC9, AdC10, AdC11, AdC12, AdC13, AdC14, AdC15, AdC16, AdC17, AdC18, AdC19, AdC20, AdC21, AdC22, AdC23, AdC24, AdC25, AdC26, AdC27, AdC28, AdC29, AdC30, AdC31, AdC32, AdC33, AdC34, AdC35, AdC36, AdC37, AdC38, AdC39, AdC40, AdC41, AdC42;
+    TextField Scales, MinSignals, MinConsSignals, RTTol, MZTol, SliceMZTol, Res, Base, RTTolShift, Start, End, Noise, AdName1, AdName2, AdName3, AdName4, AdName5, AdName6, AdName7, AdName8, AdName9, AdName10, AdName11, AdName12, AdName13, AdName14, AdName15, AdName16, AdName17, AdName18, AdName19, AdName20, AdName21, AdName22, AdName23, AdName24, AdName25, AdName26, AdName27, AdName28, AdName29, AdName30, AdName31, AdName32, AdName33, AdName34, AdName35, AdName36, AdName37, AdName38, AdName39, AdName40, AdName41, AdName42, AdMass1, AdMass2, AdMass3, AdMass4, AdMass5, AdMass6, AdMass7, AdMass8, AdMass9, AdMass10, AdMass11, AdMass12, AdMass13, AdMass14, AdMass15, AdMass16, AdMass17, AdMass18, AdMass19, AdMass20, AdMass21, AdMass22, AdMass23, AdMass24, AdMass25, AdMass26, AdMass27, AdMass28, AdMass29, AdMass30, AdMass31, AdMass32, AdMass33, AdMass34, AdMass35, AdMass36, AdMass37, AdMass38, AdMass39, AdMass40, AdMass41, AdMass42, AdM1, AdM2, AdM3, AdM4, AdM5, AdM6, AdM7, AdM8, AdM9, AdM10, AdM11, AdM12, AdM13, AdM14, AdM15, AdM16, AdM17, AdM18, AdM19, AdM20, AdM21, AdM22, AdM23, AdM24, AdM25, AdM26, AdM27, AdM28, AdM29, AdM30, AdM31, AdM32, AdM33, AdM34, AdM35, AdM36, AdM37, AdM38, AdM39, AdM40, AdM41, AdM42, AdC1, AdC2, AdC3, AdC4, AdC5, AdC6, AdC7, AdC8, AdC9, AdC10, AdC11, AdC12, AdC13, AdC14, AdC15, AdC16, AdC17, AdC18, AdC19, AdC20, AdC21, AdC22, AdC23, AdC24, AdC25, AdC26, AdC27, AdC28, AdC29, AdC30, AdC31, AdC32, AdC33, AdC34, AdC35, AdC36, AdC37, AdC38, AdC39, AdC40, AdC41, AdC42;
 
     @FXML
-    Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, noiselabel, Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7, Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42;
+    Label labelmin, dislabel, label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, noiselabel, Adlabel1, Adlabel2, Adlabel3, Adlabel4, Adlabel5, Adlabel6, Adlabel7, Adlabel8, Adlabel9, Adlabel10, Adlabel11, Adlabel12, Adlabel13, Adlabel14, Adlabel15, Adlabel16, Adlabel17, Adlabel18, Adlabel19, Adlabel20, Adlabel21, Adlabel22, Adlabel23, Adlabel24, Adlabel25, Adlabel26, Adlabel27, Adlabel28, Adlabel29, Adlabel30, Adlabel31, Adlabel32, Adlabel33, Adlabel34, Adlabel35, Adlabel36, Adlabel37, Adlabel38, Adlabel39, Adlabel40, Adlabel41, Adlabel42;
 
     @FXML
     Rectangle box1, box2, box3, box4;
@@ -526,6 +526,9 @@ public class FXMLTableViewController implements Initializable {
 //      protected String computeValue() {
 //      return makeString(session.getListofadductmproperties().get(6).intValue(),session.getListofadductchargeproperties().get(6).get());}});
         RTTol.textProperty().bindBidirectional(session.getRTTolProp(), new NumberStringConverter());
+        MinSignals.textProperty().bindBidirectional(session.getMinnumofsignals(), new NumberStringConverter());
+        MinConsSignals.textProperty().bindBidirectional(session.getMinnumofconsecutivesignals(), new NumberStringConverter());
+        Scales.textProperty().bindBidirectional(session.getScales());
         Start.textProperty().bindBidirectional(session.getStart(), new NumberStringConverter());
         Noise.textProperty().bindBidirectional(session.getNoisethreshold(), new NumberStringConverter());
         End.textProperty().bindBidirectional(session.getEnd(), new NumberStringConverter());
@@ -542,9 +545,32 @@ public class FXMLTableViewController implements Initializable {
             public void changed(ObservableValue ov, Number value, Number newVal) {
                 session.setPeackPick(PeakPick.getItems().get(newVal.intValue()).toString());
                 if (PeakPick.getItems().get(newVal.intValue()).toString().equals("MassSpecWavelet")) {
-                    noiselabel.setText("S/N Threshold");
+                    noiselabel.setText("S/N Threshold:");
+                    Scales.setVisible(true);
+                    dislabel.setVisible(true);
+                    box3.setHeight(129);
+                    label10.setLayoutY(422);
+                    box4.setLayoutY(425);
+                    labelmin.setLayoutY(434);
+                    RTTolShift.setLayoutY(430);
+                    Res.setLayoutY(460);
+                    label11.setLayoutY(434);
+                    label6.setLayoutY(464);
+                    label7.setLayoutY(438);
+                    
                 } else {
-                    noiselabel.setText("NU Threshold");
+                    noiselabel.setText("NU Threshold:");
+                    Scales.setVisible(false);
+                    dislabel.setVisible(false);
+                    box3.setHeight(98);
+                    label10.setLayoutY(391);
+                    box4.setLayoutY(394);
+                    labelmin.setLayoutY(401);
+                    RTTolShift.setLayoutY(399);
+                    Res.setLayoutY(429);
+                    label11.setLayoutY(404);
+                    label6.setLayoutY(433);
+                    label7.setLayoutY(407);
                 }
             }
 
@@ -676,6 +702,7 @@ public class FXMLTableViewController implements Initializable {
         System.out.println(session.getReferenceTsv().toString());
         
         setMasterListofOGroups(session.parseReferenceTsv()); }
+     
         finally {
             Platform.runLater(new Runnable() {
                         @Override
@@ -721,10 +748,12 @@ public class FXMLTableViewController implements Initializable {
 
         
         TabPane.setVisible(false);
-        RTTol.setDisable(true);
+        MinSignals.setDisable(true);
+        MinConsSignals.setDisable(true);
         MZTol.setDisable(true);
         SliceMZTol.setDisable(true);
-        Res.setDisable(true);
+        RTTol.setDisable(true);
+        
         Start.setDisable(true);
         End.setDisable(true);
         toggleadductgeneration.setDisable(true);

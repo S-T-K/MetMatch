@@ -58,6 +58,9 @@ public class Session {
     private SimpleFloatProperty start;
     private SimpleFloatProperty end;
     private SimpleFloatProperty noisethreshold;
+    private SimpleIntegerProperty minnumofsignals;
+    private SimpleIntegerProperty minnumofconsecutivesignals;
+    private SimpleStringProperty scales;
    
     private int numberofadducts;
     private int numberofFiles;
@@ -109,6 +112,9 @@ System.out.println(System.getProperty("user.dir"));
         PeakRTTolerance = new SimpleFloatProperty(0.15f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
         minPeakLength = new SimpleFloatProperty(0.1f);
+        minnumofsignals = new SimpleIntegerProperty(5);
+        minnumofconsecutivesignals = new SimpleIntegerProperty(3);
+        scales = new SimpleStringProperty("5, 19");
         
             
         engine = new Rengine(new String[] { "--no-save" }, false, null);
@@ -764,7 +770,7 @@ System.out.println(System.getProperty("user.dir"));
      * @return the maxPeakLengthint
      */
     public short getMaxPeakLengthint() {
-        return maxPeakLengthint;
+        return (short) ((maxPeakLength.floatValue()/(RTTolerance.floatValue()*2/resolution.floatValue()))/2);
     }
     
     //final steps when Parameters are fixed
@@ -1147,6 +1153,48 @@ System.out.println(System.getProperty("user.dir"));
      */
     public void setNoisethreshold(SimpleFloatProperty noisethreshold) {
         this.noisethreshold = noisethreshold;
+    }
+
+    /**
+     * @return the minnumofsignals
+     */
+    public SimpleIntegerProperty getMinnumofsignals() {
+        return minnumofsignals;
+    }
+
+    /**
+     * @param minnumofsignals the minnumofsignals to set
+     */
+    public void setMinnumofsignals(SimpleIntegerProperty minnumofsignals) {
+        this.minnumofsignals = minnumofsignals;
+    }
+
+    /**
+     * @return the minnumofconsecutivesignals
+     */
+    public SimpleIntegerProperty getMinnumofconsecutivesignals() {
+        return minnumofconsecutivesignals;
+    }
+
+    /**
+     * @param minnumofconsecutivesignals the minnumofconsecutivesignals to set
+     */
+    public void setMinnumofconsecutivesignals(SimpleIntegerProperty minnumofconsecutivesignals) {
+        this.minnumofconsecutivesignals = minnumofconsecutivesignals;
+    }
+
+    /**
+     * @return the scales
+     */
+    public SimpleStringProperty getScales() {
+        return scales;
+    }
+
+    /**
+     * @param scales the scales to set
+     */
+    public void setScales(SimpleStringProperty scales) {
+        this.scales = scales;
     }
     
 }

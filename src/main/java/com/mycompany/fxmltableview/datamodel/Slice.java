@@ -169,7 +169,7 @@ public class Slice {
      //this.clean();
      //this.generateInterpolatedEIC();
      
-     if (numberofsignals<5) {
+     if (numberofsignals<file.getSession().getMinnumofsignals().doubleValue()) {
          this.empty = true;
      } else {
          this.empty = false;
@@ -242,8 +242,8 @@ public class Slice {
         //Retrieve values, see script for names
         //=OUTPUTS
 //        float start3 = System.currentTimeMillis();
-        String evalstring = "getMajorPeaks(eic, scales=c(5, 19), snrTh=";
-         
+        String evalstring = "getMajorPeaks(eic, scales=c(";
+        evalstring = evalstring.concat(file.getSession().getScales().get() + "), snrTh=");
 //        System.out.println("getmajorpeaks");
         evalstring = evalstring.concat(file.getSession().getNoisethreshold().get() + ")");
 //        s = engine.eval("paste(capture.output( " + evalstring + "),collapse='\\n')");
@@ -1413,7 +1413,7 @@ public class Slice {
         //number of consecutive signals
         int nocs = 0;
         long sum = 0;
-        int minnocs = (int) (file.getSession().getMinPeakLength().floatValue()*60*file.getScanspersecond());
+        int minnocs = file.getSession().getMinnumofconsecutivesignals().get();
         for (int i = 0; i<MZArray.length; i++) {
             if (MZArray[i]==0||MZArray[i]<minMZ||MZArray[i]>maxMZ) {
                 MZArray[i] = 0;
