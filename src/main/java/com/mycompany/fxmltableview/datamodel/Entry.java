@@ -61,7 +61,7 @@ public class Entry {
     private boolean empty;
     private int Inline;
     private int Outline;
-    
+    private String mString;
 
     
     
@@ -962,6 +962,20 @@ if (listofSlices.containsKey(file)) {
      */
     public void setRanges(HashMap<RawDataFile, Float> Ranges) {
         this.Ranges = Ranges;
+    }
+
+    /**
+     * @return the mString
+     */
+    public String getmString() {
+        return mString;
+    }
+
+    /**
+     * @param mString the mString to set
+     */
+    public void setmString(String mString) {
+        this.mString = mString;
     }
 
     

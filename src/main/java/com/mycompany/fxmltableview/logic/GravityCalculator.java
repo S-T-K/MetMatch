@@ -79,7 +79,7 @@ public class GravityCalculator {
          }
          
          //don't calcualte every step for big xRanges, => increase performance
-         int step = (int) ((double) xRanges[count] / 10.0);
+         int step = (int) ((double) absolutex / 10.0);
          if (step < 1) {
              step = 1;
          }
@@ -134,7 +134,7 @@ public class GravityCalculator {
                      //to avoid keeping a list, the average is updated continuously, which requires to keep track of the current sum of all weights = counts
                      float xdistance = absolutex + 1 - (Math.abs(i - l));
                      //normalize distance
-                     xdistance /= (xRanges[count]+1);
+                     xdistance /= (absolutex+1);
                      //the weight is the sum of the proximity value and the distance
                      ncentroids[l] = (ncentroids[l] * counts[l] + (maxint * max * xdistance)) / (counts[l] + (max * xdistance));
                      counts[l] += max * xdistance;

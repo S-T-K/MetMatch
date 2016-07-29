@@ -1857,7 +1857,7 @@ indicatorbar.setEffect(adjust);
                             for (String nameo : session.getListofadductnames()) {
 
                                 //to every hypothetical adduct
-                                if (j != k && (adduct.getCharge()==null||Objects.equals(session.getListofadductcharges().get(k), adduct.getCharge()))) {
+                                if (j != k && (adduct.getCharge()==null||adduct.getIonisation()==null||lastChar(session.getListofadductcharges().get(k).toString())==lastChar(session.getListofadductcharges().get(j).toString()))) {
                                     //don't add the same value
                                     //get original mass
                                     Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
@@ -1916,7 +1916,74 @@ indicatorbar.setEffect(adjust);
                     } else //if multiple Ions specified
                      if (adduct.getIon().indexOf(',') > 0) {
                             //do something
+                            String ionString = adduct.getIon();
+                            String mString = adduct.getmString();
+//                            List<String> listofadductnames = new ArrayList<>();
+//                            List<Float> listofadductms = new ArrayList<>();
+String[] nameArray = ionString.split(",");
+String[] mArray = mString.split(",");
+                            
+                           int j = 0;
+                        for (String namen : session.getListofadductnames()) {
+
+                            //add every possible adduct
+                            for (int k = 0; k<nameArray.length; k++) {
+
+                                //to every hypothetical adduct
+                                if (adduct.getCharge()==null||adduct.getIonisation()==null||lastChar(session.getListofadductcharges().get(j).toString())==lastChar(nameArray[k])) {
+                                    //don't add the same value
+                                    //get original mass
+                                    Float mass = Float.parseFloat(mArray[k]);
+                                    float M = mass;
+                                    //get new mass
+                                    mass *= session.getListofadductms().get(j);
+                                    mass /= session.getListofadductcharges().get(j);
+                                    mass += session.getListofadductmasses().get(j);
+
+                                    Float ppm = mass / 1000000 * session.getMZTolerance();
+                                    boolean duplicate = false;
+                                    for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
+                                        if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
+                                            duplicate = true;
+                                            // System.out.println("Duplicate generated");
+                                            break;
+                                        }
+                                    }
+                                    if (!duplicate) {
+                                        String Ion;
+                                        if (session.getListofadductms().get(j)==1) {
+                                        Ion = "[M(" + adduct.getNum() + ":";
+                                        } else {
+                                        Ion = "[" + session.getListofadductms().get(j) + "M(" + adduct.getNum() + ":";
+                                        }
+                                       
+                                        
+                                       
+                                        Ion = Ion +  nameArray[k];
+                                        
+                                        
+                                        Ion = Ion.concat(")" + namen + "]");
+                                        String charge = session.getListofadductchargeproperties().get(j).get();
+                                        char sign = charge.charAt(charge.length() - 1);
+                                        for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
+                                            Ion = Ion.concat(String.valueOf(sign));
+                                        }
+                                        MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, M, adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
+                                        max++;
+                                    }
+                                }
+                            }
+                            j++;
+                        }
+
+                            
+                            
+                            
+                            
+                            
+                            
                         } else {
+                         //if only one ion specified
                             int j = 0;
                             for (String namen : session.getListofadductnames()) {
 
@@ -2613,6 +2680,10 @@ public static boolean open(File file)
     }
 }
 
+
+public char lastChar (String string) {
+    return string.charAt(string.length()-1);
+}
        
         
 }

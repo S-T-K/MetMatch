@@ -439,6 +439,8 @@ public class Session {
             //add Adduct to correct Ogroup
             ogroup = OMap.get(OGroup);
             Entry adduct = new Entry(Num,MZ,RT,Xn,OGroup,Ion,M,Charge,ScanEvent,Ionisation, labeledXn, i, this,ogroup);
+             if (infos.get(6).isspecified()) {
+            adduct.setmString(allRows.get(i)[indexM]); }
             ogroup.addAdduct(adduct);
             //System.out.println(labeledXn[0]+ "   " + labeledXn[1]);
             
