@@ -604,6 +604,8 @@ public class Fxml_gravityshiftviewController implements Initializable {
 
                                 }
                                 grav.qualitycheck(samplematrix, centroids, samplefile);
+                            
+                                
                                 samplefile.setRtshiftfunction(olist, centroids);
                                 progress.setVisible(false);
                              ((Group) topSeries.getNode()).getChildren().get(0).setVisible(false);
@@ -1763,6 +1765,7 @@ if (Thread.currentThread().isInterrupted()) {
                  return null;
              }
                                 }
+                                
                                 
                                 //quality check
                                 grav.qualitycheck(matrix, centroids,currentfile);

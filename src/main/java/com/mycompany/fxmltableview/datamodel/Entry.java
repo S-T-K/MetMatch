@@ -1086,8 +1086,10 @@ public boolean isStored(RawDataFile file) {
 }
     
 public void setPeakWeight(RawDataFile file, double weight, float start, float end) {
+    if (listofSlices!=null) {
    if (listofSlices.containsKey(file)) {
        Slice slice = listofSlices.get(file);
+       if (slice.getListofPeaks()!=null) {
        for (int i = 0; i<slice.getListofPeaks().size(); i++) {
            Peak peak = slice.getListofPeaks().get(i);
            if (peak.getIndexRT()>=start&&peak.getIndexRT()<=end) {
@@ -1097,7 +1099,8 @@ public void setPeakWeight(RawDataFile file, double weight, float start, float en
            }
        }
    }
-    
+   }
+    }
     
 }
 

@@ -13,6 +13,7 @@ import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import com.univocity.parsers.tsv.TsvWriter;
 import com.univocity.parsers.tsv.TsvWriterSettings;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -29,6 +30,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -601,6 +603,7 @@ public class FXMLTableViewController implements Initializable {
         metTable.setPlaceholder(label);
 
         InputTable.setItems(session.getInfos());
+     
 
         infocol.setCellValueFactory(
                 new PropertyValueFactory<Information, String>("information")
@@ -1854,7 +1857,7 @@ indicatorbar.setEffect(adjust);
                             for (String nameo : session.getListofadductnames()) {
 
                                 //to every hypothetical adduct
-                                if (j != k && (adduct.getCharge()==null||session.getListofadductcharges().get(k)==adduct.getCharge())) {
+                                if (j != k && (adduct.getCharge()==null||Objects.equals(session.getListofadductcharges().get(k), adduct.getCharge()))) {
                                     //don't add the same value
                                     //get original mass
                                     Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
@@ -1876,7 +1879,19 @@ indicatorbar.setEffect(adjust);
                                         }
                                     }
                                     if (!duplicate) {
-                                        String Ion = "[M(" + adduct.getNum() + ":[M" + nameo + "]";
+                                        String Ion;
+                                        if (session.getListofadductms().get(j)==1) {
+                                        Ion = "[M(" + adduct.getNum() + ":[";
+                                        } else {
+                                        Ion = "[" + session.getListofadductms().get(j) + "M(" + adduct.getNum() + ":[";
+                                        }
+                                       
+                                        
+                                        if (session.getListofadductms().get(k)==1) {
+                                        Ion = Ion + "M" + nameo + "]";
+                                        } else {
+                                        Ion = Ion + session.getListofadductms().get(k) + "M" + nameo + "]";
+                                        }
                                         String charge = session.getListofadductchargeproperties().get(k).get();
                                         char sign = charge.charAt(charge.length() - 1);
                                         for (int c = 0; c < session.getListofadductcharges().get(k); c++) {
@@ -1922,7 +1937,12 @@ indicatorbar.setEffect(adjust);
                                     }
                                 }
                                 if (!duplicate) {
-                                    String Ion = "[M(" + adduct.getNum() + ")+" + namen + "]";
+                                    String Ion;
+                                    if (session.getListofadductms().get(j)==1) {
+                                        Ion = "[M(" + adduct.getNum() + ")+" + namen + "]";
+                                    } else {
+                                        Ion = "[" + session.getListofadductms().get(j) + "M(" + adduct.getNum() + ")+" + namen + "]";
+                                    }
                                     String charge = session.getListofadductchargeproperties().get(j).get();
                                     char sign = charge.charAt(charge.length() - 1);
                                     for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
@@ -2295,55 +2315,63 @@ indicatorbar.setEffect(adjust);
         newOption(paramButton);
         
         //TEST
-        parameterButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent evt) {
-                
- 
-                if (evt.getButton()==MouseButton.SECONDARY) {
-                    
- 
-                    double targetX = evt.getScreenX();
-                    double targetY = evt.getScreenY();
- 
-                    GridPane pane = new GridPane();
-                    pane.add(new Label(""), 1, 1);
-                    pane.add(new Label("TODO, could contain parameters, images, descriptions, help..."), 1, 2);
-                    pane.add(new Label(""), 1, 3);
-                    pane.add(new TextField("Parameter!"), 1, 4);
-                    pane.add(new Label(""), 1, 5);
-                    Label label = new Label("?");
-                    pane.add(label, 1, 6);
-         
-                    pane.add(new Label(""), 1, 7);
-                    ImageView view = new ImageView();
-                    view.setImage(new Image("file:TestBild.png", true));
-                    
-                    PopOver popOver = new PopOver(pane);
-                    popOver.setTitle("Detachable!");
-                               label.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent evt) {
-                double start = System.currentTimeMillis();
-                boolean finished = false;
-                while (!finished&&System.currentTimeMillis()-start<750) {
-                if (System.currentTimeMillis()-start>500&&label.isHover()) {
-                    finished=true;
-              pane.add(view, 1, 8);
-              pane.getChildren().remove(label);
-                }
-                
-            }
-            }
-        });
- 
-                    double size = 3;
-                   
-                        popOver.show(outputButton, targetX, targetY);
-                    
-                }
-            }
-        });
+//        parameterButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent evt) {
+//                
+// 
+//                if (evt.getButton()==MouseButton.SECONDARY) {
+//                    
+// 
+//                    double targetX = evt.getScreenX();
+//                    double targetY = evt.getScreenY();
+// 
+//                    GridPane pane = new GridPane();
+//                    pane.add(new Label(""), 1, 1);
+//                    pane.add(new Label("TODO, could contain parameters, images, descriptions, help..."), 1, 2);
+//                    pane.add(new Label(""), 1, 3);
+//                    pane.add(new TextField("Parameter!"), 1, 4);
+//                    pane.add(new Label(""), 1, 5);
+//                    Label label = new Label("?");
+//                    pane.add(label, 1, 6);
+//         
+//                    pane.add(new Label(""), 1, 7);
+//                    ImageView view = new ImageView();
+//                    view.setImage(new Image("file:TestBild.png", true));
+//                    
+//                    
+//                    
+//                    PopOver popOver = new PopOver(pane);
+//                    popOver.setTitle("Detachable!");
+//                               label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent evt) {
+//                double start = System.currentTimeMillis();
+//                boolean finished = false;
+//                while (!finished&&System.currentTimeMillis()-start<750) {
+//                if (System.currentTimeMillis()-start>500&&label.isHover()) {
+//                    try {
+//                        finished=true;
+//                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fxml_gravityshiftview.fxml"));
+//                        Pane myPane = (Pane) loader.load();
+//                        pane.add(myPane, 1, 8);
+//                        pane.getChildren().remove(label);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//                
+//            }
+//            }
+//        });
+// 
+//                    double size = 3;
+//                   
+//                        popOver.show(outputButton, targetX, targetY);
+//                    
+//                }
+//            }
+//        });
     }
     
     public void newOption(Button button) {
@@ -2548,6 +2576,43 @@ public void setstep(int step) {
             newOption(parameterButton);
     }
 }
+
+//to open files with system program associated with the file
+public static boolean open(File file)
+{
+    try
+    {
+        if (OSDetector.isWindows())
+        {
+            Runtime.getRuntime().exec(new String[]
+            {"rundll32", "url.dll,FileProtocolHandler",
+             file.getAbsolutePath()});
+            return true;
+        } else if (OSDetector.isLinux() || OSDetector.isMac())
+        {
+            Runtime.getRuntime().exec(new String[]{"/usr/bin/open",
+                                                   file.getAbsolutePath()});
+            return true;
+        } else
+        {
+            // Unknown OS, try with desktop
+            if (Desktop.isDesktopSupported())
+            {
+                Desktop.getDesktop().open(file);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    } catch (Exception e)
+    {
+        e.printStackTrace(System.err);
+        return false;
+    }
+}
+
        
         
 }

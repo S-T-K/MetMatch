@@ -138,6 +138,7 @@ public class Fxml_adductviewController implements Initializable {
     private RawDataFile selectedFile;
     
      XYChart.Series line;
+     double lineanchor;
     
     private float scroll;
 
@@ -1034,15 +1035,15 @@ if (event.isPrimaryButtonDown()) {
     Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
     double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
     double y = chart.getYAxis().sceneToLocal(mouseSceneCoords).getY();
-
+    lineanchor = x;
     System.out.println("" +
         chart.getXAxis().getValueForDisplay(x) + ",  " +
         chart.getYAxis().getValueForDisplay(y)
     );
    
     line = new XYChart.Series();
-    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
-    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),1.0f));
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),1.0f));
     chart.getData().add(line);
     chart.applyCss();
     
@@ -1069,10 +1070,16 @@ chart.setOnMouseDragged((MouseEvent event) -> {
     );
    
     
-    
+  if (x>lineanchor)  { 
+  //System.out.println(((XYChart.Data)line.getData().get(1)).getXValue().getClass());
+  
     ((XYChart.Data)line.getData().get(1)).setXValue(chart.getXAxis().getValueForDisplay(x));
-    ((XYChart.Data)line.getData().get(1)).setYValue(chart.getYAxis().getValueForDisplay(y));
-    
+    ((XYChart.Data)line.getData().get(0)).setXValue(chart.getXAxis().getValueForDisplay(lineanchor));
+   // ((XYChart.Data)line.getData().get(1)).setYValue(chart.getYAxis().getValueForDisplay(y));
+    } else {
+      ((XYChart.Data)line.getData().get(0)).setXValue(chart.getXAxis().getValueForDisplay(x));
+      ((XYChart.Data)line.getData().get(1)).setXValue(chart.getXAxis().getValueForDisplay(lineanchor));
+  }
     
 }});
        
@@ -1139,15 +1146,15 @@ if (event.isPrimaryButtonDown()) {
     Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
     double x = chart.getXAxis().sceneToLocal(mouseSceneCoords).getX();
     double y = chart.getYAxis().sceneToLocal(mouseSceneCoords).getY();
-
+    lineanchor = x;
     System.out.println("" +
         chart.getXAxis().getValueForDisplay(x) + ",  " +
         chart.getYAxis().getValueForDisplay(y)
     );
    
     line = new XYChart.Series();
-    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
-    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),chart.getYAxis().getValueForDisplay(y)));
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),1.0f));
+    line.getData().add(new XYChart.Data(chart.getXAxis().getValueForDisplay(x),1.0f));
     chart.getData().add(line);
     chart.applyCss();
     
@@ -1175,8 +1182,16 @@ chart.setOnMouseDragged((MouseEvent event) -> {
    
     
     
+    if (x>lineanchor)  { 
+  //System.out.println(((XYChart.Data)line.getData().get(1)).getXValue().getClass());
+  
     ((XYChart.Data)line.getData().get(1)).setXValue(chart.getXAxis().getValueForDisplay(x));
-    ((XYChart.Data)line.getData().get(1)).setYValue(chart.getYAxis().getValueForDisplay(y));
+    ((XYChart.Data)line.getData().get(0)).setXValue(chart.getXAxis().getValueForDisplay(lineanchor));
+   // ((XYChart.Data)line.getData().get(1)).setYValue(chart.getYAxis().getValueForDisplay(y));
+    } else {
+      ((XYChart.Data)line.getData().get(0)).setXValue(chart.getXAxis().getValueForDisplay(x));
+      ((XYChart.Data)line.getData().get(1)).setXValue(chart.getXAxis().getValueForDisplay(lineanchor));
+  }
     
     
 }});
@@ -1336,7 +1351,7 @@ chart.setOnMouseReleased(null);
                 if (adduct.getListofSlices().containsKey(file)&&adduct.getListofSlices().get(file).getFittedPeak()!=null) {
                     shift = adduct.getListofSlices().get(file).getFittedPeak().getIndexshift();
                     //if no peak found
-                } else {
+                } else if (adduct.getOGroupObject().getOgroupShift().get(file)!=null) {
                     shift = adduct.getOGroupObject().getOgroupShift().get(file);
                 }
                 ObservableList<XYChart.Data> list = series.getData();

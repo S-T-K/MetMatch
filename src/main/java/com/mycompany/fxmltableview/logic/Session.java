@@ -94,8 +94,8 @@ public class Session {
 // exec.args=-Xms1g -Xmx5g -classpath %classpath ${packageClassName}
 // exec.executable=java
 //System.setProperty("java.library.path", "C:\\Program Files\\R\\R-3.2.3\\library\\rJava\\jri\\x64");
-System.out.println(System.getProperty("java.library.path"));
-System.out.println(System.getProperty("user.dir"));
+//System.out.println(System.getProperty("java.library.path"));
+//System.out.println(System.getProperty("user.dir"));
         
         this.mastercontroller = mastercontroller;
         startIOThread();
