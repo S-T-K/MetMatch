@@ -152,6 +152,7 @@ public class Fxml_adductviewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+       
         //add ChartGenerator
         chartGenerator = new ChartGenerator(this, null, null);
         setFiletoseries((HashMap<RawDataFile, List<XYChart.Series>>) new HashMap());

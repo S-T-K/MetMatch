@@ -576,6 +576,9 @@
                                     <RadioButton fx:id="option1" layoutX="21.0" layoutY="14.0" mnemonicParsing="false" onAction="#option1changed" prefHeight="17.0" prefWidth="199.0" text="Option 1: Extend Input Matrix" />
                                     <RadioButton fx:id="option2" layoutX="21.0" layoutY="50.0" mnemonicParsing="false" onAction="#option2changed" prefHeight="17.0" prefWidth="253.0" text="Option 2: Only write specific Information" />
                                     <Separator layoutY="40.0" prefHeight="3.0" prefWidth="438.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                    <CheckBox fx:id="changedcheckbox" layoutX="21.0" layoutY="332.0" mnemonicParsing="false" text="Create M/Z and RT Shift corrected .mzXML Files" />
+                                    <Separator layoutX="1.0" layoutY="304.0" prefHeight="3.0" prefWidth="438.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                    <Label alignment="TOP_LEFT" layoutX="44.0" layoutY="358.0" prefHeight="71.0" prefWidth="253.0" text="MetMatch creates new .mzXML Files with corrected M/Z and RT values. The original Files will not be replaced." textAlignment="JUSTIFY" textFill="#828282" wrapText="true" />
                                  </children>
                               </AnchorPane>
                            </content>

@@ -197,7 +197,7 @@ public class GravityCalculator {
                            Alert alert = new Alert(AlertType.WARNING, "");
          alert.setTitle("Warning");
          alert.setHeaderText(file.getName() + ": Very few peaks detected!");
-         alert.setContentText("Only very few peaks could be used in calculating the retention time shift function. This indicates that the file contains very few of the metabolites specified in the reference data matrix or that the retention time shift function is far from optimal.\n\nPlease verify the correctness of the results!");
+         alert.setContentText("Only very few peaks could be for the calculation of the retention time shift function. This indicates that either the file contains very few of the metabolites specified in the reference data matrix or that the retention time shift function is far from optimal.\n\nPlease verify the correctness of the results!");
          alert.showAndWait();
                         }});
          

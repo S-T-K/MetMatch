@@ -152,7 +152,7 @@ public class FXMLTableViewController implements Initializable {
     ChoiceBox PeakPick;
 
     @FXML
-    CheckBox toggleadductgeneration;
+    CheckBox toggleadductgeneration, changedcheckbox;
 
     @FXML
     TabPane TabPane;
@@ -2360,14 +2360,47 @@ String[] mArray = mString.split(",");
     }
 
     public void Output() throws UnsupportedEncodingException, IOException {
+        Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                           progressbar.setVisible(true);
+                           progressbar.progressProperty().unbind();
+                           progressbar.progressProperty().set(-1.0);
+                        }});
+        
+        
+           Task task = new Task<Void>() {
+            @Override
+            public Void call() throws IOException, InterruptedException {
+           if (changedcheckbox.selectedProperty().get()) {
+        for (RawDataFile file: session.getAllFiles()) {
+            file.writeChangedFile();
+        }
+        }
+        
         if (option1.selectedProperty().get()) {
             generateOutputExtended();
         } else {
             generateOutputSpecific();
         }
+        
+        
+        Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                           progressbar.setVisible(false);
+                        }});
+        
+                return null;
+            }
 
+        };
+
+        //new thread that executes task
+        new Thread(task).start();
+        
     }
-    
+        
     public void initializeButtons() {
         //parameterButton, referenceMatrixButton, referenceFilesButton, batchFilesButton, checkResultsButton, p1, p2, p3, p4, p5, p6
         

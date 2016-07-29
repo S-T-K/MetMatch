@@ -224,7 +224,7 @@ listofSlices=newlist;
 if (listofSlices.containsKey(file)) {
         Slice currentSlice = listofSlices.get(file);
         if (currentSlice.lastpeakpickversion!=session.getPeakPickversion()) {
-            System.out.println("Picking File: " +  currentSlice.getFile().getName());
+            //System.out.println("Picking File: " +  currentSlice.getFile().getName());
 //        
         if (session.getPeackPick().equals("Gauss Peak Correlation")) {
             currentSlice.NaivePeakPicking();
