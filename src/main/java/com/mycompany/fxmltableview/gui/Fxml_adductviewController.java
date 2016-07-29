@@ -37,6 +37,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -70,7 +71,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.Group;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -170,6 +175,22 @@ public class Fxml_adductviewController implements Initializable {
         
         weightfield.textProperty().bindBidirectional(weightslider.valueProperty(), new NumberStringConverter());
         
+                                ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean prevselected, Boolean newselected) {
+                if (!prevselected) {
+                    weightslider.setVisible(true);
+                } else {
+                   if (!weightslider.focusedProperty().get()) {
+                       weightslider.setVisible(false);
+                   }
+                }
+            }
+                        };
+        
+        
+        weightfield.focusedProperty().addListener(listener);
+        
     }
 
     //method that generates the graphs
@@ -268,18 +289,37 @@ public class Fxml_adductviewController implements Initializable {
                     System.out.println("Adding Read Adduct from Print");
                     session.getIothread().readAdduct(adduct);
                          
+                    //gridPane.getColumnConstraints().add(new ColumnConstraints(350));
                     //Label showing the MZ
                     VBox box = new VBox();
+                    box.setStyle("-fx-background-color: #E1E1E1");
+                    box.setAlignment(Pos.CENTER_LEFT);
                     String MZ = Float.toString(adduct.getMZ()).concat("00000000000");
                     MZ = MZ.substring(0,MZ.indexOf(".")+5);
-                    Label label = new Label("MZ: " + MZ);
+                    Label label = new Label(" MZ: ");
+                    label.setFont(Font.font("Verdana",FontWeight.BOLD , 12));
                     box.getChildren().add(label);
-                    Label label2 = new Label("Ion: " + adduct.getIon());
+                    Label vlabel = new Label(MZ);
+                    formatLabel(vlabel);
+                    box.getChildren().add(vlabel);
+                    Label label2 = new Label(" Ion: ");
+                    label2.setFont(Font.font("Verdana",FontWeight.BOLD , 12));
                     box.getChildren().add(label2);
-                    Label label3 = new Label("Xn: " + Float.toString(adduct.getXn()));
+                    Label vlabel2 = new Label(adduct.getIon());
+                    formatLabel(vlabel2);
+                    box.getChildren().add(vlabel2);
+                    Label label3 = new Label(" Xn: ");
+                    label3.setFont(Font.font("Verdana",FontWeight.BOLD , 12));
                     box.getChildren().add(label3);
-                    Label label4 = new Label("Num: " + Float.toString(adduct.getNum()));
+                    Label vlabel3 = new Label(Integer.toString(adduct.getXn()));
+                    formatLabel(vlabel3);
+                    box.getChildren().add(vlabel3);
+                    Label label4 = new Label(" Num:   ");
+                    label4.setFont(Font.font("Verdana",FontWeight.BOLD , 12));
                     box.getChildren().add(label4);
+                    Label vlabel4 = new Label(Integer.toString(adduct.getNum()));
+                    formatLabel(vlabel4);
+                    box.getChildren().add(vlabel4);
                     
                     //generate graphs
                     
@@ -1336,6 +1376,7 @@ chart.setOnMouseReleased(null);
     public void hideSlider() {
         weighttoggle.setSelected(true);
         weightslider.setVisible(false);
+        weightslider.setValue(Math.round(weightslider.getValue()));
         peakWeightMode();
     }
     
@@ -1414,6 +1455,26 @@ chart.setOnMouseReleased(null);
      * @return the alignablescatterseries
      */
     
-
+public void formatLabel(Label label) {
+    if (label.getText()==null) {
+                        label.setText("?");
+                    } else if (label.getText().length()>25) {
+                        label.setTooltip(new Tooltip(label.getText()));
+                        String newtext = label.getText().substring(0, 21) + "...";
+                        label.setText(newtext);
+                    }
+    label.setText("  " + label.getText());
+    
+                    label.setMaxWidth(180);
+                    label.setPrefWidth(180);
+                    label.setMinWidth(180);
+                    label.setMaxHeight(25);
+                    label.setPrefHeight(25);
+                    label.setMinHeight(25);
+                    label.setAlignment(Pos.TOP_LEFT);
+    
+}
+    
+    
    
 }
