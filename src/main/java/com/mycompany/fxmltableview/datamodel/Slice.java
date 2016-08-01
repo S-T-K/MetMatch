@@ -1036,15 +1036,15 @@ public class Slice {
             float intensity = IntArray[RTindex];
             
             //check if we are "inside" another peak, if yes, do nothing
-            boolean inside = false;
-            if (listofPeaks!=null) {
-            for (Peak peak:listofPeaks) {
-                if (peak.getStart()<=RTindex&&peak.getEnd()>=RTindex) {
-                    inside = true;
-                }
-            }
-            }
-            if (!inside) {
+//            boolean inside = false;
+//            if (listofPeaks!=null) {
+//            for (Peak peak:listofPeaks) {
+//                if (peak.getStart()<=RTindex&&peak.getEnd()>=RTindex) {
+//                    inside = true;
+//                }
+//            }
+//            }
+//            if (!inside) {
             
             //TODO get range
             float sheight=intensity;
@@ -1073,7 +1073,7 @@ public class Slice {
            
             }
             
-            }
+            //}
             
            
         }

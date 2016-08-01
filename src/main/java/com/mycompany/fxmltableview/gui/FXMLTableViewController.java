@@ -54,6 +54,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
@@ -2372,6 +2373,7 @@ String[] mArray = mString.split(",");
            Task task = new Task<Void>() {
             @Override
             public Void call() throws IOException, InterruptedException {
+                try {
            if (changedcheckbox.selectedProperty().get()) {
         for (RawDataFile file: session.getAllFiles()) {
             file.writeChangedFile();
@@ -2392,6 +2394,21 @@ String[] mArray = mString.split(",");
                         }});
         
                 return null;
+                } catch (Exception e) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                           Alert alert = new Alert(Alert.AlertType.ERROR, "");
+         alert.setTitle("Error");
+         alert.setHeaderText("Output file could not be written!");
+         alert.setContentText("MetMatch can't write the output file.\n\nPlease exit all other applications that are currently accessing the output file and try again.");
+         alert.showAndWait();
+         progressbar.setVisible(false);
+                        }});
+                    
+                    return null;
+                }
+              
             }
 
         };
