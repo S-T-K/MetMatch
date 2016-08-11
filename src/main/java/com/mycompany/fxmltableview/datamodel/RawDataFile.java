@@ -228,7 +228,7 @@ public class RawDataFile {
        }
       if (bin>=0){
        mzbins[bin]++;
-       //System.out.println(bin);
+       //System.out.println(listofSlices[i].getAdduct().getRT());
         }}
         }
         int max = 0;
@@ -253,6 +253,17 @@ public class RawDataFile {
         ppm = (float) (session.getMZTolerance()*(-1)+accuratebin*valuestep);
         System.out.println("PPM: " + ppm);
         System.out.println("                               Timeppm:  " + (System.currentTimeMillis()-start2));
+        
+//        System.out.println("values: ");
+//for (int i = 0;i <ppmvalues.length; i++) {
+//    System.out.println(ppmvalues[i]);
+//}        
+//
+//System.out.println("b: ");
+//for (int i = 0;i <ppmvalues.length; i++) {
+//    System.out.println(ppmvalues[i]);
+//}        
+
         
         mzshift.set(ppm);
         double start3 = System.currentTimeMillis();

@@ -70,7 +70,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
                <columns>
-                  <TableColumn fx:id="activeColumn" maxWidth="35.0" minWidth="0.0" prefWidth="0.0" text="Active">
+                  <TableColumn fx:id="activeColumn" maxWidth="35.0" minWidth="0.0" prefWidth="10.0" text="Active">
                      <cellValueFactory>
                         <PropertyValueFactory property="Active" />
                      </cellValueFactory>
@@ -80,13 +80,13 @@
                         <PropertyValueFactory property="File" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="colorColumn" maxWidth="57.0" minWidth="57.0" prefWidth="57.0" text="Color" />
+                  <TableColumn fx:id="colorColumn" maxWidth="57.0" minWidth="0.0" prefWidth="57.0" text="Color" />
                   <TableColumn fx:id="widthColumn" maxWidth="57.0" minWidth="0.0" prefWidth="0.0" text="Width">
                      <cellValueFactory>
                         <PropertyValueFactory property="Width" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="shiftColumn" maxWidth="77.0" minWidth="0.0" prefWidth="0.0" text="M/Z Shift [ppm]">
+                  <TableColumn fx:id="shiftColumn" maxWidth="1000.0" minWidth="0.0" text="M/Z Shift [ppm]">
                      <cellValueFactory>
                         <PropertyValueFactory property="mzshift" />
                      </cellValueFactory>

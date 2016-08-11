@@ -2154,9 +2154,9 @@ String[] mArray = mString.split(",");
             changed = true;
         }
 
-        if (!oldRT.equals(RTTolShift.getText())) {
-            changed = true;
-        }
+//        if (!oldRT.equals(RTTolShift.getText())) {
+//            changed = true;
+//        }
         
         if (!oldSN.equals(Noise.getText())) {
             changed = true;

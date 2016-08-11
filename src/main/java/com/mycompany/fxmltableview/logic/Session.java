@@ -109,12 +109,12 @@ public class Session {
         SliceMZTolerance = new SimpleFloatProperty (3.5f);
         RTTolerance = new SimpleFloatProperty(1.5f);
         MZTolerance = new SimpleFloatProperty(11.0f);
-        PeakRTTolerance = new SimpleFloatProperty(0.15f);
+        PeakRTTolerance = new SimpleFloatProperty(0.12f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
         minPeakLength = new SimpleFloatProperty(0.1f);
         minnumofsignals = new SimpleIntegerProperty(5);
         minnumofconsecutivesignals = new SimpleIntegerProperty(3);
-        scales = new SimpleStringProperty("5, 19");
+        scales = new SimpleStringProperty("3, 19");
         
             
         engine = new Rengine(new String[] { "--no-save" }, false, null);
@@ -138,12 +138,12 @@ public class Session {
     new Information("Mass/Charge","MZ", "Expected Mass/Charge Ratio of the Ion"),
     new Information("Ion ID","Num","Each Ion has to hava a unique number"),
     new Information("Metabolite ID","Group_ID","Each Metabolite has to have a unique number"),
-    new Information("Number of Carbon Atoms","Xn", "Number of Carbon Atoms of the Ion"),
+    new Information("Number of Carbon Atoms","", "Number of Carbon Atoms of the Ion"),
     new Information("Ion Form","","Annotated Ion Form, e.g. [M+H]+"),
     new Information("Uncharged Ion Mass", "", "Mass of uncharged, intact Ion"),
-    new Information("Ion Charge", "Charge", "Charge of the Ion"),
-    new Information("Scan Event", "ScanEvent", "Scan Event"),
-    new Information("Ionisation Mode", "Ionisation_Mode", "Ionisation Mode")
+    new Information("Ion Charge", "", "Charge of the Ion"),
+    new Information("Scan Event", "", "Scan Event"),
+    new Information("Ionisation Mode", "", "Ionisation Mode")
 );
     outputoptions = new ArrayList<>();
     outputoptions.add("Reference Retention Time (RT) of Ion");
