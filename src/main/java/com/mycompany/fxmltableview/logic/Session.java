@@ -111,7 +111,7 @@ public class Session {
         MZTolerance = new SimpleFloatProperty(11.0f);
         PeakRTTolerance = new SimpleFloatProperty(0.12f);
         maxPeakLength = new SimpleFloatProperty(0.9f);
-        minPeakLength = new SimpleFloatProperty(0.1f);
+        minPeakLength = new SimpleFloatProperty(0.05f);
         minnumofsignals = new SimpleIntegerProperty(5);
         minnumofconsecutivesignals = new SimpleIntegerProperty(3);
         scales = new SimpleStringProperty("3, 19");

@@ -1727,10 +1727,8 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
 //        areachart.setCache(true);
 //        areachart.setCacheHint(CacheHint.SPEED);
         linechart.setLegendVisible(false);
-        xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
-        xAxis.setLowerBound(0);
-        xAxis.setUpperBound(40);
+        xAxis.setAutoRanging(true);
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(session.getResolution());
         yAxis.setOpacity(0);
@@ -1920,9 +1918,8 @@ List<XYChart.Data> points = new ArrayList<>(intArr.length);
         yAxis.setAutoRanging(false);
 //        yAxis.setLowerBound(lower - 30);
 //        yAxis.setUpperBound(upper + 30);
-        xAxis.setAutoRanging(false);
-        xAxis.setLowerBound(0);
-        xAxis.setUpperBound(40);
+        xAxis.setAutoRanging(true);
+        
         yAxis.setLowerBound(session.getRTTolerance()*-55);
         yAxis.setUpperBound(session.getRTTolerance()*55);
        

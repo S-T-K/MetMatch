@@ -80,7 +80,7 @@
                         <PropertyValueFactory property="File" />
                      </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="colorColumn" maxWidth="57.0" minWidth="0.0" prefWidth="57.0" text="Color" />
+                  <TableColumn fx:id="colorColumn" maxWidth="1000.0" minWidth="0.0" prefWidth="57.0" text="Color" />
                   <TableColumn fx:id="widthColumn" maxWidth="57.0" minWidth="0.0" prefWidth="0.0" text="Width">
                      <cellValueFactory>
                         <PropertyValueFactory property="Width" />

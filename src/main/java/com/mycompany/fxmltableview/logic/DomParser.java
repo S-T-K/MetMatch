@@ -110,7 +110,11 @@ public class DomParser {
         float[] intensity = null;
         try {
         String encodedpeaks = getTextValue(EL, "peaks");
+        if (encodedpeaks!=null) {
         peaks = decoder.extractArray(encodedpeaks);
+        } else {
+            peaks = new float[0];
+        }
         massovercharge = new float[peaks.length/2];
         intensity = new float[peaks.length/2];
         for (int i =0; i<peaks.length/2; i++) {
@@ -156,7 +160,11 @@ public class DomParser {
         NodeList nl = ele.getElementsByTagName(tagName);
         if (nl != null && nl.getLength() > 0) {
             Element el = (Element) nl.item(0);
-            textVal = el.getFirstChild().getNodeValue();
+            try {
+            textVal = el.getFirstChild().getNodeValue(); }
+            catch (Exception e) {
+                return null;
+            }
         }
 
         return textVal;
