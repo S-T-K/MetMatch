@@ -1389,6 +1389,7 @@ chart.setOnMouseReleased(null);
                 Entry adduct = entry.getValue();
                 RawDataFile file = seriestofile.get(series);
                 float shift=0;
+                float mzshift = file.getMzshift();
                 //if peak found
                 if (adduct.getListofSlices().containsKey(file)&&adduct.getListofSlices().get(file).getFittedPeak()!=null) {
                     shift = adduct.getListofSlices().get(file).getFittedPeak().getIndexshift();
@@ -1403,9 +1404,41 @@ chart.setOnMouseReleased(null);
                     
                 }
                 
+                XYChart chart = seriestochart.get(entry.getKey());
+                if (chart instanceof ScatterChart) {
+                    for (XYChart.Data data : list) {
+                    data.YValueProperty().setValue(((float)data.YValueProperty().getValue())-mzshift);
+                
+                    
+                }
+                    
+                }
+                
+                
                 
             }
-            
+//            for (XYChart chart:charts) {
+//                if (chart.getClass().equals(new ScatterChart<>(null,null))) {
+//                    List<XYChart.Series<Number,Number>> series = chart.getData();
+//                    for (XYChart.Series<Number,Number> s:series) {
+//                        RawDataFile file = seriestofile.get(s);
+//                        
+//                        List<XYChart.Data<Number,Number>> points = s.getData();
+//                        for (XYChart.Data<Number,Number> point:points) {
+//                            point.
+//                        }
+//                    }
+//                    
+//                    List<XYChart.Data> points = ((XYChart.Series)chart.getData().get(0)).getData();
+//                    for (i)
+//                }
+//                
+//                
+//                
+//                
+//                
+//            }
+//            
             
             //if not acitve
         }else {
@@ -1413,12 +1446,13 @@ chart.setOnMouseReleased(null);
                 XYChart.Series series = entry.getKey();
                 Entry adduct = entry.getValue();
                 RawDataFile file = seriestofile.get(series);
-                float shift;
+                float shift=0;
+                float mzshift = file.getMzshift();
                 //if peak found
                 if (adduct.getListofSlices().containsKey(file)&&adduct.getListofSlices().get(file).getFittedPeak()!=null) {
                     shift = adduct.getListofSlices().get(file).getFittedPeak().getIndexshift();
                     //if no peak found
-                } else {
+                 } else if (adduct.getOGroupObject().getOgroupShift().get(file)!=null) {
                     shift = adduct.getOGroupObject().getOgroupShift().get(file);
                 }
                 
@@ -1431,6 +1465,15 @@ chart.setOnMouseReleased(null);
                     
                 }
                 
+                  XYChart chart = seriestochart.get(entry.getKey());
+                if (chart instanceof ScatterChart) {
+                    for (XYChart.Data data : list) {
+                    data.YValueProperty().setValue(((float)data.YValueProperty().getValue())+mzshift);
+                
+                    
+                }
+                    
+                }
                 
             }
             

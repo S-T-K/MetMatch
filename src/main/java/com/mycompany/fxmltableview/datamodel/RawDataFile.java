@@ -261,7 +261,7 @@ public class RawDataFile {
 //
 //System.out.println("b: ");
 //for (int i = 0;i <ppmvalues.length; i++) {
-//    System.out.println(ppmvalues[i]);
+//    System.out.println(mzbins[i]);
 //}        
 
         
