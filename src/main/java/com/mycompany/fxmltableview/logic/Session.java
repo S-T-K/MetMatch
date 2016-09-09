@@ -893,7 +893,7 @@ public class Session {
         listofadductcharges = new ArrayList<Integer>();
         listofadductms = new ArrayList<Integer>();
         for (int i = 0; i<listofadductnameproperties.size(); i++) {
-            if (!listofadductnameproperties.get(i).get().isEmpty()&&listofadductmassproperties.get(i).floatValue()>0&&listofadductmproperties.get(i).getValue()>0&&!listofadductchargeproperties.get(i).get().isEmpty()) {
+            if (!listofadductnameproperties.get(i).get().isEmpty()&&listofadductmassproperties.get(i).floatValue()!=0&&listofadductmproperties.get(i).getValue()>0&&!listofadductchargeproperties.get(i).get().isEmpty()) {
                 listofadductnames.add(listofadductnameproperties.get(i).get());
                 listofadductmasses.add(listofadductmassproperties.get(i).floatValue());
                 listofadductms.add(listofadductmproperties.get(i).get());

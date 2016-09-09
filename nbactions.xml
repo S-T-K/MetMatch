@@ -42,7 +42,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Xms1g -Xmx5g -classpath %classpath ${packageClassName}</exec.args>
+                <exec.args>-Xms1g -Xmx5g -classpath %classpath ${packageClassName} -Djava.library.path=C:/Users/stefankoch/MetMatch/R/R-3.2.3/library/rJava/jri/</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
