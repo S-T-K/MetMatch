@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +64,7 @@ public class Entry {
     private int Outline;
     private String mString;
 
-    
+    public List<Float> sortedmasses;
     
     //for peak probability
     private HashMap<RawDataFile, Short> Interpolatedshift;
@@ -171,6 +172,15 @@ public class Entry {
         this.Scores = new HashMap<RawDataFile, Float>();
         this.Certainties = new HashMap<RawDataFile, Float>();
         PenArray = new HashMap<RawDataFile, short[]>();
+        
+        sortedmasses = new ArrayList<Float>() {
+    public boolean add(Float mt) {
+        int index = Collections.binarySearch(this, mt);
+        if (index < 0) index = ~index;
+        super.add(index, mt);
+        return true;
+    }
+};
 
     }
     
@@ -198,6 +208,7 @@ listofSlices=newlist;
     public void addAdduct(Entry adduct) {
         this.getListofAdducts().add(adduct);
         this.setRT(new SimpleFloatProperty((float) (((this.getRT() * (getListofAdducts().size() - 1)) + adduct.getRT()) / getListofAdducts().size())));
+        sortedmasses.add(adduct.getMZ());
     }
     
 //    public void generateRTArray() {
@@ -1173,6 +1184,21 @@ public String getMZString () {
    } else {
        return MZ.getValue().toString();
    }
+}
+
+public boolean checkforduplicates(Float mass) {
+    Float ppm = mass / 1000000 * session.getMZTolerance();
+    boolean duplicate = false;
+    
+    int index = Collections.binarySearch(sortedmasses, mass);
+        if (index < 0) index = ~index;
+        if (index<sortedmasses.size()) {
+        if (Math.abs(mass - sortedmasses.get(index)) < ppm) duplicate = true;}
+        if (index-1>0) {
+        if (Math.abs(mass - sortedmasses.get(index-1)) < ppm) duplicate = true;
+        }
+        
+    return duplicate;
 }
 
 }

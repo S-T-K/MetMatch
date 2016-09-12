@@ -179,7 +179,7 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     Pane maskerpane;
-    
+
     @FXML
     public MenuItem saveP, loadP, restoreP;
 
@@ -583,7 +583,7 @@ public class FXMLTableViewController implements Initializable {
                 }
 
             });
-PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().getProperty("PeakPick")));
+            PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().getProperty("PeakPick")));
             panelink = new HashMap<>();
             setDatasettocontroller(new HashMap<>());
 
@@ -1790,8 +1790,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
 
                         //if ion specified
                     } else //if multiple Ions specified
-                    {
-                        if (adduct.getIon().indexOf(',') > 0) {
+                     if (adduct.getIon().indexOf(',') > 0) {
                             //do something
                         } else {
                             String Ion = adduct.getIon().substring(adduct.getIon().indexOf('+') + 1, adduct.getIon().indexOf(']', 3));
@@ -1822,7 +1821,6 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
 
                             }
                         }
-                    }
 
                 }
             }
@@ -1874,15 +1872,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
                                     mass /= session.getListofadductcharges().get(j);
                                     mass += session.getListofadductmasses().get(j);
 
-                                    Float ppm = mass / 1000000 * session.getMZTolerance();
-                                    boolean duplicate = false;
-                                    for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
-                                        if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
-                                            duplicate = true;
-                                            // System.out.println("Duplicate generated");
-                                            break;
-                                        }
-                                    }
+                                    boolean duplicate = MasterListofOGroups.get(o).checkforduplicates(mass);
                                     if (!duplicate) {
                                         String Ion;
                                         if (session.getListofadductms().get(j) == 1) {
@@ -1918,8 +1908,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
 
                         //if ion specified
                     } else //if multiple Ions specified
-                    {
-                        if (adduct.getIon().indexOf(',') > 0) {
+                     if (adduct.getIon().indexOf(',') > 0) {
                             //do something
                             String ionString = adduct.getIon();
                             String mString = adduct.getmString();
@@ -1951,14 +1940,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
                                             mass += session.getListofadductmasses().get(j);
 
                                             Float ppm = mass / 1000000 * session.getMZTolerance();
-                                            boolean duplicate = false;
-                                            for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
-                                                if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
-                                                    duplicate = true;
-                                                    // System.out.println("Duplicate generated");
-                                                    break;
-                                                }
-                                            }
+                                            boolean duplicate = MasterListofOGroups.get(o).checkforduplicates(mass);
                                             if (!duplicate) {
                                                 String Ion;
                                                 if (session.getListofadductms().get(j) == 1) {
@@ -2015,14 +1997,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
                                             mass += session.getListofadductmasses().get(j);
 
                                             Float ppm = mass / 1000000 * session.getMZTolerance();
-                                            boolean duplicate = false;
-                                            for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
-                                                if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
-                                                    duplicate = true;
-                                                    // System.out.println("Duplicate generated");
-                                                    break;
-                                                }
-                                            }
+                                            boolean duplicate = MasterListofOGroups.get(o).checkforduplicates(mass);
                                             if (!duplicate) {
                                                 String Ion;
                                                 if (session.getListofadductms().get(j) == 1) {
@@ -2062,14 +2037,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
                                 mass += session.getListofadductmasses().get(j);
 
                                 Float ppm = mass / 1000000 * session.getMZTolerance();
-                                boolean duplicate = false;
-                                for (int c = 0; c < MasterListofOGroups.get(o).getListofAdducts().size(); c++) {
-                                    if (Math.abs(mass - MasterListofOGroups.get(o).getListofAdducts().get(c).getMZ()) < ppm) {
-                                        duplicate = true;
-                                        //System.out.println("Duplicate generated");
-                                        break;
-                                    }
-                                }
+                                boolean duplicate = MasterListofOGroups.get(o).checkforduplicates(mass);
                                 if (!duplicate) {
                                     String Ion;
                                     if (session.getListofadductms().get(j) == 1) {
@@ -2089,14 +2057,15 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
                             }
 
                         }
-                    }
 
                 }
-                
+MasterListofOGroups.get(o).sortedmasses=null;
             }
 
             System.out.println("Total time: " + (System.currentTimeMillis() - start));
         }
+        
+        
     }
 
     public void parameters() {
@@ -2775,11 +2744,13 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
                     file.getAbsolutePath()});
                 return true;
             } else // Unknown OS, try with desktop
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().open(file);
-                return true;
-            } else {
-                return false;
+            {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(file);
+                    return true;
+                } else {
+                    return false;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace(System.err);
@@ -2797,15 +2768,15 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
         //Set extension filter
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Properties file (.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
-        
+
         //Set to user directory or go to default if cannot access
         String userDirectoryString = System.getProperty("user.dir");
-        File userDirectory = new File(userDirectoryString+"//Parameters");
+        File userDirectory = new File(userDirectoryString + "//Parameters");
         if (!userDirectory.canRead()) {
             userDirectory = new File("c:/");
         }
         fileChooser.setInitialDirectory(userDirectory);
-        
+
         File file = fileChooser.showOpenDialog(null);
 
         Properties properties = new Properties();
@@ -2826,7 +2797,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
 
         //Set to user directory or go to default if cannot access
         String userDirectoryString = System.getProperty("user.dir");
-        File userDirectory = new File(userDirectoryString+"//Parameters");
+        File userDirectory = new File(userDirectoryString + "//Parameters");
         if (!userDirectory.canRead()) {
             userDirectory = new File("c:/");
         }
