@@ -8,6 +8,7 @@ import com.mycompany.fxmltableview.datamodel.Slice;
 import com.mycompany.fxmltableview.logic.Session;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
@@ -41,7 +43,11 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -126,6 +132,10 @@ public class BatchController implements Initializable {
 
     //List with data for table, Ogroups (adducts within the Ogroups)
     ObservableList<Entry> data;
+    
+    private boolean positive = false;
+    private boolean cancel = false;
+    private boolean windowopen = false;
 
     //constructor, has reference to the session
     public BatchController(Session session, Dataset batch, ProgressBar bar, ObservableList<Entry> data, TitledPane tps, FXMLTableViewController tvController) {
@@ -145,7 +155,7 @@ public class BatchController implements Initializable {
         if (batch.equals(session.getReference())) {
             delete.setVisible(false);
         }
-        
+
         Label label = new Label("Click to add Files");
         label.setFont(Font.font("Verdana", 14));
         label.setAlignment(Pos.CENTER);
@@ -171,11 +181,11 @@ public class BatchController implements Initializable {
                     @Override
                     public void handle(MouseEvent event) {
                         if (event.getButton().equals(MouseButton.PRIMARY)) {
-                        final int index = row.getIndex();
-                        if (index >= 0 && index < batchFileView.getItems().size() && batchFileView.getSelectionModel().isSelected(index)) {
-                            batchFileView.getSelectionModel().clearSelection(index);
-                            event.consume();
-                        }
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < batchFileView.getItems().size() && batchFileView.getSelectionModel().isSelected(index)) {
+                                batchFileView.getSelectionModel().clearSelection(index);
+                                event.consume();
+                            }
                         }
                     }
                 });
@@ -265,11 +275,12 @@ public class BatchController implements Initializable {
 
 //Property to link with progressbar
         FloatProperty progress = new SimpleFloatProperty(0.0f);
-                 Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            progress.set((float) -0.000001);
-                        }});
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                progress.set((float) -0.000001);
+            }
+        });
         progressbar.progressProperty().bind(progress);
 
         FileChooser fileChooser = new FileChooser();
@@ -291,41 +302,63 @@ public class BatchController implements Initializable {
                     TVcontroller.maskerpane.setVisible(true);
                     TVcontroller.indicatorbar.setEffect(TVcontroller.adjust);
                     progressbar.setVisible(true);
-                    
-                    for (File file : filelist) {
-                        double start = System.currentTimeMillis();
-                        batch.addFile(true, file, session);
-                        Platform.runLater(new Runnable() {
+
+                    //test polarity
+                    String pol = testpolarity(filelist);
+                    positive = false;
+                    cancel = false;
+                    switch (pol) {
+                        case "both":
+                            windowopen=true;
+        Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            progress.set(progress.get() + test);
-                        }});
-                        getBatchFileView().refresh();
-                        System.out.println(progress.get());
-                        double end = System.currentTimeMillis();
-                        System.out.println(end - start);
-                        //refresh files
-                        getBatchFileView().setItems(batch.getListofFiles());
-//session.testdeletearray();
-                        if (batch.equals(session.getReference())) {
-                            TVcontroller.setstep(4);
-                        } else {
-                            TVcontroller.setstep(5);
-                        }
-                    }
-progressbar.setVisible(false);
-                }
-                TVcontroller.loading.getAndDecrement();
-                if (TVcontroller.loading.get() == 0) {
-                    TVcontroller.maskerpane.setVisible(false);
-                    TVcontroller.indicatorbar.setEffect(TVcontroller.shadow);
-                }
-                //session.setPeakPickchanged(true);
-                
-                return null;
-            }
+                            Alert alert = new Alert(AlertType.CONFIRMATION);
+                            alert.setTitle("Positive and negative polarity detected");
+                            alert.setHeaderText("Positive and negative polarity data has been detected.");
+                            alert.setContentText("The chosen files contain positive as well as negaitve polarity data. Files can only be processed in one polarity, please choose one. If you wish to process the files in both polarities, choose one now, load the same files again and choose the other polarity.");
 
+                            ButtonType buttonTypeOne = new ButtonType("Positive");
+                            ButtonType buttonTypeTwo = new ButtonType("Negative");
+                            ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+                            alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+                       
+                            
+                            Optional<ButtonType> result = alert.showAndWait();
+                        
+                            if (result.get() == buttonTypeOne) {
+                                try {
+                                    openFiles(filelist,true,progress);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else if (result.get() == buttonTypeTwo) {
+                                try {
+                                    openFiles(filelist,false,progress);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else {
+                            }
+}});
+        break;
+                        case "pos":
+                            openFiles(filelist,true,progress);
+                            break;
+                        case "neg":
+                            openFiles(filelist,false,progress);
+                            break;
+                    }
+                }
+                return null;
+                }
         };
+
 
         //new thread that executes task
         new Thread(task).start();
@@ -529,5 +562,125 @@ progressbar.setVisible(false);
 
         }
 
+    }
+
+    public String testpolarity(List<File> filelist) throws FileNotFoundException, IOException {
+        boolean pos = false;
+        boolean neg = false;
+
+        for (File file : filelist) {
+            BufferedReader BR = new BufferedReader(new FileReader(file));
+            String line;
+            for (int i = 0; i < 100; i++) {
+                line = BR.readLine();
+                if (!pos && line.contains("polarity=\"+\"")) {
+                    pos = true;
+                }
+                if (!neg && line.contains("polarity=\"-\"")) {
+                    neg = true;
+                }
+
+            }
+
+        }
+
+        if (pos && neg) {
+            return "both";
+        } else if (pos) {
+            return "pos";
+        } else if (neg) {
+            return "neg";
+        } else {
+            return "non";
+        }
+
+    }
+    
+    public void showpolarityalert() {
+        Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            
+                            
+                            
+                        }});
+        
+    }
+
+    /**
+     * @return the positive
+     */
+    public boolean isPositive() {
+        return positive;
+    }
+
+    /**
+     * @param positive the positive to set
+     */
+    public void setPositive(boolean positive) {
+        this.positive = positive;
+    }
+
+    /**
+     * @return the cancel
+     */
+    public boolean isCancel() {
+        return cancel;
+    }
+
+    /**
+     * @param cancel the cancel to set
+     */
+    public void setCancel(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    /**
+     * @return the windowopen
+     */
+    public boolean isWindowopen() {
+        return windowopen;
+    }
+
+    /**
+     * @param windowopen the windowopen to set
+     */
+    public void setWindowopen(boolean windowopen) {
+        this.windowopen = windowopen;
+    }
+    
+    public void openFiles(List<File> filelist, boolean positive, FloatProperty progress) throws InterruptedException, IOException {
+        float test = 1 / (float) filelist.size();
+                            for (File file : filelist) {
+                        double start = System.currentTimeMillis();
+                        batch.addFile(true, file, session, positive);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.set(progress.get() + test);
+                            }
+                        });
+                        getBatchFileView().refresh();
+                        System.out.println(progress.get());
+                        double end = System.currentTimeMillis();
+                        System.out.println(end - start);
+                        //refresh files
+                        getBatchFileView().setItems(batch.getListofFiles());
+//session.testdeletearray();
+                        if (batch.equals(session.getReference())) {
+                            TVcontroller.setstep(4);
+                        } else {
+                            TVcontroller.setstep(5);
+                        }
+                    }
+                            
+                                                progressbar.setVisible(false);
+                
+                TVcontroller.loading.getAndDecrement();
+                if (TVcontroller.loading.get() == 0) {
+                    TVcontroller.maskerpane.setVisible(false);
+                    TVcontroller.indicatorbar.setEffect(TVcontroller.shadow);
+                }
+        
     }
 }

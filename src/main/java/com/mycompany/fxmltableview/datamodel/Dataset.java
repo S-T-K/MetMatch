@@ -63,10 +63,10 @@ public class Dataset {
     
     
     //add new File and parse it
-    public void addFile(boolean isreference, File file, Session session) throws InterruptedException, IOException {
-        RawDataFile newfile = new RawDataFile(this, file, session);
+    public void addFile(boolean isreference, File file, Session session, boolean positive) throws InterruptedException, IOException {
+        RawDataFile newfile = new RawDataFile(this, file, session, positive);
         this.listofFiles.add(newfile); 
-        newfile.parseFile();
+        newfile.parseFile(positive);
         System.out.println("parsed");
         newfile.extractSlices(isreference, session.getListofOGroups(), session.getRTTolerance(), session.getMZTolerance());
         

@@ -585,11 +585,11 @@
                         </Tab>
                     </tabs>
                      <contextMenu>
-                        <ContextMenu>
+                        <ContextMenu fx:id="parametercontext">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#saveParameters" text="Save Parameters..." />
-                              <MenuItem mnemonicParsing="false" onAction="#loadParameters" text="Load Parameters..." />
-                              <MenuItem mnemonicParsing="false" onAction="#loaddefaultParameters" text="Restore to default" />
+                            <MenuItem fx:id="saveP" mnemonicParsing="false" onAction="#saveParameters" text="Save Parameters..." />
+                              <MenuItem fx:id="loadP" mnemonicParsing="false" onAction="#loadParameters" text="Load Parameters..." />
+                              <MenuItem fx:id="restoreP" mnemonicParsing="false" onAction="#loaddefaultParameters" text="Restore to default" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

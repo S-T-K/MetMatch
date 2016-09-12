@@ -179,6 +179,9 @@ public class FXMLTableViewController implements Initializable {
 
     @FXML
     Pane maskerpane;
+    
+    @FXML
+    public MenuItem saveP, loadP, restoreP;
 
     private ObservableList<OutputFormat> outputformat;
 
@@ -711,6 +714,8 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
             System.out.println(session.getReferenceTsv().toString());
 
             setMasterListofOGroups(session.parseReferenceTsv());
+            loadP.setVisible(false);
+            restoreP.setVisible(false);
         } finally {
             Platform.runLater(new Runnable() {
                 @Override
@@ -1842,6 +1847,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
 
             double start = System.currentTimeMillis();
             for (int o = 0; o < MasterListofOGroups.size(); o++) {
+                //System.out.println(o);
                 int size = MasterListofOGroups.get(o).getListofAdducts().size();
                 for (int a = 0; a < size; a++) {
                     Entry adduct = MasterListofOGroups.get(o).getListofAdducts().get(a);
@@ -2086,6 +2092,7 @@ PeakPick.getSelectionModel().select(Integer.parseInt(session.getProperties().get
                     }
 
                 }
+                
             }
 
             System.out.println("Total time: " + (System.currentTimeMillis() - start));

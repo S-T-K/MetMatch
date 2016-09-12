@@ -28,12 +28,12 @@ public class DomParser {
         this.decoder = new B64Coder();
     }
 
-    public List ParseFile() {
+    public List ParseFile(boolean positive) {
 
         parseXmlFile();
 
 
-        return parseDocument();
+        return parseDocument(positive);
 
     }
 
@@ -59,7 +59,7 @@ public class DomParser {
         }
     }
 
-    private List<Scan> parseDocument() {
+    private List<Scan> parseDocument(boolean positive) {
         //get the root elememt
         Element docEle = mzxmlFile.getDocumentElement();
         List<Scan> listofScans = new ArrayList<>();
@@ -76,9 +76,11 @@ public class DomParser {
 
                 //get the scan object
                 Scan e = getScan(el);
+                
+                if((positive&&e.getPolarity()=='+'||!positive&&e.getPolarity()=='-')) {
 
                 //add it to list
-                listofScans.add(e);
+                listofScans.add(e);}
             }
         }
         docEle = null;

@@ -77,10 +77,14 @@ public class RawDataFile {
     private PolynomialSplineFunction rtshiftfunction;
 
     //Constructor for new Raw Data file
-    public RawDataFile(Dataset dataset, File file, Session session) {
+    public RawDataFile(Dataset dataset, File file, Session session, boolean positive) {
         this.file=file;
         this.dataset=dataset;
-        this.name = new SimpleStringProperty(file.getName());
+        if (positive) {
+        this.name = new SimpleStringProperty("[+]" + file.getName());
+        } else {
+        this.name = new SimpleStringProperty("[-]" + file.getName());    
+        }
         this.color= new SimpleObjectProperty(dataset.getColor());
         this.Width = new SimpleFloatProperty(dataset.getWidth());
         this.session = session;
@@ -137,9 +141,9 @@ public class RawDataFile {
     }
 
     // parse Scans
-    public void parseFile() {
+    public void parseFile(boolean positive) {
         DomParser dpe = new DomParser(file.toString());
-        this.listofScans = dpe.ParseFile();
+        this.listofScans = dpe.ParseFile(positive);
         setRTArray(new float[listofScans.size()]);
      for (int i = 0; i<listofScans.size(); i++) {
             getRTArray()[i] = listofScans.get(i).getRetentionTime();
