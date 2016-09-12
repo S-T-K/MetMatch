@@ -584,6 +584,15 @@
                            </content>
                         </Tab>
                     </tabs>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#saveParameters" text="Save Parameters..." />
+                              <MenuItem mnemonicParsing="false" onAction="#loadParameters" text="Load Parameters..." />
+                              <MenuItem mnemonicParsing="false" onAction="#loaddefaultParameters" text="Restore to default" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TabPane>
                   <Button fx:id="paramButton" layoutX="40.0" layoutY="490.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#hideParameters" prefHeight="25.0" prefWidth="154.0" style="-fx-background-insets: 0;" text="Apply" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="20.0">
                      <effect>

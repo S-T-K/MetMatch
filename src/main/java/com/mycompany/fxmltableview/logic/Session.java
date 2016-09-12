@@ -16,13 +16,16 @@ import com.mycompany.fxmltableview.gui.Information;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -88,7 +91,9 @@ public class Session {
     private ObservableList<Information> infos;
     private ArrayList<String> outputoptions;
     
-    public Session(FXMLTableViewController mastercontroller) {
+    private Properties properties;
+    
+    public Session(FXMLTableViewController mastercontroller) throws FileNotFoundException, IOException {
 //        //Or RUN: -Djava.library.path=C:\Users\stefankoch\Documents\R\R-3.2.3\library\rJava\jri
 //in actions runproject
 // exec.args=-Xms1g -Xmx5g -classpath %classpath ${packageClassName}
@@ -96,7 +101,10 @@ public class Session {
 //System.setProperty("java.library.path", "C:\\Program Files\\R\\R-3.2.3\\library\\rJava\\jri\\x64");
 //System.out.println(System.getProperty("java.library.path"));
 //System.out.println(System.getProperty("user.dir"));
+
+
         
+
         this.mastercontroller = mastercontroller;
         startIOThread();
        this.gravitycalculator=new GravityCalculator(this);
@@ -104,17 +112,17 @@ public class Session {
         
         this.reference= new Reference();
         this.listofDatasets = new ArrayList<>();
-        this.resolution = new SimpleIntegerProperty(100);
-        this.baseline = new SimpleFloatProperty(0);
-        SliceMZTolerance = new SimpleFloatProperty (3.5f);
-        RTTolerance = new SimpleFloatProperty(1.5f);
-        MZTolerance = new SimpleFloatProperty(11.0f);
-        PeakRTTolerance = new SimpleFloatProperty(0.12f);
-        maxPeakLength = new SimpleFloatProperty(0.9f);
-        minPeakLength = new SimpleFloatProperty(0.05f);
-        minnumofsignals = new SimpleIntegerProperty(5);
-        minnumofconsecutivesignals = new SimpleIntegerProperty(3);
-        scales = new SimpleStringProperty("3, 19");
+        this.resolution = new SimpleIntegerProperty();
+        this.baseline = new SimpleFloatProperty();
+        SliceMZTolerance = new SimpleFloatProperty ();
+        RTTolerance = new SimpleFloatProperty();
+        MZTolerance = new SimpleFloatProperty();
+        PeakRTTolerance = new SimpleFloatProperty();
+        maxPeakLength = new SimpleFloatProperty();
+        minPeakLength = new SimpleFloatProperty();
+        minnumofsignals = new SimpleIntegerProperty();
+        minnumofconsecutivesignals = new SimpleIntegerProperty();
+        scales = new SimpleStringProperty();
         
             
         engine = new Rengine(new String[] { "--no-save" }, false, null);
@@ -125,19 +133,19 @@ public class Session {
        
         
         peakPickversion = 1;
-        start = new SimpleFloatProperty (0.0f);
-        end = new SimpleFloatProperty (40.0f);
-        noisethreshold = new SimpleFloatProperty(3.0f);
+        start = new SimpleFloatProperty ();
+        end = new SimpleFloatProperty ();
+        noisethreshold = new SimpleFloatProperty();
         
         //proparraycalculator=new PropArrayCalculator(this);
         sncalculator = new SNCalculator(this);
         
         
     infos = FXCollections.observableArrayList(
-    new Information("Retention Time", "RT", "Expected Retention Time of the Ion"),
-    new Information("Mass/Charge","MZ", "Expected Mass/Charge Ratio of the Ion"),
-    new Information("Ion ID","Num","Each Ion has to hava a unique number"),
-    new Information("Metabolite ID","Group_ID","Each Metabolite has to have a unique number"),
+    new Information("Retention Time", "", "Expected Retention Time of the Ion"),
+    new Information("Mass/Charge","", "Expected Mass/Charge Ratio of the Ion"),
+    new Information("Ion ID","","Each Ion has to hava a unique number"),
+    new Information("Metabolite ID","","Each Metabolite has to have a unique number"),
     new Information("Number of Carbon Atoms","", "Number of Carbon Atoms of the Ion"),
     new Information("Ion Form","","Annotated Ion Form, e.g. [M+H]+"),
     new Information("Uncharged Ion Mass", "", "Mass of uncharged, intact Ion"),
@@ -167,11 +175,11 @@ public class Session {
         
         
         listofadductnameproperties= new ArrayList<>();
-        listofadductnameproperties.add(new SimpleStringProperty("+H"));
-        listofadductnameproperties.add(new SimpleStringProperty("+NH4"));
-        listofadductnameproperties.add(new SimpleStringProperty("+Na"));
-        listofadductnameproperties.add(new SimpleStringProperty("+CH3OH+H"));
-        listofadductnameproperties.add(new SimpleStringProperty("+K"));
+//        listofadductnameproperties.add(new SimpleStringProperty("+H"));
+//        listofadductnameproperties.add(new SimpleStringProperty("+NH4"));
+//        listofadductnameproperties.add(new SimpleStringProperty("+Na"));
+//        listofadductnameproperties.add(new SimpleStringProperty("+CH3OH+H"));
+//        listofadductnameproperties.add(new SimpleStringProperty("+K"));
 //        listofadductnameproperties.add(new SimpleStringProperty("+3H"));
 //        listofadductnameproperties.add(new SimpleStringProperty("+2H+Na"));
 //        listofadductnameproperties.add(new SimpleStringProperty("+H+2Na"));
@@ -199,15 +207,15 @@ public class Session {
 //        listofadductnameproperties.add(new SimpleStringProperty("+K"));
 //        listofadductnameproperties.add(new SimpleStringProperty("+ACN+H"));
 //        listofadductnameproperties.add(new SimpleStringProperty("+ACN+Na"));
-        for (int i = 6; i<43; i++) {
+        for (int i = 1; i<43; i++) {
             listofadductnameproperties.add(new SimpleStringProperty(""));
         }
         listofadductmassproperties= new ArrayList<>();
-        listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
-        listofadductmassproperties.add(new SimpleFloatProperty(18.033823f));
-        listofadductmassproperties.add(new SimpleFloatProperty(22.989218f));
-        listofadductmassproperties.add(new SimpleFloatProperty(33.033489f));
-        listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
+//        listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
+//        listofadductmassproperties.add(new SimpleFloatProperty(18.033823f));
+//        listofadductmassproperties.add(new SimpleFloatProperty(22.989218f));
+//        listofadductmassproperties.add(new SimpleFloatProperty(33.033489f));
+//        listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
 //        listofadductmassproperties.add(new SimpleFloatProperty(1.007276f));
 //        listofadductmassproperties.add(new SimpleFloatProperty(8.33459f));
 //        listofadductmassproperties.add(new SimpleFloatProperty(15.7661904f));
@@ -235,15 +243,15 @@ public class Session {
 //        listofadductmassproperties.add(new SimpleFloatProperty(38.963158f));
 //        listofadductmassproperties.add(new SimpleFloatProperty(42.033823f));
 //        listofadductmassproperties.add(new SimpleFloatProperty(64.015765f));
-        for (int i = 6; i<43; i++) {
+        for (int i = 1; i<43; i++) {
             listofadductmassproperties.add(new SimpleFloatProperty());
         }
         listofadductchargeproperties= new ArrayList<>();
-        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
-        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
-        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
-        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
-        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+//        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+//        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+//        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+//        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
+//        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
 //        listofadductchargeproperties.add(new SimpleStringProperty("3+"));
 //        listofadductchargeproperties.add(new SimpleStringProperty("3+"));
 //        listofadductchargeproperties.add(new SimpleStringProperty("3+"));
@@ -271,15 +279,15 @@ public class Session {
 //        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
 //        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
 //        listofadductchargeproperties.add(new SimpleStringProperty("1+"));
-        for (int i = 6; i<43; i++) {
+        for (int i = 1; i<43; i++) {
             listofadductchargeproperties.add(new SimpleStringProperty(""));
         }
         listofadductmproperties= new ArrayList<>();
-        listofadductmproperties.add(new SimpleIntegerProperty(1));
-        listofadductmproperties.add(new SimpleIntegerProperty(1));
-        listofadductmproperties.add(new SimpleIntegerProperty(1));
-        listofadductmproperties.add(new SimpleIntegerProperty(1));
-        listofadductmproperties.add(new SimpleIntegerProperty(1));
+//        listofadductmproperties.add(new SimpleIntegerProperty(1));
+//        listofadductmproperties.add(new SimpleIntegerProperty(1));
+//        listofadductmproperties.add(new SimpleIntegerProperty(1));
+//        listofadductmproperties.add(new SimpleIntegerProperty(1));
+//        listofadductmproperties.add(new SimpleIntegerProperty(1));
 //        listofadductmproperties.add(new SimpleIntegerProperty(1));
 //        listofadductmproperties.add(new SimpleIntegerProperty(1));
 //        listofadductmproperties.add(new SimpleIntegerProperty(1));
@@ -307,10 +315,19 @@ public class Session {
 //        listofadductmproperties.add(new SimpleIntegerProperty(2));
 //        listofadductmproperties.add(new SimpleIntegerProperty(2));
 //        listofadductmproperties.add(new SimpleIntegerProperty(2));
-        for (int i = 6; i<43; i++) {
+        for (int i = 1; i<43; i++) {
             listofadductmproperties.add(new SimpleIntegerProperty());
         }
         
+        
+        //read default properties
+        properties = new Properties();
+        FileInputStream in = new FileInputStream("Parameters//default.txt");
+        properties.load(in);
+        in.close();
+        
+        loadParameters(properties);
+        System.out.println("Default parameters loaded");
     }
 
     /**
@@ -1197,6 +1214,140 @@ public class Session {
      */
     public void setScales(SimpleStringProperty scales) {
         this.scales = scales;
+    }
+
+    /**
+     * @return the properties
+     */
+    public Properties getProperties() {
+        return properties;
+    }
+
+    /**
+     * @param properties the properties to set
+     */
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+    
+    public void loadParameters(Properties prop) {
+        properties = prop;
+        
+        this.resolution.set(Integer.parseInt(properties.getProperty("numberOfBins")));
+        this.baseline.set(Float.parseFloat(properties.getProperty("cutoff")));
+        SliceMZTolerance.set(Float.parseFloat(properties.getProperty("sliceMZTolerance")));
+        RTTolerance.set(Float.parseFloat(properties.getProperty("RtTolerance")));
+        MZTolerance.set(Float.parseFloat(properties.getProperty("FeatureFrameMZTolerance")));
+        PeakRTTolerance.set(Float.parseFloat(properties.getProperty("PeakRTTolerance")));
+        maxPeakLength.set(Float.parseFloat(properties.getProperty("maxPeakLength")));
+        minPeakLength.set(Float.parseFloat(properties.getProperty("minPeakLength")));
+        minnumofsignals.set(Integer.parseInt(properties.getProperty("minnumofsignals")));
+        minnumofconsecutivesignals.set(Integer.parseInt(properties.getProperty("minnumofconsecutivesignals")));
+        scales.set(properties.getProperty("scales"));
+        start.set(Float.parseFloat(properties.getProperty("start")));
+        end.set(Float.parseFloat(properties.getProperty("end")));
+        noisethreshold.set(Float.parseFloat(properties.getProperty("noisethreshold")));
+        
+        //get adduct names
+        for (int i = 0; i<42; i++) {
+            String cname= "name"+(i+1);
+            if (properties.containsKey(cname)) {
+                listofadductnameproperties.get(i).set(properties.getProperty(cname));
+            }
+        }
+        
+        //get adduct mass
+        for (int i = 0; i<42; i++) {
+            String cmass= "mass"+(i+1);
+            if (properties.containsKey(cmass)&&!properties.getProperty(cmass).isEmpty()) {
+                listofadductmassproperties.get(i).set(Float.parseFloat(properties.getProperty(cmass)));
+            }
+        }
+        
+        //get adduct charge
+        for (int i = 0; i<42; i++) {
+            String ccharge= "charge"+(i+1);
+            if (properties.containsKey(ccharge)) {
+                listofadductchargeproperties.get(i).set(properties.getProperty(ccharge));
+            }
+        }
+        
+        //get adduct m
+        for (int i = 0; i<42; i++) {
+            String ccharge= "m"+(i+1);
+            if (properties.containsKey(ccharge)&&!properties.getProperty(ccharge).isEmpty()) {
+                listofadductmproperties.get(i).set(Integer.parseInt(properties.getProperty(ccharge)));
+            }
+        }
+        
+        //get input headers
+        for (int i = 0; i<10; i++) {
+            String cheader= "info"+(i+1);
+            if (properties.containsKey(cheader)) {
+                infos.get(i).setHeader(properties.getProperty(cheader));
+            }
+        }
+        
+        if (Boolean.parseBoolean(properties.getProperty("generatenewadducts"))) {
+            mastercontroller.toggleadductgeneration.selectedProperty().set(true);
+        } else {
+            mastercontroller.toggleadductgeneration.selectedProperty().set(false);
+        }
+        mastercontroller.toggleAdductGeneration();
+        
+      
+        mastercontroller.PeakPick.getSelectionModel().select(Integer.parseInt(properties.getProperty("PeakPick")));
+
+        
+        
+        
+    }
+    
+    public void saveParameters(File file) throws FileNotFoundException, IOException {
+        
+        properties.setProperty("numberOfBins", resolution.getValue().toString());
+        properties.setProperty("sliceMZTolerance", SliceMZTolerance.getValue().toString());
+        properties.setProperty("RtTolerance", RTTolerance.getValue().toString());
+        properties.setProperty("FeatureFrameMZTolerance", MZTolerance.getValue().toString());
+        properties.setProperty("PeakRTTolerance", PeakRTTolerance.getValue().toString());
+        properties.setProperty("maxPeakLength", maxPeakLength.getValue().toString());
+        properties.setProperty("minPeakLength", minPeakLength.getValue().toString());
+        properties.setProperty("minnumofsignals", minnumofsignals.getValue().toString());
+        properties.setProperty("minnumofconsecutivesignals", minnumofconsecutivesignals.getValue().toString());
+        properties.setProperty("scales", scales.getValue().toString());
+        properties.setProperty("start", start.getValue().toString());
+        properties.setProperty("end", end.getValue().toString());
+        properties.setProperty("noisethreshold", noisethreshold.getValue().toString());
+        
+        for (int i = 0; i<42; i++) {
+            String cname= "name"+(i+1);
+            properties.setProperty(cname, listofadductnameproperties.get(i).get());
+        }
+        
+        for (int i = 0; i<42; i++) {
+            String cname= "mass"+(i+1);
+            properties.setProperty(cname, String.valueOf(listofadductmassproperties.get(i).get()));
+        }
+        
+        for (int i = 0; i<42; i++) {
+            String cname= "charge"+(i+1);
+            properties.setProperty(cname, listofadductchargeproperties.get(i).get());
+        }
+        for (int i = 0; i<42; i++) {
+            String cname= "m"+(i+1);
+            properties.setProperty(cname, String.valueOf(listofadductmproperties.get(i).get()));
+        }
+        
+        properties.setProperty("generatenewadducts", String.valueOf(mastercontroller.toggleadductgeneration.selectedProperty().get()));
+        properties.setProperty("PeakPick", String.valueOf(mastercontroller.PeakPick.getSelectionModel().getSelectedIndex()));
+        
+          
+        FileOutputStream out = new FileOutputStream(file);
+        properties.store(out, "---Test---");
+        out.close();
+        
+        
+        
     }
     
 }
