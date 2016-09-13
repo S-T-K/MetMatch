@@ -853,7 +853,7 @@ indicatorbar.setEffect(supercontroller.shadow);
                                 controller.metTable = supercontroller.getMetTable();
 
                                 //print graphs
-                                controller.print();
+                                controller.print(0);
                                 stage.show();
 
                             } catch (IOException ex) {

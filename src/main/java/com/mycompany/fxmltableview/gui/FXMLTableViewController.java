@@ -803,7 +803,7 @@ public class FXMLTableViewController implements Initializable {
                         controller.metTable = getMetTable();
 
                         //print graphs
-                        controller.print();
+                        controller.print(-2);
                         stage.show();
                         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 

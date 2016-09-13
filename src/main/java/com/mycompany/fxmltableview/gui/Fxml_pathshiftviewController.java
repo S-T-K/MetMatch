@@ -507,7 +507,7 @@ public class Fxml_pathshiftviewController implements Initializable {
                                 controller.metTable = supercontroller.getMetTable();
 
                                 //print graphs
-                                controller.print();
+                                controller.print(0);
                                 stage.show();
 
                             } catch (IOException ex) {

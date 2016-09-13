@@ -69,6 +69,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -117,6 +118,9 @@ public class Fxml_adductviewController implements Initializable {
     
     @FXML
     AnchorPane anchor;
+    
+    @FXML
+    Button up, down;
            
 
     TreeTableView<Entry> metTable;
@@ -146,6 +150,14 @@ public class Fxml_adductviewController implements Initializable {
      double lineanchor;
     
     private float scroll;
+    
+    public int maxnumberofdrawnadducts;
+    public int currentadduct;
+    public int nextadduct;
+    public int previousadduct;
+    
+    public TreeItem<Entry> OGroupItem;
+    public List<Entry> listofadducts;
 
     /**
      * Initializes the controller class.
@@ -173,6 +185,7 @@ public class Fxml_adductviewController implements Initializable {
         MZToggle.selectedProperty().setValue(true);
         EICMode.selectedProperty().set(true);
         scrollPane.setContextMenu(null);
+       
         
         weightfield.textProperty().bindBidirectional(weightslider.valueProperty(), new NumberStringConverter());
         
@@ -195,7 +208,8 @@ public class Fxml_adductviewController implements Initializable {
     }
 
     //method that generates the graphs
-    public void print() {
+    public void print(int first) {
+        currentadduct=first;
         nextprev();
         anchor.setDisable(true);
         float start = System.currentTimeMillis();
@@ -206,14 +220,14 @@ public class Fxml_adductviewController implements Initializable {
         setSeriestopeak(new HashMap<XYChart.Series, Peak>());
         adducttochart= new HashMap<>();
         
-        
-
-        
+  
                 
                 //get selected Entry
-        int adductnumber = 0;
+        int adductnumber = first;
+        if (first==-2) {
+        adductnumber=0;
         
-        TreeItem<Entry> OGroupItem;
+        
         if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
             entry = metTable.getSelectionModel().getSelectedItem().getValue().getOGroupObject();
             TreeItem<Entry> AdductItem = metTable.getSelectionModel().getSelectedItem();
@@ -224,14 +238,45 @@ public class Fxml_adductviewController implements Initializable {
             entry = metTable.getSelectionModel().getSelectedItem().getValue();
             OGroupItem = metTable.getSelectionModel().getSelectedItem();
         }
+        
+        if (listofadducts==null) {
+            listofadducts=new ArrayList<>();
+            for (int i = 0; i<OGroupItem.getChildren().size(); i++) {
+                listofadducts.add(OGroupItem.getChildren().get(i).getValue());
+            }
+        }
+        
+        } else if (first==0) {
+            if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
+            entry = metTable.getSelectionModel().getSelectedItem().getValue().getOGroupObject();
+            TreeItem<Entry> AdductItem = metTable.getSelectionModel().getSelectedItem();
+            OGroupItem = metTable.getSelectionModel().getSelectedItem().getParent();
+   
+        } else {
+            entry = metTable.getSelectionModel().getSelectedItem().getValue();
+            OGroupItem = metTable.getSelectionModel().getSelectedItem();
+        }
+        
+        if (listofadducts==null) {
+            listofadducts=new ArrayList<>();
+            for (int i = 0; i<OGroupItem.getChildren().size(); i++) {
+                listofadducts.add(OGroupItem.getChildren().get(i).getValue());
+            }
+        }
+            
+        }
+        
+        //if (OGroupItem.getChildren().get(adductnumber).getValue().equals(listofadducts.get(adductnumber))) System.out.println("Success!");
 
+        
+        
         //delete previous graphs
         gridPane.getChildren().clear();
         
         progress.setVisible(true);
-        setScroll(((float) adductnumber) / (entry.getListofAdducts().size() - 1));
+//        setScroll(((float) adductnumber) / (entry.getListofAdducts().size() - 1));
         
-        
+        currentadduct=adductnumber;
                 
         
         Task task;
@@ -267,10 +312,12 @@ public class Fxml_adductviewController implements Initializable {
                 
                 boolean nodata = true;
                 
-                
-                for (int i = 0; i < entry.getListofAdducts().size(); i++) {
+                int numberofadducts = 0;
+                int numberofdrawnadducts=0;
+                for (int i = currentadduct; i < entry.getListofAdducts().size()&&numberofdrawnadducts<maxnumberofdrawnadducts; i++) {
+                    numberofadducts++;
                    boolean empty = true;
-                    Entry adduct = OGroupItem.getChildren().get(i).getValue();
+                    Entry adduct = listofadducts.get(i);
                     
                      for (int d = 0; d<session.getListofDatasets().size(); d++) {
                     if (session.getListofDatasets().get(d).getActive()) {
@@ -286,6 +333,7 @@ public class Fxml_adductviewController implements Initializable {
                      }
                      
                      if (!empty) {
+                         numberofdrawnadducts++;
                          nodata=false;
                     System.out.println("Adding Read Adduct from Print");
                     session.getIothread().readAdduct(adduct);
@@ -361,8 +409,84 @@ public class Fxml_adductviewController implements Initializable {
                              
                      
                 }
-                 
+                
+//                for (int p = 0; p<numberofadducts; p++) {
+//                    metTable.getSelectionModel().selectNext();
+//                }
+                
+                if (currentadduct+numberofadducts+1<entry.getListofAdducts().size()) {
+                    boolean empty = true;
+                    for (int i = currentadduct+numberofadducts+1; i < entry.getListofAdducts().size(); i++) {
+                   
+                    Entry adduct = listofadducts.get(i);
+                    
+                     for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
+            if (currentfile.getActive().booleanValue()) {
+                if(adduct.getListofSlices().containsKey(currentfile)) {
+                    empty = false;
+                    break;
+                }
+            }
+        }
+        if (!empty) break; 
+                    }
+                     }
+                     if (!empty) break; 
+                    }
+                    if (!empty) {
+                        nextadduct = currentadduct+numberofadducts; 
+                    down.setVisible(true);
+                } else {
+                    nextadduct = -1;
+                    down.setVisible(false);
+                }
+                }
+                    
+                    
+                if (currentadduct>0) {
+                    int count = 0;
+                    int countd=0;
+                    boolean empty = true;
+                    for (int i = currentadduct-1; i > 0 && countd<maxnumberofdrawnadducts; i--) {
+                        count++;
+                   
+                    Entry adduct = listofadducts.get(i);
+                    
+                     for (int d = 0; d<session.getListofDatasets().size(); d++) {
+                    if (session.getListofDatasets().get(d).getActive()) {
+        for (int f = 0; f < adduct.getSession().getListofDatasets().get(d).getListofFiles().size(); f++) {
+            RawDataFile currentfile = adduct.getSession().getListofDatasets().get(d).getListofFiles().get(f);
+            if (currentfile.getActive().booleanValue()) {
+                if(adduct.getListofSlices().containsKey(currentfile)) {
+                    empty = false;
+                    countd++;
+                    break;
+                }
+            }
+        }
+        
+                    }
+                     }
+                     
+                    }
+                    if (!empty) {
+                    previousadduct = currentadduct-count; 
+                    up.setVisible(true);
+                } else {
+                    previousadduct = -1;
+                    up.setVisible(false);
+                }
+                } else {
+                    previousadduct = -1;
+                    up.setVisible(false);
+                }
+                
                 nodatalabel.setVisible(nodata);
+                
+//                metTable.getSelectionModel().select(entry.getListofAdducts().get(currentadduct).treeitem);
                 
                 
                 //add listener to every color property, to show changes instantly
@@ -482,6 +606,8 @@ public class Fxml_adductviewController implements Initializable {
         t.start();
          float end = System.currentTimeMillis();
          
+         
+         
 
          
         System.out.println("Drawing time: " + (end-start) );
@@ -490,6 +616,7 @@ public class Fxml_adductviewController implements Initializable {
     //select next metabolite, changes Selection in Main GUI
     public void next() {
         nextprev();
+        listofadducts=null;
         if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
             metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
         }
@@ -499,13 +626,16 @@ public class Fxml_adductviewController implements Initializable {
                         public void run() {
                             metTable.getSelectionModel().getSelectedItem().nextSibling().getChildren().sort(metTable.getComparator());
                         }});
-        print();
+        up.setVisible(true);
+        down.setVisible(true);
+        print(0);
 
     }
 
     //select previous metablite, changes Selection in Main GUI
     public void previous() {
         nextprev();
+        listofadducts=null;
         if (metTable.getSelectionModel().getSelectedItem().isLeaf()) {
             metTable.getSelectionModel().select(metTable.getSelectionModel().getSelectedItem().getParent());
         }
@@ -515,7 +645,9 @@ public class Fxml_adductviewController implements Initializable {
                         public void run() {
                             metTable.getSelectionModel().getSelectedItem().previousSibling().getChildren().sort(metTable.getComparator());
                         }});
-        print();
+        up.setVisible(true);
+        down.setVisible(true);
+        print(0);
 
     }
 
@@ -561,6 +693,10 @@ public class Fxml_adductviewController implements Initializable {
     public void setSession(Session session) {
         this.session = session;
         this.chartGenerator.setSession(session);
+        maxnumberofdrawnadducts = 20/session.getAllFiles().size();
+        if (maxnumberofdrawnadducts<1) {
+            maxnumberofdrawnadducts=1;
+        }
     }
 
     /**
@@ -913,6 +1049,8 @@ public class Fxml_adductviewController implements Initializable {
     }
     
      public void nextprev() {
+         
+         
          
         //delete all nodes
         if (t!=null) {
@@ -1518,7 +1656,41 @@ public void formatLabel(Label label) {
                     label.setAlignment(Pos.TOP_LEFT);
     
 }
+
+public void up() {
     
+//    if (!metTable.getSelectionModel().getSelectedItem().isLeaf()) {
+//        metTable.getSelectionModel().getSelectedItem().expandedProperty().set(true);
+//    }
+//    
+//    
+//    for (int i = 0; i<currentadduct-previousadduct; i++) {
+//        metTable.getSelectionModel().selectPrevious();
+//    }
+//   metTable.getSelectionModel().select(previousadduct);
+    up.setVisible(true);
+        down.setVisible(true);
+        print(previousadduct);
+}
+
+public void down() {
     
+//    if (!metTable.getSelectionModel().getSelectedItem().isLeaf()) {
+//        metTable.getSelectionModel().getSelectedItem().expandedProperty().set(true);
+//    }
+//    
+//    for (int i = 0; i<nextadduct-currentadduct; i++) {
+//        metTable.getSelectionModel().selectNext();
+//    }
+//    metTable.getSelectionModel().select(nextadduct);
+    up.setVisible(true);
+        down.setVisible(true); 
+        print(nextadduct);
+}
+    
+    public void defaultprint() {
+        
+        print(0);
+    }
    
 }
