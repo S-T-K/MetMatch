@@ -739,11 +739,13 @@ public class FXMLTableViewController implements Initializable {
         //for all OGroups
         for (int i = 0; i < getMasterListofOGroups().size(); i++) {
             TreeItem<Entry> root = new TreeItem<>(getMasterListofOGroups().get(i));
+            getMasterListofOGroups().get(i).treeitem=root;
             root.setExpanded(false);
             superroot.getChildren().add(root);
 
             for (int j = 0; j < getMasterListofOGroups().get(i).getListofAdducts().size(); j++) {
                 TreeItem<Entry> childNode1 = new TreeItem<>(getMasterListofOGroups().get(i).getListofAdducts().get(j));
+                getMasterListofOGroups().get(i).getListofAdducts().get(j).treeitem=childNode1;
                 root.getChildren().add(childNode1);
                 numberofadducts++;
             }
@@ -1059,6 +1061,20 @@ public class FXMLTableViewController implements Initializable {
 
     //calculates Shift and opens a new window
     public void newWindowShiftFitting() throws IOException, InterruptedException {
+        
+        
+        
+        for (Entry e:MasterListofOGroups) {
+            List<Entry> copy = new ArrayList<>(e.getListofAdducts());
+            TreeItem<Entry> ogroup = e.treeitem;
+            for (Entry a:copy) {
+                if (a.getListofSlices()==null||a.getListofSlices().size()==0) {
+                    e.getListofAdducts().remove(a);
+                    ogroup.getChildren().remove(a.treeitem);
+                }
+            }
+        }
+        
         maskerpane.setVisible(true);
         indicatorbar.setEffect(adjust);
 

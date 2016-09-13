@@ -23,6 +23,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TreeItem;
 
 
 /**
@@ -65,6 +66,7 @@ public class Entry {
     private String mString;
 
     public List<Float> sortedmasses;
+    public TreeItem<Entry> treeitem;
     
     //for peak probability
     private HashMap<RawDataFile, Short> Interpolatedshift;
