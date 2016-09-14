@@ -80,6 +80,7 @@ public class Session {
     private List<Float> listofadductmasses;
     private List<Integer> listofadductcharges;
     private List<Integer> listofadductms;
+    private List<String> listofadductpolarities;
     
     private PropArrayCalculator proparraycalculator;
     private GravityCalculator gravitycalculator;
@@ -93,6 +94,10 @@ public class Session {
     
     private Properties properties;
     
+    public int maxnumberofdrawnfileadducts;
+    public int totalnumberofadducts=-1;
+    public boolean compactlist=false;
+    
     public Session(FXMLTableViewController mastercontroller) throws FileNotFoundException, IOException {
 //        //Or RUN: -Djava.library.path=C:\Users\stefankoch\Documents\R\R-3.2.3\library\rJava\jri
 //in actions runproject
@@ -104,7 +109,7 @@ public class Session {
 
 
         
-
+        this.maxnumberofdrawnfileadducts=100;
         this.mastercontroller = mastercontroller;
         startIOThread();
        this.gravitycalculator=new GravityCalculator(this);
@@ -908,6 +913,7 @@ public class Session {
         listofadductnames = new ArrayList<String>();
         listofadductmasses = new ArrayList<Float>();
         listofadductcharges = new ArrayList<Integer>();
+        listofadductpolarities = new ArrayList<String>();
         listofadductms = new ArrayList<Integer>();
         for (int i = 0; i<listofadductnameproperties.size(); i++) {
             if (!listofadductnameproperties.get(i).get().isEmpty()&&listofadductmassproperties.get(i).floatValue()!=0&&listofadductmproperties.get(i).getValue()>0&&!listofadductchargeproperties.get(i).get().isEmpty()) {
@@ -915,8 +921,16 @@ public class Session {
                 listofadductmasses.add(listofadductmassproperties.get(i).floatValue());
                 listofadductms.add(listofadductmproperties.get(i).get());
                 String charge = listofadductchargeproperties.get(i).get();
+                char polsign = charge.charAt(charge.length() - 1);
                 charge = charge.substring(0, charge.length()-1);
-                listofadductcharges.add(Integer.parseInt(charge));
+                int chargei = Integer.parseInt(charge);
+                listofadductcharges.add(chargei);
+                String pol = "";
+                for (int j = 0; j<chargei; j++) {
+                    pol = pol + polsign;
+                } 
+                listofadductpolarities.add(pol);
+                
             }
             
         }
@@ -1349,5 +1363,35 @@ public class Session {
         
         
     }
+    
+    public int gettotalnumberofadducts() {
+        if (totalnumberofadducts==-1) {
+            int count=0;
+            for(Entry o:listofOGroups) {
+                count+=o.getListofAdducts().size();
+            }
+            
+            totalnumberofadducts=count;
+            
+        }
+        return totalnumberofadducts;
+    }
+
+    /**
+     * @return the listofadductpolarities
+     */
+    public List<String> getListofadductpolarities() {
+        return listofadductpolarities;
+    }
+
+    /**
+     * @param listofadductpolarities the listofadductpolarities to set
+     */
+    public void setListofadductpolarities(List<String> listofadductpolarities) {
+        this.listofadductpolarities = listofadductpolarities;
+    }
+    
+    
+    
     
 }

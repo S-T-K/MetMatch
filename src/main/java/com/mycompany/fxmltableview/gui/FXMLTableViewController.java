@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
@@ -58,7 +59,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
@@ -1062,19 +1065,66 @@ public class FXMLTableViewController implements Initializable {
     //calculates Shift and opens a new window
     public void newWindowShiftFitting() throws IOException, InterruptedException {
         
-        
-        
-        for (Entry e:MasterListofOGroups) {
-            List<Entry> copy = new ArrayList<>(e.getListofAdducts());
+        if (!session.compactlist) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            String Title = String.valueOf(session.gettotalnumberofadducts());
+                            alert.setTitle("Large Number of Adducts");
+                            alert.setHeaderText(Title + " adducts are included in the reference matrix. Do you want to delete empty adducts?");
+                            alert.setContentText("A large number of empty adducts can slow down processing speed and overall responsiveness of MetMatch. Do you want to delete empty adducts? \nDeleted adducts will not be accounted for when loading new files.\nThis could take a few minutes.");
+
+                            ButtonType buttonTypeOne = new ButtonType("Yes");
+                            ButtonType buttonTypeTwo = new ButtonType("No");
+                            ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                            alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+                       
+                            
+                            Optional<ButtonType> result = alert.showAndWait();
+                        
+                            if (result.get() == buttonTypeOne) {
+                                double progress = 0;
+                                double step = 1.0d/MasterListofOGroups.size();
+                             for (Entry e:MasterListofOGroups) {
             TreeItem<Entry> ogroup = e.treeitem;
-            for (Entry a:copy) {
-                if (a.getListofSlices()==null||a.getListofSlices().size()==0) {
-                    e.getListofAdducts().remove(a);
+            List<Entry> emptylist = e.getListofemptyAdducts();
+            e.getListofAdducts().removeAll(emptylist);
+            for (Entry a:emptylist) {
                     ogroup.getChildren().remove(a.treeitem);
-                }
             }
+            
+            System.out.println((progress+=step) + "%");
         }
+                             session.compactlist=true;
+                                try {
+                                    openshiftcalculationwindow();
+                                } catch (IOException ex) {
+                                    Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else if (result.get() == buttonTypeTwo) {
+                                try {
+                                    openshiftcalculationwindow();
+                                } catch (IOException ex) {
+                                    Logger.getLogger(FXMLTableViewController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else  {
+                            
+                                
+                            }
+}});
+            
+            
+            
+            
+            
+        } else {
+   openshiftcalculationwindow(); }
         
+    }
+    
+    public void openshiftcalculationwindow() throws IOException {
         maskerpane.setVisible(true);
         indicatorbar.setEffect(adjust);
 
@@ -1105,7 +1155,9 @@ public class FXMLTableViewController implements Initializable {
             }
         });
 
+        
     }
+    
 
     public float getmaxofrange(float[][] weights, int row, int col, int range) {
         float max = 0;
@@ -1902,17 +1954,15 @@ public class FXMLTableViewController implements Initializable {
                                         } else {
                                             Ion = Ion + session.getListofadductms().get(k) + "M" + nameo + "]";
                                         }
-                                        String charge = session.getListofadductchargeproperties().get(k).get();
-                                        char sign = charge.charAt(charge.length() - 1);
-                                        for (int c = 0; c < session.getListofadductcharges().get(k); c++) {
-                                            Ion = Ion.concat(String.valueOf(sign));
-                                        }
+                                        
+                                        String sign = session.getListofadductpolarities().get(k);
+                                        Ion = Ion.concat(sign);
                                         Ion = Ion.concat(")" + namen + "]");
-                                        charge = session.getListofadductchargeproperties().get(j).get();
-                                        sign = charge.charAt(charge.length() - 1);
-                                        for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
-                                            Ion = Ion.concat(String.valueOf(sign));
-                                        }
+                                        
+                                        sign = session.getListofadductpolarities().get(j);
+                                       
+                                            Ion = Ion.concat(sign);
+                                        
                                         MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, M, adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
                                         max++;
                                     }
@@ -1970,17 +2020,16 @@ public class FXMLTableViewController implements Initializable {
                                                 } else {
                                                     Ion = Ion + session.getListofadductms().get(k) + "M" + nameo + "]";
                                                 }
-                                                String charge = session.getListofadductchargeproperties().get(k).get();
-                                                char sign = charge.charAt(charge.length() - 1);
-                                                for (int c = 0; c < session.getListofadductcharges().get(k); c++) {
-                                                    Ion = Ion.concat(String.valueOf(sign));
-                                                }
+                                                String charge = session.getListofadductcharges().get(k).toString();
+                                                String sign = session.getListofadductpolarities().get(k);
+                                                
+                                                    Ion = Ion.concat(sign);
+                                                
                                                 Ion = Ion.concat(")" + namen + "]");
-                                                charge = session.getListofadductchargeproperties().get(j).get();
-                                                sign = charge.charAt(charge.length() - 1);
-                                                for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
-                                                    Ion = Ion.concat(String.valueOf(sign));
-                                                }
+                                                sign = session.getListofadductpolarities().get(j);
+                                                
+                                                    Ion = Ion.concat(sign);
+                                                
                                                 MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, M, adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
                                                 max++;
                                             }
@@ -2025,11 +2074,11 @@ public class FXMLTableViewController implements Initializable {
                                                 Ion = Ion + nameArray[k];
 
                                                 Ion = Ion.concat(")" + namen + "]");
-                                                String charge = session.getListofadductchargeproperties().get(j).get();
-                                                char sign = charge.charAt(charge.length() - 1);
-                                                for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
-                                                    Ion = Ion.concat(String.valueOf(sign));
-                                                }
+                                               
+                                                String sign = session.getListofadductpolarities().get(j);
+                                                
+                                                Ion = Ion.concat(sign);
+                                                
                                                 MasterListofOGroups.get(o).addAdduct(new Entry(max, mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, M, adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
                                                 max++;
                                             }
@@ -2061,11 +2110,11 @@ public class FXMLTableViewController implements Initializable {
                                     } else {
                                         Ion = "[" + session.getListofadductms().get(j) + "M(" + adduct.getNum() + ")" + namen + "]";
                                     }
-                                    String charge = session.getListofadductchargeproperties().get(j).get();
-                                    char sign = charge.charAt(charge.length() - 1);
-                                    for (int c = 0; c < session.getListofadductcharges().get(j); c++) {
-                                        Ion = Ion.concat(String.valueOf(sign));
-                                    }
+                                    String charge = session.getListofadductcharges().get(j).toString();
+                                    String sign = session.getListofadductpolarities().get(j);
+                                    
+                                        Ion = Ion.concat(sign);
+                                    
                                     MasterListofOGroups.get(o).addAdduct(new Entry(max, adduct.getMZ() + mass, adduct.getRT(), adduct.getXn(), adduct.getOGroup(), Ion, adduct.getM(), adduct.getLabeledXn(), session, MasterListofOGroups.get(o), adduct));
                                     max++;
                                 }

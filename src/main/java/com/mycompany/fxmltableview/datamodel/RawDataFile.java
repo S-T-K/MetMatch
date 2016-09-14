@@ -75,6 +75,8 @@ public class RawDataFile {
     private int column;
     
     private PolynomialSplineFunction rtshiftfunction;
+    
+    public String polarity;
 
     //Constructor for new Raw Data file
     public RawDataFile(Dataset dataset, File file, Session session, boolean positive) {
@@ -142,6 +144,11 @@ public class RawDataFile {
 
     // parse Scans
     public void parseFile(boolean positive) {
+        if (positive) {
+            polarity="+";
+        } else {
+            polarity="-";
+        }
         DomParser dpe = new DomParser(file.toString());
         this.listofScans = dpe.ParseFile(positive);
         setRTArray(new float[listofScans.size()]);
@@ -182,8 +189,10 @@ public class RawDataFile {
         for (int i = 0; i < data.size(); i++) {
             //System.out.println("started with OGroup " + i);
             for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
+                Entry adduct = data.get(i).getListofAdducts().get(j);
+                if (adduct.getIonisation().equals(this.polarity)||adduct.getIonisation()==null) {
                 //System.out.println("started with Adduct " + j);
-                Slice newSlice = new Slice(this, data.get(i).getListofAdducts().get(j)); 
+                Slice newSlice = new Slice(this, adduct); 
                 newSlice.newbinaryExtractSlicefromScans(listofScans, RTArray);
                 
                 
@@ -194,7 +203,7 @@ public class RawDataFile {
                 } else {
                     number++;
                 }
-                
+                }
             }
            
             

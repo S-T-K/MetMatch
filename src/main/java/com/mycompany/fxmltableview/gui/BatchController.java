@@ -316,13 +316,14 @@ public class BatchController implements Initializable {
                             Alert alert = new Alert(AlertType.CONFIRMATION);
                             alert.setTitle("Positive and negative polarity detected");
                             alert.setHeaderText("Positive and negative polarity data has been detected.");
-                            alert.setContentText("The chosen files contain positive as well as negaitve polarity data. Files can only be processed in one polarity, please choose one. If you wish to process the files in both polarities, choose one now, load the same files again and choose the other polarity.");
+                            alert.setContentText("The chosen files contain positive as well as negaitve polarity data. Files can only be processed in one polarity, please choose one. Clicking both will open each file two times, in postitve and in negative polarity mode.\nPolarities are marked by [+] and [-] in front of the file name.");
 
                             ButtonType buttonTypeOne = new ButtonType("Positive");
                             ButtonType buttonTypeTwo = new ButtonType("Negative");
+                            ButtonType buttonTypeThree = new ButtonType("Both");
                             ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 
-                            alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+                            alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree, buttonTypeCancel);
                        
                             
                             Optional<ButtonType> result = alert.showAndWait();
@@ -343,7 +344,16 @@ public class BatchController implements Initializable {
                                 } catch (IOException ex) {
                                     Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                            } else {
+                            } else if (result.get() == buttonTypeThree) {
+                                try {
+                                    openFiles(filelist,true,progress);
+                                    openFiles(filelist,false,progress);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                
                             }
 }});
         break;

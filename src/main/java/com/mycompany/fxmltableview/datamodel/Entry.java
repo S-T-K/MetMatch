@@ -133,7 +133,7 @@ public class Entry {
         this.M = new SimpleFloatProperty((float) M);
         this.LabeledXn=labeledXn;
         this.ScanEvent=orig.ScanEvent;
-        this.Ionisation=orig.Ionisation;
+        this.Ionisation=Ion.substring(Ion.length() - 1);
         this.Score = new SimpleFloatProperty(Float.NaN);
         this.Scorepeakclose = new SimpleFloatProperty(Float.NaN);
         this.Scorepeakfound = new SimpleFloatProperty(Float.NaN);
@@ -1203,4 +1203,16 @@ public boolean checkforduplicates(Float mass) {
     return duplicate;
 }
 
+
+public List<Entry> getListofemptyAdducts() {
+    List<Entry> listofemptyadducts = new ArrayList<>();
+    
+    for (Entry a:listofAdducts) {
+        if (a.getListofSlices().size()==0) {
+            listofemptyadducts.add(a);
+        }
+    }
+    
+    return listofemptyadducts;
+}
 }

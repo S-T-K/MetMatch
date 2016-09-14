@@ -443,6 +443,9 @@ public class Fxml_adductviewController implements Initializable {
                     nextadduct = -1;
                     down.setVisible(false);
                 }
+                } else {
+                    nextadduct = -1;
+                    down.setVisible(false);
                 }
                     
                     
@@ -467,12 +470,13 @@ public class Fxml_adductviewController implements Initializable {
                 }
             }
         }
+        if (countd==maxnumberofdrawnadducts) break;
         
                     }
                      }
-                     
+                     if (countd==maxnumberofdrawnadducts) break;
                     }
-                    if (!empty) {
+                    if (countd>0) {
                     previousadduct = currentadduct-count; 
                     up.setVisible(true);
                 } else {
@@ -693,7 +697,7 @@ public class Fxml_adductviewController implements Initializable {
     public void setSession(Session session) {
         this.session = session;
         this.chartGenerator.setSession(session);
-        maxnumberofdrawnadducts = 20/session.getAllFiles().size();
+        maxnumberofdrawnadducts = session.maxnumberofdrawnfileadducts/session.getAllFiles().size();
         if (maxnumberofdrawnadducts<1) {
             maxnumberofdrawnadducts=1;
         }
@@ -1692,5 +1696,17 @@ public void down() {
         
         print(0);
     }
+    
+    public void showupdown() {
+        up.setOpacity(0.8);
+        down.setOpacity(0.8);
+    }
+    
+    public void hideupdown() {
+        up.setOpacity(0.3);
+        down.setOpacity(0.3);
+    }
+    
+    
    
 }
