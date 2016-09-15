@@ -1352,6 +1352,12 @@ public class Session {
             properties.setProperty(cname, String.valueOf(listofadductmproperties.get(i).get()));
         }
         
+        //get input headers
+        for (int i = 0; i<10; i++) {
+            String cheader= "info"+(i+1);
+            properties.setProperty(cheader, infos.get(i).getHeader());
+        }
+        
         properties.setProperty("generatenewadducts", String.valueOf(mastercontroller.toggleadductgeneration.selectedProperty().get()));
         properties.setProperty("PeakPick", String.valueOf(mastercontroller.PeakPick.getSelectionModel().getSelectedIndex()));
         

@@ -1095,7 +1095,7 @@ public class FXMLTableViewController implements Initializable {
                     ogroup.getChildren().remove(a.treeitem);
             }
             
-            System.out.println((progress+=step) + "%");
+            System.out.println((progress+=step)*100 + "%");
         }
                              session.compactlist=true;
                                 try {
