@@ -69,6 +69,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -77,6 +78,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -871,6 +873,7 @@ public class Fxml_adductviewController implements Initializable {
                             @Override
                             public void run() {
                                 RawDataFile file = getSeriestofile().get(series);
+//                                newpeaktest(series);
                                 List<XYChart.Series> list = getFiletoseries().get(file);
                                 BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
                                 if (getMainController().session.getSelectedFiles().contains(file)) {
@@ -992,6 +995,7 @@ public class Fxml_adductviewController implements Initializable {
                             @Override
                             public void run() {
                                 RawDataFile file = getSeriestofile().get(series);
+                                
                                 List<XYChart.Series> list = getFiletoseries().get(file);
                                 BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
                                 if (getMainController().session.getSelectedFiles().contains(file)) {
@@ -1707,6 +1711,119 @@ public void down() {
         down.setOpacity(0.3);
     }
     
+    
+    public void newpeaktest(XYChart.Series series) {
+        XYChart chart = seriestochart.get(series);
+        RawDataFile file = seriestofile.get(series);
+        Entry adduct=null;
+        for (Map.Entry<Entry,List<XYChart<Number,Number>>> entry:adducttochart.entrySet()) {
+            if (entry.getValue().contains(chart)) {
+                adduct = entry.getKey();
+                break;
+            }
+            
+        }
+        
+        Slice slice = adduct.getListofSlices().get(file);
+        float[] IntArray = slice.getIntArray();
+        float max = slice.getMaxIntensity();
+        
+        float[] fd = new float[IntArray.length];
+        
+        float fdmax=0;
+        for (int i =0; i<IntArray.length-1; i++)  {
+            fd[i]=IntArray[i+1]-IntArray[i];
+            if (fd[i]>fdmax) fdmax=fd[i];
+        }
+        
+        
+        
+        for (int i = 1; i<fd.length-2; i++) {
+            if (fd[i]<0) {
+                if (fd[i-1]>0&&fd[i+1]>0) {
+                    fd[i]=(fd[i-1]+fd[i+1])/2;
+                }
+            } else {
+                if (fd[i-1]<0&&fd[i+1]<0) {
+                    fd[i]=(fd[i-1]+fd[i+1])/2;
+                }
+            }
+        }
+        
+//        byte[] slope = new byte[IntArray.length];
+//        
+//        for (int i = 1; i<slope.length-2; i++) {
+//           
+//            if (IntArray[i-1]>IntArray[i]&&IntArray[i+1]<IntArray[i]) {
+//                slope[i]=-1;
+//            } else if (IntArray[i-1]<IntArray[i]&&IntArray[i+1]>IntArray[i]) {
+//                slope[i]=1;
+//            }
+//        }
+        
+        
+        
+        
+        Stage stage = new Stage();
+        stage.setTitle("Peak Test");
+        //Basic Chart attributes
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("RT [minutes]");
+        yAxis.setLabel("Intensity");
+        
+        //linechart.getData().clear();
+        
+        AreaChartnoSymbol<Number, Number> linechart = new AreaChartnoSymbol(xAxis, yAxis);
+
+                XYChart.Series newSeries = new XYChart.Series();
+
+                List<XYChart.Data> list = new ArrayList<>();
+                //just fill the chart with data points
+                for (int j = 0; j < IntArray.length; j++) {
+                    float intensity = IntArray[j]/max;
+                    float currentRT = j;
+
+                    list.add(new XYChart.Data(currentRT, intensity));
+                }
+                newSeries.getData().addAll(list);
+
+                // add new Series
+                linechart.getData().add(newSeries);
+                
+                XYChart.Series newSeries2 = new XYChart.Series();
+
+                List<XYChart.Data> list2 = new ArrayList<>();
+                //just fill the chart with data points
+                for (int j = 0; j < fd.length; j++) {
+                    float intensity = fd[j]/fdmax;
+                    float currentRT = j;
+
+                    list2.add(new XYChart.Data(currentRT, intensity));
+                }
+                newSeries2.getData().addAll(list2);
+
+                // add new Series
+                linechart.getData().add(newSeries2);
+                
+
+        Scene scene  = new Scene(linechart,800,600);       
+        System.out.println("est02");
+
+        stage.setScene(scene);
+//        linechart.applyCss();
+//        for (Object data: newSeries.getData()) {
+//            ((XYChart.Data)data).getNode().setDisable(true);
+//            ((XYChart.Data)data).getNode().setVisible(false);
+//        }
+        stage.show();
+        
+        
+        
+        
+        
+        
+    }
     
    
 }

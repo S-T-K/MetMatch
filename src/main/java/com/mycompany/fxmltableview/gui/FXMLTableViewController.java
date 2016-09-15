@@ -1928,7 +1928,9 @@ public class FXMLTableViewController implements Initializable {
                             for (String nameo : session.getListofadductnames()) {
 
                                 //to every hypothetical adduct
-                                if (j != k && (adduct.getCharge() == null || adduct.getIonisation() == null || lastChar(session.getListofadductcharges().get(k).toString()) == lastChar(session.getListofadductcharges().get(j).toString()))) {
+//                                System.out.println(adduct.getIonisation());
+//                                System.out.println(session.getListofadductpolarities().get(k));
+                                if (j != k && (adduct.getIonisation() == null || adduct.getIonisation().equals(session.getListofadductpolarities().get(k).substring(0, 1)))) {
                                     //don't add the same value
                                     //get original mass
                                     Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
@@ -1993,7 +1995,7 @@ public class FXMLTableViewController implements Initializable {
                                     for (String nameo : session.getListofadductnames()) {
 
                                         //to every hypothetical adduct
-                                        if (j != k && (adduct.getCharge() == null || adduct.getIonisation() == null || lastChar(session.getListofadductcharges().get(k).toString()) == lastChar(session.getListofadductcharges().get(j).toString()))) {
+                                        if (j != k && (adduct.getIonisation() == null || adduct.getIonisation().equals(session.getListofadductpolarities().get(k).substring(0, 1)))) {
                                             //don't add the same value
                                             //get original mass
                                             Float mass = adduct.getMZ() - session.getListofadductmasses().get(k);
@@ -2051,7 +2053,7 @@ public class FXMLTableViewController implements Initializable {
                                     for (int k = 0; k < nameArray.length; k++) {
 
                                         //to every hypothetical adduct
-                                        if (adduct.getCharge() == null || adduct.getIonisation() == null || lastChar(session.getListofadductcharges().get(j).toString()) == lastChar(nameArray[k])) {
+                                        if (j != k && (adduct.getIonisation() == null || adduct.getIonisation().equals(session.getListofadductpolarities().get(k).substring(0, 1)))) {
                                             //don't add the same value
                                             //get original mass
                                             Float mass = Float.parseFloat(mArray[k]);

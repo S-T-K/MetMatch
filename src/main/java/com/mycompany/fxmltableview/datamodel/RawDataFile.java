@@ -190,7 +190,7 @@ public class RawDataFile {
             //System.out.println("started with OGroup " + i);
             for (int j = 0; j < data.get(i).getListofAdducts().size(); j++) {
                 Entry adduct = data.get(i).getListofAdducts().get(j);
-                if (adduct.getIonisation().equals(this.polarity)||adduct.getIonisation()==null) {
+                if (adduct.getIonisation()==null||adduct.getIonisation().equals(this.polarity)) {
                 //System.out.println("started with Adduct " + j);
                 Slice newSlice = new Slice(this, adduct); 
                 newSlice.newbinaryExtractSlicefromScans(listofScans, RTArray);

@@ -347,6 +347,7 @@ public class BatchController implements Initializable {
                             } else if (result.get() == buttonTypeThree) {
                                 try {
                                     openFiles(filelist,true,progress);
+                                    TVcontroller.loading.getAndIncrement();
                                     openFiles(filelist,false,progress);
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(BatchController.class.getName()).log(Level.SEVERE, null, ex);
