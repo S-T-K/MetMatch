@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -873,7 +874,7 @@ public class Fxml_adductviewController implements Initializable {
                             @Override
                             public void run() {
                                 RawDataFile file = getSeriestofile().get(series);
-//                                newpeaktest(series);
+                                newpeaktest(series);
                                 List<XYChart.Series> list = getFiletoseries().get(file);
                                 BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
                                 if (getMainController().session.getSelectedFiles().contains(file)) {
@@ -1712,7 +1713,7 @@ public void down() {
     }
     
     
-    public void newpeaktest(XYChart.Series series) {
+   public void newpeaktest(XYChart.Series series) {
         XYChart chart = seriestochart.get(series);
         RawDataFile file = seriestofile.get(series);
         Entry adduct=null;
@@ -1725,30 +1726,287 @@ public void down() {
         }
         
         Slice slice = adduct.getListofSlices().get(file);
-        float[] IntArray = slice.getIntArray();
-        float max = slice.getMaxIntensity();
         
-        float[] fd = new float[IntArray.length];
+        long start = System.nanoTime();
+         float[] IntArray = slice.getIntArray().clone();
+         float max = slice.getMaxIntensity();
+         
+         
+         
+         float []smoothed = new float[IntArray.length];
+         
+     
+         
         
-        float fdmax=0;
-        for (int i =0; i<IntArray.length-1; i++)  {
-            fd[i]=IntArray[i+1]-IntArray[i];
-            if (fd[i]>fdmax) fdmax=fd[i];
+        int number = 10;
+        for (int i  = number; i<IntArray.length-number; i++) {
+            smoothed[i]=IntArray[i]-(IntArray[i-number]+IntArray[i+number])/2;
         }
         
+  byte[] sign = new byte[IntArray.length];
+  number = 3;
+  for (int i = number; i<IntArray.length-number; i++) {
+              boolean pos = false;
+              boolean same=true;
+              if (smoothed[i-number]>0) pos = true;
+              for (int j = i-number+1; j<i+number; j++) {
+                  if (pos&&smoothed[j]<0) {
+                      same = false;
+                      break;}
+                  else if (!pos&&smoothed[j]>0) {
+                      same = false;
+                      break;
+                  }
+              }
+              if (same) {
+                  if (pos) {
+                      sign[i]=1;
+                  } else {
+                      sign[i]=-1;
+                  }
+              }
+  }
+  
+      int a = -1;
+      int b = -1;
+      int c = -1;
+      boolean afound = false;
+      boolean bfound = false;
+  for (int i = 0; i<sign.length; i++) {
+     if (!afound) {
+         if (sign[i]<0) {
+             a=i;
+             afound = true;
+         } if (sign[i]==0) {
+             
+         } else {
+             a=0;
+             b=i;
+             afound = true;
+             bfound=true;
+         }
+     } else if (!bfound) {
+         if (sign[i]<0) {
+             a=i;
+         } else if (sign[i]==0) {
+             
+         } else {
+             b=i;
+         }
+         
+     } else {
+         
+     }
+     
+     
+  }
+  
         
         
-        for (int i = 1; i<fd.length-2; i++) {
-            if (fd[i]<0) {
-                if (fd[i-1]>0&&fd[i+1]>0) {
-                    fd[i]=(fd[i-1]+fd[i+1])/2;
-                }
-            } else {
-                if (fd[i-1]<0&&fd[i+1]<0) {
-                    fd[i]=(fd[i-1]+fd[i+1])/2;
-                }
-            }
-        }
+        
+        IntArray=slice.getIntArray();
+         
+         
+         
+         
+         
+//  float[] fd = new float[IntArray.length];
+//        
+//      
+//        for (int i =0; i<IntArray.length; i++)  {
+//            fd[i]=IntArray[i];
+//            
+//        }
+//        
+//        
+//        float[] fds = new float[fd.length];
+//        
+//        
+//    for (int s = 0; s<3; s++) {    
+//        int number = 3;
+//        float sum =0;
+//        for (int i = 0; i<=1+number*2; i++) {
+//            sum+=fd[i];
+//        }
+//        int n = number*2+1;
+//
+//        for (int i = number; i<fd.length-number-1; i++) {
+//            fds[i]=sum/n;
+//            
+//            sum-=fd[i-number];
+//            sum+=fd[i+number];
+//        }
+//        fds[fd.length-number]=sum/n;
+//        fd=fds;
+//    }   
+//    
+//    
+//    byte[] trend = new byte[fd.length];
+//    float k = fds[1]-fds[0];
+//    float maxk = fds[1]+k*1.5f;
+//    float mink = fds[1]+k*0.5f;
+//    if (maxk<mink) {
+//        float temp = maxk;
+//        maxk = mink;
+//        mink=temp;
+//    }
+//    for (int i = 1; i<fd.length; i++) {
+//        if (fds[i]<mink) {
+//            trend[i]=(byte) (trend[i-1]-1);
+//            k = fds[i]-fds[i-1];
+//            maxk = fds[i]+k*1.5f;
+//            mink = fds[i]+k*0.5f;
+//            if (maxk<mink) {
+//        float temp = maxk;
+//        maxk = mink;
+//        mink=temp;
+//    }
+// 
+//        } else if (fds[i]>maxk) {
+//            trend[i]=(byte) (trend[i-1]+1);
+//            k = fds[i]-fds[i-1];
+//            maxk = fds[i]+k*1.5f;
+//            mink = fds[i]+k*0.5f;
+//            if (maxk<mink) {
+//        float temp = maxk;
+//        maxk = mink;
+//        mink=temp;
+//    }
+//        } else {
+//            trend[i]=trend[i-1];
+//            maxk+=k;
+//            mink+=k;
+//        }
+//        
+//    }
+       
+   
+         
+         
+         
+         
+         
+//         //line
+//         //------------------------------------------------------------------
+//        
+//         
+//      
+//
+//        float[] minmax = new float[IntArray.length];
+//        int number = 25;
+//        
+//        for (int i = 0; i<minmax.length-number; i++) {
+////        float k = (IntArray[i+number]-IntArray[i])/number;
+////        float linev=IntArray[i];
+////        int ma= -1;
+////        float mav=1000;
+////        int mi = -1;
+////        float miv=-1000;
+////            for (int j = i+1; j<i+number; j++) {
+////                linev+=k;
+////                float val = IntArray[j]-linev;
+////                if (val > 0) {
+////                    if (val > linev * 0.1) {
+////                        if (val > mav) {
+////                            mav = val;
+////                            ma = j;
+////                        }
+////                    }
+////                } else if (val < linev * -0.1) {
+////                    if (val < miv) {
+////                        miv = val;
+////                        mi = j;
+////                    }
+////                } 
+////             
+////            }
+////            if (ma>=0) minmax[ma]++;
+////            if (mi>=0) minmax[mi]--;
+//
+//float val = (IntArray[i+number]+IntArray[i])/2;
+//float dif = IntArray[i+number/2]-val;
+//minmax[i+number/2]=dif;
+//
+//        }
+//        
+////        IntArray = slice.getIntArray();
+////        for (int i = 1; i<minmax.length-1; i++) {
+////            if (minmax[i]>0) {
+////                if (IntArray[i]<1000||IntArray[i-1]==0||IntArray[i+1]==0) {
+////                    minmax[i]=0;
+////                }
+////            }
+////            
+////        }
+        
+        
+        
+        
+        //end line
+        //------------------------------------------------------------
+        
+        
+        //higher-lower//
+        //-----------------------------------------------------------
+        
+//        float[] IntArray = slice.getIntArray();
+//        float max = slice.getMaxIntensity();
+//        
+//        float[] fd = new float[IntArray.length];
+//        
+//        float fdmax=0;
+//        for (int i =0; i<IntArray.length-1; i++)  {
+//            fd[i]=IntArray[i+1]-IntArray[i];
+//            if (fd[i]>fdmax) fdmax=fd[i];
+//        }
+//        
+//        
+//        float[] fds = new float[fd.length];
+//        
+//        
+//    for (int s = 0; s<3; s++) {    
+//        int number = 3;
+//        float sum =0;
+//        for (int i = 0; i<=1+number*2; i++) {
+//            sum+=fd[i];
+//        }
+//        int n = number*2+1;
+//
+//        for (int i = number; i<fd.length-number-1; i++) {
+//            fds[i]=sum/n;
+//            
+//            sum-=fd[i-number];
+//            sum+=fd[i+number];
+//        }
+//        fds[fd.length-number]=sum/n;
+//        fd=fds;
+//    }   
+//        
+//        int[] sign = new int[fd.length];
+//        
+//        for (int i = 0; i<fd.length; i++) {
+//            if (fds[i]>0) {
+//                sign[i]=1;
+//            } else if (fds[i]<0) {
+//                sign[i]=-1;
+//            }
+//        }
+//        
+//        int[] hl = new int[fd.length];
+//        for (int i = 1; i< fd.length; i++) {
+//            if (fds[i]>=fds[i-1]) {
+//                hl[i]=1;
+//                
+//            } else {
+//                hl[i]=-1;
+//            }
+//        }
+
+        //end higher-lower//
+        //-----------------------------------------------------------
+        
+        System.out.println(System.nanoTime()-start);
+        
         
 //        byte[] slope = new byte[IntArray.length];
 //        
@@ -1795,8 +2053,8 @@ public void down() {
 
                 List<XYChart.Data> list2 = new ArrayList<>();
                 //just fill the chart with data points
-                for (int j = 0; j < fd.length; j++) {
-                    float intensity = fd[j]/fdmax;
+                for (int j = 0; j < IntArray.length; j++) {
+                    float intensity = ((float)sign[j]);
                     float currentRT = j;
 
                     list2.add(new XYChart.Data(currentRT, intensity));

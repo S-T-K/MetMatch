@@ -109,7 +109,7 @@ public class Session {
 
 
         
-        this.maxnumberofdrawnfileadducts=100;
+        this.maxnumberofdrawnfileadducts=300;
         this.mastercontroller = mastercontroller;
         startIOThread();
        this.gravitycalculator=new GravityCalculator(this);
