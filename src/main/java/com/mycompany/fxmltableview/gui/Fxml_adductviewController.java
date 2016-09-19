@@ -873,7 +873,7 @@ public class Fxml_adductviewController implements Initializable {
                             @Override
                             public void run() {
                                 RawDataFile file = getSeriestofile().get(series);
-//                                newpeaktest(series);
+                                newpeaktest(series);
                                 List<XYChart.Series> list = getFiletoseries().get(file);
                                 BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
                                 if (getMainController().session.getSelectedFiles().contains(file)) {
@@ -1737,18 +1737,35 @@ public void down() {
         }
         
         
+        float[] fds = new float[fd.length];
         
-        for (int i = 1; i<fd.length-2; i++) {
-            if (fd[i]<0) {
-                if (fd[i-1]>0&&fd[i+1]>0) {
-                    fd[i]=(fd[i-1]+fd[i+1])/2;
-                }
-            } else {
-                if (fd[i-1]<0&&fd[i+1]<0) {
-                    fd[i]=(fd[i-1]+fd[i+1])/2;
-                }
+        int number = 5;
+        float sum =0;
+        for (int i = 0; i<=1+number*2; i++) {
+            sum+=fd[i];
+        }
+        int n = number*2+1;
+
+        for (int i = number; i<fd.length-number-1; i++) {
+            fds[i]=sum/n;
+            
+            sum-=fd[i-number];
+            sum+=fd[i+number];
+        }
+        fds[fd.length-number]=sum/n;
+        
+        int[] sign = new int[fd.length];
+        
+        for (int i = 0; i<fd.length; i++) {
+            if (fds[i]>0) {
+                sign[i]=1;
+            } else if (fds[i]<0) {
+                sign[i]=-1;
             }
         }
+        
+        
+        
         
 //        byte[] slope = new byte[IntArray.length];
 //        
@@ -1796,7 +1813,7 @@ public void down() {
                 List<XYChart.Data> list2 = new ArrayList<>();
                 //just fill the chart with data points
                 for (int j = 0; j < fd.length; j++) {
-                    float intensity = fd[j]/fdmax;
+                    float intensity = sign[j];
                     float currentRT = j;
 
                     list2.add(new XYChart.Data(currentRT, intensity));

@@ -44,6 +44,12 @@
                         <version>0.9</version>
                         <type>jar</type>
                 </dependency>
+                <dependency>
+                        <groupId>com.github.lucarosellini.rJava</groupId>
+                        <artifactId>JRI</artifactId>
+                        <version>0.9-7</version>
+                        <type>jar</type>
+                </dependency>
         </dependencies>
 
     <properties>
