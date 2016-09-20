@@ -873,28 +873,32 @@ public class Fxml_adductviewController implements Initializable {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                RawDataFile file = getSeriestofile().get(series);
-                                newpeaktest(series);
-                                List<XYChart.Series> list = getFiletoseries().get(file);
-                                BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
-                                if (getMainController().session.getSelectedFiles().contains(file)) {
-                                    
-                                    ObservableList<RawDataFile> selist = controller.getBatchFileView().getSelectionModel().getSelectedItems();
-
-                                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
-                                    for (RawDataFile sel : selist) {
-                                        newlist.add(sel);
+                                try {
+                                    RawDataFile file = getSeriestofile().get(series);
+                                    newpeaktest(series);
+                                    List<XYChart.Series> list = getFiletoseries().get(file);
+                                    BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
+                                    if (getMainController().session.getSelectedFiles().contains(file)) {
+                                        
+                                        ObservableList<RawDataFile> selist = controller.getBatchFileView().getSelectionModel().getSelectedItems();
+                                        
+                                        List<RawDataFile> newlist = new ArrayList<RawDataFile>();
+                                        for (RawDataFile sel : selist) {
+                                            newlist.add(sel);
+                                        }
+                                        controller.getBatchFileView().getSelectionModel().clearSelection();
+                                        newlist.remove(file);
+                                        for (RawDataFile sel : newlist) {
+                                            controller.getBatchFileView().getSelectionModel().select(sel);
+                                        }
+                                        
+                                    } else {
+                                        controller.getBatchFileView().getSelectionModel().select(file);
                                     }
-                                    controller.getBatchFileView().getSelectionModel().clearSelection();
-                                    newlist.remove(file);
-                                    for (RawDataFile sel : newlist) {
-                                        controller.getBatchFileView().getSelectionModel().select(sel);
-                                    }
-
-                                } else {
-                                    controller.getBatchFileView().getSelectionModel().select(file);
+                                    controller.changedFile();
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Fxml_adductviewController.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                controller.changedFile();
                             }
                         });
 
@@ -1713,7 +1717,7 @@ public void down() {
     }
     
     
-   public void newpeaktest(XYChart.Series series) {
+   public void newpeaktest(XYChart.Series series) throws InterruptedException {
         XYChart chart = seriestochart.get(series);
         RawDataFile file = seriestofile.get(series);
         Entry adduct=null;
@@ -1745,6 +1749,7 @@ public void down() {
         
   byte[] sign = new byte[IntArray.length];
   number = 3;
+  boolean empty = true;
   for (int i = number; i<IntArray.length-number; i++) {
               boolean pos = false;
               boolean same=true;
@@ -1759,6 +1764,7 @@ public void down() {
                   }
               }
               if (same) {
+                  empty=false;
                   if (pos) {
                       sign[i]=1;
                   } else {
@@ -1767,42 +1773,100 @@ public void down() {
               }
   }
   
-      int a = -1;
-      int b = -1;
-      int c = -1;
-      boolean afound = false;
-      boolean bfound = false;
-  for (int i = 0; i<sign.length; i++) {
-     if (!afound) {
-         if (sign[i]<0) {
-             a=i;
-             afound = true;
-         } if (sign[i]==0) {
-             
-         } else {
-             a=0;
-             b=i;
-             afound = true;
-             bfound=true;
-         }
-     } else if (!bfound) {
-         if (sign[i]<0) {
-             a=i;
-         } else if (sign[i]==0) {
-             
-         } else {
-             b=i;
-         }
-         
-     } else {
-         
-     }
+//      int a = -1;
+//      int b = -1;
+//      int c = -1;
+//      boolean afound = false;
+//      boolean bfound = false;
+//  for (int i = 0; i<sign.length; i++) {
+//     if (!afound) {
+//         if (sign[i]<0) {
+//             a=i;
+//             afound = true;
+//         } if (sign[i]==0) {
+//             
+//         } else {
+//             a=0;
+//             b=i;
+//             afound = true;
+//             bfound=true;
+//         }
+//     } else if (!bfound) {
+//         if (sign[i]<0) {
+//             a=i;
+//         } else if (sign[i]==0) {
+//             
+//         } else {
+//             b=i;
+//         }
+//         
+//     } else {
+//         
+//     }
+//     
+//     
+//  }
+  if (!empty) {
+      if (slice.getListofPeaks()==null) {
+         slice.setListofPeaks(new ArrayList<Peak>());}
+        int a = -1;
+        int b = -1;
+        int c = -1;
+        float sminv = Float.MAX_VALUE;
+        float eminv = Float.MAX_VALUE;
+        float maxv = Float.MIN_VALUE;
+        boolean afound = false;
+        boolean bfound = false;
+        boolean cfound = false;
+        
+        int i = 0;
+        while (i<sign.length) {
+        while (a<0) {
+            while (i<sign.length) {
+            if (sign[i]<=0) {
+                if (smoothed[i]<sminv) {
+                    sminv=smoothed[i];
+                    a=i;
+                }
+            } else {
+                i++;
+                break;
+            }
+            i++;
+            }
+        }
+        b=i-1;
+        maxv=smoothed[i-1];
+
+        while (i<sign.length&&sign[i]>0) {
+            if (smoothed[i]>maxv) {
+                maxv=smoothed[i];
+                b=i;
+            }
+            i++;
+        }
+        eminv=smoothed[i-1];
+        c=i-1;
+        while (i<sign.length&&sign[i]<=0) {
+            if(smoothed[i]<eminv) {
+                eminv=smoothed[i];
+                c=i;
+            }
+            i++;
+        }
+        //new peak
+     slice.addPeak(new Peak((short)b,(short)a,(short)c,slice));
      
-     
+        a=c;
+        b=-1;
+        c=-1;
+        sminv = Float.MAX_VALUE;
+        eminv = Float.MAX_VALUE;
+        maxv = Float.MIN_VALUE;
+        }
+
+
   }
-  
-        
-        
         
         IntArray=slice.getIntArray();
          
@@ -2082,6 +2146,8 @@ public void down() {
         
         
     }
+   
+   
     
    
 }
