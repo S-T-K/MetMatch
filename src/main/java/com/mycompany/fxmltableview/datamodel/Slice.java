@@ -299,6 +299,117 @@ public class Slice {
         
     }
  
+  public void LinePeakPicking() throws InterruptedException {
+      
+     if (listofPeaks==null) {
+         listofPeaks = new ArrayList<Peak>();
+     } else {
+         deleteAutoPeaks();
+     }
+     
+     float []smoothed = new float[IntArray.length];
+        int number = 8;
+        for (int i  = number; i<IntArray.length-number; i++) {
+            smoothed[i]=IntArray[i]-(IntArray[i-number]+IntArray[i+number])/2;
+        }
+        
+  byte[] sign = new byte[IntArray.length];
+  number = 4;
+  boolean empty = true;
+  for (int i = number; i<IntArray.length-number; i++) {
+              boolean pos = false;
+              boolean same=true;
+              if (smoothed[i-number]>0) pos = true;
+              for (int j = i-number+1; j<i+number; j++) {
+                  if (pos&&smoothed[j]<0) {
+                      same = false;
+                      break;}
+                  else if (!pos&&smoothed[j]>0) {
+                      same = false;
+                      break;
+                  }
+              }
+              if (same) {
+                  empty=false;
+                  if (pos) {
+                      sign[i]=1;
+                  } else {
+                      sign[i]=-1;
+                  }
+              }
+  }
+
+  if (!empty) {
+        int a = -1;
+        int b = -1;
+        int c = -1;
+        float sminv = Float.MAX_VALUE;
+        float eminv = Float.MAX_VALUE;
+        float maxv = Float.MIN_VALUE;
+        float area = 0;
+        
+        
+        int i = 0;
+        while (i<sign.length) {
+        while (a<0) {
+            while (i<sign.length) {
+            if (sign[i]<=0) {
+                if (smoothed[i]<sminv) {
+                    sminv=smoothed[i];
+                    a=i;
+                    area=IntArray[i];
+                } else {
+                    area+=IntArray[i];
+                }
+            } else {
+                i++;
+                break;
+            }
+            i++;
+            }
+        }
+        b=i-1;
+        maxv=smoothed[i-1];
+
+        while (i<sign.length&&sign[i]>0) {
+            if (smoothed[i]>maxv) {
+                maxv=smoothed[i];
+                b=i;
+            }
+            area+=IntArray[i];
+            i++;
+        }
+        eminv=smoothed[i-1];
+        c=i-1;
+        float newarea = 0;
+        while (i<sign.length&&sign[i]<=0) {
+            newarea+=IntArray[i];
+            if(smoothed[i]<eminv) {
+                area+=newarea;
+                newarea=0;
+                eminv=smoothed[i];
+                c=i;
+            }
+            i++;
+        }
+        //new peak
+        if (IntArray[b]>=file.getSession().getBaseline()){
+        addPeak(new Peak(b,a,c,this,area));}
+     
+        a=c;
+        b=-1;
+        c=-1;
+        sminv = Float.MAX_VALUE;
+        eminv = Float.MAX_VALUE;
+        maxv = Float.MIN_VALUE;
+        }
+
+
+  }
+     
+     
+ }
+ 
  public void SavitzkyGolayPeakPicking() throws InterruptedException {
       //baseline correct IntensityArray
          
@@ -912,14 +1023,13 @@ public class Slice {
     
     public void addPeak(Peak peak){
         float[] length = peak.gethalflength();
-        float halflength =file.getSession().getMinPeakLength().floatValue()/2;
         boolean duplicate = false;
         for (Peak p: listofPeaks) {
            if (p.getIndex()==peak.getIndex()) {
                duplicate = true;
            }
         }
-        if (!duplicate&&length[0]>=halflength&&length[1]>=halflength) {
+        if (!duplicate&&length[0]+length[1]>=file.getSession().getMinPeakLength().floatValue()) {
         this.listofPeaks.add(peak);}
     }
     

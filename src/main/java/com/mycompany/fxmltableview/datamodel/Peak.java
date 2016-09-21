@@ -62,6 +62,18 @@ public class Peak {
      MZ = slice.getMZArray()[index];
     }
     
+    public Peak(int index, int start, int end, Slice slice, float area) throws InterruptedException {
+        this.weight = 1;
+        this.index = index;
+        this.start = start;
+        this.end = end;
+        this.slice = slice;
+        this.manual = false;
+        this.area=area;
+     indexshift = (getIndexRT()-slice.getAdduct().getOGroupObject().getRT());
+     MZ = slice.getMZArray()[index];
+    }
+    
     public Peak(boolean manual, short index, short start, short end, Slice slice, int non) throws InterruptedException {
         this.weight = 1;
         this.index = index;

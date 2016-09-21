@@ -253,6 +253,11 @@ if (listofSlices.containsKey(file)) {
             session.getSncalculator().calculatetrueSN(currentSlice);
             session.getSncalculator().calculateNoiseUnits(currentSlice);
             
+        } else if (session.getPeackPick().equals("Experimental")) {
+            currentSlice.LinePeakPicking();
+            session.getSncalculator().calculatetrueSN(currentSlice);
+            session.getSncalculator().calculateNoiseUnits(currentSlice);
+            
         } else {
             System.out.println("Error");
         }
