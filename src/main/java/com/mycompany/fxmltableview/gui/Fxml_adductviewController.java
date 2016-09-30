@@ -873,32 +873,27 @@ public class Fxml_adductviewController implements Initializable {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                try {
-                                    RawDataFile file = getSeriestofile().get(series);
-                                    newpeaktest(series);
-                                    List<XYChart.Series> list = getFiletoseries().get(file);
-                                    BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
-                                    if (getMainController().session.getSelectedFiles().contains(file)) {
-                                        
-                                        ObservableList<RawDataFile> selist = controller.getBatchFileView().getSelectionModel().getSelectedItems();
-                                        
-                                        List<RawDataFile> newlist = new ArrayList<RawDataFile>();
-                                        for (RawDataFile sel : selist) {
-                                            newlist.add(sel);
-                                        }
-                                        controller.getBatchFileView().getSelectionModel().clearSelection();
-                                        newlist.remove(file);
-                                        for (RawDataFile sel : newlist) {
-                                            controller.getBatchFileView().getSelectionModel().select(sel);
-                                        }
-                                        
-                                    } else {
-                                        controller.getBatchFileView().getSelectionModel().select(file);
+                                RawDataFile file = getSeriestofile().get(series);
+                                List<XYChart.Series> list = getFiletoseries().get(file);
+                                BatchController controller = getMainController().getDatasettocontroller().get(file.getDataset());
+                                if (getMainController().session.getSelectedFiles().contains(file)) {
+                                    
+                                    ObservableList<RawDataFile> selist = controller.getBatchFileView().getSelectionModel().getSelectedItems();
+                                    
+                                    List<RawDataFile> newlist = new ArrayList<RawDataFile>();
+                                    for (RawDataFile sel : selist) {
+                                        newlist.add(sel);
                                     }
-                                    controller.changedFile();
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(Fxml_adductviewController.class.getName()).log(Level.SEVERE, null, ex);
+                                    controller.getBatchFileView().getSelectionModel().clearSelection();
+                                    newlist.remove(file);
+                                    for (RawDataFile sel : newlist) {
+                                        controller.getBatchFileView().getSelectionModel().select(sel);
+                                    }
+                                    
+                                } else {
+                                    controller.getBatchFileView().getSelectionModel().select(file);
                                 }
+                                controller.changedFile();
                             }
                         });
 
@@ -1735,6 +1730,22 @@ public void down() {
          float[] IntArray = slice.getIntArray().clone();
          float max = slice.getMaxIntensity();
          
+//         //smoothing
+//         float[] sint = new float[IntArray.length];
+//         
+//         for (int i = 0; i<3; i++) {
+//             sint[0]=(IntArray[0]+IntArray[1])/2;
+//             for (int j = 1; j<IntArray.length-1; j++) {
+//                 sint[j]=(IntArray[j-1]+IntArray[j]+IntArray[j+1])/3;  
+//             }
+//             sint[IntArray.length-1]=(IntArray[IntArray.length-1]+IntArray[IntArray.length-2])/2;
+//    IntArray = sint;
+//         }
+         
+         
+         
+         
+         
          
          
          float []smoothed = new float[IntArray.length];
@@ -1747,31 +1758,44 @@ public void down() {
             smoothed[i]=IntArray[i]-(IntArray[i-number]+IntArray[i+number])/2;
         }
         
-  byte[] sign = new byte[IntArray.length];
-  number = 3;
-  boolean empty = true;
-  for (int i = number; i<IntArray.length-number; i++) {
-              boolean pos = false;
-              boolean same=true;
-              if (smoothed[i-number]>0) pos = true;
-              for (int j = i-number+1; j<i+number; j++) {
-                  if (pos&&smoothed[j]<0) {
-                      same = false;
-                      break;}
-                  else if (!pos&&smoothed[j]>0) {
-                      same = false;
-                      break;
-                  }
-              }
-              if (same) {
-                  empty=false;
-                  if (pos) {
-                      sign[i]=1;
-                  } else {
-                      sign[i]=-1;
-                  }
-              }
-  }
+        boolean[] sign = new boolean[IntArray.length];
+        for (int i  = 1; i<IntArray.length-1; i++) {
+            sign[i]=true;
+            if (smoothed[i]/IntArray[i]<0.2) {
+                sign[i]=false;
+                sign[i-1]=false;
+                sign[i+1]=false;
+                i++;
+            }
+        }
+        
+        
+        
+//  byte[] sign = new byte[IntArray.length];
+//  number = 3;
+//  boolean empty = true;
+//  for (int i = number; i<IntArray.length-number; i++) {
+//              boolean pos = false;
+//              boolean same=true;
+//              if (smoothed[i-number]>0) pos = true;
+//              for (int j = i-number+1; j<i+number; j++) {
+//                  if (pos&&smoothed[j]<0) {
+//                      same = false;
+//                      break;}
+//                  else if (!pos&&smoothed[j]>0) {
+//                      same = false;
+//                      break;
+//                  }
+//              }
+//              if (same) {
+//                  empty=false;
+//                  if (pos) {
+//                      sign[i]=1;
+//                  } else {
+//                      sign[i]=-1;
+//                  }
+//              }
+//  }
   
 //      int a = -1;
 //      int b = -1;
@@ -1806,7 +1830,7 @@ public void down() {
 //     
 //     
 //  }
-  if (!empty) {
+//  if (!empty) {
       if (slice.getListofPeaks()==null) {
          slice.setListofPeaks(new ArrayList<Peak>());}
         int a = -1;
@@ -1820,10 +1844,10 @@ public void down() {
         boolean cfound = false;
         
         int i = 0;
-        while (i<sign.length) {
+        while (i<smoothed.length) {
         while (a<0) {
-            while (i<sign.length) {
-            if (sign[i]<=0) {
+            while (i<smoothed.length) {
+            if (!sign[i]) {
                 if (smoothed[i]<sminv) {
                     sminv=smoothed[i];
                     a=i;
@@ -1838,7 +1862,7 @@ public void down() {
         b=i-1;
         maxv=smoothed[i-1];
 
-        while (i<sign.length&&sign[i]>0) {
+        while (i<smoothed.length&&sign[i]) {
             if (smoothed[i]>maxv) {
                 maxv=smoothed[i];
                 b=i;
@@ -1847,7 +1871,7 @@ public void down() {
         }
         eminv=smoothed[i-1];
         c=i-1;
-        while (i<sign.length&&sign[i]<=0) {
+        while (i<smoothed.length&&!sign[i]) {
             if(smoothed[i]<eminv) {
                 eminv=smoothed[i];
                 c=i;
@@ -1866,9 +1890,9 @@ public void down() {
         }
 
 
-  }
+//  }
         
-        IntArray=slice.getIntArray();
+        //IntArray=slice.getIntArray();
          
          
          
@@ -2114,11 +2138,15 @@ public void down() {
                 linechart.getData().add(newSeries);
                 
                 XYChart.Series newSeries2 = new XYChart.Series();
+                IntArray=slice.getIntArray();
 
                 List<XYChart.Data> list2 = new ArrayList<>();
                 //just fill the chart with data points
                 for (int j = 0; j < IntArray.length; j++) {
-                    float intensity = ((float)sign[j]);
+                    float intensity = 0;
+                    if(sign[j]) {
+                        intensity = 1;
+                    }
                     float currentRT = j;
 
                     list2.add(new XYChart.Data(currentRT, intensity));

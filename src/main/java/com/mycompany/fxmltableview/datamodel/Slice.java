@@ -308,13 +308,13 @@ public class Slice {
      }
      
      float []smoothed = new float[IntArray.length];
-        int number = 8;
+        int number = 10;
         for (int i  = number; i<IntArray.length-number; i++) {
             smoothed[i]=IntArray[i]-(IntArray[i-number]+IntArray[i+number])/2;
         }
         
   byte[] sign = new byte[IntArray.length];
-  number = 4;
+  number = 3;
   boolean empty = true;
   for (int i = number; i<IntArray.length-number; i++) {
               boolean pos = false;

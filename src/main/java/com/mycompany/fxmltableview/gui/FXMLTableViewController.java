@@ -36,6 +36,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -2499,6 +2500,22 @@ MasterListofOGroups.get(o).sortedmasses=null;
                         }
                     });
 
+                            //-----------------------------------
+//        //debug: delete 25% of OGroups at random
+//        int currentsize = MasterListofOGroups.size();
+//        System.out.println("Old number of Groups: " + currentsize);
+//        int nextsize = (int) (currentsize*0.75);
+//        
+//        while (MasterListofOGroups.size()>nextsize) {
+//            int max = MasterListofOGroups.size();
+//            int min = 0;
+//            int rand = ThreadLocalRandom.current().nextInt(min, max);
+//            MasterListofOGroups.remove(rand);
+//        }
+//         System.out.println("New number of Groups: " + MasterListofOGroups.size());
+//        session.newPeakPickversion();
+//        
+//        //---------------------------------
                     return null;
                 } catch (Exception e) {
                     Platform.runLater(new Runnable() {
@@ -2512,6 +2529,9 @@ MasterListofOGroups.get(o).sortedmasses=null;
                             progressbar.setVisible(false);
                         }
                     });
+                    
+
+
 
                     return null;
                 }

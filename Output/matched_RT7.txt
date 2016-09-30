@@ -1,0 +1,3 @@
+Num	Group_ID	True_MZ	True_RT	1	MZ	0	Random Ogroup RT Shift	Function	RT	[+]151215_pos_236_fullyLab_Remus.Area	[+]151215_pos_236_fullyLab_Remus.RT-Shift	[+]151215_pos_236_fullyLab_Remus.MZ-Shift	[+]151215_pos_236_fullyLab_Remus.MZ
+1022	362	307.2268297	27.31133333	1	308.7268297	0	-0.072688019	-0.438600757	26.80004455				
+5282	362				307.22684				26.800045	335087.62	0.54278755	0.0	307.22684

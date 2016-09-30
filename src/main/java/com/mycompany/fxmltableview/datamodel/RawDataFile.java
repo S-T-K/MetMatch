@@ -51,7 +51,7 @@ public class RawDataFile {
     private MappedByteBuffer MMFile;
     private int pointer;
     private Dataset dataset;
-    private List<Scan> listofScans;
+    public List<Scan> listofScans;
     private float[] RTArray;
     private Slice[] listofSlices;
     private StringProperty name;

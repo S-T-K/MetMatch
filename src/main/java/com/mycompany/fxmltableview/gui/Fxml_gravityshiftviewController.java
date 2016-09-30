@@ -13,7 +13,10 @@ import com.mycompany.fxmltableview.datamodel.Slice;
 import com.mycompany.fxmltableview.logic.CertaintyCalculator;
 import com.mycompany.fxmltableview.logic.GravityCalculator;
 import com.mycompany.fxmltableview.logic.Session;
+import com.univocity.parsers.tsv.TsvWriter;
+import com.univocity.parsers.tsv.TsvWriterSettings;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -1769,8 +1773,7 @@ if (Thread.currentThread().isInterrupted()) {
                                 
                                 //quality check
                                 grav.qualitycheck(matrix, centroids,currentfile);
-                                currentfile.setRtshiftfunction(olist, centroids);
-                          
+                                currentfile.setRtshiftfunction(olist, centroids);        
 //set fitted peak
                 for (int i = 0; i<olist.size(); i++) {
                 olist.get(i).setFittedShift(currentfile, centroids[i]);
@@ -1781,7 +1784,28 @@ if (Thread.currentThread().isInterrupted()) {
                                         
                                       
                                      filesdone++;  
-                            
+                           
+                                      //Debug: Write shifts
+//                                PrintWriter printwriter = new PrintWriter("C:\\Users\\stefankoch\\Documents\\Output\\"+currentfile.getName()+".txt", "UTF-8");
+//        TsvWriter writer = new TsvWriter(printwriter, new TsvWriterSettings());
+//                           List<String> headers = new ArrayList<>();
+//                           headers.add("RT");
+//                           headers.add("RT Shift");
+//                           
+//                           List<List<String>> data = new ArrayList<>();
+//                           
+//                           for (int o = 0; o<currentfile.listofScans.size(); o++) {
+//                               List<String> t = new ArrayList<>();
+//                               t.add(String.valueOf(currentfile.listofScans.get(o).getRetentionTime()));
+//                               t.add(String.valueOf(currentfile.getRtshiftfunction().value(currentfile.listofScans.get(o).getRetentionTime()*60)));
+//                               data.add(t);
+//                           }
+//                           
+//                            writer.writeHeaders(headers);
+//        for (int i = 1; i < data.size(); i++) {
+//            writer.writeRow(data.get(i).toArray());
+//        }
+//                           writer.close();
                       
                 }
 
@@ -1955,6 +1979,10 @@ if (Thread.currentThread().isInterrupted()) {
     }
     
     public void finish() {
+        
+        
+        
+        
          supercontroller.newOption(supercontroller.outputButton);
          supercontroller.oldOption(supercontroller.shiftButton);
          supercontroller.oldOption(supercontroller.checkResultsButton);
